@@ -1,10 +1,12 @@
+import { StoryPoint } from "./story-point";
+
 type GiveUpCard = {
   kind: "giveup";
 };
 
 type StoryPointCard = {
   kind: "storypoint";
-  storyPoint: number;
+  storyPoint: StoryPoint;
 };
 
 export type Card = GiveUpCard | StoryPointCard;
@@ -21,11 +23,7 @@ export const createGiveUpCard = (): GiveUpCard => {
 /**
    factory function for StoryPointCard
  */
-export const createStoryPointCard = (storyPoint: number): StoryPointCard => {
-  if (storyPoint <= 0 || isNaN(storyPoint)) {
-    throw new Error(`Can not create story point card with ${storyPoint}`);
-  }
-
+export const createStoryPointCard = (storyPoint: StoryPoint): StoryPointCard => {
   return {
     kind: "storypoint",
     storyPoint,
