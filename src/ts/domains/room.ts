@@ -1,4 +1,5 @@
 import { createId, Id } from "./base";
+import { SelectableCards } from "./selectable-cards";
 import { User, UserId } from "./user";
 
 export type RoomId = Id<"Room">;
@@ -9,6 +10,7 @@ export interface Room {
   get id(): RoomId;
   get name(): string;
   get joinedUsers(): UserId[];
+  get selectableCards(): SelectableCards;
 
   changeName(name: string): void;
 
@@ -24,7 +26,7 @@ export interface Room {
 /**
    create room from id and name
  */
-export const createRoomByUser = (id: RoomId, name: string, user: User): Room => {
+export const createRoomByUser = (id: RoomId, name: string, selectableCards: SelectableCards, user: User): Room => {
   if (name === "") {
     throw new Error("can not create room with empty name");
   }
@@ -43,6 +45,10 @@ export const createRoomByUser = (id: RoomId, name: string, user: User): Room => 
 
     get joinedUsers() {
       return this._joinedUsers;
+    },
+
+    get selectableCards() {
+      return selectableCards;
     },
 
     changeName(name: string) {

@@ -1,15 +1,19 @@
 import { createRoomByUser, createRoomId } from "./room";
+import { createSelectableCards } from "./selectable-cards";
+import { createStoryPoint } from "./story-point";
 import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
   describe("room", () => {
+    const cards = createSelectableCards([1, 2].map(createStoryPoint));
+
     test("create room", () => {
       // Arrange
       const id = createRoomId();
       const user = createUser(createUserId(), "user");
 
       // Act
-      const room = createRoomByUser(id, "name", user);
+      const room = createRoomByUser(id, "name", cards, user);
 
       // Assert
       expect(room.id).toEqual(id);
@@ -25,14 +29,14 @@ describe("domains", () => {
       // Act
 
       // Assert
-      expect(() => createRoomByUser(id, "", user)).toThrowError();
+      expect(() => createRoomByUser(id, "", cards, user)).toThrowError();
     });
 
     test("can not accept same user that joined the room already", () => {
       // Arrange
       const id = createRoomId();
       const user = createUser(createUserId(), "user");
-      const room = createRoomByUser(id, "name", user);
+      const room = createRoomByUser(id, "name", cards, user);
 
       // Act
       const ret = room.canAcceptToBeJoinedBy(user);
@@ -46,7 +50,7 @@ describe("domains", () => {
       const id = createRoomId();
       const user = createUser(createUserId(), "user");
       const user2 = createUser(createUserId(), "user");
-      const room = createRoomByUser(id, "name", user);
+      const room = createRoomByUser(id, "name", cards, user);
 
       // Act
       const ret = room.canAcceptToBeJoinedBy(user2);
@@ -60,7 +64,7 @@ describe("domains", () => {
       const id = createRoomId();
       const user = createUser(createUserId(), "user");
       const user2 = createUser(createUserId(), "user2");
-      const room = createRoomByUser(id, "name", user);
+      const room = createRoomByUser(id, "name", cards, user);
 
       // Act
       room.acceptToBeJoinedBy(user2);
