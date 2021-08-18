@@ -1,5 +1,5 @@
 import { createId } from "./base";
-import { createUser } from "./user";
+import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
   describe("users", () => {
@@ -8,7 +8,7 @@ describe("domains", () => {
       const name = "name";
 
       // Act
-      const ret = createUser(createId<"User">(), name);
+      const ret = createUser(createUserId(), name);
 
       // Assert
       expect(ret.name).toEqual("name");
@@ -17,7 +17,7 @@ describe("domains", () => {
     test("change name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createId<"User">(), name);
+      const user = createUser(createUserId(), name);
 
       // Act
       user.changeName("changed name");
@@ -32,13 +32,13 @@ describe("domains", () => {
       // Act
 
       // Assert
-      expect(() => createUser(createId<"User">(), "")).toThrowError();
+      expect(() => createUser(createUserId(), "")).toThrowError();
     });
 
     test("throw error when change to empty name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createId<"User">(), name);
+      const user = createUser(createUserId(), name);
 
       // Act
 
@@ -49,7 +49,7 @@ describe("domains", () => {
     test("validate name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createId<"User">(), name);
+      const user = createUser(createUserId(), name);
 
       // Act
 

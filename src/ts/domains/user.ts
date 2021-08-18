@@ -1,6 +1,8 @@
-import { Id } from "./base";
+import { createId, Id } from "./base";
 
 export type UserId = Id<"User">;
+
+export const createUserId = (): UserId => createId<"User">();
 
 export interface User {
   get id(): UserId;
