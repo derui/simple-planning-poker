@@ -1,4 +1,4 @@
-import { createId, equalId } from "./base";
+import { createId } from "./base";
 
 describe("domains", () => {
   describe("base", () => {
@@ -21,8 +21,8 @@ describe("domains", () => {
         const id2 = createId<"foo">("constant2");
 
         // Assert
-        expect(equalId(id1, id2)).toBeFalsy;
-        expect(equalId(id1, createId<"foo">("constant1"))).toBeTruthy;
+        expect(id1).not.toBe(id2);
+        expect(id1).toBe(createId<"foo">("constant1"));
       });
     });
   });
