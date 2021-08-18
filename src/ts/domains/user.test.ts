@@ -1,4 +1,3 @@
-import { createId } from "./base";
 import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
