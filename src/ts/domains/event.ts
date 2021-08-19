@@ -1,5 +1,6 @@
 import { createId, Id } from "./base";
-import { RoomId } from "./room";
+import { Card } from "./card";
+import { GameId } from "./game";
 import { UserId } from "./user";
 
 export type EventId = Id<"Event">;
@@ -19,6 +20,8 @@ export const DOMAIN_EVENTS = {
   NewGameStarted: "NewGameStarted",
   UserNameChanged: "UserNameChanged",
   UserJoined: "UserJoined",
+  GameShowedDown: "GameShowedDown",
+  UserCardSelected: "UserCardSelected",
 } as const;
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
@@ -32,9 +35,19 @@ export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> 
 }
 
 export interface UserJoined extends Event<DomainEvents["UserJoined"]> {
-  roomId: RoomId;
+  gameId: GameId;
   userId: UserId;
   name: string;
+}
+
+export interface GameShowedDown extends Event<DomainEvents["GameShowedDown"]> {
+  gameId: GameId;
+}
+
+export interface UserCardSelected extends Event<DomainEvents["UserCardSelected"]> {
+  gameId: GameId;
+  userId: UserId;
+  card: Card;
 }
 
 export const EventFactory = {
@@ -54,13 +67,31 @@ export const EventFactory = {
     };
   },
 
-  userJoined(roomId: RoomId, userId: UserId, name: string): UserJoined {
+  userJoined(gameId: GameId, userId: UserId, name: string): UserJoined {
     return {
       id: createEventId(),
       kind: DOMAIN_EVENTS.UserJoined,
-      roomId,
+      gameId,
       userId,
       name,
+    };
+  },
+
+  gamdShowedDown(gameId: GameId): GameShowedDown {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.GameShowedDown,
+      gameId,
+    };
+  },
+
+  userCardSelected(gameId: GameId, userId: UserId, card: Card): UserCardSelected {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.UserCardSelected,
+      gameId,
+      userId,
+      card,
     };
   },
 };

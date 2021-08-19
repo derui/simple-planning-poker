@@ -1,22 +1,25 @@
 import { createGiveUpCard, createStoryPointCard } from "./card";
-import { createGame } from "./game";
+import { createGame, createGameId } from "./game";
+import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
-import { createUserId } from "./user";
+import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
   describe("game", () => {
+    const cards = createSelectableCards([1, 2].map(createStoryPoint));
+
     test("throw error if initial joined user is empty", () => {
       // Arrange
 
       // Act
       // Assert
-      expect(() => createGame([])).toThrowError();
+      expect(() => createGame(createGameId(), "name", [], cards)).toThrowError(/Users in game must/);
     });
 
     test("should return undefined if user did not hand yet", () => {
       // Arrange
       const userId = createUserId();
-      const game = createGame([userId]);
+      const game = createGame(createGameId(), "name", [userId], cards);
 
       // Act
       const card = game.findHandBy(userId);
@@ -29,8 +32,8 @@ describe("domains", () => {
       // Arrange
       const userId = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
-      let game = createGame([userId]);
-      game = game.acceptHandBy(userId, card);
+      const game = createGame(createGameId(), "name", [userId], cards);
+      game.acceptHandBy(userId, card);
 
       // Act
       const ret = game.findHandBy(userId);
@@ -44,9 +47,9 @@ describe("domains", () => {
       const userId = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
       const card2 = createStoryPointCard(createStoryPoint(2));
-      let game = createGame([userId]);
-      game = game.acceptHandBy(userId, card);
-      game = game.acceptHandBy(userId, card2);
+      const game = createGame(createGameId(), "name", [userId], cards);
+      game.acceptHandBy(userId, card);
+      game.acceptHandBy(userId, card2);
 
       // Act
       const ret = game.findHandBy(userId);
@@ -59,13 +62,13 @@ describe("domains", () => {
     test("should not be able to show down when all user did not hand yet", () => {
       // Arrange
       const userId = createUserId();
-      let game = createGame([userId]);
+      const game = createGame(createGameId(), "name", [userId], cards);
 
       // Act
       const ret = game.showDown();
 
       // Assert
-      expect(ret.showedDown).toBeFalsy;
+      expect(ret).toBeUndefined;
     });
 
     test("should be able to show down when least one user handed", () => {
@@ -73,21 +76,22 @@ describe("domains", () => {
       const user1 = createUserId();
       const user2 = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
-      let game = createGame([user1, user2]);
-      game = game.acceptHandBy(user1, card);
+      const game = createGame(createGameId(), "name", [user1], cards);
 
       // Act
+      game.acceptHandBy(user1, card);
       const ret = game.showDown();
 
       // Assert
-      expect(ret.userHands).toHaveLength(1);
-      expect(ret.showedDown).toBeTruthy;
+      expect(game.userHands).toHaveLength(1);
+      expect(game.showedDown).toBeTruthy;
+      expect(ret).not.toBeUndefined;
     });
 
     test("should return undefined as average when the game does not show down yet", () => {
       // Arrange
       const user1 = createUserId();
-      let game = createGame([user1]);
+      const game = createGame(createGameId(), "name", [user1], cards);
 
       // Act
       const ret = game.calculateAverage();
@@ -102,10 +106,10 @@ describe("domains", () => {
       const user2 = createUserId();
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createStoryPointCard(createStoryPoint(3));
-      let game = createGame([user1]);
-      game = game.acceptHandBy(user1, card1);
-      game = game.acceptHandBy(user2, card2);
-      game = game.showDown();
+      const game = createGame(createGameId(), "name", [user1], cards);
+      game.acceptHandBy(user1, card1);
+      game.acceptHandBy(user2, card2);
+      game.showDown();
 
       // Act
       const ret = game.calculateAverage();
@@ -120,10 +124,11 @@ describe("domains", () => {
       const user2 = createUserId();
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createGiveUpCard();
-      let game = createGame([user1]);
-      game = game.acceptHandBy(user1, card1);
-      game = game.acceptHandBy(user2, card2);
-      game = game.showDown();
+      const game = createGame(createGameId(), "name", [user1], cards);
+
+      game.acceptHandBy(user1, card1);
+      game.acceptHandBy(user2, card2);
+      game.showDown();
 
       // Act
       const ret = game.calculateAverage();
@@ -135,14 +140,31 @@ describe("domains", () => {
     test("should be able to add user while game", () => {
       // Arrange
       const user1 = createUserId();
-      const user2 = createUserId();
-      let game = createGame([user1]);
+      const user2 = createUser(createUserId(), "user2");
+      const game = createGame(createGameId(), "name", [user1], cards);
 
       // Act
-      game = game.addPartiticatedUserOnTheWay(user2);
+      const event = game.acceptToBeJoinedBy(user2);
 
       // Assert
       expect(game.joinedUsers).toHaveLength(2);
+      expect(game.joinedUsers).toEqual([user1, user2.id]);
+      expect(event?.gameId).toBe(game.id);
+      expect(event?.name).toBe("user2");
+      expect(event?.userId).toBe(user2.id);
+    });
+
+    test("should not return event if user can not accept to join", () => {
+      // Arrange
+      const user1 = createUser(createUserId(), "user");
+      const game = createGame(createGameId(), "name", [user1.id], cards);
+
+      // Act
+      const event = game.acceptToBeJoinedBy(user1);
+
+      // Assert
+      expect(game.joinedUsers).toHaveLength(1);
+      expect(event).toBeUndefined;
     });
   });
 });
