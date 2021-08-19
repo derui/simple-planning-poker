@@ -74,7 +74,6 @@ describe("domains", () => {
     test("should be able to show down when least one user handed", () => {
       // Arrange
       const user1 = createUserId();
-      const user2 = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
       const game = createGame(createGameId(), "name", [user1], cards);
 
