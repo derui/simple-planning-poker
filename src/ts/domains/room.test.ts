@@ -1,3 +1,4 @@
+import { DOMAIN_EVENTS } from "./event";
 import { createRoomByUser, createRoomId } from "./room";
 import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
@@ -71,6 +72,44 @@ describe("domains", () => {
 
       // Assert
       expect(room.joinedUsers).toContainEqual(user2.id);
+    });
+
+    test("should start a game when a room created", () => {
+      // Arrange
+      const id = createRoomId();
+      const user = createUser(createUserId(), "user");
+
+      // Act
+      const room = createRoomByUser(id, "name", cards, user);
+
+      // Assert
+      expect(room.currentGame.joinedUsers).toContain(user.id);
+    });
+
+    test("should be able to start new game", () => {
+      // Arrange
+      const id = createRoomId();
+      const user = createUser(createUserId(), "user");
+      const room = createRoomByUser(id, "name", cards, user);
+
+      // Act
+      const prevGame = room.currentGame;
+
+      // Assert
+      expect(room.currentGame === prevGame).toBeFalsy;
+    });
+
+    test("should return event to notify new game started", () => {
+      // Arrange
+      const id = createRoomId();
+      const user = createUser(createUserId(), "user");
+      const room = createRoomByUser(id, "name", cards, user);
+
+      // Act
+      const event = room.newGame();
+
+      // Assert
+      expect(event.kind).toEqual(DOMAIN_EVENTS.NewGameStarted);
     });
   });
 });

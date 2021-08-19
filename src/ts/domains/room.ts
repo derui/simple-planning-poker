@@ -1,4 +1,6 @@
 import { createId, Id } from "./base";
+import { EventFactory, NewGameStarted } from "./event";
+import { createGame, Game } from "./game";
 import { SelectableCards } from "./selectable-cards";
 import { User, UserId } from "./user";
 
@@ -11,6 +13,7 @@ export interface Room {
   get name(): string;
   get joinedUsers(): UserId[];
   get selectableCards(): SelectableCards;
+  get currentGame(): Game;
 
   changeName(name: string): void;
 
@@ -21,8 +24,12 @@ export interface Room {
 
   // return true if room can accept to join user
   canAcceptToBeJoinedBy(user: User): boolean;
+
+  // start new game
+  newGame(): NewGameStarted;
 }
 
+type InternalRoom = Room & { roomName: string; _joinedUsers: UserId[]; _game: Game };
 /**
    create room from id and name
  */
@@ -34,6 +41,7 @@ export const createRoomByUser = (id: RoomId, name: string, selectableCards: Sele
   return {
     roomName: name,
     _joinedUsers: [user.id],
+    _game: createGame([user.id]),
 
     get id() {
       return id;
@@ -49,6 +57,10 @@ export const createRoomByUser = (id: RoomId, name: string, selectableCards: Sele
 
     get selectableCards() {
       return selectableCards;
+    },
+
+    get currentGame() {
+      return this._game;
     },
 
     changeName(name: string) {
@@ -73,5 +85,11 @@ export const createRoomByUser = (id: RoomId, name: string, selectableCards: Sele
     canAcceptToBeJoinedBy(user: User): boolean {
       return !this._joinedUsers.some((v) => v === user.id);
     },
-  } as Room & { roomName: string; _joinedUsers: UserId[] };
+
+    newGame() {
+      this._game = createGame(this.joinedUsers);
+
+      return EventFactory.newGameStarted();
+    },
+  } as InternalRoom;
 };
