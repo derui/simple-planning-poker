@@ -1,3 +1,4 @@
+import { DOMAIN_EVENTS } from "./event";
 import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
@@ -55,6 +56,20 @@ describe("domains", () => {
       // Assert
       expect(user.canChangeName("")).toBeFalsy;
       expect(user.canChangeName("foo")).toBeTruthy;
+    });
+
+    test("should return event to notify user name changed", () => {
+      // Arrange
+      const name = "name";
+      const user = createUser(createUserId(), name);
+
+      // Act
+      const event = user.changeName("foobar");
+
+      // Assert
+      expect(event.kind).toEqual(DOMAIN_EVENTS.UserNameChanged);
+      expect(event.name).toEqual("foobar");
+      expect(event.userId).toBe(user.id);
     });
   });
 });

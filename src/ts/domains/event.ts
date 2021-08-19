@@ -1,4 +1,5 @@
 import { createId, Id } from "./base";
+import { UserId } from "./user";
 
 export type EventId = Id<"Event">;
 
@@ -15,6 +16,7 @@ export const createEventId = (): EventId => createId<"Event">();
 
 export const DOMAIN_EVENTS = {
   NewGameStarted: "NewGameStarted",
+  UserNameChanged: "UserNameChanged",
 } as const;
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
@@ -22,12 +24,25 @@ export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_
 // define domain events
 
 export interface NewGameStarted extends Event<DomainEvents["NewGameStarted"]> {}
+export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> {
+  userId: UserId;
+  name: string;
+}
 
 export const EventFactory = {
   newGameStarted(): NewGameStarted {
     return {
       id: createEventId(),
       kind: DOMAIN_EVENTS.NewGameStarted,
+    };
+  },
+
+  userNameChanged(userId: UserId, name: string): UserNameChanged {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.UserNameChanged,
+      userId,
+      name,
     };
   },
 };

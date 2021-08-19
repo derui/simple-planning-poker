@@ -1,4 +1,5 @@
 import { createId, Id } from "./base";
+import { EventFactory, UserNameChanged } from "./event";
 
 export type UserId = Id<"User">;
 
@@ -9,7 +10,7 @@ export interface User {
   get name(): string;
 
   // change name
-  changeName(name: string): void;
+  changeName(name: string): UserNameChanged;
 
   // can change name with given value
   canChangeName(name: string): boolean;
@@ -38,6 +39,8 @@ export const createUser = (id: UserId, name: string): User => {
         throw new Error("can not change name");
       }
       this.userName = name;
+
+      return EventFactory.userNameChanged(this.id, name);
     },
 
     canChangeName(name: string) {
