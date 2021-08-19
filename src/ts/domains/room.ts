@@ -1,5 +1,5 @@
 import { createId, Id } from "./base";
-import { EventFactory, NewGameStarted } from "./event";
+import { EventFactory, NewGameStarted, UserJoined } from "./event";
 import { createGame, Game } from "./game";
 import { SelectableCards } from "./selectable-cards";
 import { User, UserId } from "./user";
@@ -20,7 +20,7 @@ export interface Room {
   canChangeName(name: string): boolean;
 
   // join user to this room
-  acceptToBeJoinedBy(user: User): void;
+  acceptToBeJoinedBy(user: User): UserJoined;
 
   // return true if room can accept to join user
   canAcceptToBeJoinedBy(user: User): boolean;
@@ -80,6 +80,8 @@ export const createRoomByUser = (id: RoomId, name: string, selectableCards: Sele
       }
 
       this._joinedUsers.push(user.id);
+
+      return EventFactory.userJoined(this.id, user.id, user.name);
     },
 
     canAcceptToBeJoinedBy(user: User): boolean {

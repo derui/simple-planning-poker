@@ -46,6 +46,23 @@ describe("domains", () => {
       expect(ret).toBe(false);
     });
 
+    test("should return event to notify user joined", () => {
+      // Arrange
+      const id = createRoomId();
+      const user = createUser(createUserId(), "user");
+      const user2 = createUser(createUserId(), "user2");
+      const room = createRoomByUser(id, "name", cards, user);
+
+      // Act
+      const event = room.acceptToBeJoinedBy(user2);
+
+      // Assert
+      expect(event.kind).toBe(DOMAIN_EVENTS.UserJoined);
+      expect(event.name).toBe("user2");
+      expect(event.roomId).toBe(room.id);
+      expect(event.userId).toBe(user2.id);
+    });
+
     test("can accept same user that do not join the room yet", () => {
       // Arrange
       const id = createRoomId();
