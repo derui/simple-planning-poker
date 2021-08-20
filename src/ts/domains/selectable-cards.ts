@@ -10,7 +10,7 @@ export interface SelectableCards {
    create selectable cards with numbers
  */
 export const createSelectableCards = (numbers: StoryPoint[]): SelectableCards => {
-  if (numbers.length <= 0) {
+  if (!isValidStoryPoints(numbers)) {
     throw new Error("Length must be greater than 0");
   }
 
@@ -20,4 +20,9 @@ export const createSelectableCards = (numbers: StoryPoint[]): SelectableCards =>
   return {
     cards,
   };
+};
+
+export const isValidStoryPoints = (numbers: StoryPoint[]): boolean => {
+  const uniqued = unique(numbers, equalStoryPoint);
+  return uniqued.length > 0;
 };

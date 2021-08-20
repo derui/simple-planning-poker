@@ -1,6 +1,7 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
 import { GameId } from "./game";
+import { SelectableCards } from "./selectable-cards";
 import { UserId } from "./user";
 
 export type EventId = Id<"Event">;
@@ -17,6 +18,7 @@ export const createEventId = (): EventId => createId<"Event">();
 // define event kinds
 
 export const DOMAIN_EVENTS = {
+  GameCreated: "GameCreated",
   NewGameStarted: "NewGameStarted",
   UserNameChanged: "UserNameChanged",
   UserJoined: "UserJoined",
@@ -26,7 +28,16 @@ export const DOMAIN_EVENTS = {
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
 
+export type DefinedDomainEvents = GameCreated | NewGameStarted | UserNameChanged | GameShowedDown | UserCardSelected;
+
 // define domain events
+
+export interface GameCreated extends Event<DomainEvents["GameCreated"]> {
+  gameId: GameId;
+  name: string;
+  createdBy: UserId;
+  selectableCards: SelectableCards;
+}
 
 export interface NewGameStarted extends Event<DomainEvents["NewGameStarted"]> {}
 export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> {
@@ -92,6 +103,17 @@ export const EventFactory = {
       gameId,
       userId,
       card,
+    };
+  },
+
+  gameCreated(gameId: GameId, name: string, userId: UserId, selectableCards: SelectableCards): GameCreated {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.GameCreated,
+      gameId,
+      createdBy: userId,
+      name,
+      selectableCards,
     };
   },
 };

@@ -3,7 +3,7 @@ export type StoryPoint = {
 };
 
 export const createStoryPoint = (v: number): StoryPoint => {
-  if (v <= 0 || isNaN(v)) {
+  if (!isValidStoryPoint(v)) {
     throw new Error("Can not create story point");
   }
 
@@ -12,6 +12,10 @@ export const createStoryPoint = (v: number): StoryPoint => {
       return v;
     },
   };
+};
+
+export const isValidStoryPoint = (v: number): boolean => {
+  return v > 0 && !isNaN(v);
 };
 
 export const equalStoryPoint = (v1: StoryPoint, v2: StoryPoint): boolean => v1.value === v2.value;
