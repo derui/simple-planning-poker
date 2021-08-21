@@ -2,3 +2,6 @@ node_modules
 build/
 yarn-error.log
 .log/
+
+database-debug.log
+ui-debug.log
