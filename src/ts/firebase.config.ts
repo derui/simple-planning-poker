@@ -1,1 +1,1 @@
-export const firebaseConfig = { projectId: "local" };
+export const firebaseConfig = { projectId: "local", apiKey: "api" };
