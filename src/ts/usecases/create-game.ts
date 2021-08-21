@@ -9,7 +9,10 @@ import { EventDispatcher, UseCase } from "./base";
 export interface CreateGameUseCaseInput {
   name: string;
   points: number[];
-  createdBy: UserId;
+  createdBy: {
+    userId: UserId;
+    name: string;
+  };
 }
 
 export type CreateGameUseCaseOutput =
@@ -34,10 +37,12 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Create
     const selectableCards = createSelectableCards(storyPoints);
 
     const gameId = createGameId();
-    const game = createGame(gameId, input.name, [input.createdBy], selectableCards);
+    const game = createGame(gameId, input.name, [input.createdBy.userId], selectableCards);
 
     this.gameRepository.save(game);
-    this.dispatcher.dispatch(EventFactory.gameCreated(gameId, input.name, input.createdBy, selectableCards));
+    this.dispatcher.dispatch(
+      EventFactory.gameCreated(gameId, input.name, input.createdBy.userId, input.createdBy.name, selectableCards)
+    );
 
     return { kind: "success" };
   }

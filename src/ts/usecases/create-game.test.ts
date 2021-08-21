@@ -13,7 +13,10 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [],
-        createdBy: createUserId(),
+        createdBy: {
+          userId: createUserId(),
+          name: "user",
+        },
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -31,7 +34,10 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [-1],
-        createdBy: createUserId(),
+        createdBy: {
+          userId: createUserId(),
+          name: "user",
+        },
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -49,7 +55,10 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [1],
-        createdBy: createUserId(),
+        createdBy: {
+          userId: createUserId(),
+          name: "user",
+        },
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -64,7 +73,7 @@ describe("use case", () => {
 
       const called = repository.save.mock.calls[0][0] as Game;
       expect(called.name).toBe("foo");
-      expect(called.joinedUsers).toContain(input.createdBy);
+      expect(called.joinedUsers).toContain(input.createdBy.userId);
     });
 
     test("should dispatch game created event", () => {
@@ -72,7 +81,10 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [1],
-        createdBy: createUserId(),
+        createdBy: {
+          userId: createUserId(),
+          name: "user",
+        },
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -87,7 +99,7 @@ describe("use case", () => {
 
       const called = dispatcher.dispatch.mock.calls[0][0] as GameCreated;
       expect(called.name).toBe("foo");
-      expect(called.createdBy).toBe(input.createdBy);
+      expect(called.createdBy).toEqual(input.createdBy);
       expect(called.selectableCards).toEqual(createSelectableCards([createStoryPoint(1)]));
     });
   });

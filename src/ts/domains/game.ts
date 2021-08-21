@@ -174,7 +174,7 @@ export const createGame = (
       this._userHands = [];
       this._showedDown = false;
 
-      return EventFactory.newGameStarted();
+      return EventFactory.newGameStarted(this.id);
     },
   } as InternalGame;
 };
