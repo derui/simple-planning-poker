@@ -28,7 +28,13 @@ export const DOMAIN_EVENTS = {
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
 
-export type DefinedDomainEvents = GameCreated | NewGameStarted | UserNameChanged | GameShowedDown | UserCardSelected;
+export type DefinedDomainEvents =
+  | GameCreated
+  | NewGameStarted
+  | UserNameChanged
+  | GameShowedDown
+  | UserCardSelected
+  | UserJoined;
 
 // define domain events
 
