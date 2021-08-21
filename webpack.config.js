@@ -11,6 +11,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json', '.wasm'],
     modules: [path.join(__dirname, 'src', 'ts'), 'node_modules'],
     alias: {
       react: path.join(__dirname, 'node_modules', 'react'),
