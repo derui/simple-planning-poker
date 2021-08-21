@@ -5,7 +5,8 @@ interface Props extends RouteComponentProps {}
 
 export const SigninContainer: React.FunctionComponent<Props> = () => {
   return (
-    <div className="app__signin-overlay">
+    <React.Fragment>
+      <div className="app__signin-overlay"></div>
       <div className="app__signin-root">
         <header className="app__signin-header">Sign in</header>
         <main className="app__signin-main">
@@ -18,6 +19,6 @@ export const SigninContainer: React.FunctionComponent<Props> = () => {
           <button className="app__signin-submit">Submit</button>
         </footer>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
