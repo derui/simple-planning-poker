@@ -9,19 +9,19 @@
   --space-small: 4px;
   --space-nano: 2px;
   /* colors */
-  --primary-0: rgba(38, 96, 107, 1); /* Main Primary color */
-  --primary-1: rgba(109, 153, 161, 1);
-  --primary-2: rgba(69, 123, 133, 1);
-  --primary-3: rgba(16, 72, 82, 1);
-  --primary-4: rgba(2, 47, 55, 1);
-  --secondary-1-0: rgba(174, 140, 59, 1); /* Main Secondary color (1) */
-  --secondary-1-1: rgba(255, 230, 171, 1);
-  --secondary-1-2: rgba(216, 185, 109, 1);
-  --secondary-1-3: rgba(133, 101, 24, 1);
-  --secondary-1-4: rgba(90, 64, 1, 1);
-  --secondary-2-0: rgba(174, 65, 59, 1); /* Main Secondary color (2) */
-  --secondary-2-1: rgba(255, 176, 171, 1);
-  --secondary-2-2: rgba(216, 114, 109, 1);
-  --secondary-2-3: rgba(133, 29, 24, 1);
-  --secondary-2-4: rgba(90, 6, 1, 1);
+  --primary-0: rgba(109, 142, 148, 1);
+  --primary-1: rgba(208, 219, 221, 1);
+  --primary-2: rgba(155, 178, 183, 1);
+  --primary-3: rgba(74, 117, 125, 1);
+  --primary-4: rgba(46, 95, 104, 1);
+  --secondary-1-0: rgba(241, 221, 175, 1);
+  --secondary-1-1: rgba(255, 251, 240, 1);
+  --secondary-1-2: rgba(255, 243, 216, 1);
+  --secondary-1-3: rgba(204, 179, 119, 1);
+  --secondary-1-4: rgba(169, 140, 72, 1);
+  --secondary-2-0: rgba(241, 178, 175, 1);
+  --secondary-2-1: rgba(255, 241, 240, 1);
+  --secondary-2-2: rgba(255, 218, 216, 1);
+  --secondary-2-3: rgba(204, 123, 119, 1);
+  --secondary-2-4: rgba(169, 77, 72, 1);
 }
