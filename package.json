@@ -11,7 +11,7 @@
     "build:css": "postcss -o build/static/css/app.css src/css/root.css",
     "build": "npm-run-all build:bundle build:css",
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
-    "lint:ts": "eslint --fix 'src/ts/**/*.ts' 'src/ts/**/*.tsx'",
+    "lint:ts": "eslint --fix --ext .ts,.tsx src/ts/",
     "test": "jest",
     "test:watch": "jest --watch"
   },
