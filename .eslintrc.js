@@ -36,13 +36,9 @@ module.exports = {
       "pragmaFrag": "Fragment"
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [".ts", ".tsx", ".js"]
     },
-    "import/resolver": {
-      node: {
-        extensions:  [".ts", ".tsx"]
-      }
-    },
+    "import/resolver": {},
     react:  {
       version:  'detect',  // Tells eslint-plugin-react to automatically detect the version of React to use
     },
