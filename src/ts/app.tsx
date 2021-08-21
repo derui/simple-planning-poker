@@ -5,7 +5,7 @@ import { SigninContainer } from "./components/containers/signin-container";
 export const App: React.FunctionComponent<{}> = () => {
   return (
     <BrowserRouter>
-      <div className="root">
+      <div className="app__root">
         <Route exact path="/" component={SigninContainer}></Route>
       </div>
     </BrowserRouter>

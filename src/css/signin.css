@@ -1,0 +1,63 @@
+.app__signin-overlay {
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.app__signin-root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: calc(50% - 125px);
+  min-width: 250px;
+  max-width: 50%;
+  height: 250px;
+  margin: auto;
+  /* border */
+  border: 1px solid var(--secondary-1-3);
+  border-radius: var(--base-border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.app__signin-header {
+  flex: 0 1 auto;
+  padding: var(--space-base);
+  font-size: var(--large-font-size);
+  font-weight: bold;
+  border-radius: var(--base-border-radius) var(--base-border-radius) 0 0;
+
+  background-color: var(--secondary-1-3);
+  color: var(--secondary-1-1);
+}
+
+.app__signin-main {
+  flex: 1 1 auto;
+  background-color: white;
+  padding: var(--space-large);
+}
+
+.app__signin-main__description {
+  text-align: center;
+  color: var(--primary-3);
+}
+
+.app__signin-main__input-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.app__signin-main__input {
+  width: 100%;
+  height: calc(var(--large-font-size) * 2);
+}
+
+.app__signin-footer {
+  flex: 0 1 auto;
+  padding: var(--space-base);
+  font-size: var(--large-font-size);
+  font-weight: bold;
+  border-radius: 0 0 var(--base-border-radius) var(--base-border-radius);
+
+  background-color: var(--secondary-1-3);
+  color: var(--secondary-1-1);
+  text-align: right;
+}
