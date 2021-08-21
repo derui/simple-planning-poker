@@ -54,6 +54,8 @@
     "@types/jest": "^27.0.1",
     "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",
+    "@types/react-router": "^5.1.16",
+    "@types/react-router-dom": "^5.1.8",
     "@types/recoil": "^0.0.9",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
@@ -90,6 +92,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "recoil": "^0.4.0",
     "uuid": "^8.3.2"
   }
