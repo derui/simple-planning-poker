@@ -7,15 +7,10 @@ export class FirebaseAuthenticator implements Authenticator {
 
   async authenticate(email: string): Promise<UserId> {
     const ref = await this.database.ref("defined-users").get();
-    let existsMail = false;
-    ref.forEach((snapshot) => {
-      if (existsMail) {
-        return;
-      }
-      existsMail = snapshot.key === email;
-    });
+    const mails = (ref.val() as string[] | null) || [];
+    let existsMail = mails.some((v) => v === email);
 
-    if (existsMail) {
+    if (!existsMail) {
       throw new Error("Do not allow login the email");
     }
 

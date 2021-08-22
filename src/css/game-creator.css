@@ -1,4 +1,4 @@
-.app__signin-overlay {
+.app__game-creator-overlay {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -9,11 +9,11 @@
   visibility: hidden;
 }
 
-.app__signin-overlay--show {
+.app__game-creator-overlay--show {
   visibility: visible;
 }
 
-.app__signin-root {
+.app__game-creator {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -30,7 +30,7 @@
   z-index: 0;
 }
 
-.app__signin-header {
+.app__game-creator__header {
   flex: 0 1 auto;
   padding: var(--space-base);
   font-size: var(--large-font-size);
@@ -41,28 +41,43 @@
   color: var(--secondary-1-1);
 }
 
-.app__signin-main {
+.app__game-creator__main {
   flex: 1 1 auto;
   background-color: white;
   padding: var(--space-large);
 }
 
-.app__signin-main__description {
+.app__game-creator__main__description {
   text-align: center;
   color: var(--primary-3);
 }
 
-.app__signin-main__input-container {
+.app__game-creator__main__input-container {
   width: 90%;
   margin: 0 auto;
 }
 
-.app__signin-main__input {
+.app__game-creator__main__input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-base);
+}
+
+.app__game-creator__main__input-label {
+  margin-right: var(--space-large);
+}
+
+.app__game-creator__main__name {
   width: 100%;
   height: calc(var(--large-font-size) * 2);
 }
 
-.app__signin-footer {
+.app__game-creator__main__card {
+  width: 100%;
+  height: calc(var(--large-font-size) * 2);
+}
+
+.app__game-creator__footer {
   flex: 0 1 auto;
   padding: var(--space-base);
   font-size: var(--large-font-size);

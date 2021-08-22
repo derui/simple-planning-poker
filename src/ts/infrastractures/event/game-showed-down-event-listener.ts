@@ -2,7 +2,7 @@ import firebase from "firebase";
 import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
 import { DomainEventListener } from "./domain-event-listener";
 
-export class GaemShowedDownEventListener implements DomainEventListener {
+export class GameShowedDownEventListener implements DomainEventListener {
   constructor(private database: firebase.database.Database) {}
 
   handle(event: DefinedDomainEvents): void {
