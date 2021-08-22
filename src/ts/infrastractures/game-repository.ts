@@ -3,7 +3,7 @@ import { createGame, Game, GameId } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { createStoryPoint } from "@/domains/story-point";
 import { UserId } from "@/domains/user";
-import { deserializeCard, serializeCard, SerializedCard } from "./card-serializer";
+import { deserializeCard, serializeCard, SerializedCard } from "./card-converter";
 import { createSelectableCards } from "@/domains/selectable-cards";
 
 export class GameRepositoryImpl implements GameRepository {

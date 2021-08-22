@@ -1,5 +1,5 @@
 import { EventFactory } from "@/domains/event";
-import { createGame, createGameId } from "@/domains/game";
+import { createGame, createGameId, GameId } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { createSelectableCards, isValidStoryPoints } from "@/domains/selectable-cards";
 import { createStoryPoint, isValidStoryPoint } from "@/domains/story-point";
@@ -16,7 +16,7 @@ export interface CreateGameUseCaseInput {
 }
 
 export type CreateGameUseCaseOutput =
-  | { kind: "success" }
+  | { kind: "success"; gameId: GameId }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" };
 
@@ -44,6 +44,6 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Create
       EventFactory.gameCreated(gameId, input.name, input.createdBy.userId, input.createdBy.name, selectableCards)
     );
 
-    return { kind: "success" };
+    return { kind: "success", gameId };
   }
 }

@@ -3,6 +3,7 @@ export const AtomKeys = {
   currentUserId: "currentUserId",
   signInState: "signInState",
   gameCreationState: "gameCreationState",
+  currentGameState: "currentGameState",
 } as const;
 
 // key definitions for selector

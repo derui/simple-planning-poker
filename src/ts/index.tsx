@@ -4,7 +4,7 @@ import "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import { gameCreationActionContext, signInActionContext } from "./contexts/actions";
+import { gameCreationActionContext, inGameACtionContext, signInActionContext } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createSigninActions } from "./status/signin";
@@ -16,6 +16,10 @@ import { GameRepositoryImpl } from "./infrastractures/game-repository";
 import { UserCardSelectedEventListener } from "./infrastractures/event/user-card-selected-event-listener";
 import { UserJoinedEventListener } from "./infrastractures/event/user-joined-event-listener";
 import { GameShowedDownEventListener } from "./infrastractures/event/game-showed-down-event-listener";
+import { createInGameAction } from "./status/in-game";
+import { HandCardUseCase } from "./usecases/hand-card";
+import { ShowDownUseCase } from "./usecases/show-down";
+import { NewGameUseCase } from "./usecases/new-game";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -33,14 +37,22 @@ const dispatcher = new EventDispatcherImpl([
   new UserJoinedEventListener(database),
 ]);
 
-const gameRepository = new GameRepositoryImpl();
+const gameRepository = new GameRepositoryImpl(database);
+const inGameAction = createInGameAction(
+  gameRepository,
+  new HandCardUseCase(dispatcher, gameRepository),
+  new ShowDownUseCase(dispatcher, gameRepository),
+  new NewGameUseCase(dispatcher, gameRepository)
+);
 
 ReactDOM.render(
   <signInActionContext.Provider value={createSigninActions(new FirebaseAuthenticator(auth, database))}>
     <gameCreationActionContext.Provider
       value={createGameCreationAction(new CreateGameUseCase(dispatcher, gameRepository))}
     >
-      <App />
+      <inGameACtionContext.Provider value={inGameAction}>
+        <App />
+      </inGameACtionContext.Provider>
     </gameCreationActionContext.Provider>
   </signInActionContext.Provider>,
 

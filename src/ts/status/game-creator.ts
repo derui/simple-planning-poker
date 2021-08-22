@@ -3,9 +3,10 @@ import { atom, useRecoilCallback, useRecoilValue } from "recoil";
 import { useCallback } from "react";
 import { CreateGameUseCase } from "@/usecases/create-game";
 import { signInSelectors } from "./signin";
+import { GameId } from "@/domains/game";
 
 export interface GameCreationAction {
-  useCreateGame: () => (callback: () => void) => void;
+  useCreateGame: () => (callback: (gameId: GameId) => void) => void;
   useSetName: () => (name: string) => void;
   useSetCards: () => (cards: string) => void;
 }
@@ -33,7 +34,7 @@ export const createGameCreationAction = (useCase: CreateGameUseCase): GameCreati
       const state = useRecoilValue(gameCreationState);
       const currentUser = signInSelectors.useCurrentUser();
 
-      return useCallback((callback: () => void) => {
+      return useCallback((callback: (gameId: GameId) => void) => {
         const currentUserId = currentUser.id;
         if (state.name === "" || state.cards.length === 0 || !currentUserId) {
           return;
@@ -45,8 +46,10 @@ export const createGameCreationAction = (useCase: CreateGameUseCase): GameCreati
           createdBy: { userId: currentUserId, name: currentUser.name },
         };
 
-        useCase.execute(input);
-        callback();
+        const ret = useCase.execute(input);
+        if (ret.kind === "success") {
+          callback(ret.gameId);
+        }
       }, []);
     },
 
