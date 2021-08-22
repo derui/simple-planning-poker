@@ -6,7 +6,8 @@
   "scripts": {
     "start:webpack": "webpack serve --config webpack.config.js --port 5000 --content-base public",
     "start:css": "postcss --watch -o public/static/css/app.css src/css/root.css",
-    "start": "npm-run-all -p start:webpack start:css",
+    "start": "npm-run-all -p start:webpack start:css emulators",
+    "emulators": "firebase emulators:start",
     "build:bundle": "NODE_ENV=production webpack --config webpack.config.js",
     "build:css": "postcss -o public/static/css/app.css src/css/root.css",
     "build": "npm-run-all build:bundle build:css",
@@ -51,6 +52,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/classnames": "^2.3.1",
     "@types/firebase": "^3.2.1",
     "@types/jest": "^27.0.1",
     "@types/react": "^17.0.18",
@@ -89,6 +91,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "firebase": "^8.10.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
