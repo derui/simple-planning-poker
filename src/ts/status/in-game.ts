@@ -1,8 +1,8 @@
-import { AtomKeys } from "./key";
-import { atom, useRecoilCallback, useRecoilValue } from "recoil";
+import { AtomKeys, SelectorKeys } from "./key";
+import { atom, selector, useRecoilCallback, useRecoilValue } from "recoil";
 import { signInSelectors } from "./signin";
 import { Game, GameId } from "@/domains/game";
-import { Card } from "@/domains/card";
+import { Card, equalCard } from "@/domains/card";
 import { GameRepository } from "@/domains/game-repository";
 import { HandCardUseCase } from "@/usecases/hand-card";
 import { ShowDownUseCase } from "@/usecases/show-down";
@@ -18,6 +18,37 @@ export interface InGameAction {
 const currentGameState = atom<Game | null>({
   key: AtomKeys.currentGameState,
   default: null,
+});
+
+const currentSelectableCards = selector({
+  key: SelectorKeys.inGameCurrentSelectableCards,
+  get: ({ get }) => {
+    const game = get(currentGameState);
+    if (!game) {
+      return [];
+    }
+
+    return game.selectableCards.cards;
+  },
+});
+
+const currentUserSelectableCard = selector({
+  key: SelectorKeys.inGameCurrentUserSelectedCard,
+  get: ({ get }) => {
+    const game = get(currentGameState);
+    const currentUser = signInSelectors.useCurrentUser();
+    const userId = currentUser.id;
+    if (!game || userId) {
+      return;
+    }
+
+    const userHand = game.userHands.find((v) => v.userId === userId);
+    if (!userHand) {
+      return;
+    }
+
+    return game.selectableCards.cards.findIndex((v) => equalCard(v, userHand.card));
+  },
 });
 
 export const createInGameAction = (
@@ -88,4 +119,9 @@ export const createInGameAction = (
         });
       }),
   };
+};
+
+export const inGameSelectors = {
+  currentSelectableCards: () => useRecoilValue(currentSelectableCards),
+  currentUserSelectedCard: () => useRecoilValue(currentUserSelectableCard),
 };

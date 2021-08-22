@@ -1,4 +1,4 @@
-import { StoryPoint } from "./story-point";
+import { equalStoryPoint, StoryPoint } from "./story-point";
 
 type GiveUpCard = {
   kind: "giveup";
@@ -28,4 +28,18 @@ export const createStoryPointCard = (storyPoint: StoryPoint): StoryPointCard => 
     kind: "storypoint",
     storyPoint,
   };
+};
+
+export const equalCard = (v1: Card, v2: Card) => {
+  if (v1.kind !== v2.kind) {
+    return false;
+  }
+
+  if (v1.kind === "giveup" && v2.kind === "giveup") {
+    return true;
+  } else if (v1.kind === "storypoint" && v2.kind === "storypoint") {
+    return equalStoryPoint(v1.storyPoint, v2.storyPoint);
+  }
+
+  return false;
 };
