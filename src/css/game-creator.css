@@ -64,15 +64,18 @@
 }
 
 .app__game-creator__main__input-label {
+  flex: 0 1 100px;
   margin-right: var(--space-large);
 }
 
 .app__game-creator__main__name {
+  flex: 1 1 auto;
   width: 100%;
   height: calc(var(--large-font-size) * 2);
 }
 
 .app__game-creator__main__card {
+  flex: 1 1 auto;
   width: 100%;
   height: calc(var(--large-font-size) * 2);
 }

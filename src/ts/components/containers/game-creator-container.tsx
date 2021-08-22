@@ -1,4 +1,5 @@
 import { gameCreationActionContext } from "@/contexts/actions";
+import { GameCreatorSelector } from "@/status/game-creator";
 import * as React from "react";
 import { useHistory } from "react-router";
 
@@ -10,6 +11,7 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
   const setCards = context.useSetCards();
   const createGame = context.useCreateGame();
   const history = useHistory();
+  const defaultCards = GameCreatorSelector.defaultCards();
 
   return (
     <div className="app__game-creator">
@@ -22,7 +24,12 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
           </span>
           <span className="app__game-creator__main__input-row">
             <label className="app__game-creator__main__input-label">Cards</label>
-            <input type="text" className="app__game-creator__main__card" onChange={(e) => setCards(e.target.value)} />
+            <input
+              type="text"
+              className="app__game-creator__main__card"
+              defaultValue={defaultCards}
+              onChange={(e) => setCards(e.target.value)}
+            />
           </span>
         </div>
       </main>

@@ -1,5 +1,5 @@
 import { AtomKeys } from "./key";
-import { atom, useRecoilCallback, useRecoilValue } from "recoil";
+import { atom, constSelector, useRecoilCallback, useRecoilValue } from "recoil";
 import { useCallback } from "react";
 import { CreateGameUseCase } from "@/usecases/create-game";
 import { signInSelectors } from "./signin";
@@ -31,26 +31,29 @@ const gameCreationState = atom<GameCreationState>({
 export const createGameCreationAction = (useCase: CreateGameUseCase): GameCreationAction => {
   return {
     useCreateGame: () => {
-      const state = useRecoilValue(gameCreationState);
       const currentUser = signInSelectors.useCurrentUser();
+      return useRecoilCallback(
+        ({ snapshot }) =>
+          (callback: (gameId: GameId) => void) => {
+            const state = snapshot.getLoadable(gameCreationState).valueOrThrow();
+            const currentUserId = currentUser.id;
+            if (state.name === "" || state.cards.length === 0 || !currentUserId) {
+              return;
+            }
 
-      return useCallback((callback: (gameId: GameId) => void) => {
-        const currentUserId = currentUser.id;
-        if (state.name === "" || state.cards.length === 0 || !currentUserId) {
-          return;
-        }
+            const input = {
+              name: state.name,
+              points: state.cards,
+              createdBy: { userId: currentUserId, name: currentUser.name },
+            };
 
-        const input = {
-          name: state.name,
-          points: state.cards,
-          createdBy: { userId: currentUserId, name: currentUser.name },
-        };
-
-        const ret = useCase.execute(input);
-        if (ret.kind === "success") {
-          callback(ret.gameId);
-        }
-      }, []);
+            const ret = useCase.execute(input);
+            if (ret.kind === "success") {
+              callback(ret.gameId);
+            }
+          },
+        [currentUser]
+      );
     },
 
     useSetName: () =>
@@ -76,4 +79,8 @@ export const createGameCreationAction = (useCase: CreateGameUseCase): GameCreati
         });
       }),
   };
+};
+
+export const GameCreatorSelector = {
+  defaultCards: () => useRecoilValue(constSelector(DEFAULT_CARDS.join(","))),
 };

@@ -11,4 +11,5 @@ export const SelectorKeys = {
   authenticated: "authenticated",
   authenticating: "authenticating",
   emailToSignIn: "emailToSignIn",
+  defaultCards: "defaultCards",
 } as const;
