@@ -8,11 +8,11 @@ export interface NewGameUseCaseInput {
 
 export type NewGameUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
 
-export class NewGameUseCase implements UseCase<NewGameUseCaseInput, NewGameUseCaseOutput> {
+export class NewGameUseCase implements UseCase<NewGameUseCaseInput, Promise<NewGameUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
-  execute(input: NewGameUseCaseInput): NewGameUseCaseOutput {
-    const game = this.gameRepository.findBy(input.gameId);
+  async execute(input: NewGameUseCaseInput): Promise<NewGameUseCaseOutput> {
+    const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
       return { kind: "notFoundGame" };
     }

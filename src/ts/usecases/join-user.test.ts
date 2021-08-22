@@ -8,7 +8,7 @@ import { JoinUserUseCase } from "./join-user";
 
 describe("use case", () => {
   describe("join user", () => {
-    test("should return error if game not found", () => {
+    test("should return error if game not found", async () => {
       // Arrange
       const input = {
         gameId: createGameId(),
@@ -20,13 +20,13 @@ describe("use case", () => {
       const useCase = new JoinUserUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toBe("notFoundGame");
     });
 
-    test("should save game that user joined in", () => {
+    test("should save game that user joined in", async () => {
       // Arrange
       const gameId = createGameId();
       const userId = createUserId();
@@ -45,14 +45,14 @@ describe("use case", () => {
       const useCase = new JoinUserUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toBe("success");
       expect(game.joinedUsers).toContain(userId2);
     });
 
-    test("should dispatch event to be joined by user", () => {
+    test("should dispatch event to be joined by user", async () => {
       // Arrange
       const gameId = createGameId();
       const userId = createUserId();
@@ -71,7 +71,7 @@ describe("use case", () => {
       const useCase = new JoinUserUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toBe("success");

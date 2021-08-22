@@ -1,5 +1,5 @@
 import { GameShowedDown } from "@/domains/event";
-import { createGame, createGameId, Game } from "@/domains/game";
+import { createGame, createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUserId } from "@/domains/user";
@@ -9,7 +9,7 @@ import { ShowDownUseCase } from "./show-down";
 
 describe("use case", () => {
   describe("show down", () => {
-    test("should return error if game is not found", () => {
+    test("should return error if game is not found", async () => {
       // Arrange
       const input = {
         gameId: createGameId(),
@@ -20,13 +20,13 @@ describe("use case", () => {
       const useCase = new ShowDownUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("notFoundGame");
     });
 
-    test("should save game showed down", () => {
+    test("should save game showed down", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
       game.acceptHandBy(game.joinedUsers[0], createGiveUpCard());
@@ -41,14 +41,14 @@ describe("use case", () => {
       const useCase = new ShowDownUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");
       expect(game.showedDown).toBeTruthy;
     });
 
-    test("should dispatch ShowedDown event", () => {
+    test("should dispatch ShowedDown event", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
       game.acceptHandBy(game.joinedUsers[0], createGiveUpCard());
@@ -63,7 +63,7 @@ describe("use case", () => {
       const useCase = new ShowDownUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");

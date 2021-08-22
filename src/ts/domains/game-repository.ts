@@ -5,5 +5,5 @@ export interface GameRepository {
   save(game: Game): void;
 
   // find game by id
-  findBy(id: GameId): Game | undefined;
+  findBy(id: GameId): Promise<Game | undefined>;
 }

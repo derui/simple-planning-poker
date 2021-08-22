@@ -11,12 +11,12 @@ export interface JoinUserUseCaseInput {
 
 export type JoinUserUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
 
-export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, JoinUserUseCaseOutput> {
+export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<JoinUserUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
-  execute(input: JoinUserUseCaseInput): JoinUserUseCaseOutput {
+  async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {
     const user = createUser(input.userId, input.name);
-    const game = this.gameRepository.findBy(input.gameId);
+    const game = await this.gameRepository.findBy(input.gameId);
 
     if (!game) {
       return { kind: "notFoundGame" };

@@ -9,7 +9,7 @@ import { HandCardUseCase } from "./hand-card";
 
 describe("use case", () => {
   describe("hand card", () => {
-    test("should return error if game is not found", () => {
+    test("should return error if game is not found", async () => {
       // Arrange
       const input = {
         userId: createUserId(),
@@ -22,13 +22,13 @@ describe("use case", () => {
       const useCase = new HandCardUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("notFoundGame");
     });
 
-    test("should save game handed card by user", () => {
+    test("should save game handed card by user", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
       const input = {
@@ -43,7 +43,7 @@ describe("use case", () => {
       const useCase = new HandCardUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");
@@ -53,7 +53,7 @@ describe("use case", () => {
       });
     });
 
-    test("should dispatch UserHanded event", () => {
+    test("should dispatch UserHanded event", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
       const input = {
@@ -68,7 +68,7 @@ describe("use case", () => {
       const useCase = new HandCardUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");

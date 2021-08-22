@@ -12,11 +12,11 @@ export interface HandCardUseCaseInput {
 
 export type HandCardUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
 
-export class HandCardUseCase implements UseCase<HandCardUseCaseInput, HandCardUseCaseOutput> {
+export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<HandCardUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
-  execute(input: HandCardUseCaseInput): HandCardUseCaseOutput {
-    const game = this.gameRepository.findBy(input.gameId);
+  async execute(input: HandCardUseCaseInput): Promise<HandCardUseCaseOutput> {
+    const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
       return { kind: "notFoundGame" };
     }

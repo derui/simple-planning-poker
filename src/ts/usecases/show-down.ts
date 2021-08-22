@@ -8,11 +8,11 @@ export interface ShowDownUseCaseInput {
 
 export type ShowDownUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
 
-export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, ShowDownUseCaseOutput> {
+export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<ShowDownUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
-  execute(input: ShowDownUseCaseInput): ShowDownUseCaseOutput {
-    const game = this.gameRepository.findBy(input.gameId);
+  async execute(input: ShowDownUseCaseInput): Promise<ShowDownUseCaseOutput> {
+    const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
       return { kind: "notFoundGame" };
     }

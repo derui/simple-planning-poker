@@ -9,7 +9,7 @@ import { NewGameUseCase } from "./new-game";
 
 describe("use case", () => {
   describe("new game", () => {
-    test("should return error if game is not found", () => {
+    test("should return error if game is not found", async () => {
       // Arrange
       const input = {
         gameId: createGameId(),
@@ -20,13 +20,13 @@ describe("use case", () => {
       const useCase = new NewGameUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("notFoundGame");
     });
 
-    test("should save game showed down", () => {
+    test("should save game showed down", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
       game.acceptHandBy(game.joinedUsers[0], createGiveUpCard());
@@ -41,14 +41,14 @@ describe("use case", () => {
       const useCase = new NewGameUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");
       expect(game.userHands).toHaveLength(0);
     });
 
-    test("should dispatch NewGame event", () => {
+    test("should dispatch NewGame event", async () => {
       // Arrange
       const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
 
@@ -62,7 +62,7 @@ describe("use case", () => {
       const useCase = new NewGameUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      const ret = await useCase.execute(input);
 
       // Assert
       expect(ret.kind).toEqual("success");
