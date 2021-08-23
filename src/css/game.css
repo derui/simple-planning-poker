@@ -1,7 +1,23 @@
+.app__game {
+  display: flex;
+  height: 100%;
+}
+
+.app__game__header {
+  flex: 0 1 24px;
+  padding: var(--space-base);
+}
+
+.app__game__main {
+  flex: 1 1 auth;
+  padding: var(--space-base);
+}
+
 .app__game__card-holder {
+  flex: 0 1 auto;
   display: flex;
   justify-content: center;
-  padding: 0 var(--space-large);
+  padding: var(--space-base) var(--space-large);
 }
 
 .app__game__selectable-card {
@@ -10,7 +26,7 @@
   height: var(--card-height);
   width: var(--card-width);
   border-radius: var(--base-border-radius);
-  border: 1px solid var(--secondary-1-3);
+  border: 1px solid var(--primary-3);
   background-color: white;
   color: var(--primary-4);
   text-align: center;
@@ -27,8 +43,8 @@
   margin: var(--space-base);
 
   &.app__game__selectable-card--selected {
-    background-color: var(--secondary-1-3);
-    color: white;
+    background-color: var(--primary-3);
+    color: var(--secondary-1-1);
   }
 }
 

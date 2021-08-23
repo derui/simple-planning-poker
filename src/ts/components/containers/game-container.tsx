@@ -33,7 +33,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
     <div className="app__game">
       <GameHeaderComponent />
       <main className="app__game__main"></main>
-      <footer className="app__game__footer">{component}</footer>
+      {component}
     </div>
   );
 };
