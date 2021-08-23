@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import { GameContainer } from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
 import { SigninContainer } from "./components/containers/signin-container";
 import { signInSelectors } from "./status/signin";
@@ -35,6 +36,9 @@ export const App: React.FunctionComponent<{}> = () => {
           <Switch>
             <PrivateRoute exact path="/">
               <GameCreatorContainer />
+            </PrivateRoute>
+            <PrivateRoute path="/game/:gameId">
+              <GameContainer />
             </PrivateRoute>
             <Route exact path="/signin" component={SigninContainer}></Route>
           </Switch>
