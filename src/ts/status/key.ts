@@ -4,6 +4,8 @@ export const AtomKeys = {
   signInState: "signInState",
   gameCreationState: "gameCreationState",
   currentGameState: "currentGameState",
+  currentGameIdState: "currentGameIdState",
+  inGameCurrentUser: "inGameCurrentUser",
 } as const;
 
 // key definitions for selector
@@ -14,4 +16,5 @@ export const SelectorKeys = {
   defaultCards: "defaultCards",
   inGameCurrentSelectableCards: "inGameCurrentSelectableCards",
   inGameCurrentUserSelectedCard: "inGameCurrentUserSelectedCard",
+  inGameCurrentGame: "inGameCurrentGame",
 } as const;

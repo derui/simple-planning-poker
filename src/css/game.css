@@ -1,6 +1,6 @@
 .app__game__card-holder {
   display: flex;
-  align-items: center;
+  justify-content: center;
   padding: 0 var(--space-large);
 }
 
@@ -9,15 +9,26 @@
   flex-direction: column;
   height: var(--card-height);
   width: var(--card-width);
-  border-radius: var(--border-radius);
+  border-radius: var(--base-border-radius);
   border: 1px solid var(--secondary-1-3);
   background-color: white;
   color: var(--primary-4);
   text-align: center;
+  justify-content: center;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+
+  margin: var(--space-base);
 
   &.app__game__selectable-card--selected {
     background-color: var(--secondary-1-3);
-    color: var(--secondary-1-0);
+    color: white;
   }
 }
 

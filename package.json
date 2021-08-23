@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:webpack": "webpack serve --config webpack.config.js --port 5000 --content-base public",
+    "start:webpack": "webpack serve --config webpack.config.js --port 5000 --content-base public --history-api-fallback",
     "start:css": "postcss --watch -o public/static/css/app.css src/css/root.css",
     "start": "npm-run-all -p start:webpack start:css emulators",
     "emulators": "firebase emulators:start",

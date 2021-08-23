@@ -29,7 +29,10 @@ export class GameRepositoryImpl implements GameRepository {
   }
 
   async findBy(id: GameId): Promise<Game | undefined> {
-    const snapshot = await this.database.ref(`game/${id}`).once("value");
+    if (id === "") {
+      return;
+    }
+    const snapshot = await this.database.ref("games").child(id).once("value");
 
     const val = snapshot.val();
     if (!val) {
@@ -40,7 +43,7 @@ export class GameRepositoryImpl implements GameRepository {
     const cards = val["cards"] as number[];
     const joinedUsers = val["users"] as { [key: string]: boolean };
     const showedDown = val["showedDown"] as boolean;
-    const userHands = val["userHands"] as { [key: string]: SerializedCard };
+    const userHands = (val["userHands"] || {}) as { [key: string]: SerializedCard };
 
     const game = createGame(
       id,

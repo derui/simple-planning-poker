@@ -1,8 +1,6 @@
-import { AtomKeys } from "./key";
-import { atom, constSelector, useRecoilCallback, useRecoilValue } from "recoil";
-import { useCallback } from "react";
+import { constSelector, useRecoilCallback, useRecoilValue } from "recoil";
 import { CreateGameUseCase } from "@/usecases/create-game";
-import { signInSelectors } from "./signin";
+import { DEFAULT_CARDS, gameCreationState, signInSelectors } from "./signin";
 import { GameId } from "@/domains/game";
 
 export interface GameCreationAction {
@@ -11,24 +9,7 @@ export interface GameCreationAction {
   useSetCards: () => (cards: string) => void;
 }
 
-interface GameCreationState {
-  name: string;
-  cards: number[];
-  creating: boolean;
-}
-
-const DEFAULT_CARDS = "1,2,3,5,8,13,21,34,55,89".split(",").map((v) => Number(v));
-
-const gameCreationState = atom<GameCreationState>({
-  key: AtomKeys.gameCreationState,
-  default: {
-    name: "",
-    cards: DEFAULT_CARDS,
-    creating: false,
-  },
-});
-
-export const createGameCreationAction = (useCase: CreateGameUseCase): GameCreationAction => {
+export const createGameCreationActions = (useCase: CreateGameUseCase): GameCreationAction => {
   return {
     useCreateGame: () => {
       const currentUser = signInSelectors.useCurrentUser();

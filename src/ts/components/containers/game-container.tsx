@@ -1,14 +1,14 @@
-import { inGameSelectors } from "@/status/in-game";
 import * as React from "react";
-import { useParams } from "react-router";
+import { inGameActionContext } from "@/contexts/actions";
+import { InGameAction } from "@/status/in-game";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 
 interface Props {}
 
-const createCardHolderComponent = () => {
-  const cards = inGameSelectors.currentSelectableCards();
-  const selectedIndex = inGameSelectors.currentUserSelectedCard();
+const createCardHolderComponent = ({ selectors }: InGameAction) => {
+  const cards = selectors.currentSelectableCards();
+  const selectedIndex = selectors.currentUserSelectedCard();
 
   const props = {
     displays: cards.map((v) => {
@@ -26,13 +26,14 @@ const createCardHolderComponent = () => {
 };
 
 export const GameContainer: React.FunctionComponent<Props> = () => {
-  const param = useParams<{ gameId: string }>();
+  const inGameActions = React.useContext(inGameActionContext);
+  const component = createCardHolderComponent(inGameActions);
 
   return (
     <div className="app__game">
       <GameHeaderComponent />
       <main className="app__game__main"></main>
-      <footer className="app__game__footer">{createCardHolderComponent()}</footer>
+      <footer className="app__game__footer">{component}</footer>
     </div>
   );
 };

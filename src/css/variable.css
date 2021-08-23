@@ -26,6 +26,6 @@
   --secondary-2-4: rgba(169, 77, 72, 1);
 
   /* component */
-  --card-height: 64px;
-  --card-width: 104px;
+  --card-width: 64px;
+  --card-height: 104px;
 }

@@ -4,11 +4,11 @@ import "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import { gameCreationActionContext, inGameACtionContext, signInActionContext } from "./contexts/actions";
+import { gameCreationActionContext, inGameActionContext, signInActionContext } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createSigninActions } from "./status/signin";
-import { createGameCreationAction } from "./status/game-creator";
+import { createGameCreationActions } from "./status/game-creator";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
@@ -20,6 +20,8 @@ import { createInGameAction } from "./status/in-game";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { NewGameUseCase } from "./usecases/new-game";
+import { gameObserverContext } from "./contexts/observer";
+import { GameObserverImpl } from "./infrastractures/game-observer";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -45,14 +47,17 @@ const inGameAction = createInGameAction(
   new NewGameUseCase(dispatcher, gameRepository)
 );
 
+const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
+const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database));
+
 ReactDOM.render(
-  <signInActionContext.Provider value={createSigninActions(new FirebaseAuthenticator(auth, database))}>
-    <gameCreationActionContext.Provider
-      value={createGameCreationAction(new CreateGameUseCase(dispatcher, gameRepository))}
-    >
-      <inGameACtionContext.Provider value={inGameAction}>
-        <App />
-      </inGameACtionContext.Provider>
+  <signInActionContext.Provider value={signInActions}>
+    <gameCreationActionContext.Provider value={gameCreationActions}>
+      <inGameActionContext.Provider value={inGameAction}>
+        <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+          <App />
+        </gameObserverContext.Provider>
+      </inGameActionContext.Provider>
     </gameCreationActionContext.Provider>
   </signInActionContext.Provider>,
 

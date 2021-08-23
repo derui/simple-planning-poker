@@ -5,6 +5,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? null : 'inline-source-map',
   entry: './src/ts/index.tsx',
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -31,6 +32,7 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: './src/index.html',
+      publicPath: '/'
     }),
   ],
 };

@@ -1,7 +1,7 @@
 import { UserId } from "@/domains/user";
 import { Authenticator, createSigninActions, SigninActions } from "../status/signin";
 import { createContext } from "react";
-import { createGameCreationAction, GameCreationAction } from "@/status/game-creator";
+import { createGameCreationActions, GameCreationAction } from "@/status/game-creator";
 import { CreateGameUseCase } from "@/usecases/create-game";
 import { EventDispatcher } from "@/usecases/base";
 import { GameRepository } from "@/domains/game-repository";
@@ -34,15 +34,8 @@ class DummyGameRepository implements GameRepository {
 
 // context for GameCreationAction.
 export const gameCreationActionContext = createContext<GameCreationAction>(
-  createGameCreationAction(new CreateGameUseCase(new DummyDispatcher(), new DummyGameRepository()))
+  createGameCreationActions(new CreateGameUseCase(new DummyDispatcher(), new DummyGameRepository()))
 );
 
 // context for GameCreationAction.
-export const inGameACtionContext = createContext<InGameAction>(
-  createInGameAction(
-    new DummyGameRepository(),
-    new HandCardUseCase(new DummyDispatcher(), new DummyGameRepository()),
-    new ShowDownUseCase(new DummyDispatcher(), new DummyGameRepository()),
-    new NewGameUseCase(new DummyDispatcher(), new DummyGameRepository())
-  )
-);
+export const inGameActionContext = createContext<InGameAction>({} as InGameAction);
