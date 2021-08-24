@@ -43,3 +43,12 @@ export const equalCard = (v1: Card, v2: Card) => {
 
   return false;
 };
+
+export const asStoryPoint = (card: Card): StoryPoint | null => {
+  switch (card.kind) {
+    case "giveup":
+      return null;
+    case "storypoint":
+      return card.storyPoint;
+  }
+};

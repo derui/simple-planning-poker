@@ -1,4 +1,4 @@
-import { createGiveUpCard, createStoryPointCard, equalCard } from "./card";
+import { asStoryPoint, createGiveUpCard, createStoryPointCard, equalCard } from "./card";
 import { createStoryPoint } from "./story-point";
 
 describe("domains", () => {
@@ -50,6 +50,28 @@ describe("domains", () => {
 
       // Assert
       expect(ret).toBeFalsy;
+    });
+
+    test("should return null if card is give up", () => {
+      // Arrange
+      const card1 = createGiveUpCard();
+
+      // Act
+      const ret = asStoryPoint(card1);
+
+      // Assert
+      expect(ret).toBeNull;
+    });
+
+    test("should return story point if card is story point card", () => {
+      // Arrange
+      const card1 = createStoryPointCard(createStoryPoint(11));
+
+      // Act
+      const ret = asStoryPoint(card1);
+
+      // Assert
+      expect(ret?.value).toBe(11);
     });
   });
 });

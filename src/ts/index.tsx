@@ -23,6 +23,7 @@ import { NewGameUseCase } from "./usecases/new-game";
 import { gameObserverContext } from "./contexts/observer";
 import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
+import { JoinUserUseCase } from "./usecases/join-user";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -44,9 +45,11 @@ const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
 const inGameAction = createInGameAction(
   gameRepository,
+  userRepository,
   new HandCardUseCase(dispatcher, gameRepository),
   new ShowDownUseCase(dispatcher, gameRepository),
-  new NewGameUseCase(dispatcher, gameRepository)
+  new NewGameUseCase(dispatcher, gameRepository),
+  new JoinUserUseCase(dispatcher, gameRepository)
 );
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));

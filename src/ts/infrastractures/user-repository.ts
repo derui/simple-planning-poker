@@ -15,13 +15,13 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async findBy(id: UserId): Promise<User | undefined> {
-    const snapshot = await this.database.ref(`users/${id}/name`).once("value");
+    const snapshot = await this.database.ref(`users/${id}/name`).get();
     const val = snapshot.val();
 
     if (!val) {
       return undefined;
     }
-    const name = val.name as string;
+    const name = val as string;
 
     return createUser(id, name);
   }

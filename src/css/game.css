@@ -1,16 +1,66 @@
 .app__game {
   display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .app__game__header {
-  flex: 0 1 24px;
+  flex: 0 1 48px;
   padding: var(--space-base);
+  color: white;
+  background-color: var(--primary-3);
+  border-bottom: 2px solid var(--secondary-1-0);
 }
 
 .app__game__main {
-  flex: 1 1 auth;
+  display: flex;
+  flex: 1 1 auto;
   padding: var(--space-base);
+}
+
+.app__game__main__game-area {
+  width: 100%;
+  height: 100%;
+}
+
+.app__game__main__grid-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 128px 96px 128px 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "upperSpacer upperSpacer upperSpacer"
+    ". upper ."
+    ". table ."
+    ". lower ."
+    "lowerSpacer lowerSpacer lowerSpacer";
+}
+.app__game__main__upper-spacer {
+  grid-area: upperSpacer;
+}
+
+.app__game__main__lower-spacer {
+  grid-area: lowerSpacer;
+}
+
+.app__game__main__users-in-upper {
+  grid-area: upper;
+  display: flex;
+  justify-content: space-around;
+}
+
+.app__game__main__users-in-lower {
+  grid-area: lower;
+  display: flex;
+  justify-content: space-around;
+}
+
+.app__game__main__table {
+  grid-area: table;
+  border-radius: 92px;
+  border: 2px solid var(--secondary-1-3);
+  height: 92px;
 }
 
 .app__game__card-holder {
@@ -50,4 +100,34 @@
 
 .app__game__selectable-card__storypoint {
   text-align: center;
+}
+
+.app__game__main__user-hand {
+  display: inline-block;
+}
+
+.app__game__main__user-hand-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app__game__main__user-hand__user-card {
+  display: flex;
+  flex-direction: column;
+  height: var(--card-height);
+  width: var(--card-width);
+  border-radius: var(--base-border-radius);
+  border: 1px solid var(--primary-3);
+  background-color: white;
+  color: var(--primary-4);
+  text-align: center;
+  justify-content: center;
+
+  margin: var(--space-base);
+
+  &.app__game__main__user-hand__user-card--handed {
+    background-color: var(--primary-3);
+    color: var(--secondary-1-1);
+  }
 }

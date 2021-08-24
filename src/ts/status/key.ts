@@ -6,6 +6,7 @@ export const AtomKeys = {
   currentGameState: "currentGameState",
   currentGameIdState: "currentGameIdState",
   inGameCurrentUser: "inGameCurrentUser",
+  user: "user",
 } as const;
 
 // key definitions for selector
@@ -16,5 +17,9 @@ export const SelectorKeys = {
   defaultCards: "defaultCards",
   inGameCurrentSelectableCards: "inGameCurrentSelectableCards",
   inGameCurrentUserSelectedCard: "inGameCurrentUserSelectedCard",
+  inGameCurrentGameName: "inGameCurrentGameName",
+  inGameCurrentUserJoined: "inGameCurrentUserJoined",
   inGameCurrentGame: "inGameCurrentGame",
+  inGameUpperLineUserHands: "inGameUpperLineUserHands",
+  inGameLowerLineUserHands: "inGameLownerLineUserHands",
 } as const;

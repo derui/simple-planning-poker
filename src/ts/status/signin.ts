@@ -1,8 +1,8 @@
 import { UserId } from "@/domains/user";
-import { AtomKeys, SelectorKeys } from "./key";
-import { atom, selector, useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
 import React from "react";
 import { UserRepository } from "@/domains/user-repository";
+import { authenticated, authenticating, currentUserState, emailToSignIn, signInState } from "./signin-atom";
 
 export interface SigninActions {
   useSignIn: () => (email: string, callback: () => void) => void;
@@ -17,48 +17,6 @@ export interface Authenticator {
   getAuthenticatedUser(): Promise<UserId | undefined>;
 }
 
-type CurrentUser = {
-  id: UserId | null;
-  name: string;
-};
-
-const currentUser = atom<CurrentUser>({
-  key: AtomKeys.currentUserId,
-  default: {
-    id: null,
-    name: "",
-  },
-});
-
-const signInState = atom<{ email: string; authenticating: boolean }>({
-  key: AtomKeys.signInState,
-  default: {
-    email: "",
-    authenticating: false,
-  },
-});
-
-const authenticated = selector<boolean>({
-  key: SelectorKeys.authenticated,
-  get: ({ get }) => {
-    return get(currentUser).id !== null;
-  },
-});
-
-const emailToSignIn = selector<string>({
-  key: SelectorKeys.emailToSignIn,
-  get: ({ get }) => {
-    return get(signInState).email;
-  },
-});
-
-const authenticating = selector<boolean>({
-  key: SelectorKeys.authenticating,
-  get: ({ get }) => {
-    return get(signInState).authenticating;
-  },
-});
-
 export const createSigninActions = (authenticator: Authenticator, userRepository: UserRepository): SigninActions => {
   return {
     useSignIn: () =>
@@ -71,7 +29,7 @@ export const createSigninActions = (authenticator: Authenticator, userRepository
             return;
           }
 
-          set(currentUser, () => ({ id: userId, name: email }));
+          set(currentUserState, () => ({ id: userId, name: email }));
           callback();
         } catch (e) {
           set(signInState, (prev) => ({ ...prev, authenticating: false }));
@@ -91,7 +49,7 @@ export const createSigninActions = (authenticator: Authenticator, userRepository
           return;
         }
 
-        set(currentUser, () => ({ id: userId, name: user.name }));
+        set(currentUserState, () => ({ id: userId, name: user.name }));
         callback();
       }),
 
@@ -104,7 +62,7 @@ export const createSigninActions = (authenticator: Authenticator, userRepository
 
 export const signInSelectors = {
   useAuthenticated: () => useRecoilValue(authenticated),
-  useCurrentUser: () => useRecoilValue(currentUser),
+  useCurrentUser: () => useRecoilValue(currentUserState),
 
   useSignInEmail: () => useRecoilValue(emailToSignIn),
   useAuthenticating: () => useRecoilValue(authenticating),
