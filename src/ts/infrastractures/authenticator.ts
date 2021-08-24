@@ -3,7 +3,7 @@ import { Authenticator } from "../status/signin";
 import { createUser, createUserId, UserId } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
 
-const sessionKey = "authenticated/uid";
+const localKey = "authenticated/uid";
 
 export class FirebaseAuthenticator implements Authenticator {
   constructor(
@@ -12,7 +12,7 @@ export class FirebaseAuthenticator implements Authenticator {
     private userRepository: UserRepository
   ) {}
   async authenticate(email: string): Promise<UserId> {
-    const authenticatedUid = sessionStorage.getItem(sessionKey);
+    const authenticatedUid = localStorage.getItem(localKey);
     if (authenticatedUid) {
       return createUserId(authenticatedUid);
     }
@@ -33,7 +33,7 @@ export class FirebaseAuthenticator implements Authenticator {
     try {
       const auth = await this.auth.signInAnonymously();
       const uid = auth.user!.uid;
-      sessionStorage.setItem(sessionKey, uid);
+      localStorage.setItem(localKey, uid);
       this.database.ref(`authenticated/${email}`).set(true);
 
       const userId = createUserId(uid);
@@ -47,7 +47,9 @@ export class FirebaseAuthenticator implements Authenticator {
     }
   }
 
-  isAuthenticated(): boolean {
-    return sessionStorage.getItem(sessionKey) !== null;
+  async getAuthenticatedUser(): Promise<UserId | undefined> {
+    const val = localStorage.getItem(localKey);
+
+    return val ? (val as UserId) : undefined;
   }
 }

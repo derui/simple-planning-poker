@@ -20,6 +20,7 @@ const Overlay = () => {
 
 export const SigninContainer: React.FunctionComponent<Props> = ({ location, history }) => {
   const action = React.useContext(signInActionContext);
+  const applyAuthenticated = action.useApplyAuthenticated();
   const signIn = action.useSignIn();
   const setSignInState = action.useUpdateEmail();
   const signInState = signInSelectors.useSignInEmail();
@@ -28,6 +29,8 @@ export const SigninContainer: React.FunctionComponent<Props> = ({ location, hist
   const signInCallback = () => {
     history.replace(from);
   };
+
+  React.useEffect(() => applyAuthenticated(signInCallback));
 
   return (
     <React.Fragment>

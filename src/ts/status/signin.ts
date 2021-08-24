@@ -6,6 +6,7 @@ import { UserRepository } from "@/domains/user-repository";
 
 export interface SigninActions {
   useSignIn: () => (email: string, callback: () => void) => void;
+  useApplyAuthenticated: () => (callback: () => void) => void;
 
   useUpdateEmail: () => (email: string) => void;
 }
@@ -13,7 +14,7 @@ export interface SigninActions {
 export interface Authenticator {
   authenticate(email: string): Promise<UserId>;
 
-  isAuthenticated(): boolean;
+  getAuthenticatedUser(): Promise<UserId | undefined>;
 }
 
 type CurrentUser = {
@@ -76,6 +77,22 @@ export const createSigninActions = (authenticator: Authenticator, userRepository
           set(signInState, (prev) => ({ ...prev, authenticating: false }));
           throw e;
         }
+      }),
+
+    useApplyAuthenticated: () =>
+      useRecoilCallback(({ set }) => async (callback: () => void) => {
+        const userId = await authenticator.getAuthenticatedUser();
+        if (!userId) {
+          return;
+        }
+
+        const user = await userRepository.findBy(userId);
+        if (!user) {
+          return;
+        }
+
+        set(currentUser, () => ({ id: userId, name: user.name }));
+        callback();
       }),
 
     useUpdateEmail: () => {

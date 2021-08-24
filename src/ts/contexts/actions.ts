@@ -14,7 +14,7 @@ class DummyAuthenticator implements Authenticator {
     return Promise.resolve(email as UserId);
   }
 
-  isAuthenticated(): boolean {
+  getAuthenticatedUser(): Promise<UserId | undefined> {
     throw new Error("Method not implemented.");
   }
 }
