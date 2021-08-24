@@ -2,7 +2,7 @@ import { createId, Id } from "./base";
 import { Card } from "./card";
 import { GameId } from "./game";
 import { SelectableCards } from "./selectable-cards";
-import { User, UserId } from "./user";
+import { UserId } from "./user";
 
 export type EventId = Id<"Event">;
 
