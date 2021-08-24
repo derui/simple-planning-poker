@@ -22,6 +22,7 @@ import { ShowDownUseCase } from "./usecases/show-down";
 import { NewGameUseCase } from "./usecases/new-game";
 import { gameObserverContext } from "./contexts/observer";
 import { GameObserverImpl } from "./infrastractures/game-observer";
+import { UserRepositoryImpl } from "./infrastractures/user-repository";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -40,6 +41,7 @@ const dispatcher = new EventDispatcherImpl([
 ]);
 
 const gameRepository = new GameRepositoryImpl(database);
+const userRepository = new UserRepositoryImpl(database);
 const inGameAction = createInGameAction(
   gameRepository,
   new HandCardUseCase(dispatcher, gameRepository),
@@ -48,7 +50,7 @@ const inGameAction = createInGameAction(
 );
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
-const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database));
+const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database, userRepository), userRepository);
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>

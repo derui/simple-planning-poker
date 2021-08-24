@@ -5,5 +5,5 @@ export interface UserRepository {
   save(user: User): void;
 
   // find user by id
-  findBy(id: UserId): User | undefined;
+  findBy(id: UserId): Promise<User | undefined>;
 }

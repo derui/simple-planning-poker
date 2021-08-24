@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { User, UserId } from "@/domains/user";
+import { createUser, User, UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 
 export class UserRepositoryImpl implements UserRepository {
@@ -14,7 +14,15 @@ export class UserRepositoryImpl implements UserRepository {
     this.users = this.users.filter((v) => v.id !== user.id).concat(user);
   }
 
-  findBy(id: UserId): User | undefined {
-    return this.users.find((v) => v.id === id);
+  async findBy(id: UserId): Promise<User | undefined> {
+    const snapshot = await this.database.ref(`users/${id}/name`).once("value");
+    const val = snapshot.val();
+
+    if (!val) {
+      return undefined;
+    }
+    const name = val.name as string;
+
+    return createUser(id, name);
   }
 }

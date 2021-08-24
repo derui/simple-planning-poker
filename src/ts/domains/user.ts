@@ -3,7 +3,13 @@ import { EventFactory, UserNameChanged } from "./event";
 
 export type UserId = Id<"User">;
 
-export const createUserId = (): UserId => createId<"User">();
+export const createUserId = (value?: string): UserId => {
+  if (value) {
+    return value as UserId;
+  } else {
+    return createId<"User">();
+  }
+};
 
 export interface User {
   get id(): UserId;

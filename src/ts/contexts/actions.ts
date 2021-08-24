@@ -7,15 +7,22 @@ import { EventDispatcher } from "@/usecases/base";
 import { GameRepository } from "@/domains/game-repository";
 import { Game } from "@/domains/game";
 import { InGameAction } from "@/status/in-game";
+import { UserRepository } from "@/domains/user-repository";
 
 class DummyAuthenticator implements Authenticator {
   authenticate(email: string): Promise<UserId> {
     return Promise.resolve(email as UserId);
   }
+
+  isAuthenticated(): boolean {
+    throw new Error("Method not implemented.");
+  }
 }
 
 // context for SignInAction.
-export const signInActionContext = createContext<SigninActions>(createSigninActions(new DummyAuthenticator()));
+export const signInActionContext = createContext<SigninActions>(
+  createSigninActions(new DummyAuthenticator(), {} as UserRepository)
+);
 
 class DummyDispatcher implements EventDispatcher {
   dispatch(): void {}

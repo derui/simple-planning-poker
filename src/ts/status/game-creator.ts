@@ -1,7 +1,8 @@
 import { constSelector, useRecoilCallback, useRecoilValue } from "recoil";
 import { CreateGameUseCase } from "@/usecases/create-game";
-import { DEFAULT_CARDS, gameCreationState, signInSelectors } from "./signin";
+import { DEFAULT_CARDS, gameCreationState } from "./game-creator-atom";
 import { GameId } from "@/domains/game";
+import { signInSelectors } from "./signin";
 
 export interface GameCreationAction {
   useCreateGame: () => (callback: (gameId: GameId) => void) => void;
@@ -13,6 +14,7 @@ export const createGameCreationActions = (useCase: CreateGameUseCase): GameCreat
   return {
     useCreateGame: () => {
       const currentUser = signInSelectors.useCurrentUser();
+
       return useRecoilCallback(
         ({ snapshot }) =>
           (callback: (gameId: GameId) => void) => {
