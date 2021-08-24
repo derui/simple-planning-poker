@@ -6,10 +6,7 @@ import { CreateGameUseCase } from "@/usecases/create-game";
 import { EventDispatcher } from "@/usecases/base";
 import { GameRepository } from "@/domains/game-repository";
 import { Game } from "@/domains/game";
-import { createInGameAction, InGameAction } from "@/status/in-game";
-import { HandCardUseCase } from "@/usecases/hand-card";
-import { ShowDownUseCase } from "@/usecases/show-down";
-import { NewGameUseCase } from "@/usecases/new-game";
+import { InGameAction } from "@/status/in-game";
 
 class DummyAuthenticator implements Authenticator {
   authenticate(email: string): Promise<UserId> {

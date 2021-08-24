@@ -6,7 +6,8 @@ import { GameHeaderComponent } from "../presentations/game-header";
 
 interface Props {}
 
-const createCardHolderComponent = ({ selectors }: InGameAction) => {
+const createCardHolderComponent = ({ useSelectCard, selectors }: InGameAction) => {
+  const selectCard = useSelectCard();
   const cards = selectors.currentSelectableCards();
   const selectedIndex = selectors.currentUserSelectedCard();
 
@@ -22,7 +23,13 @@ const createCardHolderComponent = ({ selectors }: InGameAction) => {
     selectedIndex: selectedIndex ?? null,
   };
 
-  return <CardHolderComponent displays={props.displays} selectedIndex={props.selectedIndex} onClickCard={() => {}} />;
+  return (
+    <CardHolderComponent
+      displays={props.displays}
+      selectedIndex={props.selectedIndex}
+      onClickCard={(index) => selectCard(index)}
+    />
+  );
 };
 
 export const GameContainer: React.FunctionComponent<Props> = () => {

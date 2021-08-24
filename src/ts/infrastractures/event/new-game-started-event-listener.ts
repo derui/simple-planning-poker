@@ -7,7 +7,7 @@ export class NewGameStartedEventListener implements DomainEventListener {
 
   handle(event: DefinedDomainEvents): void {
     if (event.kind == DOMAIN_EVENTS.NewGameStarted) {
-      const ref = this.database.ref(`database/${event.gameId}`);
+      const ref = this.database.ref(`games/${event.gameId}`);
 
       ref.child("userHands").remove();
       ref.child("showedDown").set(false);

@@ -7,7 +7,7 @@ export class GameShowedDownEventListener implements DomainEventListener {
 
   handle(event: DefinedDomainEvents): void {
     if (event.kind == DOMAIN_EVENTS.GameShowedDown) {
-      const ref = this.database.ref(`database/${event.gameId}`);
+      const ref = this.database.ref(`games/${event.gameId}`);
 
       ref.child("showedDown").transaction((currentData) => {
         if (currentData === null || !currentData) {

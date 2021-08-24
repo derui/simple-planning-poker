@@ -10,7 +10,7 @@ import { setUpAtomsInGame } from "./in-game-atom";
 import { currentUserState } from "./signin-atom";
 
 export interface InGameAction {
-  useSelectCard: () => (card: Card) => void;
+  useSelectCard: () => (index: number) => void;
   useNewGame: () => () => void;
   useShowDown: () => () => void;
   useSetCurrentGame: (gameId: GameId) => (game: Game) => void;
@@ -47,7 +47,7 @@ export const createInGameAction = (
       const game = get(gameStateQuery);
       const currentUser = get(currentUserState);
       const userId = currentUser.id;
-      if (!game || userId) {
+      if (!game || !userId) {
         return;
       }
 
@@ -70,16 +70,18 @@ export const createInGameAction = (
       const currentUser = useRecoilValue(currentUserState);
       const currentGame = useRecoilValue(gameStateQuery);
 
-      return useRecoilCallback(({ set }) => async (card: Card) => {
+      return useRecoilCallback(({ set }) => async (index: number) => {
         if (!currentUser.id || !currentGame) {
           return;
         }
+        const card = currentGame.selectableCards.cards[index];
 
         await handCardUseCase.execute({
           gameId: currentGame.id,
           userId: currentUser.id,
           card,
         });
+
         const game = await gameRepository.findBy(currentGame.id);
         set(currentGameState(currentGame.id), (prev) => {
           return game || prev;

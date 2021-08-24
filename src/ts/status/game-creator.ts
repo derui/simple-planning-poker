@@ -51,7 +51,7 @@ export const createGameCreationActions = (useCase: CreateGameUseCase): GameCreat
         if (!/^[0-9 ,]$/.test(cards)) return;
 
         const numbers = cards
-          .replace(" ", "")
+          .trim()
           .split(",")
           .map((v) => Number(v));
 
