@@ -48,7 +48,7 @@ export const createGameCreationActions = (useCase: CreateGameUseCase): GameCreat
     useSetCards: () =>
       useRecoilCallback(({ set }) => (cards: string) => {
         if (cards === "") return;
-        if (!/^[0-9 ,]$/.test(cards)) return;
+        if (!/^[0-9 ,]+$/.test(cards)) return;
 
         const numbers = cards
           .trim()
