@@ -4,7 +4,6 @@ export const AtomKeys = {
   signInState: "signInState",
   gameCreationState: "gameCreationState",
   currentGameState: "currentGameState",
-  currentGameIdState: "currentGameIdState",
   inGameCurrentUser: "inGameCurrentUser",
   user: "user",
 } as const;

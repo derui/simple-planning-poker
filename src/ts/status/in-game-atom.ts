@@ -1,32 +1,22 @@
 import { AtomKeys, SelectorKeys } from "./key";
-import { atom, atomFamily, RecoilState, RecoilValueReadOnly, selector } from "recoil";
+import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
 import { Game, GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
 
-export const setUpAtomsInGame = (
-  gameRepository: GameRepository
-): {
+export const setUpAtomsInGame = (): {
   gameStateQuery: RecoilValueReadOnly<Game | undefined>;
-  currentGameIdState: RecoilState<GameId>;
-  currentGameState: (gameId: GameId) => RecoilState<Game | undefined>;
+  currentGameState: RecoilState<Game | undefined>;
 } => {
-  const currentGameIdState = atom<GameId>({
-    key: AtomKeys.currentGameIdState,
-    default: "" as GameId,
-  });
-
-  const currentGameState = atomFamily({
+  const currentGameState = atom<Game | undefined>({
     key: AtomKeys.currentGameState,
-    default: (gameId: GameId) => gameRepository.findBy(gameId),
+    default: undefined,
   });
 
   const gameStateQuery = selector({
     key: SelectorKeys.inGameCurrentGame,
-    get: ({ get }) => get(currentGameState(get(currentGameIdState))),
+    get: ({ get }) => get(currentGameState),
   });
 
   return {
-    currentGameIdState,
     gameStateQuery,
     currentGameState,
   };

@@ -52,7 +52,7 @@ export const createInGameAction = (
   newGameUseCase: NewGameUseCase,
   joinUserUseCase: JoinUserUseCase
 ): InGameAction => {
-  const { gameStateQuery, currentGameState, currentGameIdState } = setUpAtomsInGame(gameRepository);
+  const { gameStateQuery, currentGameState } = setUpAtomsInGame();
   const { userState } = setUpAtomsUser(userRepository);
 
   const currentSelectableCards = selector({
@@ -189,7 +189,7 @@ export const createInGameAction = (
         })
         .filter((v) => v > 0)
         .reduce((accum, v) => {
-          accum[v] = accum[v] ?? 0 + 1;
+          accum[v] = (accum[v] ?? 0) + 1;
           return accum;
         }, {} as { [key: number]: number });
       const cardCounts = Object.entries(points).map(([k, v]) => [Number(k), v] as [number, number]);
@@ -227,7 +227,7 @@ export const createInGameAction = (
         });
 
         const game = await gameRepository.findBy(currentGame.id);
-        set(currentGameState(currentGame.id), (prev) => {
+        set(currentGameState, (prev) => {
           return game || prev;
         });
       });
@@ -246,7 +246,7 @@ export const createInGameAction = (
         });
 
         const game = await gameRepository.findBy(currentGame.id);
-        set(currentGameState(currentGame.id), (prev) => {
+        set(currentGameState, (prev) => {
           return game || prev;
         });
       });
@@ -269,7 +269,7 @@ export const createInGameAction = (
         });
 
         const game = await gameRepository.findBy(currentGame.id);
-        set(currentGameState(currentGame.id), (prev) => {
+        set(currentGameState, (prev) => {
           return game || prev;
         });
       });
@@ -288,7 +288,7 @@ export const createInGameAction = (
         });
 
         const game = await gameRepository.findBy(currentGame.id);
-        set(currentGameState(currentGame.id), (prev) => {
+        set(currentGameState, (prev) => {
           return game || prev;
         });
       });
@@ -297,9 +297,9 @@ export const createInGameAction = (
     useSetCurrentGame: (gameId: GameId) =>
       useRecoilCallback(
         ({ set }) =>
-          async () => {
-            set(currentGameIdState, () => {
-              return gameId;
+          async (game: Game) => {
+            set(currentGameState, () => {
+              return game;
             });
           },
         [gameId]
