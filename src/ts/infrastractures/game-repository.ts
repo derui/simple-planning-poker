@@ -24,6 +24,9 @@ export class GameRepositoryImpl implements GameRepository {
     game.userHands.forEach((hand) => {
       updates[`/games/${game.id}/userHands/${hand.userId}`] = serializeCard(hand.card);
     });
+    if (!game.userHands.length) {
+      updates[`/games/${game.id}/userHands`] = null;
+    }
 
     this.database.ref().update(updates);
   }

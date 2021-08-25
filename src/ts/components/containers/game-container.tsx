@@ -1,9 +1,10 @@
 import * as React from "react";
 import { inGameActionContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus } from "@/status/in-game";
+import { InGameAction, InGameStatus, ShowDownResult } from "@/status/in-game";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
+import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 
 interface Props {}
 
@@ -33,8 +34,14 @@ const createCardHolderComponent = ({ useSelectCard, selectors }: InGameAction) =
   );
 };
 
+const createAveragePointShowcase = (showDownResult: ShowDownResult) => {
+  const average = showDownResult.average.toFixed(1).toString();
+  return <AveragePointShowcaseComponent averagePoint={average} cardCounts={showDownResult.cardCounts} />;
+};
+
 const GameProgressionButton = (status: InGameStatus, context: InGameAction) => {
   const showDown = context.useShowDown();
+  const newGame = context.useNewGame();
 
   switch (status) {
     case "EmptyUserHand":
@@ -46,7 +53,11 @@ const GameProgressionButton = (status: InGameStatus, context: InGameAction) => {
         </button>
       );
     case "ShowedDown":
-      return <button className="app__game__main__game-management-button--next-game">Start next game</button>;
+      return (
+        <button className="app__game__main__game-management-button--next-game" onClick={() => newGame()}>
+          Start next game
+        </button>
+      );
   }
 };
 
@@ -58,6 +69,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const lowerLine = inGameActions.selectors.lowerLineUserHands();
   const joinUser = inGameActions.useJoinUser();
   const currentStatus = inGameActions.selectors.currentGameStatus();
+  const showDownResult = inGameActions.selectors.showDownResult();
 
   React.useEffect(() => {
     joinUser();
@@ -77,7 +89,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
           </div>
         </div>
       </main>
-      {component}
+      {currentStatus === "ShowedDown" ? createAveragePointShowcase(showDownResult) : component}
     </div>
   );
 };

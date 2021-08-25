@@ -24,6 +24,7 @@ import { gameObserverContext } from "./contexts/observer";
 import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
 import { JoinUserUseCase } from "./usecases/join-user";
+import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -34,15 +35,17 @@ if (location.hostname === "localhost") {
   auth.useEmulator("http://localhost:9099");
 }
 
+const gameRepository = new GameRepositoryImpl(database);
+const userRepository = new UserRepositoryImpl(database);
+
 const dispatcher = new EventDispatcherImpl([
   new GameCreatedEventListener(database),
   new GameShowedDownEventListener(database),
   new UserCardSelectedEventListener(database),
   new UserJoinedEventListener(database),
+  new NewGameStartedEventListener(database),
 ]);
 
-const gameRepository = new GameRepositoryImpl(database);
-const userRepository = new UserRepositoryImpl(database);
 const inGameAction = createInGameAction(
   gameRepository,
   userRepository,

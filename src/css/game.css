@@ -71,11 +71,6 @@
 
 .app__game__main__game-management-button--waiting {
   flex: 0 1 auto;
-  border: 1px solid var(--primary-4);
-  border-radius: var(--base-border-radius);
-  background-color: var(--primary-0);
-
-  padding: var(--space-base) var(--space-large);
 }
 
 .app__game__main__game-management-button--show-down {
@@ -105,20 +100,20 @@
   outline: none;
   border: 1px solid var(--primary-4);
   border-radius: var(--base-border-radius);
-  background-color: var(--primary-1);
-  color: var(--primary-4);
+  background-color: var(--secondary-2-1);
+  color: var(--secondary-2-4);
   padding: var(--space-base) var(--space-large);
   cursor: pointer;
 
-  transition: color 0.2s ease-out, background-color 0.2s ease-out;
+  transition: color 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
   &:active {
     box-shadow: var(--box-shadow);
   }
 
   &:hover {
-    color: var(--primary-1);
-    background-color: var(--primary-4);
+    color: var(--secondary-2-1);
+    background-color: var(--secondary-2-3);
   }
 }
 
@@ -194,4 +189,77 @@
     background-color: var(--primary-3);
     color: var(--secondary-1-1);
   }
+}
+
+/* average show case */
+.app__game__average-point-showcase {
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-base) var(--space-large);
+  position: relative;
+  top: -48px;
+}
+
+.app__game__average-point-showcase__results {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.app__game__average-point-showcase__average {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-3);
+  border-radius: var(--base-border-radius);
+  padding: 0 var(--space-large);
+}
+
+.app__game__average-point-showcase__equal {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  color: var(--secondary-2-1);
+}
+
+.app__game__average-point-showcase__average-label {
+  flex: 0 0 auto;
+  color: var(--secondary-2-1);
+}
+
+.app__game__average-point-showcase__average-value {
+  flex: 0 0 auto;
+  align-items: center;
+  font-size: 1.75rem;
+  color: var(--secondary-2-1);
+}
+
+.app__game__result-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: var(--space-large);
+
+  &:last-of-type {
+    margin-right: calc(2 * var(--space-large));
+  }
+}
+
+.app__game__result-display__card {
+  display: flex;
+  flex-direction: column;
+  height: var(--card-height);
+  width: var(--card-width);
+  border-radius: var(--base-border-radius);
+  border: 1px solid var(--primary-3);
+  background-color: white;
+  color: var(--primary-4);
+  text-align: center;
+  justify-content: center;
+  margin: var(--space-base);
+}
+
+.app__game__result-display__count {
+  color: black;
+  text-align: center;
 }

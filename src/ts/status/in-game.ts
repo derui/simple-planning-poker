@@ -19,6 +19,11 @@ interface InGameUserHand {
   handed: boolean;
 }
 
+export interface ShowDownResult {
+  cardCounts: [number, number][];
+  average: number;
+}
+
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
 export interface InGameAction {
@@ -35,6 +40,7 @@ export interface InGameAction {
     currentGameStatus: () => InGameStatus;
     upperLineUserHands: () => InGameUserHand[];
     lowerLineUserHands: () => InGameUserHand[];
+    showDownResult: () => ShowDownResult;
   };
 }
 
@@ -169,6 +175,30 @@ export const createInGameAction = (
     },
   });
 
+  const showDownResult = selector<ShowDownResult>({
+    key: SelectorKeys.inGameShowDownResult,
+    get: ({ get }) => {
+      const game = get(gameStateQuery);
+      if (!game || !game.showedDown) {
+        return { cardCounts: [], average: 0 };
+      }
+
+      const points = game.userHands
+        .map((v) => {
+          return asStoryPoint(v.card)?.value ?? 0;
+        })
+        .filter((v) => v > 0)
+        .reduce((accum, v) => {
+          accum[v] = accum[v] ?? 0 + 1;
+          return accum;
+        }, {} as { [key: number]: number });
+      const cardCounts = Object.entries(points).map(([k, v]) => [Number(k), v] as [number, number]);
+      const average = game.calculateAverage()?.value ?? 0;
+
+      return { average, cardCounts };
+    },
+  });
+
   const inGameSelectors = {
     currentGameName: () => useRecoilValue(currentGameName),
     currentSelectableCards: () => useRecoilValue(currentSelectableCards),
@@ -176,6 +206,7 @@ export const createInGameAction = (
     upperLineUserHands: () => useRecoilValue(upperLineUserHands),
     lowerLineUserHands: () => useRecoilValue(lowerLineUserHands),
     currentGameStatus: () => useRecoilValue(currentGameStatus),
+    showDownResult: () => useRecoilValue(showDownResult),
   };
 
   return {
