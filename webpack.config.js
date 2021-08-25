@@ -17,7 +17,7 @@ module.exports = {
     alias: {
       react: path.join(__dirname, 'node_modules', 'react'),
       "@": path.join(__dirname, 'src', 'ts'),
-      "firebase.config": path.join(__dirname, 'src', 'ts', isProduction ? 'firebase.config.prod' : 'firebase.config')
+      "./firebase.config": path.join(__dirname, 'src', 'ts', isProduction ? 'firebase.config.prod' : 'firebase.config')
     },
   },
   module: {

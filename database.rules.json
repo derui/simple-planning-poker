@@ -1,10 +1,24 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
+    "games": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "authenticated": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "defined-users": {
       ".read": true,
       ".write": false
+    },
+    "users": {
+      "$user_id": {
+        // grants write access to the owner of this user account
+        // whose uid must exactly match the key ($user_id)
+        ".read": "auth != null",
+        ".write": "auth != null && $user_id === auth.uid"
+      }
     }
   }
 }
