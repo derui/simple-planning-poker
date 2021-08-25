@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inGameActionContext } from "@/contexts/actions";
-import { InGameAction } from "@/status/in-game";
+import { InGameAction, InGameStatus } from "@/status/in-game";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
@@ -33,6 +33,23 @@ const createCardHolderComponent = ({ useSelectCard, selectors }: InGameAction) =
   );
 };
 
+const GameProgressionButton = (status: InGameStatus, context: InGameAction) => {
+  const showDown = context.useShowDown();
+
+  switch (status) {
+    case "EmptyUserHand":
+      return <span className="app__game__main__game-management-button--waiting">Waiting to select card...</span>;
+    case "CanShowDown":
+      return (
+        <button className="app__game__main__game-management-button--show-down" onClick={() => showDown()}>
+          Show down!
+        </button>
+      );
+    case "ShowedDown":
+      return <button className="app__game__main__game-management-button--next-game">Start next game</button>;
+  }
+};
+
 export const GameContainer: React.FunctionComponent<Props> = () => {
   const inGameActions = React.useContext(inGameActionContext);
   const component = createCardHolderComponent(inGameActions);
@@ -40,6 +57,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const upperLine = inGameActions.selectors.upperLineUserHands();
   const lowerLine = inGameActions.selectors.lowerLineUserHands();
   const joinUser = inGameActions.useJoinUser();
+  const currentStatus = inGameActions.selectors.currentGameStatus();
 
   React.useEffect(() => {
     joinUser();
@@ -53,7 +71,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
             <PlayerHandsComponent position="upper" userHands={upperLine} />
-            <div className="app__game__main__table"></div>
+            <div className="app__game__main__table">{GameProgressionButton(currentStatus, inGameActions)}</div>
             <PlayerHandsComponent position="lower" userHands={lowerLine} />
             <div className="app__game__main__lower-spacer"></div>
           </div>

@@ -27,6 +27,8 @@ export interface Game {
 
   canChangeName(name: string): boolean;
 
+  canShowDown(): boolean;
+
   // find hand by user id
   findHandBy(userId: UserId): Card | undefined;
 
@@ -102,10 +104,14 @@ export const createGame = (
       return this._userHands.find((v) => v.userId === userId)?.card;
     },
 
-    showDown(): GameShowedDown | undefined {
+    canShowDown(): boolean {
       const handedUsers = new Set(this.userHands.map((v) => v.userId));
       const joinedUsers = new Set(this.joinedUsers);
-      if (handedUsers.size > 0 && isSuperset(handedUsers, joinedUsers)) {
+      return handedUsers.size > 0 && isSuperset(handedUsers, joinedUsers) && !this.showedDown;
+    },
+
+    showDown(): GameShowedDown | undefined {
+      if (this.canShowDown()) {
         this._showedDown = true;
         return EventFactory.gamdShowedDown(this.id);
       }

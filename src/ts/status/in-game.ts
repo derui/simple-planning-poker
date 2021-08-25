@@ -19,6 +19,8 @@ interface InGameUserHand {
   handed: boolean;
 }
 
+export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
+
 export interface InGameAction {
   useSelectCard: () => (index: number) => void;
   useNewGame: () => () => void;
@@ -30,6 +32,7 @@ export interface InGameAction {
     currentGameName: () => string;
     currentSelectableCards: () => Card[];
     currentUserSelectedCard: () => number | undefined;
+    currentGameStatus: () => InGameStatus;
     upperLineUserHands: () => InGameUserHand[];
     lowerLineUserHands: () => InGameUserHand[];
   };
@@ -146,12 +149,33 @@ export const createInGameAction = (
     },
   });
 
+  const currentGameStatus = selector<InGameStatus>({
+    key: SelectorKeys.inGameCurrentGameStatus,
+    get: ({ get }) => {
+      const game = get(gameStateQuery);
+      if (!game) {
+        return "EmptyUserHand";
+      }
+
+      if (game.canShowDown()) {
+        return "CanShowDown";
+      }
+
+      if (game.showedDown) {
+        return "ShowedDown";
+      }
+
+      return "EmptyUserHand";
+    },
+  });
+
   const inGameSelectors = {
     currentGameName: () => useRecoilValue(currentGameName),
     currentSelectableCards: () => useRecoilValue(currentSelectableCards),
     currentUserSelectedCard: () => useRecoilValue(currentUserSelectedCard),
     upperLineUserHands: () => useRecoilValue(upperLineUserHands),
     lowerLineUserHands: () => useRecoilValue(lowerLineUserHands),
+    currentGameStatus: () => useRecoilValue(currentGameStatus),
   };
 
   return {
