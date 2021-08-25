@@ -6,3 +6,5 @@ yarn-error.log
 database-debug.log
 ui-debug.log
 firebase-debug.log
+
+src/ts/firebase.config.prod.ts
