@@ -2,6 +2,7 @@ node_modules
 public/
 yarn-error.log
 .log/
+.firebase/
 
 database-debug.log
 ui-debug.log
