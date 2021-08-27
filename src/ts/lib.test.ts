@@ -13,5 +13,12 @@ export const createMockedGameRepository = () => {
   };
 };
 
+export const createMockedUserRepository = () => {
+  return {
+    save: jest.fn(),
+    findBy: jest.fn(),
+  };
+};
+
 // Avoid error
 test("dummy", () => {});

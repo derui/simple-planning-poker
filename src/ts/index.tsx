@@ -4,7 +4,12 @@ import "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import { gameCreationActionContext, inGameActionContext, signInActionContext } from "./contexts/actions";
+import {
+  gameCreationActionContext,
+  inGameActionContext,
+  signInActionContext,
+  UserActionsContext,
+} from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createSigninActions } from "./status/signin";
@@ -25,6 +30,8 @@ import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
+import { createUserActions } from "./status/user";
+import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -57,14 +64,17 @@ const inGameAction = createInGameAction(
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
 const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database, userRepository), userRepository);
+const userActions = createUserActions(new ChangeUserNameUseCase(dispatcher, userRepository));
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
     <gameCreationActionContext.Provider value={gameCreationActions}>
       <inGameActionContext.Provider value={inGameAction}>
-        <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-          <App />
-        </gameObserverContext.Provider>
+        <UserActionsContext.Provider value={userActions}>
+          <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+            <App />
+          </gameObserverContext.Provider>
+        </UserActionsContext.Provider>
       </inGameActionContext.Provider>
     </gameCreationActionContext.Provider>
   </signInActionContext.Provider>,
