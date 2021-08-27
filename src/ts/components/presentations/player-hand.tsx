@@ -13,6 +13,8 @@ export const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentPro
   let Card = null;
   if (props.showedDown && props.storyPoint) {
     Card = <span className="app__game__main__user-hand__user-card">{props.storyPoint}</span>;
+  } else if (props.showedDown && !props.storyPoint) {
+    Card = <span className="app__game__main__user-hand__user-card">?</span>;
   } else {
     const className = classnames({
       "app__game__main__user-hand__user-card": true,
