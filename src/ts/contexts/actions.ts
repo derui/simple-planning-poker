@@ -9,6 +9,7 @@ import { Game } from "@/domains/game";
 import { InGameAction } from "@/status/in-game";
 import { UserRepository } from "@/domains/user-repository";
 import { UserActions } from "@/status/user";
+import { ChangeUserNameUseCase } from "@/usecases/change-user-name";
 
 class DummyAuthenticator implements Authenticator {
   authenticate(email: string): Promise<UserId> {

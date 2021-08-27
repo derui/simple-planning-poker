@@ -49,6 +49,7 @@ const dispatcher = new EventDispatcherImpl([
   new GameCreatedEventListener(database),
   new GameShowedDownEventListener(database),
   new UserCardSelectedEventListener(database),
+  new UserJoinedEventListener(database, userRepository),
   new NewGameStartedEventListener(database),
 ]);
 
