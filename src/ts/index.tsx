@@ -8,7 +8,7 @@ import {
   gameCreationActionContext,
   inGameActionContext,
   signInActionContext,
-  UserActionsContext,
+  userActionsContext,
 } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
@@ -49,7 +49,6 @@ const dispatcher = new EventDispatcherImpl([
   new GameCreatedEventListener(database),
   new GameShowedDownEventListener(database),
   new UserCardSelectedEventListener(database),
-  new UserJoinedEventListener(database),
   new NewGameStartedEventListener(database),
 ]);
 
@@ -70,11 +69,11 @@ ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
     <gameCreationActionContext.Provider value={gameCreationActions}>
       <inGameActionContext.Provider value={inGameAction}>
-        <UserActionsContext.Provider value={userActions}>
+        <userActionsContext.Provider value={userActions}>
           <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
             <App />
           </gameObserverContext.Provider>
-        </UserActionsContext.Provider>
+        </userActionsContext.Provider>
       </inGameActionContext.Provider>
     </gameCreationActionContext.Provider>
   </signInActionContext.Provider>,

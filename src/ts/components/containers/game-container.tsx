@@ -1,10 +1,12 @@
 import * as React from "react";
-import { inGameActionContext } from "@/contexts/actions";
+import { inGameActionContext, userActionsContext } from "@/contexts/actions";
 import { InGameAction, InGameStatus, ShowDownResult } from "@/status/in-game";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
+import { UserInfoComponent } from "../presentations/user-info";
+import { signInSelectors } from "@/status/signin";
 
 interface Props {}
 
@@ -70,6 +72,8 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const joinUser = inGameActions.useJoinUser();
   const currentStatus = inGameActions.selectors.currentGameStatus();
   const showDownResult = inGameActions.selectors.showDownResult();
+  const currentUser = signInSelectors.useCurrentUser();
+  const changeName = React.useContext(userActionsContext).useChangeUserName();
 
   React.useEffect(() => {
     joinUser();
@@ -80,6 +84,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
       <GameHeaderComponent gameName={currentGameName} />
       <main className="app__game__main">
         <div className="app__game__main__game-area">
+          <UserInfoComponent name={currentUser.name} onChangeName={(name) => changeName(name)} />
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
             <PlayerHandsComponent position="upper" userHands={upperLine} />
