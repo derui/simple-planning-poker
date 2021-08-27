@@ -15,7 +15,6 @@ export class UserJoinedEventListener implements DomainEventListener {
         const ref = this.database.ref(`games/${event.gameId}`);
 
         ref.child("users").child(event.userId).set(user.name);
-        ref.child(`joinedGames/${event.gameId}`).set(true);
       });
     }
 

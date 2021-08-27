@@ -11,6 +11,7 @@ import { currentUserState } from "./signin-atom";
 import { UserRepository } from "@/domains/user-repository";
 import { setUpAtomsUser } from "./user-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
+import { UserObserver } from "@/contexts/observer";
 
 interface InGameUserHand {
   name: string;
@@ -50,10 +51,11 @@ export const createInGameAction = (
   handCardUseCase: HandCardUseCase,
   showDownUseCase: ShowDownUseCase,
   newGameUseCase: NewGameUseCase,
-  joinUserUseCase: JoinUserUseCase
+  joinUserUseCase: JoinUserUseCase,
+  userObserver: UserObserver
 ): InGameAction => {
   const { gameStateQuery, currentGameState } = setUpAtomsInGame();
-  const { userState } = setUpAtomsUser(userRepository);
+  const { userState } = setUpAtomsUser(userRepository, userObserver);
 
   const currentSelectableCards = selector({
     key: SelectorKeys.inGameCurrentSelectableCards,

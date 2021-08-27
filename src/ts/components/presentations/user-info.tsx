@@ -5,7 +5,7 @@ export interface UserInfoProps {
   onChangeName: (name: string) => void;
 }
 
-const NameEditor = (name: string, setName: (name: string) => void, submitName: () => void) => {
+const NameEditor = (name: string, setName: (name: string) => void) => {
   return (
     <div className="app__game__user-info__name-editor">
       <label className="app__game__user-info__name-editor__label">Name</label>
@@ -15,9 +15,6 @@ const NameEditor = (name: string, setName: (name: string) => void, submitName: (
         defaultValue={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <button className="app__game__user-info__name-editor__submit" onClick={() => submitName()}>
-        update
-      </button>
     </div>
   );
 };
@@ -33,18 +30,29 @@ const NameViewer = (name: string, enableNameEditor: () => void) => {
   );
 };
 
+const UpdateApplyer = (allowApplying: boolean, submit: () => void) => {
+  return (
+    <div className="app__game__user-info__applyer">
+      <button disabled={!allowApplying} className="app__game__user-info__name-editor__submit" onClick={() => submit()}>
+        update
+      </button>
+    </div>
+  );
+};
+
 export const UserInfoComponent: React.FunctionComponent<UserInfoProps> = ({ name, onChangeName }) => {
   const [editName, setEditName] = React.useState(false);
   const [currentName, setCurrentName] = React.useState(name);
 
   return (
     <div className="app__game__user-info">
+      {editName ? NameEditor(currentName, setCurrentName) : NameViewer(currentName, () => setEditName(true))}
       {editName
-        ? NameEditor(currentName, setCurrentName, () => {
+        ? UpdateApplyer(currentName !== "", () => {
             setEditName(false);
             onChangeName(currentName);
           })
-        : NameViewer(currentName, () => setEditName(true))}
+        : null}
     </div>
   );
 };
