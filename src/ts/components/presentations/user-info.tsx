@@ -47,12 +47,10 @@ export const UserInfoComponent: React.FunctionComponent<UserInfoProps> = ({ name
   return (
     <div className="app__game__user-info">
       {editName ? NameEditor(currentName, setCurrentName) : NameViewer(currentName, () => setEditName(true))}
-      {editName
-        ? UpdateApplyer(currentName !== "", () => {
-            setEditName(false);
-            onChangeName(currentName);
-          })
-        : null}
+      {UpdateApplyer(currentName !== "" && editName, () => {
+        setEditName(false);
+        onChangeName(currentName);
+      })}
     </div>
   );
 };
