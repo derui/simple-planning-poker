@@ -5,11 +5,87 @@
 }
 
 .app__game__header {
+  display: flex;
   flex: 0 1 48px;
-  padding: var(--space-base);
   color: white;
-  background-color: var(--primary-3);
-  border-bottom: 2px solid var(--secondary-1-0);
+  align-items: center;
+  padding: var(--space-large);
+}
+
+.app__game__header__game-info {
+  flex: 0 0 auto;
+  display: flex;
+  color: var(--primary-4);
+  padding: 0 0 0 var(--space-small);
+}
+
+.app__game__header__game-info__name-container {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: stretch;
+}
+
+.app__game__header__game-info__name-label {
+  display: flex;
+  flex: 0 0 auto;
+  color: var(--primary-2);
+  align-items: center;
+}
+
+.app__game__header__game-info__name {
+  display: flex;
+  flex: 1 1 auto;
+  font-weight: bold;
+  padding: var(--space-base) var(--space-large);
+  align-items: center;
+}
+
+.app__game__header__game-info__actions {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+.app__game__header__game-info__actions__leave {
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: none;
+  transition: background-color 0.5s ease, clip-path 0.5s ease, border 0.5s ease;
+  clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid var(--secondary-2-3);
+    background-color: var(--secondary-2-1);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+
+  &::before {
+    content: "";
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-block;
+    background-image: url(/static/svg/opened-door-aperture.svg);
+    mask: url(/static/svg/opened-door-aperture.svg);
+    background-color: var(--secondary-2-4);
+    mask-size: cover;
+    vertical-align: middle;
+  }
+
+  &::after {
+    display: inline-block;
+    content: "Leave";
+    color: var(--secondary-2-4);
+    position: relative;
+    right: -10em;
+    vertical-align: middle;
+    transition: right 0.1s ease-in;
+    margin-left: var(--space-base);
+    margin-right: var(--space-base);
+  }
+
+  &:hover::after {
+    right: 0;
+  }
 }
 
 .app__game__main {

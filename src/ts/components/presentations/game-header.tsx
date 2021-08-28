@@ -1,4 +1,5 @@
 import React from "react";
+import { GameInfoComponent } from "./game-info";
 
 interface Props {
   gameName: string;
@@ -7,7 +8,7 @@ interface Props {
 export const GameHeaderComponent: React.FunctionComponent<Props> = (props) => {
   return (
     <div className="app__game__header">
-      <h2>Planning Poker: {props.gameName}</h2>
+      <GameInfoComponent gameName={props.gameName} />
     </div>
   );
 };
