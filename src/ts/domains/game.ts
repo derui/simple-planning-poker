@@ -59,6 +59,15 @@ type InternalGame = Game & {
   _selectableCards: SelectableCards;
 };
 
+const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
+  for (let elem of subset) {
+    if (!baseSet.has(elem)) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export const createGame = (
   id: GameId,
   name: string,
@@ -183,13 +192,4 @@ export const createGame = (
       return EventFactory.newGameStarted(this.id);
     },
   } as InternalGame;
-};
-
-const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
-  for (let elem of subset) {
-    if (!baseSet.has(elem)) {
-      return false;
-    }
-  }
-  return true;
 };

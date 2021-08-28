@@ -75,6 +75,7 @@ describe("domains", () => {
       // Arrange
       const user1 = createUserId();
       const user2 = createUserId();
+
       const card = createStoryPointCard(createStoryPoint(1));
       const game = createGame(createGameId(), "name", [user1], cards);
 
@@ -107,7 +108,7 @@ describe("domains", () => {
       const user2 = createUserId();
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createStoryPointCard(createStoryPoint(3));
-      const game = createGame(createGameId(), "name", [user1], cards);
+      const game = createGame(createGameId(), "name", [user1, user2], cards);
       game.acceptHandBy(user1, card1);
       game.acceptHandBy(user2, card2);
       game.showDown();
@@ -125,7 +126,7 @@ describe("domains", () => {
       const user2 = createUserId();
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createGiveUpCard();
-      const game = createGame(createGameId(), "name", [user1], cards);
+      const game = createGame(createGameId(), "name", [user1, user2], cards);
 
       game.acceptHandBy(user1, card1);
       game.acceptHandBy(user2, card2);
