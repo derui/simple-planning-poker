@@ -5,7 +5,6 @@ import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
-import { UserInfoComponent } from "../presentations/user-info";
 import { signInSelectors } from "@/status/signin";
 
 interface Props {}

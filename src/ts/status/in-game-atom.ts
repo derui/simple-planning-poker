@@ -1,6 +1,6 @@
 import { AtomKeys, SelectorKeys } from "./key";
 import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
-import { Game, GameId } from "@/domains/game";
+import { Game } from "@/domains/game";
 
 export const setUpAtomsInGame = (): {
   gameStateQuery: RecoilValueReadOnly<Game | undefined>;
