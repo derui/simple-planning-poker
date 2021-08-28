@@ -159,7 +159,6 @@
   color: var(--secondary-2-4);
   padding: var(--space-base) var(--space-large);
   cursor: pointer;
-
   transition: color 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
   &:active {

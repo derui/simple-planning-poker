@@ -35,7 +35,14 @@ export const SigninContainer: React.FunctionComponent<Props> = ({ location, hist
   return (
     <React.Fragment>
       <Overlay />
-      <div className="app__signin-root">
+      <form
+        className="app__signin-root"
+        onSubmit={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          signIn(signInState, signInCallback);
+        }}
+      >
         <header className="app__signin-header">Sign in</header>
         <main className="app__signin-main">
           <h3 className="app__signin-main__description">Sign in with verified mail address</h3>
@@ -44,11 +51,9 @@ export const SigninContainer: React.FunctionComponent<Props> = ({ location, hist
           </div>
         </main>
         <footer className="app__signin-footer">
-          <button className="app__signin-submit" onClick={() => signIn(signInState, signInCallback)}>
-            Submit
-          </button>
+          <input type="submit" className="app__signin__submit" value="Submit" />
         </footer>
-      </div>
+      </form>
     </React.Fragment>
   );
 };

@@ -32,8 +32,9 @@ export const createSigninActions = (authenticator: Authenticator, userRepository
           set(currentUserState, () => ({ id: userId, name: email }));
           callback();
         } catch (e) {
-          set(signInState, (prev) => ({ ...prev, authenticating: false }));
           throw e;
+        } finally {
+          set(signInState, (prev) => ({ ...prev, authenticating: false }));
         }
       }),
 

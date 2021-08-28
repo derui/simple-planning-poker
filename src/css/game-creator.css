@@ -91,3 +91,24 @@
   color: var(--secondary-1-1);
   text-align: right;
 }
+
+.app__game-creator__submit {
+  flex: 0 1 auto;
+  outline: none;
+  border: 1px solid var(--secondary-1-4);
+  border-radius: var(--base-border-radius);
+  background-color: var(--secondary-1-1);
+  color: var(--secondary-1-4);
+  padding: var(--space-base) var(--space-large);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:active {
+    box-shadow: var(--box-shadow);
+  }
+
+  &:hover {
+    color: var(--secondary-1-1);
+    background-color: var(--secondary-1-4);
+  }
+}
