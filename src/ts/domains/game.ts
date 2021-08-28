@@ -107,7 +107,7 @@ export const createGame = (
     canShowDown(): boolean {
       const handedUsers = new Set(this.userHands.map((v) => v.userId));
       const joinedUsers = new Set(this.joinedUsers);
-      return handedUsers.size > 0 && isSuperset(handedUsers, joinedUsers) && !this.showedDown;
+      return handedUsers.size > 0 && isSuperset(joinedUsers, handedUsers) && !this.showedDown;
     },
 
     showDown(): GameShowedDown | undefined {

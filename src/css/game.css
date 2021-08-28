@@ -153,7 +153,7 @@
 .app__game__main__game-management-button--show-down {
   flex: 0 1 auto;
   outline: none;
-  border: 1px solid var(--primary-4);
+  border: 1px solid var(--secondary-2-4);
   border-radius: var(--base-border-radius);
   background-color: var(--secondary-2-1);
   color: var(--secondary-2-4);
@@ -177,20 +177,19 @@
   outline: none;
   border: 1px solid var(--primary-4);
   border-radius: var(--base-border-radius);
-  background-color: var(--secondary-2-1);
-  color: var(--secondary-2-4);
+  background-color: var(--primary-1);
+  color: var(--primary-4);
   padding: var(--space-base) var(--space-large);
   cursor: pointer;
-
-  transition: color 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 
   &:active {
     box-shadow: var(--box-shadow);
   }
 
   &:hover {
-    color: var(--secondary-2-1);
-    background-color: var(--secondary-2-3);
+    color: var(--primary-1);
+    background-color: var(--primary-4);
   }
 }
 

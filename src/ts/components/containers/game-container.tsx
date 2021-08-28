@@ -81,10 +81,13 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
 
   return (
     <div className="app__game">
-      <GameHeaderComponent gameName={currentGameName} />
+      <GameHeaderComponent
+        gameName={currentGameName}
+        userName={currentUser.name}
+        onChangeName={(name) => changeName(name)}
+      />
       <main className="app__game__main">
         <div className="app__game__main__game-area">
-          <UserInfoComponent name={currentUser.name} onChangeName={(name) => changeName(name)} />
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
             <PlayerHandsComponent position="upper" userHands={upperLine} />

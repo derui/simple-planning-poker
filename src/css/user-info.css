@@ -35,6 +35,7 @@
 .app__game__user-info__name-viewer {
   display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   border: 1px solid var(--secondary-1-4);
 }
 
@@ -58,6 +59,7 @@
 .app__game__user-info__name-editor {
   display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   border: 1px solid var(--secondary-1-4);
 }
 
