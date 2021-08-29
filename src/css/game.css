@@ -7,9 +7,11 @@
 .app__game__header {
   display: flex;
   flex: 0 1 48px;
+  justify-content: space-between;
   color: white;
   align-items: center;
   padding: var(--space-large);
+  z-index: 3;
 }
 
 .app__game__header__game-info {
@@ -92,6 +94,7 @@
   display: flex;
   flex: 1 1 auto;
   padding: var(--space-base);
+  z-index: 2;
 }
 
 .app__game__main__game-area {

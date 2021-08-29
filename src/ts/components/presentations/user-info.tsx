@@ -1,56 +1,33 @@
-import * as React from "react";
+import React from "react";
+import classnames from "classnames";
+import { UserInfoUpdaterComponent } from "./user-info-updater";
 
-export interface UserInfoProps {
+interface Props {
   name: string;
   onChangeName: (name: string) => void;
 }
 
-const NameEditor = (name: string, setName: (name: string) => void) => {
-  return (
-    <div className="app__game__user-info__name-editor">
-      <label className="app__game__user-info__name-editor__label">Name</label>
-      <input
-        className="app__game__user-info__name-editor__input"
-        type="text"
-        defaultValue={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-    </div>
-  );
-};
-
-const NameViewer = (name: string, enableNameEditor: () => void) => {
-  return (
-    <div className="app__game__user-info__name-viewer">
-      <label className="app__game__user-info__name-viewer__label">Name</label>
-      <span className="app__game__user-info__name-viewer__name" onClick={() => enableNameEditor()}>
-        {name}
-      </span>
-    </div>
-  );
-};
-
-const UpdateApplyer = (allowApplying: boolean, submit: () => void) => {
-  return (
-    <div className="app__game__user-info__applyer">
-      <button disabled={!allowApplying} className="app__game__user-info__name-editor__submit" onClick={() => submit()}>
-        update
-      </button>
-    </div>
-  );
-};
-
-export const UserInfoComponent: React.FunctionComponent<UserInfoProps> = ({ name, onChangeName }) => {
-  const [editName, setEditName] = React.useState(false);
-  const [currentName, setCurrentName] = React.useState(name);
+export const UserInfoComponent: React.FunctionComponent<Props> = (props) => {
+  const [showUpdater, setShowUpdater] = React.useState(false);
+  const indicatorClassName = classnames({
+    "app__game__user-info__indicator": true,
+    "app__game__user-info__indicator--opened": showUpdater,
+  });
 
   return (
-    <div className="app__game__user-info">
-      {editName ? NameEditor(currentName, setCurrentName) : NameViewer(currentName, () => setEditName(true))}
-      {UpdateApplyer(currentName !== "" && editName, () => {
-        setEditName(false);
-        onChangeName(currentName);
-      })}
+    <div className="app__game__user-info" onClick={() => setShowUpdater(!showUpdater)}>
+      <span className="app__game__user-info__icon"></span>
+      <span className="app__game__user-info__name">{props.name}</span>
+      <span className={indicatorClassName}></span>
+      {showUpdater ? (
+        <UserInfoUpdaterComponent
+          name={props.name}
+          onChangeName={(name) => {
+            setShowUpdater(false);
+            props.onChangeName(name);
+          }}
+        />
+      ) : null}
     </div>
   );
 };
