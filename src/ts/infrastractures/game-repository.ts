@@ -5,6 +5,7 @@ import { createStoryPoint } from "@/domains/story-point";
 import { UserId } from "@/domains/user";
 import { deserializeCard, serializeCard, SerializedCard } from "./card-converter";
 import { createSelectableCards } from "@/domains/selectable-cards";
+import { createGameJoinedUser, GameJoinedUser, UserMode } from "@/domains/game-joined-user";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: firebase.database.Database) {}
@@ -18,7 +19,8 @@ export class GameRepositoryImpl implements GameRepository {
       .map((v) => (v.kind === "storypoint" ? v.storyPoint.value : null));
 
     game.joinedUsers.forEach((user) => {
-      updates[`/games/${game.id}/users/${user}`] = true;
+      updates[`/games/${game.id}/users/${user}/name`] = user.name;
+      updates[`/games/${game.id}/users/${user}/mode`] = user.mode;
     });
 
     game.userHands.forEach((hand) => {
@@ -44,14 +46,19 @@ export class GameRepositoryImpl implements GameRepository {
 
     const name = val["name"] as string;
     const cards = val["cards"] as number[];
-    const joinedUsers = val["users"] as { [key: string]: boolean };
+    const joinedUsers = val["users"] as { [key: string]: any };
     const showedDown = val["showedDown"] as boolean;
     const userHands = (val["userHands"] || {}) as { [key: string]: SerializedCard };
 
     const game = createGame(
       id,
       name,
-      Object.keys(joinedUsers) as UserId[],
+      Object.keys(joinedUsers).reduce((accum, userId) => {
+        const { name, mode } = joinedUsers[userId] as { name: string; mode: UserMode };
+
+        accum.push(createGameJoinedUser(userId as UserId, name, mode));
+        return accum;
+      }, [] as GameJoinedUser[]),
       createSelectableCards(cards.map(createStoryPoint))
     );
 

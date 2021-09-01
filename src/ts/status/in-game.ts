@@ -8,13 +8,12 @@ import { ShowDownUseCase } from "@/usecases/show-down";
 import { NewGameUseCase } from "@/usecases/new-game";
 import { setUpAtomsInGame } from "./in-game-atom";
 import { currentUserState } from "./signin-atom";
-import { UserRepository } from "@/domains/user-repository";
-import { setUpAtomsUser } from "./user-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
-import { UserObserver } from "@/contexts/observer";
+import { UserMode } from "@/domains/game-joined-user";
 
 interface InGameUserHand {
   name: string;
+  mode: UserMode;
   storyPoint: number | null;
   showedDown: boolean;
   handed: boolean;
@@ -47,15 +46,12 @@ export interface InGameAction {
 
 export const createInGameAction = (
   gameRepository: GameRepository,
-  userRepository: UserRepository,
   handCardUseCase: HandCardUseCase,
   showDownUseCase: ShowDownUseCase,
   newGameUseCase: NewGameUseCase,
-  joinUserUseCase: JoinUserUseCase,
-  userObserver: UserObserver
+  joinUserUseCase: JoinUserUseCase
 ): InGameAction => {
   const { gameStateQuery, currentGameState } = setUpAtomsInGame();
-  const { userState } = setUpAtomsUser(userRepository, userObserver);
 
   const currentSelectableCards = selector({
     key: SelectorKeys.inGameCurrentSelectableCards,
@@ -97,7 +93,7 @@ export const createInGameAction = (
         return false;
       }
 
-      return game.joinedUsers.includes(user.id);
+      return game.joinedUsers.map((v) => v.userId).includes(user.id);
     },
   });
 
@@ -122,11 +118,11 @@ export const createInGameAction = (
       }
       const users = game.joinedUsers.filter((_, index) => index % 2 == 0);
 
-      return users.map((userId) => {
-        const user = get(userState(userId));
-        const hand = game.userHands.find((v) => v.userId === userId);
+      return users.map((user) => {
+        const hand = game.userHands.find((v) => v.userId === user.userId);
         return {
           name: user?.name ?? "",
+          mode: user?.mode ?? UserMode.normal,
           storyPoint: hand ? asStoryPoint(hand.card)?.value ?? null : null,
           showedDown: game.showedDown,
           handed: !!hand,
@@ -144,11 +140,11 @@ export const createInGameAction = (
       }
       const users = game.joinedUsers.filter((_, index) => index % 2 == 1);
 
-      return users.map((userId) => {
-        const user = get(userState(userId));
-        const hand = game.userHands.find((v) => v.userId === userId);
+      return users.map((user) => {
+        const hand = game.userHands.find((v) => v.userId === user.userId);
         return {
           name: user?.name ?? "",
+          mode: user?.mode ?? UserMode.normal,
           storyPoint: hand ? asStoryPoint(hand.card)?.value ?? null : null,
           showedDown: game.showedDown,
           handed: !!hand,

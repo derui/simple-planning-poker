@@ -6,6 +6,7 @@ import { createUserId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
 import { createGiveUpCard } from "@/domains/card";
 import { HandCardUseCase } from "./hand-card";
+import { createGameJoinedUser } from "@/domains/game-joined-user";
 
 describe("use case", () => {
   describe("hand card", () => {
@@ -30,9 +31,10 @@ describe("use case", () => {
 
     test("should save game handed card by user", async () => {
       // Arrange
-      const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
+      const user = createGameJoinedUser(createUserId(), "foo");
+      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
       const input = {
-        userId: game.joinedUsers[0],
+        userId: game.joinedUsers[0].userId,
         gameId: game.id,
         card: createGiveUpCard(),
       };
@@ -55,9 +57,10 @@ describe("use case", () => {
 
     test("should dispatch UserHanded event", async () => {
       // Arrange
-      const game = createGame(createGameId(), "name", [createUserId()], createSelectableCards([createStoryPoint(1)]));
+      const user = createGameJoinedUser(createUserId(), "foo");
+      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
       const input = {
-        userId: game.joinedUsers[0],
+        userId: game.joinedUsers[0].userId,
         gameId: game.id,
         card: createGiveUpCard(),
       };

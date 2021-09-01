@@ -73,7 +73,7 @@ describe("use case", () => {
 
       const called = repository.save.mock.calls[0][0] as Game;
       expect(called.name).toBe("foo");
-      expect(called.joinedUsers).toContain(input.createdBy.userId);
+      expect(called.joinedUsers.map((v) => v.userId)).toContain(input.createdBy.userId);
     });
 
     test("should dispatch game created event", () => {

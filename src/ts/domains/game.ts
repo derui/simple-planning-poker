@@ -1,6 +1,7 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
 import { EventFactory, GameShowedDown, NewGameStarted, UserCardSelected, UserJoined } from "./event";
+import { createGameJoinedUserFromUser, GameJoinedUser } from "./game-joined-user";
 import { SelectableCards } from "./selectable-cards";
 import { createStoryPoint, StoryPoint } from "./story-point";
 import { User, UserId } from "./user";
@@ -18,7 +19,7 @@ export interface UserHand {
 export interface Game {
   get id(): GameId;
   get name(): string;
-  get joinedUsers(): UserId[];
+  get joinedUsers(): GameJoinedUser[];
   get userHands(): UserHand[];
   get showedDown(): boolean;
   get selectableCards(): SelectableCards;
@@ -54,7 +55,7 @@ export interface Game {
 type InternalGame = Game & {
   _userHands: UserHand[];
   _showedDown: boolean;
-  _joinedUsers: UserId[];
+  _joinedUsers: GameJoinedUser[];
   _name: string;
   _selectableCards: SelectableCards;
 };
@@ -71,7 +72,7 @@ const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
 export const createGame = (
   id: GameId,
   name: string,
-  initialUsers: UserId[],
+  initialUsers: GameJoinedUser[],
   selectableCards: SelectableCards
 ): Game => {
   if (initialUsers.length === 0) {
@@ -115,7 +116,7 @@ export const createGame = (
 
     canShowDown(): boolean {
       const handedUsers = new Set(this.userHands.map((v) => v.userId));
-      const joinedUsers = new Set(this.joinedUsers);
+      const joinedUsers = new Set(this.joinedUsers.map((v) => v.userId));
       return handedUsers.size > 0 && isSuperset(joinedUsers, handedUsers) && !this.showedDown;
     },
 
@@ -176,13 +177,13 @@ export const createGame = (
         return;
       }
 
-      this._joinedUsers.push(user.id);
+      this._joinedUsers.push(createGameJoinedUserFromUser(user));
 
       return EventFactory.userJoined(this.id, user.id, user.name);
     },
 
     canAcceptToBeJoinedBy(user: User): boolean {
-      return !this._joinedUsers.some((v) => v === user.id);
+      return !this._joinedUsers.map((v) => v.userId).some((v) => v === user.id);
     },
 
     newGame() {

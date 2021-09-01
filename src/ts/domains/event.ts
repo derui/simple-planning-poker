@@ -1,6 +1,7 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
 import { GameId } from "./game";
+import { UserMode } from "./game-joined-user";
 import { SelectableCards } from "./selectable-cards";
 import { UserId } from "./user";
 
@@ -21,6 +22,7 @@ export const DOMAIN_EVENTS = {
   GameCreated: "GameCreated",
   NewGameStarted: "NewGameStarted",
   UserNameChanged: "UserNameChanged",
+  GameJoinedUserModeChanged: "GameJoinedUserModeChanged",
   UserJoined: "UserJoined",
   GameShowedDown: "GameShowedDown",
   UserCardSelected: "UserCardSelected",
@@ -32,6 +34,7 @@ export type DefinedDomainEvents =
   | GameCreated
   | NewGameStarted
   | UserNameChanged
+  | GameJoinedUserModeChanged
   | GameShowedDown
   | UserCardSelected
   | UserJoined;
@@ -50,6 +53,11 @@ export interface GameCreated extends Event<DomainEvents["GameCreated"]> {
 
 export interface NewGameStarted extends Event<DomainEvents["NewGameStarted"]> {
   gameId: GameId;
+}
+
+export interface GameJoinedUserModeChanged extends Event<DomainEvents["GameJoinedUserModeChanged"]> {
+  userId: UserId;
+  mode: UserMode;
 }
 
 export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> {
@@ -136,6 +144,15 @@ export const EventFactory = {
       },
       name,
       selectableCards,
+    };
+  },
+
+  gameJoinedUserModeChanged(userId: UserId, mode: UserMode): GameJoinedUserModeChanged {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.GameJoinedUserModeChanged,
+      userId,
+      mode,
     };
   },
 };

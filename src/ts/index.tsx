@@ -32,7 +32,6 @@ import { JoinUserUseCase } from "./usecases/join-user";
 import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
 import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
-import { UserObserverImpl } from "./infrastractures/user-observer";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -54,15 +53,12 @@ const dispatcher = new EventDispatcherImpl([
   new NewGameStartedEventListener(database),
 ]);
 
-const userObserver = new UserObserverImpl(database, userRepository);
 const inGameAction = createInGameAction(
   gameRepository,
-  userRepository,
   new HandCardUseCase(dispatcher, gameRepository),
   new ShowDownUseCase(dispatcher, gameRepository),
   new NewGameUseCase(dispatcher, gameRepository),
-  new JoinUserUseCase(dispatcher, gameRepository),
-  userObserver
+  new JoinUserUseCase(dispatcher, gameRepository)
 );
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));

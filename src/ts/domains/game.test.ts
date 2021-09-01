@@ -1,5 +1,6 @@
 import { createGiveUpCard, createStoryPointCard } from "./card";
 import { createGame, createGameId } from "./game";
+import { createGameJoinedUser, createGameJoinedUserFromUser } from "./game-joined-user";
 import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
 import { createUser, createUserId } from "./user";
@@ -19,7 +20,7 @@ describe("domains", () => {
     test("should return undefined if user did not hand yet", () => {
       // Arrange
       const userId = createUserId();
-      const game = createGame(createGameId(), "name", [userId], cards);
+      const game = createGame(createGameId(), "name", [createGameJoinedUser(userId, "foo")], cards);
 
       // Act
       const card = game.findHandBy(userId);
@@ -32,7 +33,7 @@ describe("domains", () => {
       // Arrange
       const userId = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
-      const game = createGame(createGameId(), "name", [userId], cards);
+      const game = createGame(createGameId(), "name", [createGameJoinedUser(userId, "foo")], cards);
       game.acceptHandBy(userId, card);
 
       // Act
@@ -47,7 +48,7 @@ describe("domains", () => {
       const userId = createUserId();
       const card = createStoryPointCard(createStoryPoint(1));
       const card2 = createStoryPointCard(createStoryPoint(2));
-      const game = createGame(createGameId(), "name", [userId], cards);
+      const game = createGame(createGameId(), "name", [createGameJoinedUser(userId, "foo")], cards);
       game.acceptHandBy(userId, card);
       game.acceptHandBy(userId, card2);
 
@@ -61,8 +62,8 @@ describe("domains", () => {
 
     test("should not be able to show down when all user did not hand yet", () => {
       // Arrange
-      const userId = createUserId();
-      const game = createGame(createGameId(), "name", [userId], cards);
+      const user = createGameJoinedUser(createUserId(), "foo");
+      const game = createGame(createGameId(), "name", [user], cards);
 
       // Act
       const ret = game.showDown();
@@ -77,7 +78,7 @@ describe("domains", () => {
       const user2 = createUserId();
 
       const card = createStoryPointCard(createStoryPoint(1));
-      const game = createGame(createGameId(), "name", [user1], cards);
+      const game = createGame(createGameId(), "name", [createGameJoinedUser(user1, "foo")], cards);
 
       // Act
       game.acceptToBeJoinedBy(createUser(user2, "2"));
@@ -92,7 +93,7 @@ describe("domains", () => {
 
     test("should return undefined as average when the game does not show down yet", () => {
       // Arrange
-      const user1 = createUserId();
+      const user1 = createGameJoinedUser(createUserId(), "foo");
       const game = createGame(createGameId(), "name", [user1], cards);
 
       // Act
@@ -104,13 +105,13 @@ describe("domains", () => {
 
     test("should return average story point when the game showed down", () => {
       // Arrange
-      const user1 = createUserId();
-      const user2 = createUserId();
+      const user1 = createGameJoinedUser(createUserId(), "foo");
+      const user2 = createGameJoinedUser(createUserId(), "bar");
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createStoryPointCard(createStoryPoint(3));
       const game = createGame(createGameId(), "name", [user1, user2], cards);
-      game.acceptHandBy(user1, card1);
-      game.acceptHandBy(user2, card2);
+      game.acceptHandBy(user1.userId, card1);
+      game.acceptHandBy(user2.userId, card2);
       game.showDown();
 
       // Act
@@ -122,14 +123,14 @@ describe("domains", () => {
 
     test("should ignore give up card to calculate average", () => {
       // Arrange
-      const user1 = createUserId();
-      const user2 = createUserId();
+      const user1 = createGameJoinedUser(createUserId(), "foo");
+      const user2 = createGameJoinedUser(createUserId(), "bar");
       const card1 = createStoryPointCard(createStoryPoint(1));
       const card2 = createGiveUpCard();
       const game = createGame(createGameId(), "name", [user1, user2], cards);
 
-      game.acceptHandBy(user1, card1);
-      game.acceptHandBy(user2, card2);
+      game.acceptHandBy(user1.userId, card1);
+      game.acceptHandBy(user2.userId, card2);
       game.showDown();
 
       // Act
@@ -141,7 +142,7 @@ describe("domains", () => {
 
     test("should be able to add user while game", () => {
       // Arrange
-      const user1 = createUserId();
+      const user1 = createGameJoinedUser(createUserId(), "foo");
       const user2 = createUser(createUserId(), "user2");
       const game = createGame(createGameId(), "name", [user1], cards);
 
@@ -150,7 +151,7 @@ describe("domains", () => {
 
       // Assert
       expect(game.joinedUsers).toHaveLength(2);
-      expect(game.joinedUsers).toEqual([user1, user2.id]);
+      expect(game.joinedUsers.map((v) => v.userId)).toEqual([user1.userId, user2.id]);
       expect(event?.gameId).toBe(game.id);
       expect(event?.name).toBe("user2");
       expect(event?.userId).toBe(user2.id);
@@ -159,7 +160,7 @@ describe("domains", () => {
     test("should not return event if user can not accept to join", () => {
       // Arrange
       const user1 = createUser(createUserId(), "user");
-      const game = createGame(createGameId(), "name", [user1.id], cards);
+      const game = createGame(createGameId(), "name", [createGameJoinedUser(user1.id, user1.name)], cards);
 
       // Act
       const event = game.acceptToBeJoinedBy(user1);
