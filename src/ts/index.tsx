@@ -33,6 +33,8 @@ import { NewGameStartedEventListener } from "./infrastractures/event/new-game-st
 import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { UserNameChangedEventListener } from "./infrastractures/event/user-name-changed-event-listener";
+import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
+import { GameJoinedUserModeChangedEventListener } from "./infrastractures/event/game-joined-user-mode-changed-event-listener";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -53,6 +55,7 @@ const dispatcher = new EventDispatcherImpl([
   new UserJoinedEventListener(database, userRepository),
   new NewGameStartedEventListener(database),
   new UserNameChangedEventListener(database),
+  new GameJoinedUserModeChangedEventListener(database),
 ]);
 
 const inGameAction = createInGameAction(
@@ -60,6 +63,7 @@ const inGameAction = createInGameAction(
   new HandCardUseCase(dispatcher, gameRepository),
   new ShowDownUseCase(dispatcher, gameRepository),
   new NewGameUseCase(dispatcher, gameRepository),
+  new ChangeUserModeUseCase(dispatcher, gameRepository),
   new JoinUserUseCase(dispatcher, gameRepository)
 );
 

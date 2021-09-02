@@ -19,7 +19,7 @@ export class GameJoinedUserModeChangedEventListener implements DomainEventListen
           const games = user["joinedGames"] || {};
           const updates: { [key: string]: any } = {};
           Object.keys(games).forEach((key) => {
-            updates[`games/${key}/joinedUser/${event.userId}/mode`] = event.mode;
+            updates[`games/${key}/users/${event.userId}/mode`] = event.mode;
           });
 
           this.database.ref().update(updates);

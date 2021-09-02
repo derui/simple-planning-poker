@@ -1,10 +1,13 @@
 import React from "react";
 import classnames from "classnames";
 import { UserInfoUpdaterComponent } from "./user-info-updater";
+import { UserMode } from "@/domains/game-joined-user";
 
 interface Props {
   name: string;
+  mode: UserMode;
   onChangeName: (name: string) => void;
+  onChangeMode: (mode: UserMode) => void;
 }
 
 export const UserInfoComponent: React.FunctionComponent<Props> = (props) => {
@@ -22,9 +25,14 @@ export const UserInfoComponent: React.FunctionComponent<Props> = (props) => {
       {showUpdater ? (
         <UserInfoUpdaterComponent
           name={props.name}
+          mode={props.mode}
           onChangeName={(name) => {
             setShowUpdater(false);
             props.onChangeName(name);
+          }}
+          onChangeMode={(mode) => {
+            setShowUpdater(false);
+            props.onChangeMode(mode);
           }}
         />
       ) : null}

@@ -1,7 +1,14 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
-import { EventFactory, GameShowedDown, NewGameStarted, UserCardSelected, UserJoined } from "./event";
-import { createGameJoinedUserFromUser, GameJoinedUser } from "./game-joined-user";
+import {
+  EventFactory,
+  GameJoinedUserModeChanged,
+  GameShowedDown,
+  NewGameStarted,
+  UserCardSelected,
+  UserJoined,
+} from "./event";
+import { createGameJoinedUserFromUser, GameJoinedUser, UserMode } from "./game-joined-user";
 import { SelectableCards } from "./selectable-cards";
 import { createStoryPoint, StoryPoint } from "./story-point";
 import { User, UserId } from "./user";
@@ -27,6 +34,10 @@ export interface Game {
   changeName(name: string): void;
 
   canChangeName(name: string): boolean;
+
+  changeUserMode(userId: UserId, mode: UserMode): GameJoinedUserModeChanged | undefined;
+
+  canChangeUserMode(userId: UserId): boolean;
 
   canShowDown(): boolean;
 
@@ -184,6 +195,23 @@ export const createGame = (
 
     canAcceptToBeJoinedBy(user: User): boolean {
       return !this._joinedUsers.map((v) => v.userId).some((v) => v === user.id);
+    },
+
+    canChangeUserMode(userId: UserId): boolean {
+      return this._joinedUsers.map((v) => v.userId).some((v) => v === userId);
+    },
+
+    changeUserMode(userId: UserId, mode: UserMode): GameJoinedUserModeChanged | undefined {
+      if (!this.canChangeUserMode(userId)) {
+        return;
+      }
+
+      const user = this._joinedUsers.find((v) => v.userId === userId);
+      if (!user) {
+        return;
+      }
+
+      return user.changeUserMode(mode);
     },
 
     newGame() {

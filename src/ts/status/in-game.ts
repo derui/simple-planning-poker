@@ -10,6 +10,7 @@ import { setUpAtomsInGame } from "./in-game-atom";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
 import { UserMode } from "@/domains/game-joined-user";
+import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
 
 interface InGameUserHand {
   name: string;
@@ -31,6 +32,7 @@ export interface InGameAction {
   useNewGame: () => () => void;
   useJoinUser: () => () => void;
   useShowDown: () => () => void;
+  useChangeMode: () => (mode: UserMode) => void;
   useSetCurrentGame: (gameId: GameId) => (game: Game) => void;
 
   selectors: {
@@ -50,6 +52,7 @@ export const createInGameAction = (
   handCardUseCase: HandCardUseCase,
   showDownUseCase: ShowDownUseCase,
   newGameUseCase: NewGameUseCase,
+  changeUserModeUseCase: ChangeUserModeUseCase,
   joinUserUseCase: JoinUserUseCase
 ): InGameAction => {
   const { gameStateQuery, currentGameState } = setUpAtomsInGame();
@@ -285,6 +288,28 @@ export const createInGameAction = (
           gameId: currentGame.id,
           userId: currentUser.id,
           name: currentUser.name,
+        });
+
+        const game = await gameRepository.findBy(currentGame.id);
+        set(currentGameState, (prev) => {
+          return game || prev;
+        });
+      });
+    },
+
+    useChangeMode: () => {
+      const currentUser = useRecoilValue(currentUserState);
+      const currentGame = useRecoilValue(gameStateQuery);
+
+      return useRecoilCallback(({ set }) => async (mode: UserMode) => {
+        if (!currentGame || !currentUser.id) {
+          return;
+        }
+
+        await changeUserModeUseCase.execute({
+          gameId: currentGame.id,
+          userId: currentUser.id,
+          mode,
         });
 
         const game = await gameRepository.findBy(currentGame.id);

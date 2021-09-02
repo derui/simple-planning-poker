@@ -79,6 +79,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const showDownResult = inGameActions.selectors.showDownResult();
   const currentUser = signInSelectors.useCurrentUser();
   const changeName = React.useContext(userActionsContext).useChangeUserName();
+  const changeMode = inGameActions.useChangeMode();
   const currentUserMode = inGameActions.selectors.currentUserMode() ?? UserMode.normal;
 
   React.useEffect(() => {
@@ -98,7 +99,9 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
       <GameHeaderComponent
         gameName={currentGameName}
         userName={currentUser.name}
+        userMode={currentUserMode}
         onChangeName={(name) => changeName(name)}
+        onChangeMode={(mode) => changeMode(mode)}
       />
       <main className="app__game__main">
         <div className="app__game__main__game-area">
