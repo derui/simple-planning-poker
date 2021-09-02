@@ -32,6 +32,7 @@ import { JoinUserUseCase } from "./usecases/join-user";
 import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
 import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
+import { UserNameChangedEventListener } from "./infrastractures/event/user-name-changed-event-listener";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -51,6 +52,7 @@ const dispatcher = new EventDispatcherImpl([
   new UserCardSelectedEventListener(database),
   new UserJoinedEventListener(database, userRepository),
   new NewGameStartedEventListener(database),
+  new UserNameChangedEventListener(database),
 ]);
 
 const inGameAction = createInGameAction(

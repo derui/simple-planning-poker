@@ -6,6 +6,8 @@ import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 import { signInSelectors } from "@/status/signin";
+import { UserMode } from "@/domains/game-joined-user";
+import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
 
 interface Props {}
 
@@ -40,9 +42,13 @@ const createAveragePointShowcase = (showDownResult: ShowDownResult) => {
   return <AveragePointShowcaseComponent averagePoint={average} cardCounts={showDownResult.cardCounts} />;
 };
 
-const GameProgressionButton = (status: InGameStatus, context: InGameAction) => {
+const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: InGameAction) => {
   const showDown = context.useShowDown();
   const newGame = context.useNewGame();
+
+  if (mode === UserMode.inspector) {
+    return <span className="app__game__main__game-management-button--waiting">Inspecting...</span>;
+  }
 
   switch (status) {
     case "EmptyUserHand":
@@ -73,10 +79,19 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const showDownResult = inGameActions.selectors.showDownResult();
   const currentUser = signInSelectors.useCurrentUser();
   const changeName = React.useContext(userActionsContext).useChangeUserName();
+  const currentUserMode = inGameActions.selectors.currentUserMode() ?? UserMode.normal;
 
   React.useEffect(() => {
     joinUser();
   });
+  let Component = <EmptyCardHolderComponent />;
+  if (currentStatus === "ShowedDown") {
+    Component = createAveragePointShowcase(showDownResult);
+  } else {
+    if (currentUserMode === UserMode.normal) {
+      Component = component;
+    }
+  }
 
   return (
     <div className="app__game">
@@ -90,13 +105,15 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
             <PlayerHandsComponent position="upper" userHands={upperLine} />
-            <div className="app__game__main__table">{GameProgressionButton(currentStatus, inGameActions)}</div>
+            <div className="app__game__main__table">
+              {GameProgressionButton(currentStatus, currentUserMode, inGameActions)}
+            </div>
             <PlayerHandsComponent position="lower" userHands={lowerLine} />
             <div className="app__game__main__lower-spacer"></div>
           </div>
         </div>
       </main>
-      {currentStatus === "ShowedDown" ? createAveragePointShowcase(showDownResult) : component}
+      {Component}
     </div>
   );
 };

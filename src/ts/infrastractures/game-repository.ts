@@ -19,8 +19,9 @@ export class GameRepositoryImpl implements GameRepository {
       .map((v) => (v.kind === "storypoint" ? v.storyPoint.value : null));
 
     game.joinedUsers.forEach((user) => {
-      updates[`/games/${game.id}/users/${user}/name`] = user.name;
-      updates[`/games/${game.id}/users/${user}/mode`] = user.mode;
+      const userId = user.userId;
+      updates[`/games/${game.id}/users/${userId}/name`] = user.name;
+      updates[`/games/${game.id}/users/${userId}/mode`] = user.mode;
     });
 
     game.userHands.forEach((hand) => {

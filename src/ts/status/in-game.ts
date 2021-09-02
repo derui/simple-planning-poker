@@ -35,6 +35,7 @@ export interface InGameAction {
 
   selectors: {
     currentGameName: () => string;
+    currentUserMode: () => UserMode | undefined;
     currentSelectableCards: () => Card[];
     currentUserSelectedCard: () => number | undefined;
     currentGameStatus: () => InGameStatus;
@@ -62,6 +63,25 @@ export const createInGameAction = (
       }
 
       return game.selectableCards.cards;
+    },
+  });
+
+  const currentUserMode = selector({
+    key: SelectorKeys.inGameCurrentUserMode,
+    get: ({ get }) => {
+      const game = get(gameStateQuery);
+      const currentUser = get(currentUserState);
+      const userId = currentUser.id;
+      if (!game || !userId) {
+        return;
+      }
+
+      const user = game.joinedUsers.find((v) => v.userId === userId);
+      if (!user) {
+        return;
+      }
+
+      return user.mode;
     },
   });
 
@@ -199,6 +219,7 @@ export const createInGameAction = (
 
   const inGameSelectors = {
     currentGameName: () => useRecoilValue(currentGameName),
+    currentUserMode: () => useRecoilValue(currentUserMode),
     currentSelectableCards: () => useRecoilValue(currentSelectableCards),
     currentUserSelectedCard: () => useRecoilValue(currentUserSelectedCard),
     upperLineUserHands: () => useRecoilValue(upperLineUserHands),

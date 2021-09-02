@@ -19,7 +19,7 @@ export class UserNameChangedEventListener implements DomainEventListener {
           const games = user["joinedGames"] || {};
           const updates: { [key: string]: any } = {};
           Object.keys(games).forEach((key) => {
-            updates[`games/${key}/joinedUser/${event.userId}/name`] = event.name;
+            updates[`games/${key}/users/${event.userId}/name`] = event.name;
           });
 
           this.database.ref().update(updates);

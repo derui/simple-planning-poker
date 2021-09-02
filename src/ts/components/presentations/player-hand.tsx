@@ -1,9 +1,11 @@
 import React from "react";
 import classnames from "classnames";
+import { UserMode } from "@/domains/game-joined-user";
 
 export interface PlayerHandComponentProps {
   namePosition: "upper" | "lower";
   name: string;
+  mode: UserMode;
   storyPoint: number | null;
   handed: boolean;
   showedDown: boolean;
@@ -11,7 +13,13 @@ export interface PlayerHandComponentProps {
 
 export const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentProps> = (props) => {
   let Card = null;
-  if (props.showedDown && props.storyPoint) {
+  if (props.mode === UserMode.inspector) {
+    Card = (
+      <span className="app__game__main__user-hand__user-card--inspector">
+        <span className="app__game__main__user-hand__user-card__eye"></span>
+      </span>
+    );
+  } else if (props.showedDown && props.storyPoint) {
     Card = <span className="app__game__main__user-hand__user-card">{props.storyPoint}</span>;
   } else if (props.showedDown && !props.storyPoint) {
     Card = <span className="app__game__main__user-hand__user-card">?</span>;

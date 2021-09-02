@@ -271,6 +271,27 @@
   }
 }
 
+.app__game__main__user-hand__user-card--inspector {
+  display: flex;
+  flex-direction: column;
+  height: var(--card-height);
+  width: var(--card-width);
+  border-radius: var(--base-border-radius);
+  border: 1px solid var(--primary-3);
+  justify-content: center;
+  margin: var(--space-base);
+  align-items: center;
+}
+
+.app__game__main__user-hand__user-card__eye {
+  display: block;
+  mask: url(/static/svg/eye.svg) no-repeat center center;
+  mask-size: contain;
+  background-color: var(--primary-3);
+  height: calc(var(--card-height) - var(--space-base));
+  width: calc(var(--card-width) - var(--space-base));
+}
+
 /* average show case */
 .app__game__average-point-showcase {
   flex: 0 1 auto;
