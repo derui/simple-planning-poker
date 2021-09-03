@@ -22,12 +22,6 @@
     "test:watch": "jest --watch"
   },
   "jest": {
-    "preset": "ts-jest",
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json"
-      }
-    },
     "collectCoverageFrom": [
       "src/ts/**/*.{ts,tsx}",
       "!node_modules/"
@@ -37,7 +31,7 @@
     ],
     "testURL": "http://localhost",
     "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
+      "^.+\\.(ts|tsx)$": "@swc/jest"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"
@@ -57,6 +51,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@swc/core": "^1.2.84",
+    "@swc/jest": "^0.2.2",
     "@types/classnames": "^2.3.1",
     "@types/firebase": "^3.2.1",
     "@types/jest": "^27.0.1",
