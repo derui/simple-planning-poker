@@ -1,10 +1,10 @@
-import firebase from "firebase";
 import { User, UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { UserObserver } from "@/contexts/observer";
+import { Database, onValue, ref } from "firebase/database";
 
 export class UserObserverImpl implements UserObserver {
-  constructor(private database: firebase.database.Database, private userRepository: UserRepository) {}
+  constructor(private database: Database, private userRepository: UserRepository) {}
 
   subscribe(userId: UserId, subscriber: (user: User) => void): () => void {
     const callback = async () => {
@@ -17,10 +17,8 @@ export class UserObserverImpl implements UserObserver {
     };
 
     const key = `users/${userId}`;
-    this.database.ref(key).on("value", callback);
+    const unsubscribe = onValue(ref(this.database, key), callback);
 
-    return () => {
-      this.database.ref(key).off("value", callback);
-    };
+    return unsubscribe;
   }
 }

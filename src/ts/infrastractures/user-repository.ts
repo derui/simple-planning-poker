@@ -1,20 +1,20 @@
-import firebase from "firebase";
 import { createUser, User, UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
+import { Database, get, ref, update } from "firebase/database";
 
 export class UserRepositoryImpl implements UserRepository {
-  constructor(private database: firebase.database.Database) {}
+  constructor(private database: Database) {}
 
   save(user: User): void {
-    const ref = this.database.ref(`users/${user.id}`);
+    const databaseRef = ref(this.database, `users/${user.id}`);
     const updates: { [key: string]: any } = {};
     updates["name"] = user.name;
 
-    ref.update(updates);
+    update(databaseRef, updates);
   }
 
   async findBy(id: UserId): Promise<User | undefined> {
-    const snapshot = await this.database.ref(`users/${id}`).once("value");
+    const snapshot = await get(ref(this.database, `users/${id}`));
     const val = snapshot.val();
 
     if (!val) {

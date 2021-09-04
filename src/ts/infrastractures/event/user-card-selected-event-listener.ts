@@ -1,16 +1,16 @@
-import firebase from "firebase";
 import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
 import { DomainEventListener } from "./domain-event-listener";
 import { serializeCard } from "../card-converter";
+import { child, Database, ref, set } from "firebase/database";
 
 export class UserCardSelectedEventListener implements DomainEventListener {
-  constructor(private database: firebase.database.Database) {}
+  constructor(private database: Database) {}
 
   handle(event: DefinedDomainEvents): void {
     if (event.kind == DOMAIN_EVENTS.UserCardSelected) {
-      const ref = this.database.ref(`games/${event.gameId}`);
+      const gameRef = ref(this.database, `games/${event.gameId}`);
 
-      ref.child("userHands").child(event.userId).set(serializeCard(event.card));
+      set(child(gameRef, `userHands/${event.userId}`), serializeCard(event.card));
     }
 
     return;

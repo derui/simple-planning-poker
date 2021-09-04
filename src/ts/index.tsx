@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/database";
-import "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
@@ -36,13 +36,13 @@ import { UserNameChangedEventListener } from "./infrastractures/event/user-name-
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GameJoinedUserModeChangedEventListener } from "./infrastractures/event/game-joined-user-mode-changed-event-listener";
 
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
-const database = firebase.database();
-const auth = firebase.auth();
+const database = getDatabase(firebaseApp);
+const auth = getAuth(firebaseApp);
 if (location.hostname === "localhost") {
-  database.useEmulator("localhost", 9000);
-  auth.useEmulator("http://localhost:9099");
+  connectDatabaseEmulator(database, "localhost", 9000);
+  connectAuthEmulator(auth, "http://localhost:9099");
 }
 
 const gameRepository = new GameRepositoryImpl(database);

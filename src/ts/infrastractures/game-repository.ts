@@ -1,4 +1,3 @@
-import firebase from "firebase";
 import { createGame, Game, GameId } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { createStoryPoint } from "@/domains/story-point";
@@ -6,9 +5,10 @@ import { UserId } from "@/domains/user";
 import { deserializeCard, serializeCard, SerializedCard } from "./card-converter";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createGameJoinedUser, GameJoinedUser, UserMode } from "@/domains/game-joined-user";
+import { child, Database, get, ref, update } from "firebase/database";
 
 export class GameRepositoryImpl implements GameRepository {
-  constructor(private database: firebase.database.Database) {}
+  constructor(private database: Database) {}
 
   save(game: Game): void {
     const updates: { [key: string]: any } = {};
@@ -31,14 +31,14 @@ export class GameRepositoryImpl implements GameRepository {
       updates[`/games/${game.id}/userHands`] = null;
     }
 
-    this.database.ref().update(updates);
+    update(ref(this.database), updates);
   }
 
   async findBy(id: GameId): Promise<Game | undefined> {
     if (id === "") {
       return;
     }
-    const snapshot = await this.database.ref("games").child(id).once("value");
+    const snapshot = await get(child(ref(this.database, "games"), id));
 
     const val = snapshot.val();
     if (!val) {

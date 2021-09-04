@@ -1,16 +1,13 @@
-import firebase from "firebase";
 import { Authenticator } from "../status/signin";
 import { createUser, createUserId, UserId } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
+import { Auth, signInAnonymously } from "firebase/auth";
+import { Database, get, ref, set } from "firebase/database";
 
 const localKey = "authenticated/uid";
 
 export class FirebaseAuthenticator implements Authenticator {
-  constructor(
-    private auth: firebase.auth.Auth,
-    private database: firebase.database.Database,
-    private userRepository: UserRepository
-  ) {}
+  constructor(private auth: Auth, private database: Database, private userRepository: UserRepository) {}
   async authenticate(email: string): Promise<UserId> {
     const authenticatedUid = localStorage.getItem(localKey);
     if (authenticatedUid) {
@@ -18,8 +15,8 @@ export class FirebaseAuthenticator implements Authenticator {
       return createUserId(authenticatedUid);
     }
 
-    const ref = await this.database.ref("defined-users").once("value");
-    const mails = (ref.val() as string[] | null) || [];
+    const definedUser = await get(ref(this.database, "defined-users"));
+    const mails = (definedUser.val() as string[] | null) || [];
     let existsMail = mails.some((v) => v === email);
 
     if (!existsMail) {
@@ -27,17 +24,17 @@ export class FirebaseAuthenticator implements Authenticator {
     }
 
     try {
-      const auth = await this.auth.signInAnonymously();
-      const uid = auth.user!.uid;
+      const auth = await signInAnonymously(this.auth);
+      const uid = auth.user.uid;
 
-      const isSignedIn = await this.database.ref(`authenticated/${uid}`).once("value");
+      const isSignedIn = await get(ref(this.database, `authenticated/${uid}`));
       const emailSignedInAsUid = isSignedIn.val();
       if (emailSignedInAsUid && emailSignedInAsUid !== email) {
         throw new Error(`${email} is already signed in`);
       }
 
       localStorage.setItem(localKey, uid);
-      this.database.ref(`authenticated/${uid}`).set(email);
+      set(ref(this.database, `authenticated/${uid}`), email);
 
       const userId = createUserId(uid);
       const user = createUser(userId, email);
@@ -51,15 +48,15 @@ export class FirebaseAuthenticator implements Authenticator {
   }
 
   private async checkUserIsAuthenticated(uidInStorage: string) {
-    const auth = await this.auth.signInAnonymously();
-    const uid = auth.user!.uid;
+    const auth = await signInAnonymously(this.auth);
+    const uid = auth.user.uid;
 
     if (uidInStorage !== uid) {
       localStorage.removeItem(localKey);
       throw new Error("Need re-authentication");
     }
 
-    const isSignedIn = await this.database.ref(`authenticated/${uid}`).once("value");
+    const isSignedIn = await get(ref(this.database, `authenticated/${uid}`));
     if (!isSignedIn.val()) {
       localStorage.removeItem(localKey);
       throw new Error("Need re-authentication");
