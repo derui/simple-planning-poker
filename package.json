@@ -13,7 +13,7 @@
     "copy-assets": "cpx 'assets/**' public/static/",
     "build": "npm-run-all -s build:bundle build:css copy-assets",
     "deploy:preview": "firebase hosting:channel:deploy preview_name",
-    "deploy:production": "firebase hosting:channel:deploy",
+    "deploy:production": "firebase deploy",
     "publish:preview": "npm-run-all -s build deploy:preview",
     "publish:production": "npm-run-all -s build deploy:production",
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
