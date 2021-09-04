@@ -12,13 +12,14 @@ describe("domains", () => {
       expect(ret.value).toEqual(1);
     });
 
-    test("throw error if point is less than 1", () => {
+    test("throw error if point is less than 0", () => {
       // Arrange
 
       // Act
 
       // Assert
-      expect(() => createStoryPoint(0)).toThrowError();
+      expect(() => createStoryPoint(0)).not.toThrowError();
+      expect(() => createStoryPoint(-2)).toThrowError();
       expect(() => createStoryPoint(-1)).toThrowError();
     });
 

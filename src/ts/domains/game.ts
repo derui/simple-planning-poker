@@ -146,6 +146,9 @@ export const createGame = (
       }
 
       const cards = this._userHands.map((v) => v.card).filter((v) => v.kind === "storypoint");
+      if (cards.length === 0) {
+        return createStoryPoint(0);
+      }
 
       const average =
         cards.reduce((point, v) => {

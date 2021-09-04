@@ -15,7 +15,7 @@ export const createStoryPoint = (v: number): StoryPoint => {
 };
 
 export const isValidStoryPoint = (v: number): boolean => {
-  return v > 0 && !isNaN(v);
+  return v >= 0 && !isNaN(v);
 };
 
 export const equalStoryPoint = (v1: StoryPoint, v2: StoryPoint): boolean => v1.value === v2.value;

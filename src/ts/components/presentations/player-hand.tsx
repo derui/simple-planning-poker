@@ -19,9 +19,9 @@ export const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentPro
         <span className="app__game__main__user-hand__user-card__eye"></span>
       </span>
     );
-  } else if (props.showedDown && props.storyPoint) {
+  } else if (props.showedDown && props.storyPoint !== null) {
     Card = <span className="app__game__main__user-hand__user-card">{props.storyPoint}</span>;
-  } else if (props.showedDown && !props.storyPoint) {
+  } else if (props.showedDown && props.storyPoint === null) {
     Card = <span className="app__game__main__user-hand__user-card">?</span>;
   } else {
     const className = classnames({

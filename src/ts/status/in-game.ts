@@ -9,7 +9,7 @@ import { NewGameUseCase } from "@/usecases/new-game";
 import { setUpAtomsInGame } from "./in-game-atom";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
-import { UserMode } from "@/domains/game-joined-user";
+import { GameJoinedUser, UserMode } from "@/domains/game-joined-user";
 import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
 
 interface InGameUserHand {
@@ -132,6 +132,20 @@ export const createInGameAction = (
     },
   });
 
+  const makeUserHandsInGame = (game: Game, users: GameJoinedUser[]) => {
+    return users.map((user) => {
+      const hand = game.userHands.find((v) => v.userId === user.userId);
+      const storyPoint = hand ? asStoryPoint(hand.card) : null;
+      return {
+        name: user?.name ?? "",
+        mode: user?.mode ?? UserMode.normal,
+        storyPoint: storyPoint ? storyPoint.value : null,
+        showedDown: game.showedDown,
+        handed: !!hand,
+      };
+    });
+  };
+
   const upperLineUserHands = selector({
     key: SelectorKeys.inGameUpperLineUserHands,
     get: ({ get }) => {
@@ -141,16 +155,7 @@ export const createInGameAction = (
       }
       const users = game.joinedUsers.filter((_, index) => index % 2 == 0);
 
-      return users.map((user) => {
-        const hand = game.userHands.find((v) => v.userId === user.userId);
-        return {
-          name: user?.name ?? "",
-          mode: user?.mode ?? UserMode.normal,
-          storyPoint: hand ? asStoryPoint(hand.card)?.value ?? null : null,
-          showedDown: game.showedDown,
-          handed: !!hand,
-        };
-      });
+      return makeUserHandsInGame(game, users);
     },
   });
 
@@ -163,16 +168,7 @@ export const createInGameAction = (
       }
       const users = game.joinedUsers.filter((_, index) => index % 2 == 1);
 
-      return users.map((user) => {
-        const hand = game.userHands.find((v) => v.userId === user.userId);
-        return {
-          name: user?.name ?? "",
-          mode: user?.mode ?? UserMode.normal,
-          storyPoint: hand ? asStoryPoint(hand.card)?.value ?? null : null,
-          showedDown: game.showedDown,
-          handed: !!hand,
-        };
-      });
+      return makeUserHandsInGame(game, users);
     },
   });
 
@@ -206,11 +202,11 @@ export const createInGameAction = (
 
       const points = game.userHands
         .map((v) => {
-          return asStoryPoint(v.card)?.value ?? 0;
+          return asStoryPoint(v.card)?.value;
         })
-        .filter((v) => v > 0)
+        .filter((v) => v !== undefined && v >= 0)
         .reduce((accum, v) => {
-          accum[v] = (accum[v] ?? 0) + 1;
+          accum[v!!] = (accum[v!!] ?? 0) + 1;
           return accum;
         }, {} as { [key: number]: number });
       const cardCounts = Object.entries(points).map(([k, v]) => [Number(k), v] as [number, number]);

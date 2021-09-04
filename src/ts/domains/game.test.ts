@@ -140,6 +140,24 @@ describe("domains", () => {
       expect(ret?.value).toEqual(1);
     });
 
+    test("should return 0 if all user giveup", () => {
+      // Arrange
+      const user1 = createGameJoinedUser(createUserId(), "foo");
+      const user2 = createGameJoinedUser(createUserId(), "bar");
+      const card = createGiveUpCard();
+      const game = createGame(createGameId(), "name", [user1, user2], cards);
+
+      game.acceptHandBy(user1.userId, card);
+      game.acceptHandBy(user2.userId, card);
+      game.showDown();
+
+      // Act
+      const ret = game.calculateAverage();
+
+      // Assert
+      expect(ret?.value).toEqual(0);
+    });
+
     test("should be able to add user while game", () => {
       // Arrange
       const user1 = createGameJoinedUser(createUserId(), "foo");
