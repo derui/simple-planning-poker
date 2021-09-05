@@ -18,6 +18,7 @@
     "publish:production": "npm-run-all -s build deploy:production",
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
     "lint:ts": "eslint --fix --ext .ts,.tsx src/ts/",
+    "lint": "npm-run-all -s lint:ts lint:css",
     "test": "jest",
     "test:watch": "jest --watch"
   },
