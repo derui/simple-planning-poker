@@ -1,11 +1,6 @@
-import { UserJoined } from "@/domains/event";
-import { createGame, createGameId } from "@/domains/game";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
 import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedGameRepository, createMockedUserRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
 import { ChangeUserNameUseCase } from "./change-user-name";
-import { JoinUserUseCase } from "./join-user";
 
 describe("use case", () => {
   describe("change user name", () => {
@@ -36,7 +31,7 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const repository = createMockedUserRepository();
       const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-      repository.findBy.mockImplementation(() => createUser(userId, "foo"));
+      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo" }));
 
       // Act
       const ret = await useCase.execute(input);
@@ -55,27 +50,7 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const repository = createMockedUserRepository();
       const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-      repository.findBy.mockImplementation(() => createUser(userId, "foo"));
-
-      // Act
-      const ret = await useCase.execute(input);
-
-      // Assert
-      expect(ret.kind).toBe("success");
-      expect(dispatcher.dispatch).toBeCalledTimes(1);
-    });
-
-    test("should save changed user", async () => {
-      // Arrange
-      const userId = createUserId();
-      const input = {
-        userId,
-        name: "name",
-      };
-      const dispatcher = createMockedDispatcher();
-      const repository = createMockedUserRepository();
-      const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-      repository.findBy.mockImplementation(() => createUser(userId, "foo"));
+      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo" }));
 
       // Act
       const ret = await useCase.execute(input);

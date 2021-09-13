@@ -8,7 +8,24 @@ describe("domains", () => {
       const name = "name";
 
       // Act
-      const ret = createUser(createUserId(), name);
+      const ret = createUser({
+        id: createUserId(),
+        name,
+      });
+
+      // Assert
+      expect(ret.name).toEqual("name");
+    });
+
+    test("join user into a game", () => {
+      // Arrange
+      const name = "name";
+
+      // Act
+      const ret = createUser({
+        id: createUserId(),
+        name,
+      });
 
       // Assert
       expect(ret.name).toEqual("name");
@@ -17,7 +34,10 @@ describe("domains", () => {
     test("change name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createUserId(), name);
+      const user = createUser({
+        id: createUserId(),
+        name,
+      });
 
       // Act
       user.changeName("changed name");
@@ -32,13 +52,21 @@ describe("domains", () => {
       // Act
 
       // Assert
-      expect(() => createUser(createUserId(), "")).toThrowError();
+      expect(() =>
+        createUser({
+          id: createUserId(),
+          name: "",
+        })
+      ).toThrowError();
     });
 
     test("throw error when change to empty name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createUserId(), name);
+      const user = createUser({
+        id: createUserId(),
+        name,
+      });
 
       // Act
 
@@ -49,7 +77,10 @@ describe("domains", () => {
     test("validate name", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createUserId(), name);
+      const user = createUser({
+        id: createUserId(),
+        name,
+      });
 
       // Act
 
@@ -61,7 +92,10 @@ describe("domains", () => {
     test("should return event to notify user name changed", () => {
       // Arrange
       const name = "name";
-      const user = createUser(createUserId(), name);
+      const user = createUser({
+        id: createUserId(),
+        name,
+      });
 
       // Act
       const event = user.changeName("foobar");

@@ -15,7 +15,10 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
   async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {
-    const user = createUser(input.userId, input.name);
+    const user = createUser({
+      id: input.userId,
+      name: input.name,
+    });
     const game = await this.gameRepository.findBy(input.gameId);
 
     if (!game) {

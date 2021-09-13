@@ -25,7 +25,7 @@ export interface User {
 /**
    create user from id and name
  */
-export const createUser = (id: UserId, name: string): User => {
+export const createUser = ({ id, name }: { id: UserId; name: string }): User => {
   if (name === "") {
     throw new Error("can not create user with empty name");
   }

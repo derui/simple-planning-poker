@@ -35,5 +35,18 @@ describe("domains", () => {
       expect(ret.cards[3]).toEqual(createStoryPointCard(numbers[3]));
       expect(ret.cards[4]).toEqual(createGiveUpCard());
     });
+
+    test("should be able to check a card contains in cards", () => {
+      // Arrange
+      const numbers = [1, 2, 3, 4].map(createStoryPoint);
+
+      // Act
+      const ret = createSelectableCards(numbers);
+
+      // Assert
+      expect(ret.contains(ret.cards[0])).toBeTruthy();
+      expect(ret.contains(ret.cards[4])).toBeTruthy();
+      expect(ret.contains(createStoryPointCard(createStoryPoint(5)))).toBeFalsy();
+    });
   });
 });

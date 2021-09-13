@@ -1,6 +1,6 @@
 import { createGiveUpCard, createStoryPointCard } from "./card";
 import { createGame, createGameId } from "./game";
-import { createGameJoinedUser, createGameJoinedUserFromUser } from "./game-joined-user";
+import { createGameJoinedUser } from "./game-joined-user";
 import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
 import { createUser, createUserId } from "./user";
@@ -81,7 +81,7 @@ describe("domains", () => {
       const game = createGame(createGameId(), "name", [createGameJoinedUser(user1, "foo")], cards);
 
       // Act
-      game.acceptToBeJoinedBy(createUser(user2, "2"));
+      game.acceptToBeJoinedBy(createUser({ id: user2, name: "2" }));
       game.acceptHandBy(user1, card);
       const ret = game.showDown();
 
@@ -161,7 +161,10 @@ describe("domains", () => {
     test("should be able to add user while game", () => {
       // Arrange
       const user1 = createGameJoinedUser(createUserId(), "foo");
-      const user2 = createUser(createUserId(), "user2");
+      const user2 = createUser({
+        id: createUserId(),
+        name: "user2",
+      });
       const game = createGame(createGameId(), "name", [user1], cards);
 
       // Act
@@ -177,7 +180,10 @@ describe("domains", () => {
 
     test("should not return event if user can not accept to join", () => {
       // Arrange
-      const user1 = createUser(createUserId(), "user");
+      const user1 = createUser({
+        id: createUserId(),
+        name: "user",
+      });
       const game = createGame(createGameId(), "name", [createGameJoinedUser(user1.id, user1.name)], cards);
 
       // Act

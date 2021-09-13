@@ -6,7 +6,7 @@ export class GameJoinedUserModeChangedEventListener implements DomainEventListen
   constructor(private database: Database) {}
 
   handle(event: DefinedDomainEvents): void {
-    if (event.kind === DOMAIN_EVENTS.GameJoinedUserModeChanged) {
+    if (event.kind === DOMAIN_EVENTS.GamePlayerModeChanged) {
       const unsubscribe = onValue(ref(this.database, `users/${event.userId}`), (snapshot) => {
         const user = snapshot.val();
         if (!user) {

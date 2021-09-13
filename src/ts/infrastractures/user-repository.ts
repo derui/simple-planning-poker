@@ -22,6 +22,6 @@ export class UserRepositoryImpl implements UserRepository {
     }
     const name = val["name"] as string;
 
-    return createUser(id, name);
+    return createUser({ id, name });
   }
 }

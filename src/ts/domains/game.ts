@@ -2,7 +2,7 @@ import { createId, Id } from "./base";
 import { Card } from "./card";
 import {
   EventFactory,
-  GameJoinedUserModeChanged,
+  GamePlayerModeChanged,
   GameShowedDown,
   NewGameStarted,
   UserCardSelected,
@@ -35,7 +35,7 @@ export interface Game {
 
   canChangeName(name: string): boolean;
 
-  changeUserMode(userId: UserId, mode: UserMode): GameJoinedUserModeChanged | undefined;
+  changeUserMode(userId: UserId, mode: UserMode): GamePlayerModeChanged | undefined;
 
   canChangeUserMode(userId: UserId): boolean;
 
@@ -204,7 +204,7 @@ export const createGame = (
       return this._joinedUsers.map((v) => v.userId).some((v) => v === userId);
     },
 
-    changeUserMode(userId: UserId, mode: UserMode): GameJoinedUserModeChanged | undefined {
+    changeUserMode(userId: UserId, mode: UserMode): GamePlayerModeChanged | undefined {
       if (!this.canChangeUserMode(userId)) {
         return;
       }

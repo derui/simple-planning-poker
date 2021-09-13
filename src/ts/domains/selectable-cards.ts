@@ -1,9 +1,11 @@
 import { unique } from "@/utils/array";
-import { Card, createGiveUpCard, createStoryPointCard } from "./card";
+import { Card, createGiveUpCard, createStoryPointCard, equalCard } from "./card";
 import { compareStoryPoint, equalStoryPoint, StoryPoint } from "./story-point";
 
 export interface SelectableCards {
-  cards: Card[];
+  get cards(): Card[];
+
+  contains(card: Card): boolean;
 }
 
 /**
@@ -18,7 +20,12 @@ export const createSelectableCards = (numbers: StoryPoint[]): SelectableCards =>
   cards.push(createGiveUpCard());
 
   return {
-    cards,
+    get cards() {
+      return cards;
+    },
+    contains(card: Card) {
+      return cards.some((v) => equalCard(v, card));
+    },
   };
 };
 
