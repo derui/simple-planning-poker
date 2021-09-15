@@ -6,10 +6,12 @@ import { createUserId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
 import { createGiveUpCard } from "@/domains/card";
 import { ShowDownUseCase } from "./show-down";
-import { createGameJoinedUser } from "@/domains/game-joined-user";
+import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 
 describe("use case", () => {
   describe("show down", () => {
+    const CARDS = createSelectableCards([createStoryPoint(1)]);
+
     test("should return error if game is not found", async () => {
       // Arrange
       const input = {
@@ -29,9 +31,20 @@ describe("use case", () => {
 
     test("should save game showed down", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
-      game.acceptHandBy(game.joinedUsers[0].userId, createGiveUpCard());
+      const gameId = createGameId();
+      const player = createGamePlayer({
+        id: createGamePlayerId(),
+        gameId,
+        userId: createUserId(),
+        cards: CARDS,
+      });
+      const game = createGame({
+        id: gameId,
+        name: "game",
+        players: [player.id],
+        cards: CARDS,
+        hands: [{ playerId: player.id, card: CARDS.at(0) }],
+      });
 
       const input = {
         gameId: game.id,
@@ -52,9 +65,20 @@ describe("use case", () => {
 
     test("should dispatch ShowedDown event", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
-      game.acceptHandBy(game.joinedUsers[0].userId, createGiveUpCard());
+      const gameId = createGameId();
+      const player = createGamePlayer({
+        id: createGamePlayerId(),
+        gameId,
+        userId: createUserId(),
+        cards: CARDS,
+      });
+      const game = createGame({
+        id: gameId,
+        name: "game",
+        players: [player.id],
+        cards: CARDS,
+        hands: [{ playerId: player.id, card: CARDS.at(0) }],
+      });
 
       const input = {
         gameId: game.id,
@@ -66,10 +90,9 @@ describe("use case", () => {
       const useCase = new ShowDownUseCase(dispatcher, repository);
 
       // Act
-      const ret = await useCase.execute(input);
+      await useCase.execute(input);
 
       // Assert
-      expect(ret.kind).toEqual("success");
       const called = dispatcher.dispatch.mock.calls[0][0] as GameShowedDown;
 
       expect(called.gameId).toEqual(game.id);

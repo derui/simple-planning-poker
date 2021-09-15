@@ -1,5 +1,6 @@
 import { createStoryPointCard } from "./card";
 import { DOMAIN_EVENTS } from "./event";
+import { createGameId } from "./game";
 import { createGamePlayer, createGamePlayerId, UserMode } from "./game-player";
 import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
@@ -16,6 +17,7 @@ describe("domains", () => {
       // Act
       const ret = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         mode: UserMode.normal,
         userId: userId,
         cards,
@@ -29,6 +31,7 @@ describe("domains", () => {
       // Arrange
       const player = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         userId: createUserId(),
         cards,
       });
@@ -44,6 +47,7 @@ describe("domains", () => {
       // Arrange
       const player = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         userId: createUserId(),
         cards,
       });
@@ -61,6 +65,7 @@ describe("domains", () => {
       // Arrange
       const player = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         userId: createUserId(),
         cards,
       });
@@ -76,6 +81,7 @@ describe("domains", () => {
       // Arrange
       const player = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         userId: createUserId(),
         cards,
       });
@@ -90,6 +96,7 @@ describe("domains", () => {
       // Arrange
       const player = createGamePlayer({
         id: createGamePlayerId(),
+        gameId: createGameId(),
         userId: createUserId(),
         cards,
       });

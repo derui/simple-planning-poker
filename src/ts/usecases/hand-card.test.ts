@@ -1,23 +1,24 @@
-import { UserCardSelected } from "@/domains/event";
-import { createGame, createGameId, Game } from "@/domains/game";
+import { GamePlayerCardSelected } from "@/domains/event";
+import { createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedGamePlayerRepository } from "@/lib.test";
 import { createGiveUpCard } from "@/domains/card";
 import { HandCardUseCase } from "./hand-card";
-import { createGameJoinedUser } from "@/domains/game-joined-user";
+import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 
 describe("use case", () => {
   describe("hand card", () => {
-    test("should return error if game is not found", async () => {
+    const CARDS = createSelectableCards([createStoryPoint(1)]);
+
+    test("should return error if player is not found", async () => {
       // Arrange
       const input = {
-        userId: createUserId(),
-        gameId: createGameId(),
+        playerId: createGamePlayerId(),
         card: createGiveUpCard(),
       };
-      const repository = createMockedGameRepository();
+      const repository = createMockedGamePlayerRepository();
       const dispatcher = createMockedDispatcher();
 
       const useCase = new HandCardUseCase(dispatcher, repository);
@@ -26,21 +27,24 @@ describe("use case", () => {
       const ret = await useCase.execute(input);
 
       // Assert
-      expect(ret.kind).toEqual("notFoundGame");
+      expect(ret.kind).toEqual("notFoundGamePlayer");
     });
 
-    test("should save game handed card by user", async () => {
+    test("should save player with card selected by user", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
+      const player = createGamePlayer({
+        id: createGamePlayerId(),
+        userId: createUserId(),
+        gameId: createGameId(),
+        cards: CARDS,
+      });
       const input = {
-        userId: game.joinedUsers[0].userId,
-        gameId: game.id,
+        playerId: player.id,
         card: createGiveUpCard(),
       };
-      const repository = createMockedGameRepository();
+      const repository = createMockedGamePlayerRepository();
       const dispatcher = createMockedDispatcher();
-      repository.findBy.mockImplementation(() => game);
+      repository.findBy.mockImplementation(() => player);
 
       const useCase = new HandCardUseCase(dispatcher, repository);
 
@@ -49,37 +53,35 @@ describe("use case", () => {
 
       // Assert
       expect(ret.kind).toEqual("success");
-      expect(game.userHands).toContainEqual({
-        userId: input.userId,
-        card: input.card,
-      });
+      expect(player.hand).toEqual(createGiveUpCard());
     });
 
     test("should dispatch UserHanded event", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
+      const player = createGamePlayer({
+        id: createGamePlayerId(),
+        userId: createUserId(),
+        gameId: createGameId(),
+        cards: CARDS,
+      });
       const input = {
-        userId: game.joinedUsers[0].userId,
-        gameId: game.id,
+        playerId: player.id,
         card: createGiveUpCard(),
       };
-      const repository = createMockedGameRepository();
+      const repository = createMockedGamePlayerRepository();
       const dispatcher = createMockedDispatcher();
-      repository.findBy.mockImplementation(() => game);
+      repository.findBy.mockImplementation(() => player);
 
       const useCase = new HandCardUseCase(dispatcher, repository);
 
       // Act
-      const ret = await useCase.execute(input);
+      await useCase.execute(input);
 
       // Assert
-      expect(ret.kind).toEqual("success");
-      const called = dispatcher.dispatch.mock.calls[0][0] as UserCardSelected;
+      const called = dispatcher.dispatch.mock.calls[0][0] as GamePlayerCardSelected;
 
       expect(called.card).toEqual(input.card);
-      expect(called.gameId).toEqual(game.id);
-      expect(called.userId).toEqual(input.userId);
+      expect(called.gamePlayerId).toEqual(player.id);
     });
   });
 });

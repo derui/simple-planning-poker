@@ -4,6 +4,8 @@ import { compareStoryPoint, equalStoryPoint, StoryPoint } from "./story-point";
 
 export interface SelectableCards {
   get cards(): Card[];
+  at(index: number): Card;
+  get giveUp(): Card;
 
   contains(card: Card): boolean;
 }
@@ -22,6 +24,12 @@ export const createSelectableCards = (numbers: StoryPoint[]): SelectableCards =>
   return {
     get cards() {
       return cards;
+    },
+    at(index: number) {
+      return cards[index];
+    },
+    get giveUp() {
+      return cards[cards.length - 1];
     },
     contains(card: Card) {
       return cards.some((v) => equalCard(v, card));

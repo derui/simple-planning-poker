@@ -13,10 +13,7 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [],
-        createdBy: {
-          userId: createUserId(),
-          name: "user",
-        },
+        createdBy: createUserId(),
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -34,10 +31,7 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [-1],
-        createdBy: {
-          userId: createUserId(),
-          name: "user",
-        },
+        createdBy: createUserId(),
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -55,25 +49,20 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [1],
-        createdBy: {
-          userId: createUserId(),
-          name: "user",
-        },
+        createdBy: createUserId(),
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
       const useCase = new CreateGameUseCase(dispatcher, repository);
 
       // Act
-      const ret = useCase.execute(input);
+      useCase.execute(input);
 
       // Assert
-      expect(ret.kind).toBe("success");
       expect(repository.save).toBeCalledTimes(1);
 
       const called = repository.save.mock.calls[0][0] as Game;
       expect(called.name).toBe("foo");
-      expect(called.joinedUsers.map((v) => v.userId)).toContain(input.createdBy.userId);
     });
 
     test("should dispatch game created event", () => {
@@ -81,10 +70,7 @@ describe("use case", () => {
       const input = {
         name: "foo",
         points: [1],
-        createdBy: {
-          userId: createUserId(),
-          name: "user",
-        },
+        createdBy: createUserId(),
       };
       const dispatcher = createMockedDispatcher();
       const repository = createMockedGameRepository();
@@ -99,8 +85,8 @@ describe("use case", () => {
 
       const called = dispatcher.dispatch.mock.calls[0][0] as GameCreated;
       expect(called.name).toBe("foo");
-      expect(called.createdBy).toEqual(input.createdBy);
-      expect(called.selectableCards).toEqual(createSelectableCards([createStoryPoint(1)]));
+      expect(called.createdBy.userId).toEqual(input.createdBy);
+      expect(called.selectableCards.cards).toEqual(createSelectableCards([createStoryPoint(1)]).cards);
     });
   });
 });

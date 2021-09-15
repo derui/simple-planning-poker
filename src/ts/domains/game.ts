@@ -1,24 +1,16 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
-import {
-  EventFactory,
-  GamePlayerModeChanged,
-  GameShowedDown,
-  NewGameStarted,
-  UserCardSelected,
-  UserJoined,
-} from "./event";
-import { createGameJoinedUserFromUser, GameJoinedUser, UserMode } from "./game-joined-user";
+import { EventFactory, GameShowedDown, NewGameStarted } from "./event";
+import { GamePlayerId } from "./game-player";
 import { SelectableCards } from "./selectable-cards";
 import { createStoryPoint, StoryPoint } from "./story-point";
-import { User, UserId } from "./user";
 
 export type GameId = Id<"Game">;
 
 export const createGameId = () => createId<"Game">();
 
-export interface UserHand {
-  userId: UserId;
+export interface PlayerHand {
+  playerId: GamePlayerId;
   card: Card;
 }
 
@@ -26,29 +18,14 @@ export interface UserHand {
 export interface Game {
   get id(): GameId;
   get name(): string;
-  get joinedUsers(): GameJoinedUser[];
-  get userHands(): UserHand[];
   get showedDown(): boolean;
-  get selectableCards(): SelectableCards;
+  get cards(): SelectableCards;
 
   changeName(name: string): void;
 
   canChangeName(name: string): boolean;
 
-  changeUserMode(userId: UserId, mode: UserMode): GamePlayerModeChanged | undefined;
-
-  canChangeUserMode(userId: UserId): boolean;
-
   canShowDown(): boolean;
-
-  // find hand by user id
-  findHandBy(userId: UserId): Card | undefined;
-
-  // join user to this room
-  acceptToBeJoinedBy(user: User): UserJoined | undefined;
-
-  // return true if room can accept to join user
-  canAcceptToBeJoinedBy(user: User): boolean;
 
   // show down all cards betted by user
   showDown(): GameShowedDown | undefined;
@@ -56,19 +33,14 @@ export interface Game {
   // calulate average story point in this game.
   calculateAverage(): StoryPoint | undefined;
 
-  // game accept hand by user
-  acceptHandBy(user: UserId, card: Card): UserCardSelected | undefined;
-
   // start new game
   newGame(): NewGameStarted;
 }
 
 type InternalGame = Game & {
-  _userHands: UserHand[];
   _showedDown: boolean;
-  _joinedUsers: GameJoinedUser[];
   _name: string;
-  _selectableCards: SelectableCards;
+  _cards: SelectableCards;
 };
 
 const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
@@ -80,22 +52,33 @@ const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
   return true;
 };
 
-export const createGame = (
-  id: GameId,
-  name: string,
-  initialUsers: GameJoinedUser[],
-  selectableCards: SelectableCards
-): Game => {
-  if (initialUsers.length === 0) {
-    throw new Error("Users in game must be greater than 0");
+export const createGame = ({
+  id,
+  name,
+  players,
+  cards,
+  hands = [],
+}: {
+  id: GameId;
+  name: string;
+  players: GamePlayerId[];
+  cards: SelectableCards;
+  hands?: PlayerHand[];
+}): Game => {
+  if (players.length === 0) {
+    throw new Error("Least one player need in game");
+  }
+
+  const handedPlayers = new Set(hands.map((v) => v.playerId));
+  const playerIds = new Set(players);
+  if (!isSuperset(playerIds, handedPlayers)) {
+    throw new Error("Found unknown player not in this game");
   }
 
   return {
     _name: name,
-    _userHands: [],
     _showedDown: false,
-    _joinedUsers: initialUsers,
-    _selectableCards: selectableCards,
+    _cards: cards,
 
     get id() {
       return id;
@@ -105,30 +88,16 @@ export const createGame = (
       return this._name;
     },
 
-    get userHands() {
-      return this._userHands;
-    },
-
     get showedDown() {
       return this._showedDown;
     },
 
-    get joinedUsers() {
-      return this._joinedUsers;
-    },
-
-    get selectableCards() {
-      return this._selectableCards;
-    },
-
-    findHandBy(userId: UserId) {
-      return this._userHands.find((v) => v.userId === userId)?.card;
+    get cards() {
+      return this._cards;
     },
 
     canShowDown(): boolean {
-      const handedUsers = new Set(this.userHands.map((v) => v.userId));
-      const joinedUsers = new Set(this.joinedUsers.map((v) => v.userId));
-      return handedUsers.size > 0 && isSuperset(joinedUsers, handedUsers) && !this.showedDown;
+      return hands.length > 0;
     },
 
     showDown(): GameShowedDown | undefined {
@@ -145,7 +114,7 @@ export const createGame = (
         return undefined;
       }
 
-      const cards = this._userHands.map((v) => v.card).filter((v) => v.kind === "storypoint");
+      const cards = hands.map((v) => v.card).filter((v) => v && v.kind === "storypoint");
       if (cards.length === 0) {
         return createStoryPoint(0);
       }
@@ -163,18 +132,6 @@ export const createGame = (
       return createStoryPoint(average);
     },
 
-    acceptHandBy(user: UserId, card: Card): UserCardSelected | undefined {
-      if (this.showedDown) {
-        return;
-      }
-
-      const hands = this.userHands.filter((v) => v.userId !== user);
-      hands.push({ userId: user, card });
-      this._userHands = hands;
-
-      return EventFactory.userCardSelected(this.id, user, card);
-    },
-
     changeName(name: string) {
       if (!this.canChangeName(name)) {
         throw new Error("can not change name");
@@ -186,39 +143,7 @@ export const createGame = (
       return name !== "";
     },
 
-    acceptToBeJoinedBy(user: User) {
-      if (!this.canAcceptToBeJoinedBy(user)) {
-        return;
-      }
-
-      this._joinedUsers.push(createGameJoinedUserFromUser(user));
-
-      return EventFactory.userJoined(this.id, user.id, user.name);
-    },
-
-    canAcceptToBeJoinedBy(user: User): boolean {
-      return !this._joinedUsers.map((v) => v.userId).some((v) => v === user.id);
-    },
-
-    canChangeUserMode(userId: UserId): boolean {
-      return this._joinedUsers.map((v) => v.userId).some((v) => v === userId);
-    },
-
-    changeUserMode(userId: UserId, mode: UserMode): GamePlayerModeChanged | undefined {
-      if (!this.canChangeUserMode(userId)) {
-        return;
-      }
-
-      const user = this._joinedUsers.find((v) => v.userId === userId);
-      if (!user) {
-        return;
-      }
-
-      return user.changeUserMode(mode);
-    },
-
     newGame() {
-      this._userHands = [];
       this._showedDown = false;
 
       return EventFactory.newGameStarted(this.id);

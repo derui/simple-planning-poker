@@ -7,6 +7,7 @@ import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
 import { createGiveUpCard } from "@/domains/card";
 import { NewGameUseCase } from "./new-game";
 import { createGameJoinedUser } from "@/domains/game-joined-user";
+import { createGamePlayerId } from "@/domains/game-player";
 
 describe("use case", () => {
   describe("new game", () => {
@@ -29,9 +30,12 @@ describe("use case", () => {
 
     test("should save game showed down", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
-      game.acceptHandBy(game.joinedUsers[0].userId, createGiveUpCard());
+      const game = createGame({
+        id: createGameId(),
+        name: "name",
+        players: [createGamePlayerId()],
+        cards: createSelectableCards([createStoryPoint(1)]),
+      });
 
       const input = {
         gameId: game.id,
@@ -47,13 +51,16 @@ describe("use case", () => {
 
       // Assert
       expect(ret.kind).toEqual("success");
-      expect(game.userHands).toHaveLength(0);
     });
 
     test("should dispatch NewGame event", async () => {
       // Arrange
-      const user = createGameJoinedUser(createUserId(), "foo");
-      const game = createGame(createGameId(), "name", [user], createSelectableCards([createStoryPoint(1)]));
+      const game = createGame({
+        id: createGameId(),
+        name: "name",
+        players: [createGamePlayerId()],
+        cards: createSelectableCards([createStoryPoint(1)]),
+      });
 
       const input = {
         gameId: game.id,
@@ -65,10 +72,9 @@ describe("use case", () => {
       const useCase = new NewGameUseCase(dispatcher, repository);
 
       // Act
-      const ret = await useCase.execute(input);
+      await useCase.execute(input);
 
       // Assert
-      expect(ret.kind).toEqual("success");
       const called = dispatcher.dispatch.mock.calls[0][0] as NewGameStarted;
       expect(called.kind).toEqual("NewGameStarted");
     });

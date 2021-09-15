@@ -18,8 +18,6 @@ import { CreateGameUseCase } from "./usecases/create-game";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
-import { UserCardSelectedEventListener } from "./infrastractures/event/user-card-selected-event-listener";
-import { UserJoinedEventListener } from "./infrastractures/event/user-joined-event-listener";
 import { GameShowedDownEventListener } from "./infrastractures/event/game-showed-down-event-listener";
 import { createInGameAction } from "./status/in-game";
 import { HandCardUseCase } from "./usecases/hand-card";
@@ -32,9 +30,9 @@ import { JoinUserUseCase } from "./usecases/join-user";
 import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
 import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
-import { UserNameChangedEventListener } from "./infrastractures/event/user-name-changed-event-listener";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
-import { GameJoinedUserModeChangedEventListener } from "./infrastractures/event/game-joined-user-mode-changed-event-listener";
+import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
+import { createInvitationService } from "./domains/invitation-service";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -47,24 +45,21 @@ if (location.hostname === "localhost") {
 
 const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
+const gamePlayerRepository = new GamePlayerRepositoryImpl(database);
 
 const dispatcher = new EventDispatcherImpl([
-  new GameCreatedEventListener(database),
+  new GameCreatedEventListener(gamePlayerRepository),
   new GameShowedDownEventListener(database),
-  new UserCardSelectedEventListener(database),
-  new UserJoinedEventListener(database, userRepository),
   new NewGameStartedEventListener(database),
-  new UserNameChangedEventListener(database),
-  new GameJoinedUserModeChangedEventListener(database),
 ]);
 
 const inGameAction = createInGameAction(
   gameRepository,
-  new HandCardUseCase(dispatcher, gameRepository),
+  new HandCardUseCase(dispatcher, gamePlayerRepository),
   new ShowDownUseCase(dispatcher, gameRepository),
   new NewGameUseCase(dispatcher, gameRepository),
   new ChangeUserModeUseCase(dispatcher, gameRepository),
-  new JoinUserUseCase(dispatcher, gameRepository)
+  new JoinUserUseCase(dispatcher, userRepository, createInvitationService(gameRepository, gamePlayerRepository))
 );
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));

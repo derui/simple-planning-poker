@@ -1,35 +1,32 @@
 import { GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
-import { createUser, UserId } from "@/domains/user";
+import { InvitationService } from "@/domains/invitation-service";
+import { UserId } from "@/domains/user";
+import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
   gameId: GameId;
   userId: UserId;
-  name: string;
 }
 
-export type JoinUserUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
+export type JoinUserUseCaseOutput = { kind: "success" } | { kind: "notFoundUser" };
 
 export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<JoinUserUseCaseOutput>> {
-  constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
+  constructor(
+    private dispatcher: EventDispatcher,
+    private userRepository: UserRepository,
+    private invitationService: InvitationService
+  ) {}
 
   async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {
-    const user = createUser({
-      id: input.userId,
-      name: input.name,
-    });
-    const game = await this.gameRepository.findBy(input.gameId);
+    const user = await this.userRepository.findBy(input.userId);
 
-    if (!game) {
-      return { kind: "notFoundGame" };
+    if (!user) {
+      return { kind: "notFoundUser" };
     }
+    const events = await this.invitationService.invite(user, input.gameId);
 
-    const event = game.acceptToBeJoinedBy(user);
-
-    if (event) {
-      this.dispatcher.dispatch(event);
-    }
+    events.forEach(this.dispatcher.dispatch);
 
     return { kind: "success" };
   }

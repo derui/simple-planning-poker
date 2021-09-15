@@ -23,9 +23,8 @@ export const DOMAIN_EVENTS = {
   NewGameStarted: "NewGameStarted",
   UserNameChanged: "UserNameChanged",
   GamePlayerModeChanged: "GameJoinedUserModeChanged",
-  UserJoined: "UserJoined",
+  UserInvited: "UserInvited",
   GameShowedDown: "GameShowedDown",
-  UserCardSelected: "UserCardSelected",
   GamePlayerCardSelected: "GamePlayerCardSelected",
 } as const;
 
@@ -37,8 +36,7 @@ export type DefinedDomainEvents =
   | UserNameChanged
   | GamePlayerModeChanged
   | GameShowedDown
-  | UserCardSelected
-  | UserJoined
+  | UserInvited
   | GamePlayerCardSelected;
 
 // define domain events
@@ -48,7 +46,7 @@ export interface GameCreated extends Event<DomainEvents["GameCreated"]> {
   name: string;
   createdBy: {
     userId: UserId;
-    name: string;
+    gamePlayerId: GamePlayerId;
   };
   selectableCards: SelectableCards;
 }
@@ -67,20 +65,14 @@ export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> 
   name: string;
 }
 
-export interface UserJoined extends Event<DomainEvents["UserJoined"]> {
+export interface UserInvited extends Event<DomainEvents["UserInvited"]> {
   gameId: GameId;
   userId: UserId;
-  name: string;
+  gamePlayerId: GamePlayerId;
 }
 
 export interface GameShowedDown extends Event<DomainEvents["GameShowedDown"]> {
   gameId: GameId;
-}
-
-export interface UserCardSelected extends Event<DomainEvents["UserCardSelected"]> {
-  gameId: GameId;
-  userId: UserId;
-  card: Card;
 }
 
 export interface GamePlayerCardSelected extends Event<DomainEvents["GamePlayerCardSelected"]> {
@@ -106,13 +98,13 @@ export const EventFactory = {
     };
   },
 
-  userJoined(gameId: GameId, userId: UserId, name: string): UserJoined {
+  userInvited(gamePlayerId: GamePlayerId, gameId: GameId, userId: UserId): UserInvited {
     return {
       id: createEventId(),
-      kind: DOMAIN_EVENTS.UserJoined,
+      kind: DOMAIN_EVENTS.UserInvited,
       gameId,
       userId,
-      name,
+      gamePlayerId,
     };
   },
 
@@ -121,16 +113,6 @@ export const EventFactory = {
       id: createEventId(),
       kind: DOMAIN_EVENTS.GameShowedDown,
       gameId,
-    };
-  },
-
-  userCardSelected(gameId: GameId, userId: UserId, card: Card): UserCardSelected {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.UserCardSelected,
-      gameId,
-      userId,
-      card,
     };
   },
 
@@ -147,7 +129,7 @@ export const EventFactory = {
     gameId: GameId,
     name: string,
     userId: UserId,
-    userName: string,
+    playerId: GamePlayerId,
     selectableCards: SelectableCards
   ): GameCreated {
     return {
@@ -156,7 +138,7 @@ export const EventFactory = {
       gameId,
       createdBy: {
         userId,
-        name: userName,
+        gamePlayerId: playerId,
       },
       name,
       selectableCards,

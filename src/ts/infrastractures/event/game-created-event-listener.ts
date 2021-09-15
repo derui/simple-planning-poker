@@ -1,20 +1,20 @@
 import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
 import { DomainEventListener } from "./domain-event-listener";
-import { UserMode } from "@/domains/game-joined-user";
-import { Database, ref, update } from "firebase/database";
+import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { createGamePlayer } from "@/domains/game-player";
 
 export class GameCreatedEventListener implements DomainEventListener {
-  constructor(private database: Database) {}
+  constructor(private gamePlayerRepository: GamePlayerRepository) {}
 
   handle(event: DefinedDomainEvents): void {
     if (event.kind == DOMAIN_EVENTS.GameCreated) {
-      const updates: { [key: string]: any } = {};
-      const { userId, name } = event.createdBy;
-      updates[`games/${event.gameId}/users/${userId}/name`] = name;
-      updates[`games/${event.gameId}/users/${userId}/mode`] = UserMode.normal;
-      updates[`users/${userId}/joinedGames/${event.gameId}`] = true;
-
-      update(ref(this.database), updates);
+      const createdPlayer = createGamePlayer({
+        id: event.createdBy.gamePlayerId,
+        userId: event.createdBy.userId,
+        gameId: event.gameId,
+        cards: event.selectableCards,
+      });
+      this.gamePlayerRepository.save(createdPlayer);
     }
   }
 }

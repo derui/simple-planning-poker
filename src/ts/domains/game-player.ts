@@ -1,6 +1,7 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
-import { EventFactory, GamePlayerModeChanged, UserCardSelected } from "./event";
+import { EventFactory, GamePlayerModeChanged, PlayerCardSelected } from "./event";
+import { GameId } from "./game";
 import { SelectableCards } from "./selectable-cards";
 import { UserId } from "./user";
 
@@ -23,11 +24,12 @@ export type UserMode = typeof UserMode[keyof typeof UserMode];
 export interface GamePlayer {
   get id(): GamePlayerId;
   get user(): UserId;
+  get game(): GameId;
   get mode(): UserMode;
   get hand(): Card | undefined;
 
   changeUserMode(newMode: UserMode): GamePlayerModeChanged;
-  takeHand(card: Card): UserCardSelected | undefined;
+  takeHand(card: Card): PlayerCardSelected | undefined;
 }
 
 /**
@@ -35,6 +37,7 @@ export interface GamePlayer {
  */
 export const createGamePlayer = ({
   id,
+  gameId,
   userId,
   cards,
   hand,
@@ -42,6 +45,7 @@ export const createGamePlayer = ({
 }: {
   id: GamePlayerId;
   userId: UserId;
+  gameId: GameId;
   hand?: Card;
   cards: SelectableCards;
   mode?: UserMode;
@@ -64,6 +68,10 @@ export const createGamePlayer = ({
 
     get hand() {
       return this.userHand;
+    },
+
+    get game() {
+      return gameId;
     },
 
     changeUserMode(newMode: UserMode) {

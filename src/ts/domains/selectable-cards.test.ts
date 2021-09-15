@@ -13,11 +13,11 @@ describe("domains", () => {
 
       // Assert
       expect(ret.cards).toHaveLength(5);
-      expect(ret.cards[0]).toEqual(createStoryPointCard(numbers[0]));
-      expect(ret.cards[1]).toEqual(createStoryPointCard(numbers[1]));
-      expect(ret.cards[2]).toEqual(createStoryPointCard(numbers[2]));
-      expect(ret.cards[3]).toEqual(createStoryPointCard(numbers[3]));
-      expect(ret.cards[4]).toEqual(createGiveUpCard());
+      expect(ret.at(0)).toEqual(createStoryPointCard(numbers[0]));
+      expect(ret.at(1)).toEqual(createStoryPointCard(numbers[1]));
+      expect(ret.at(2)).toEqual(createStoryPointCard(numbers[2]));
+      expect(ret.at(3)).toEqual(createStoryPointCard(numbers[3]));
+      expect(ret.at(4)).toEqual(createGiveUpCard());
     });
 
     test("ignore duplicate storypoint", () => {
@@ -29,11 +29,11 @@ describe("domains", () => {
 
       // Assert
       expect(ret.cards).toHaveLength(5);
-      expect(ret.cards[0]).toEqual(createStoryPointCard(numbers[0]));
-      expect(ret.cards[1]).toEqual(createStoryPointCard(numbers[1]));
-      expect(ret.cards[2]).toEqual(createStoryPointCard(numbers[2]));
-      expect(ret.cards[3]).toEqual(createStoryPointCard(numbers[3]));
-      expect(ret.cards[4]).toEqual(createGiveUpCard());
+      expect(ret.at(0)).toEqual(createStoryPointCard(numbers[0]));
+      expect(ret.at(1)).toEqual(createStoryPointCard(numbers[1]));
+      expect(ret.at(2)).toEqual(createStoryPointCard(numbers[2]));
+      expect(ret.at(3)).toEqual(createStoryPointCard(numbers[3]));
+      expect(ret.at(4)).toEqual(createGiveUpCard());
     });
 
     test("should be able to check a card contains in cards", () => {
@@ -44,8 +44,8 @@ describe("domains", () => {
       const ret = createSelectableCards(numbers);
 
       // Assert
-      expect(ret.contains(ret.cards[0])).toBeTruthy();
-      expect(ret.contains(ret.cards[4])).toBeTruthy();
+      expect(ret.contains(ret.at(0)!!)).toBeTruthy();
+      expect(ret.contains(ret.giveUp)).toBeTruthy();
       expect(ret.contains(createStoryPointCard(createStoryPoint(5)))).toBeFalsy();
     });
   });
