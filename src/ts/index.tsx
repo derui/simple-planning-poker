@@ -19,7 +19,7 @@ import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
 import { GameShowedDownEventListener } from "./infrastractures/event/game-showed-down-event-listener";
-import { createInGameAction } from "./status/in-game";
+import { createInGameAction } from "./status/in-game-action";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { NewGameUseCase } from "./usecases/new-game";
@@ -53,14 +53,20 @@ const dispatcher = new EventDispatcherImpl([
   new NewGameStartedEventListener(database),
 ]);
 
-const inGameAction = createInGameAction(
+const inGameAction = createInGameAction({
   gameRepository,
-  new HandCardUseCase(dispatcher, gamePlayerRepository),
-  new ShowDownUseCase(dispatcher, gameRepository),
-  new NewGameUseCase(dispatcher, gameRepository),
-  new ChangeUserModeUseCase(dispatcher, gameRepository),
-  new JoinUserUseCase(dispatcher, userRepository, createInvitationService(gameRepository, gamePlayerRepository))
-);
+  gamePlayerRepository,
+  userRepository,
+  handCardUseCase: new HandCardUseCase(dispatcher, gamePlayerRepository),
+  showDownUseCase: new ShowDownUseCase(dispatcher, gameRepository),
+  newGameUseCase: new NewGameUseCase(dispatcher, gameRepository),
+  changeUserModeUseCase: new ChangeUserModeUseCase(dispatcher, gamePlayerRepository),
+  joinUserUseCase: new JoinUserUseCase(
+    dispatcher,
+    userRepository,
+    createInvitationService(gameRepository, gamePlayerRepository)
+  ),
+});
 
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
 const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database, userRepository), userRepository);

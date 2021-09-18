@@ -19,6 +19,7 @@ export interface Game {
   get id(): GameId;
   get name(): string;
   get showedDown(): boolean;
+  get players(): GamePlayerId[];
   get cards(): SelectableCards;
 
   changeName(name: string): void;
@@ -90,6 +91,10 @@ export const createGame = ({
 
     get showedDown() {
       return this._showedDown;
+    },
+
+    get players() {
+      return players;
     },
 
     get cards() {

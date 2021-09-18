@@ -17,6 +17,7 @@ export const SelectorKeys = {
   inGameCurrentSelectableCards: "inGameCurrentSelectableCards",
   inGameCurrentUserSelectedCard: "inGameCurrentUserSelectedCard",
   inGameCurrentUserMode: "inGameCurrentUserMode",
+  inGameCurrentGamePlayer: "inGameCurrentGamePlayer",
   inGameCurrentGameName: "inGameCurrentGameName",
   inGameCurrentUserJoined: "inGameCurrentUserJoined",
   inGameCurrentGame: "inGameCurrentGame",

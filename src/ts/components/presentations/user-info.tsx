@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { UserInfoUpdaterComponent } from "./user-info-updater";
-import { UserMode } from "@/domains/game-joined-user";
+import { UserMode } from "@/domains/game-player";
 
 interface Props {
   name: string;

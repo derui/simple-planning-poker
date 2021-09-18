@@ -36,7 +36,12 @@ describe("domains", () => {
     test("should return domain event to notify player joined", async () => {
       // Arrange
       const user = createUser({ id: createUserId(), name: "foo" });
-      const player = createGamePlayer({ id: createGamePlayerId(), userId: user.id, cards: CARDS });
+      const player = createGamePlayer({
+        id: createGamePlayerId(),
+        userId: user.id,
+        gameId: createGameId(),
+        cards: CARDS,
+      });
 
       const game = createGame({
         id: createGameId(),
@@ -85,7 +90,7 @@ describe("domains", () => {
       const service = createInvitationService(gameRepository, gamePlayerRepository);
 
       // Act
-      const ret = await service.invite(user, createGameId());
+      await service.invite(user, createGameId());
 
       // Assert
       expect(save).toBeCalledTimes(1);

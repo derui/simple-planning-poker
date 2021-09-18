@@ -6,7 +6,7 @@ import { CreateGameUseCase } from "@/usecases/create-game";
 import { EventDispatcher } from "@/usecases/base";
 import { GameRepository } from "@/domains/game-repository";
 import { Game } from "@/domains/game";
-import { InGameAction } from "@/status/in-game";
+import { InGameAction } from "@/status/in-game-action";
 import { UserRepository } from "@/domains/user-repository";
 import { UserActions } from "@/status/user";
 

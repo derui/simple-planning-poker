@@ -1,32 +1,25 @@
-import { GameId } from "@/domains/game";
-import { UserMode } from "@/domains/game-joined-user";
-import { GameRepository } from "@/domains/game-repository";
-import { UserId } from "@/domains/user";
+import { GamePlayerId, UserMode } from "@/domains/game-player";
+import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserModeInput {
-  gameId: GameId;
-  userId: UserId;
+  gamePlayerId: GamePlayerId;
   mode: UserMode;
 }
 
 export type ChangeUserModeOutput = { kind: "success" } | { kind: "notFound" } | { kind: "canNotChangeMode" };
 
 export class ChangeUserModeUseCase implements UseCase<ChangeUserModeInput, Promise<ChangeUserModeOutput>> {
-  constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
+  constructor(private dispatcher: EventDispatcher, private gamePlayerRepository: GamePlayerRepository) {}
 
   async execute(input: ChangeUserModeInput): Promise<ChangeUserModeOutput> {
-    const game = await this.gameRepository.findBy(input.gameId);
+    const game = await this.gamePlayerRepository.findBy(input.gamePlayerId);
     if (!game) {
       return { kind: "notFound" };
     }
 
-    if (!game.canChangeUserMode(input.userId)) {
-      return { kind: "canNotChangeMode" };
-    }
-
-    const event = game.changeUserMode(input.userId, input.mode);
-    this.gameRepository.save(game);
+    const event = game.changeUserMode(input.mode);
+    this.gamePlayerRepository.save(game);
 
     if (event) {
       this.dispatcher.dispatch(event);

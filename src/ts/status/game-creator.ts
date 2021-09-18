@@ -27,7 +27,7 @@ export const createGameCreationActions = (useCase: CreateGameUseCase): GameCreat
             const input = {
               name: state.name,
               points: state.cards,
-              createdBy: { userId: currentUserId, name: currentUser.name },
+              createdBy: currentUserId,
             };
 
             const ret = useCase.execute(input);

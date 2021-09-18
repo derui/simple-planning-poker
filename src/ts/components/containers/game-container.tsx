@@ -1,20 +1,23 @@
 import * as React from "react";
 import { inGameActionContext, userActionsContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus, ShowDownResult } from "@/status/in-game";
+import { InGameAction, InGameStatus } from "@/status/in-game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 import { signInSelectors } from "@/status/signin";
-import { UserMode } from "@/domains/game-joined-user";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
+import { createInGameSelectors, InGameSelector } from "@/status/in-game-selector";
+import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
+import { UserMode } from "@/domains/game-player";
+import { asStoryPoint } from "@/domains/card";
 
 interface Props {}
 
-const createCardHolderComponent = ({ useSelectCard, selectors }: InGameAction) => {
+const createCardHolderComponent = ({ useSelectCard }: InGameAction, selectors: InGameSelector) => {
   const selectCard = useSelectCard();
   const cards = selectors.currentSelectableCards();
-  const selectedIndex = selectors.currentUserSelectedCard();
+  const selectedIndex = selectors.currentUserSelectedCardIndex();
 
   const props = {
     displays: cards.map((v) => {
@@ -37,7 +40,7 @@ const createCardHolderComponent = ({ useSelectCard, selectors }: InGameAction) =
   );
 };
 
-const createAveragePointShowcase = (showDownResult: ShowDownResult) => {
+const createAveragePointShowcase = (showDownResult: ShowDownResultViewModel) => {
   const average = showDownResult.average.toFixed(1).toString();
   return <AveragePointShowcaseComponent averagePoint={average} cardCounts={showDownResult.cardCounts} />;
 };
@@ -68,19 +71,27 @@ const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: In
   }
 };
 
+const convertHands = (hands: UserHandViewModel[], currentStatus: InGameStatus) =>
+  hands.map((v) => ({
+    ...v,
+    storyPoint: v.card ? asStoryPoint(v.card)?.value ?? null : null,
+    showedDown: currentStatus === "ShowedDown",
+  }));
+
 export const GameContainer: React.FunctionComponent<Props> = () => {
   const inGameActions = React.useContext(inGameActionContext);
-  const component = createCardHolderComponent(inGameActions);
-  const currentGameName = inGameActions.selectors.currentGameName();
-  const upperLine = inGameActions.selectors.upperLineUserHands();
-  const lowerLine = inGameActions.selectors.lowerLineUserHands();
+  const inGameSelector = createInGameSelectors();
+  const component = createCardHolderComponent(inGameActions, inGameSelector);
+  const currentGameName = inGameSelector.currentGameName();
+  const upperLine = inGameSelector.upperLineUserHands();
+  const lowerLine = inGameSelector.lowerLineUserHands();
   const joinUser = inGameActions.useJoinUser();
-  const currentStatus = inGameActions.selectors.currentGameStatus();
-  const showDownResult = inGameActions.selectors.showDownResult();
+  const currentStatus = inGameSelector.currentGameStatus();
+  const showDownResult = inGameSelector.showDownResult();
   const currentUser = signInSelectors.useCurrentUser();
   const changeName = React.useContext(userActionsContext).useChangeUserName();
   const changeMode = inGameActions.useChangeMode();
-  const currentUserMode = inGameActions.selectors.currentUserMode() ?? UserMode.normal;
+  const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
 
   React.useEffect(() => {
     joinUser();
@@ -107,11 +118,11 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
         <div className="app__game__main__game-area">
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
-            <PlayerHandsComponent position="upper" userHands={upperLine} />
+            <PlayerHandsComponent position="upper" userHands={convertHands(upperLine, currentStatus)} />
             <div className="app__game__main__table">
               {GameProgressionButton(currentStatus, currentUserMode, inGameActions)}
             </div>
-            <PlayerHandsComponent position="lower" userHands={lowerLine} />
+            <PlayerHandsComponent position="lower" userHands={convertHands(lowerLine, currentStatus)} />
             <div className="app__game__main__lower-spacer"></div>
           </div>
         </div>

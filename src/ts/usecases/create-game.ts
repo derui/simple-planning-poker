@@ -1,6 +1,6 @@
 import { EventFactory } from "@/domains/event";
 import { createGame, createGameId, GameId } from "@/domains/game";
-import { createGamePlayerId } from "@/domains/game-player";
+import { createGamePlayerId, GamePlayerId } from "@/domains/game-player";
 import { GameRepository } from "@/domains/game-repository";
 import { createSelectableCards, isValidStoryPoints } from "@/domains/selectable-cards";
 import { createStoryPoint, isValidStoryPoint } from "@/domains/story-point";
@@ -14,7 +14,7 @@ export interface CreateGameUseCaseInput {
 }
 
 export type CreateGameUseCaseOutput =
-  | { kind: "success"; gameId: GameId }
+  | { kind: "success"; gameId: GameId; createdGamePlayerId: GamePlayerId }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" };
 
@@ -46,6 +46,6 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Create
     this.gameRepository.save(game);
     this.dispatcher.dispatch(EventFactory.gameCreated(gameId, input.name, input.createdBy, playerId, selectableCards));
 
-    return { kind: "success", gameId };
+    return { kind: "success", gameId, createdGamePlayerId: playerId };
   }
 }

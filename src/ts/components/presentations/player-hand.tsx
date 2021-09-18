@@ -1,13 +1,13 @@
 import React from "react";
 import classnames from "classnames";
-import { UserMode } from "@/domains/game-joined-user";
+import { UserMode } from "@/domains/game-player";
 
 export interface PlayerHandComponentProps {
   namePosition: "upper" | "lower";
   name: string;
   mode: UserMode;
   storyPoint: number | null;
-  handed: boolean;
+  selected: boolean;
   showedDown: boolean;
 }
 
@@ -26,7 +26,7 @@ export const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentPro
   } else {
     const className = classnames({
       "app__game__main__user-hand__user-card": true,
-      "app__game__main__user-hand__user-card--handed": props.handed,
+      "app__game__main__user-hand__user-card--handed": props.selected,
     });
     Card = <span className={className}></span>;
   }

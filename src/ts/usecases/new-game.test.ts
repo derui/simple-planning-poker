@@ -2,11 +2,8 @@ import { NewGameStarted } from "@/domains/event";
 import { createGame, createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
-import { createGiveUpCard } from "@/domains/card";
 import { NewGameUseCase } from "./new-game";
-import { createGameJoinedUser } from "@/domains/game-joined-user";
 import { createGamePlayerId } from "@/domains/game-player";
 
 describe("use case", () => {

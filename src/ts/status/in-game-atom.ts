@@ -1,12 +1,47 @@
 import { AtomKeys, SelectorKeys } from "./key";
 import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
-import { Game } from "@/domains/game";
+import { GamePlayerId, UserMode } from "@/domains/game-player";
+import { UserId } from "@/domains/user";
+import { GameId } from "@/domains/game";
+import { Card } from "@/domains/card";
+
+export interface UserHandViewModel {
+  gamePlayerId: GamePlayerId;
+  name: string;
+  mode: UserMode;
+  card?: Card;
+  selected: boolean;
+}
+
+export interface GameViewModel {
+  id: GameId;
+  name: string;
+  hands: UserHandViewModel[];
+  cards: Card[];
+  showedDown: boolean;
+  average: number | undefined;
+}
+
+export interface ShowDownResultViewModel {
+  cardCounts: [number, number][];
+  average: number;
+}
+
+export interface GamePlayerViewModel {
+  id: GamePlayerId;
+  userId: UserId;
+  mode: UserMode;
+  hand?: Card;
+  cards: Card[];
+}
 
 export const setUpAtomsInGame = (): {
-  gameStateQuery: RecoilValueReadOnly<Game | undefined>;
-  currentGameState: RecoilState<Game | undefined>;
+  gameStateQuery: RecoilValueReadOnly<GameViewModel | undefined>;
+  currentGameState: RecoilState<GameViewModel | undefined>;
+  gamePlayerQuery: RecoilValueReadOnly<GamePlayerViewModel | undefined>;
+  currentGamePlayer: RecoilState<GamePlayerViewModel | undefined>;
 } => {
-  const currentGameState = atom<Game | undefined>({
+  const currentGameState = atom<GameViewModel | undefined>({
     key: AtomKeys.currentGameState,
     default: undefined,
   });
@@ -16,8 +51,20 @@ export const setUpAtomsInGame = (): {
     get: ({ get }) => get(currentGameState),
   });
 
+  const currentGamePlayer = atom<GamePlayerViewModel | undefined>({
+    key: AtomKeys.currentGameState,
+    default: undefined,
+  });
+
+  const gamePlayerQuery = selector({
+    key: SelectorKeys.inGameCurrentGamePlayer,
+    get: ({ get }) => get(currentGamePlayer),
+  });
+
   return {
     gameStateQuery,
     currentGameState,
+    currentGamePlayer,
+    gamePlayerQuery,
   };
 };

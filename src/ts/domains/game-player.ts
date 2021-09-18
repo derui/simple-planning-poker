@@ -1,6 +1,6 @@
 import { createId, Id } from "./base";
 import { Card } from "./card";
-import { EventFactory, GamePlayerModeChanged, PlayerCardSelected } from "./event";
+import { EventFactory, GamePlayerCardSelected, GamePlayerModeChanged } from "./event";
 import { GameId } from "./game";
 import { SelectableCards } from "./selectable-cards";
 import { UserId } from "./user";
@@ -29,7 +29,7 @@ export interface GamePlayer {
   get hand(): Card | undefined;
 
   changeUserMode(newMode: UserMode): GamePlayerModeChanged;
-  takeHand(card: Card): PlayerCardSelected | undefined;
+  takeHand(card: Card): GamePlayerCardSelected | undefined;
 }
 
 /**

@@ -1,6 +1,6 @@
-import { UserMode } from "@/domains/game-joined-user";
 import * as React from "react";
 import classnames from "classnames";
+import { UserMode } from "@/domains/game-player";
 
 export interface UserInfoProps {
   name: string;

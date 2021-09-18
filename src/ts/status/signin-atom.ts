@@ -2,12 +2,12 @@ import { AtomKeys, SelectorKeys } from "./key";
 import { atom, selector } from "recoil";
 import { UserId } from "@/domains/user";
 
-export type CurrentUser = {
+export type CurrentUserViewModel = {
   id: UserId | null;
   name: string;
 };
 
-export const currentUserState = atom<CurrentUser>({
+export const currentUserState = atom<CurrentUserViewModel>({
   key: AtomKeys.currentUserId,
   default: {
     id: null,
