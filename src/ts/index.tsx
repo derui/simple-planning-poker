@@ -33,7 +33,7 @@ import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
-import { createInvitationService } from "./domains/invitation-service";
+import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -66,7 +66,7 @@ const inGameAction = createInGameAction({
   joinUserUseCase: new JoinUserUseCase(
     dispatcher,
     userRepository,
-    createInvitationService(gameRepository, gamePlayerRepository)
+    createJoinService(gameRepository, gamePlayerRepository)
   ),
 });
 

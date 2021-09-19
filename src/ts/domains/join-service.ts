@@ -3,19 +3,20 @@ import { GameId } from "./game";
 import { createGamePlayer, createGamePlayerId } from "./game-player";
 import { GamePlayerRepository } from "./game-player-repository";
 import { GameRepository } from "./game-repository";
+import { InvitationSignature } from "./invitation";
 import { User } from "./user";
 
-export interface InvitationService {
-  invite(user: User, gameId: GameId): Promise<UserInvited | undefined>;
+export interface JoinService {
+  join(user: User, gameId: GameId): Promise<UserInvited | undefined>;
 }
 
-export const createInvitationService = (
+export const createJoinService = (
   gameRepository: GameRepository,
   gamePlayerRepository: GamePlayerRepository
-): InvitationService => {
+): JoinService => {
   return {
-    async invite(user: User, gameId: GameId): Promise<UserInvited | undefined> {
-      const game = await gameRepository.findBy(gameId);
+    async join(user: User, signature: InvitationSignature): Promise<UserInvited | undefined> {
+      const game = await gameRepository.findByInvitationSignature(signature);
 
       if (!game) {
         return undefined;
@@ -24,13 +25,13 @@ export const createInvitationService = (
       const player = createGamePlayer({
         id: createGamePlayerId(),
         userId: user.id,
-        gameId,
+        gameId: game.id,
         cards: game.cards,
       });
 
       gamePlayerRepository.save(player);
 
-      return EventFactory.userInvited(player.id, gameId, user.id);
+      return EventFactory.userInvited(player.id, game.id, user.id);
     },
   };
 };

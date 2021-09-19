@@ -1,6 +1,6 @@
 import { GameId } from "@/domains/game";
 import { GamePlayerId } from "@/domains/game-player";
-import { InvitationService } from "@/domains/invitation-service";
+import { JoinService } from "@/domains/join-service";
 import { UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
@@ -19,7 +19,7 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
   constructor(
     private dispatcher: EventDispatcher,
     private userRepository: UserRepository,
-    private invitationService: InvitationService
+    private joinService: JoinService
   ) {}
 
   async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {
@@ -28,7 +28,7 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
     if (!user) {
       return { kind: "notFoundUser" };
     }
-    const event = await this.invitationService.invite(user, input.gameId);
+    const event = await this.joinService.join(user, input.gameId);
 
     if (!event) {
       return { kind: "joinFailed" };

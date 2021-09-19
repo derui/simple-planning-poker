@@ -2,6 +2,7 @@ import { createId, Id } from "./base";
 import { Card } from "./card";
 import { EventFactory, GameShowedDown, NewGameStarted } from "./event";
 import { GamePlayerId } from "./game-player";
+import { createInvitation, Invitation } from "./invitation";
 import { SelectableCards } from "./selectable-cards";
 import { createStoryPoint, StoryPoint } from "./story-point";
 
@@ -21,6 +22,8 @@ export interface Game {
   get showedDown(): boolean;
   get players(): GamePlayerId[];
   get cards(): SelectableCards;
+
+  makeInvitation(): Invitation;
 
   changeName(name: string): void;
 
@@ -99,6 +102,10 @@ export const createGame = ({
 
     get cards() {
       return this._cards;
+    },
+
+    makeInvitation() {
+      return createInvitation(this.id);
     },
 
     canShowDown(): boolean {

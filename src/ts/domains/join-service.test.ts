@@ -3,7 +3,7 @@ import { createGame, createGameId } from "./game";
 import { createGamePlayer, createGamePlayerId } from "./game-player";
 import { GamePlayerRepository } from "./game-player-repository";
 import { GameRepository } from "./game-repository";
-import { createInvitationService } from "./invitation-service";
+import { createJoinService } from "./join-service";
 import { createSelectableCards } from "./selectable-cards";
 import { createStoryPoint } from "./story-point";
 import { createUser, createUserId } from "./user";
@@ -17,17 +17,18 @@ describe("domains", () => {
       const gameRepository: GameRepository = {
         save: jest.fn(),
         findBy: jest.fn().mockImplementation(() => undefined),
+        findByInvitationSignature: jest.fn().mockImplementation(() => undefined),
       };
       const gamePlayerRepository: GamePlayerRepository = {
         save: jest.fn(),
         findBy: jest.fn(),
       };
 
-      const service = createInvitationService(gameRepository, gamePlayerRepository);
+      const service = createJoinService(gameRepository, gamePlayerRepository);
 
       // Act
       const user = createUser({ id: createUserId(), name: "foo" });
-      const ret = await service.invite(user, createGameId());
+      const ret = await service.join(user, createGameId());
 
       // Assert
       expect(ret).toBeUndefined;
@@ -51,17 +52,18 @@ describe("domains", () => {
       });
       const gameRepository: GameRepository = {
         save: jest.fn(),
-        findBy: jest.fn().mockImplementation(() => game),
+        findBy: jest.fn(),
+        findByInvitationSignature: jest.fn().mockImplementation(() => game),
       };
       const gamePlayerRepository: GamePlayerRepository = {
         save: jest.fn(),
         findBy: jest.fn(),
       };
 
-      const service = createInvitationService(gameRepository, gamePlayerRepository);
+      const service = createJoinService(gameRepository, gamePlayerRepository);
 
       // Act
-      const ret = await service.invite(user, createGameId());
+      const ret = await service.join(user, createGameId());
 
       // Assert
       expect(ret).toHaveLength(1);
@@ -79,7 +81,8 @@ describe("domains", () => {
       });
       const gameRepository: GameRepository = {
         save: jest.fn(),
-        findBy: jest.fn().mockImplementation(() => game),
+        findBy: jest.fn(),
+        findByInvitationSignature: jest.fn().mockImplementation(() => game),
       };
       const save = jest.fn();
       const gamePlayerRepository: GamePlayerRepository = {
@@ -87,10 +90,10 @@ describe("domains", () => {
         findBy: jest.fn(),
       };
 
-      const service = createInvitationService(gameRepository, gamePlayerRepository);
+      const service = createJoinService(gameRepository, gamePlayerRepository);
 
       // Act
-      await service.invite(user, createGameId());
+      await service.join(user, createGameId());
 
       // Assert
       expect(save).toBeCalledTimes(1);

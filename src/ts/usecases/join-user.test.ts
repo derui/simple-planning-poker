@@ -16,10 +16,10 @@ describe("use case", () => {
       };
       const dispatcher = createMockedDispatcher();
       const userRepository = createMockedUserRepository();
-      const invitationService = {
-        invite: jest.fn().mockImplementation(() => []),
+      const joinService = {
+        join: jest.fn().mockImplementation(() => undefined),
       };
-      const useCase = new JoinUserUseCase(dispatcher, userRepository, invitationService);
+      const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
       // Act
       const ret = await useCase.execute(input);
@@ -40,10 +40,10 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const userRepository = createMockedUserRepository();
       userRepository.findBy.mockImplementation(() => user);
-      const invitationService = {
-        invite: jest.fn().mockImplementation(() => []),
+      const joinService = {
+        join: jest.fn().mockImplementation(() => undefined),
       };
-      const useCase = new JoinUserUseCase(dispatcher, userRepository, invitationService);
+      const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
       // Act
       const ret = await useCase.execute(input);
@@ -64,10 +64,10 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const userRepository = createMockedUserRepository();
       userRepository.findBy.mockImplementation(() => user);
-      const invitationService = {
-        invite: jest.fn().mockImplementation(() => [EventFactory.userInvited(createGamePlayerId(), gameId, user.id)]),
+      const joinService = {
+        join: jest.fn().mockImplementation(() => EventFactory.userInvited(createGamePlayerId(), gameId, user.id)),
       };
-      const useCase = new JoinUserUseCase(dispatcher, userRepository, invitationService);
+      const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
       // Act
       await useCase.execute(input);
