@@ -15,6 +15,7 @@ export interface InGameSelector {
   upperLineUserHands: () => UserHandViewModel[];
   lowerLineUserHands: () => UserHandViewModel[];
   showDownResult: () => ShowDownResultViewModel;
+  invitationSignature: () => string | undefined;
 }
 
 export const createInGameSelectors = (): InGameSelector => {
@@ -159,6 +160,15 @@ export const createInGameSelectors = (): InGameSelector => {
     },
   });
 
+  const invitationSignature = selector({
+    key: SelectorKeys.inGameCurrentInvitationSignature,
+    get: ({ get }) => {
+      const game = get(gameStateQuery);
+
+      return game?.invitationSignature;
+    },
+  });
+
   return {
     currentGameName: () => useRecoilValue(currentGameName),
     currentUserMode: () => useRecoilValue(currentUserMode),
@@ -168,5 +178,6 @@ export const createInGameSelectors = (): InGameSelector => {
     lowerLineUserHands: () => useRecoilValue(lowerLineUserHands),
     currentGameStatus: () => useRecoilValue(currentGameStatus),
     showDownResult: () => useRecoilValue(showDownResult),
+    invitationSignature: () => useRecoilValue(invitationSignature),
   };
 };

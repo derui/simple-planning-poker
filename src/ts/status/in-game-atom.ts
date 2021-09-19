@@ -20,6 +20,7 @@ export interface GameViewModel {
   cards: Card[];
   showedDown: boolean;
   average: number | undefined;
+  invitationSignature: string;
 }
 
 export interface ShowDownResultViewModel {

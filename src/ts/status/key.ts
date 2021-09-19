@@ -26,4 +26,5 @@ export const SelectorKeys = {
   inGameLowerLineUserHands: "inGameLownerLineUserHands",
   inGameCurrentGameStatus: "inGameCurrentGameStatus",
   inGameShowDownResult: "inGameShowDownResult",
+  inGameCurrentInvitationSignature: "inGameCurrentInvitationSignature",
 } as const;
