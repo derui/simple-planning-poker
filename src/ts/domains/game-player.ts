@@ -50,7 +50,7 @@ export const createGamePlayer = ({
   cards: SelectableCards;
   mode?: UserMode;
 }): GamePlayer => {
-  return {
+  const obj = {
     userMode: mode,
     userHand: hand,
 
@@ -63,11 +63,11 @@ export const createGamePlayer = ({
     },
 
     get mode() {
-      return this.userMode;
+      return obj.userMode;
     },
 
     get hand() {
-      return this.userHand;
+      return obj.userHand;
     },
 
     get game() {
@@ -75,9 +75,9 @@ export const createGamePlayer = ({
     },
 
     changeUserMode(newMode: UserMode) {
-      this.userMode = newMode;
+      obj.userMode = newMode;
 
-      return EventFactory.gamePlayerModeChanged(this.id, newMode);
+      return EventFactory.gamePlayerModeChanged(obj.id, newMode);
     },
 
     takeHand(card: Card) {
@@ -85,9 +85,11 @@ export const createGamePlayer = ({
         return undefined;
       }
 
-      this.userHand = card;
+      obj.userHand = card;
 
-      return EventFactory.gamePlayerCardSelected(this.id, card);
+      return EventFactory.gamePlayerCardSelected(obj.id, card);
     },
   } as GamePlayer & { userMode: UserMode; userHand: Card | undefined };
+
+  return obj;
 };

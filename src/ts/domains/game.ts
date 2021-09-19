@@ -79,7 +79,7 @@ export const createGame = ({
     throw new Error("Found unknown player not in this game");
   }
 
-  return {
+  const obj = {
     _name: name,
     _showedDown: false,
     _cards: cards,
@@ -89,11 +89,11 @@ export const createGame = ({
     },
 
     get name() {
-      return this._name;
+      return obj._name;
     },
 
     get showedDown() {
-      return this._showedDown;
+      return obj._showedDown;
     },
 
     get players() {
@@ -101,11 +101,11 @@ export const createGame = ({
     },
 
     get cards() {
-      return this._cards;
+      return obj._cards;
     },
 
     makeInvitation() {
-      return createInvitation(this.id);
+      return createInvitation(obj.id);
     },
 
     canShowDown(): boolean {
@@ -113,16 +113,16 @@ export const createGame = ({
     },
 
     showDown(): GameShowedDown | undefined {
-      if (this.canShowDown()) {
-        this._showedDown = true;
-        return EventFactory.gamdShowedDown(this.id);
+      if (obj.canShowDown()) {
+        obj._showedDown = true;
+        return EventFactory.gamdShowedDown(obj.id);
       }
 
       return undefined;
     },
 
     calculateAverage(): StoryPoint | undefined {
-      if (!this.showedDown) {
+      if (!obj.showedDown) {
         return undefined;
       }
 
@@ -145,10 +145,10 @@ export const createGame = ({
     },
 
     changeName(name: string) {
-      if (!this.canChangeName(name)) {
+      if (!obj.canChangeName(name)) {
         throw new Error("can not change name");
       }
-      this._name = name;
+      obj._name = name;
     },
 
     canChangeName(name: string) {
@@ -156,9 +156,11 @@ export const createGame = ({
     },
 
     newGame() {
-      this._showedDown = false;
+      obj._showedDown = false;
 
-      return EventFactory.newGameStarted(this.id);
+      return EventFactory.newGameStarted(obj.id);
     },
   } as InternalGame;
+
+  return obj;
 };

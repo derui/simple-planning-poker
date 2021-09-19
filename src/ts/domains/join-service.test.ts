@@ -66,7 +66,6 @@ describe("domains", () => {
       const ret = await service.join(user, createGameId());
 
       // Assert
-      expect(ret).toHaveLength(1);
       expect(ret?.kind).toEqual(DOMAIN_EVENTS.UserInvited);
     });
 

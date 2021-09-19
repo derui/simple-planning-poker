@@ -30,27 +30,29 @@ export const createUser = ({ id, name }: { id: UserId; name: string }): User => 
     throw new Error("can not create user with empty name");
   }
 
-  return {
-    userName: name,
+  const obj = {
+    _userName: name,
     get id() {
       return id;
     },
 
     get name() {
-      return this.userName;
+      return obj._userName;
     },
 
     changeName(name: string) {
-      if (!this.canChangeName(name)) {
+      if (!obj.canChangeName(name)) {
         throw new Error("can not change name");
       }
-      this.userName = name;
+      obj._userName = name;
 
-      return EventFactory.userNameChanged(this.id, name);
+      return EventFactory.userNameChanged(obj.id, name);
     },
 
     canChangeName(name: string) {
       return name !== "";
     },
-  } as User & { userName: string };
+  } as User & { _userName: string };
+
+  return obj;
 };

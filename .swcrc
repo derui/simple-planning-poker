@@ -6,22 +6,22 @@
       "decorators": false,
       "dynamicImport": true
     },
-  "transform": {
-   "react": {
+    "transform": {
+      "react": {
         "pragma": "React.createElement",
         "pragmaFrag": "React.Fragment",
         "throwIfNamespace": true,
         "development": false,
         "useBuiltins": false
-    }
+      }
+    },
+    "target": "es2015"
   },
-  "target": "es2015"
-  },
- "module": {
+  "module": {
     "type": "commonjs",
     "strict": true,
     "strictMode": true,
     "lazy": false,
     "noInterop": false
- }
+  }
 }

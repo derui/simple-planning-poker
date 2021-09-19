@@ -10,9 +10,8 @@ describe("use case", () => {
     test("should return error if user not found", async () => {
       // Arrange
       const input = {
-        gameId: createGameId(),
         userId: createUserId(),
-        name: "foo",
+        signature: "a",
       };
       const dispatcher = createMockedDispatcher();
       const userRepository = createMockedUserRepository();
@@ -33,7 +32,7 @@ describe("use case", () => {
       const gameId = createGameId();
       const user = createUser({ id: createUserId(), name: "test" });
       const input = {
-        gameId,
+        signature: "a",
         userId: user.id,
       };
 
@@ -41,7 +40,7 @@ describe("use case", () => {
       const userRepository = createMockedUserRepository();
       userRepository.findBy.mockImplementation(() => user);
       const joinService = {
-        join: jest.fn().mockImplementation(() => undefined),
+        join: jest.fn().mockImplementation(() => EventFactory.userInvited(createGamePlayerId(), gameId, user.id)),
       };
       const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
@@ -57,7 +56,7 @@ describe("use case", () => {
       const gameId = createGameId();
       const user = createUser({ id: createUserId(), name: "test" });
       const input = {
-        gameId,
+        signature: "a",
         userId: user.id,
       };
 
