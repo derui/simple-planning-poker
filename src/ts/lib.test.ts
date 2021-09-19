@@ -10,6 +10,7 @@ export const createMockedGameRepository = () => {
   return {
     save: jest.fn(),
     findBy: jest.fn(),
+    findByInvitationSignature: jest.fn(),
   };
 };
 

@@ -36,6 +36,10 @@ class DummyGameRepository implements GameRepository {
   findBy(): Promise<Game | undefined> {
     throw new Error("Do not use in production");
   }
+
+  findByInvitationSignature(): Promise<Game | undefined> {
+    throw new Error("Do not use in production");
+  }
 }
 
 // context for GameCreationAction.

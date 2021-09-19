@@ -5,6 +5,7 @@ import { createSelectableCards } from "@/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
 import { createGamePlayerId } from "@/domains/game-player";
 import { deserializeCard, SerializedCard } from "./card-converter";
+import { InvitationSignature } from "@/domains/invitation";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: Database) {}
@@ -17,7 +18,24 @@ export class GameRepositoryImpl implements GameRepository {
       .filter((v) => v.kind === "storypoint")
       .map((v) => (v.kind === "storypoint" ? v.storyPoint.value : null));
 
+    const invitation = game.makeInvitation();
+    updates[`/invitations/${invitation.signature}`] = game.id;
+
     update(ref(this.database), updates);
+  }
+
+  async findByInvitationSignature(signature: InvitationSignature): Promise<Game | undefined> {
+    if (signature === "") {
+      return;
+    }
+    const snapshot = await get(child(ref(this.database, "invitations"), signature));
+
+    const gameId = snapshot.val() as GameId | undefined;
+    if (!gameId) {
+      return undefined;
+    }
+
+    return this.findBy(gameId);
   }
 
   async findBy(id: GameId): Promise<Game | undefined> {

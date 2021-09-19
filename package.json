@@ -55,6 +55,7 @@
     "@swc/core": "^1.2.88",
     "@swc/jest": "^0.2.3",
     "@types/classnames": "^2.3.1",
+    "@types/crypto-js": "^4.0.2",
     "@types/firebase": "^3.2.1",
     "@types/jest": "^27.0.1",
     "@types/react": "^17.0.21",
@@ -96,6 +97,7 @@
   },
   "dependencies": {
     "classnames": "^2.3.1",
+    "crypto-js": "^4.1.1",
     "firebase": "^9.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

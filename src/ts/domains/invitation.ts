@@ -1,5 +1,5 @@
 import { GameId } from "./game";
-import * as crypto from "crypto";
+import sha256 from "crypto-js/sha256";
 
 export type InvitationSignature = string;
 
@@ -9,9 +9,9 @@ export interface Invitation {
 }
 
 export const createInvitation = (gameId: GameId): Invitation => {
-  const hash = crypto.createHash("sha256");
+  const hash = sha256(gameId);
   return {
     gameId,
-    signature: hash.update(gameId).digest("hex"),
+    signature: hash.toString(),
   };
 };
