@@ -1,12 +1,12 @@
-import { GameId } from "@/domains/game";
 import { GamePlayerId } from "@/domains/game-player";
+import { InvitationSignature } from "@/domains/invitation";
 import { JoinService } from "@/domains/join-service";
 import { UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
-  gameId: GameId;
+  signature: InvitationSignature;
   userId: UserId;
 }
 
@@ -28,7 +28,7 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
     if (!user) {
       return { kind: "notFoundUser" };
     }
-    const event = await this.joinService.join(user, input.gameId);
+    const event = await this.joinService.join(user, input.signature);
 
     if (!event) {
       return { kind: "joinFailed" };

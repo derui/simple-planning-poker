@@ -85,7 +85,6 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const currentGameName = inGameSelector.currentGameName();
   const upperLine = inGameSelector.upperLineUserHands();
   const lowerLine = inGameSelector.lowerLineUserHands();
-  const joinUser = inGameActions.useJoinUser();
   const currentStatus = inGameSelector.currentGameStatus();
   const showDownResult = inGameSelector.showDownResult();
   const currentUser = signInSelectors.useCurrentUser();
@@ -93,9 +92,6 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const changeMode = inGameActions.useChangeMode();
   const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
 
-  React.useEffect(() => {
-    joinUser();
-  }, [currentGameName]);
   let Component = <EmptyCardHolderComponent />;
   if (currentStatus === "ShowedDown") {
     Component = createAveragePointShowcase(showDownResult);

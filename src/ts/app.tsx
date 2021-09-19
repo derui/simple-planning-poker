@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import { GameContainer } from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
 import { GameObserverContainer } from "./components/containers/game-observer";
+import { InvitationContainer } from "./components/containers/invitation-container";
 import { SigninContainer } from "./components/containers/signin-container";
 import { signInSelectors } from "./status/signin";
 
@@ -42,6 +43,9 @@ export const App: React.FunctionComponent<{}> = () => {
               <PrivateRoute path="/game/:gameId">
                 <GameObserverContainer />
                 <GameContainer />
+              </PrivateRoute>
+              <PrivateRoute path="/invitation/:signature">
+                <InvitationContainer />
               </PrivateRoute>
               <Route exact path="/signin" component={SigninContainer}></Route>
             </Switch>

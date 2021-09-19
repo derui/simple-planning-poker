@@ -12,13 +12,14 @@ import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { GamePlayerViewModel, GameViewModel, setUpAtomsInGame } from "./in-game-atom";
 import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
+import { InvitationSignature } from "@/domains/invitation";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
 export interface InGameAction {
   useSelectCard: () => (index: number) => void;
   useNewGame: () => () => void;
-  useJoinUser: () => () => void;
+  useJoinUser: () => (signature: InvitationSignature, callback: (gameId: GameId) => void) => void;
   useShowDown: () => () => void;
   useChangeMode: () => (mode: UserMode) => void;
   useSetCurrentGame: (gameId: GameId) => (game: Game) => void;
@@ -58,6 +59,7 @@ const gameToViewModel = async (
       }),
     cards: game.cards.cards,
     showedDown: game.showedDown,
+    invitationSignature: game.makeInvitation().signature,
   };
 };
 
@@ -139,14 +141,14 @@ export const createInGameAction = ({
       const currentUser = useRecoilValue(currentUserState);
       const currentGame = useRecoilValue(gameStateQuery);
 
-      return useRecoilCallback(({ set }) => async () => {
+      return useRecoilCallback(({ set }) => async (signature: InvitationSignature, callback: (id: GameId) => void) => {
         if (!currentGame || !currentUser.id) {
           return;
         }
 
         const ret = await joinUserUseCase.execute({
-          gameId: currentGame.id,
           userId: currentUser.id,
+          signature,
         });
 
         if (ret.kind === "success") {
@@ -161,6 +163,10 @@ export const createInGameAction = ({
         set(currentGameState, (prev) => {
           return state || prev;
         });
+
+        if (game) {
+          callback(game.id);
+        }
       });
     },
 

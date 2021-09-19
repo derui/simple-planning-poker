@@ -1,5 +1,4 @@
 import { EventFactory, UserInvited } from "./event";
-import { GameId } from "./game";
 import { createGamePlayer, createGamePlayerId } from "./game-player";
 import { GamePlayerRepository } from "./game-player-repository";
 import { GameRepository } from "./game-repository";
@@ -7,7 +6,7 @@ import { InvitationSignature } from "./invitation";
 import { User } from "./user";
 
 export interface JoinService {
-  join(user: User, gameId: GameId): Promise<UserInvited | undefined>;
+  join(user: User, signature: InvitationSignature): Promise<UserInvited | undefined>;
 }
 
 export const createJoinService = (
