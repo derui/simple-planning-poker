@@ -44,9 +44,10 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     if (!val) {
       return undefined;
     }
-    const mode = gameVal[`users/${id}`] as UserMode;
-    const hand = gameVal[`userHands/${id}`] as SerializedCard | undefined;
-    const cards = val["cards"] as number[];
+    const hands = gameVal.userHands as { [k: string]: SerializedCard | undefined };
+    const mode = gameVal.users[id] as UserMode;
+    const hand = hands ? hands[id] : (undefined as SerializedCard | undefined);
+    const cards = gameVal["cards"] as number[];
 
     const selectableCards = createSelectableCards(cards.map(createStoryPoint));
 

@@ -1,4 +1,5 @@
 import { GameId } from "@/domains/game";
+import { GamePlayerId } from "@/domains/game-player";
 import { InvitationService } from "@/domains/invitation-service";
 import { UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
@@ -9,7 +10,10 @@ export interface JoinUserUseCaseInput {
   userId: UserId;
 }
 
-export type JoinUserUseCaseOutput = { kind: "success" } | { kind: "notFoundUser" };
+export type JoinUserUseCaseOutput =
+  | { kind: "success"; gamePlayerId: GamePlayerId }
+  | { kind: "notFoundUser" }
+  | { kind: "joinFailed" };
 
 export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<JoinUserUseCaseOutput>> {
   constructor(
@@ -24,10 +28,13 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
     if (!user) {
       return { kind: "notFoundUser" };
     }
-    const events = await this.invitationService.invite(user, input.gameId);
+    const event = await this.invitationService.invite(user, input.gameId);
 
-    events.forEach(this.dispatcher.dispatch);
+    if (!event) {
+      return { kind: "joinFailed" };
+    }
+    this.dispatcher.dispatch(event);
 
-    return { kind: "success" };
+    return { kind: "success", gamePlayerId: event.gamePlayerId };
   }
 }

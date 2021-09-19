@@ -1,4 +1,4 @@
-import { DefinedDomainEvents, EventFactory } from "./event";
+import { EventFactory, UserInvited } from "./event";
 import { GameId } from "./game";
 import { createGamePlayer, createGamePlayerId } from "./game-player";
 import { GamePlayerRepository } from "./game-player-repository";
@@ -6,7 +6,7 @@ import { GameRepository } from "./game-repository";
 import { User } from "./user";
 
 export interface InvitationService {
-  invite(user: User, gameId: GameId): Promise<DefinedDomainEvents[]>;
+  invite(user: User, gameId: GameId): Promise<UserInvited | undefined>;
 }
 
 export const createInvitationService = (
@@ -14,11 +14,11 @@ export const createInvitationService = (
   gamePlayerRepository: GamePlayerRepository
 ): InvitationService => {
   return {
-    async invite(user: User, gameId: GameId): Promise<DefinedDomainEvents[]> {
+    async invite(user: User, gameId: GameId): Promise<UserInvited | undefined> {
       const game = await gameRepository.findBy(gameId);
 
       if (!game) {
-        return [];
+        return undefined;
       }
 
       const player = createGamePlayer({
@@ -30,7 +30,7 @@ export const createInvitationService = (
 
       gamePlayerRepository.save(player);
 
-      return [EventFactory.userInvited(player.id, gameId, user.id)];
+      return EventFactory.userInvited(player.id, gameId, user.id);
     },
   };
 };

@@ -1,9 +1,10 @@
-import { createGame, Game, GameId } from "@/domains/game";
+import { createGame, Game, GameId, PlayerHand } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { createStoryPoint } from "@/domains/story-point";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
 import { createGamePlayerId } from "@/domains/game-player";
+import { deserializeCard, SerializedCard } from "./card-converter";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: Database) {}
@@ -34,6 +35,7 @@ export class GameRepositoryImpl implements GameRepository {
     const cards = val["cards"] as number[];
     const players = val["users"] as { [key: string]: any };
     const showedDown = val["showedDown"] as boolean;
+    const hands = val.userHands as { [k: string]: SerializedCard | undefined } | undefined;
 
     const selectableCards = createSelectableCards(cards.map(createStoryPoint));
     const game = createGame({
@@ -41,6 +43,20 @@ export class GameRepositoryImpl implements GameRepository {
       name,
       players: Object.keys(players).map((v) => createGamePlayerId(v)),
       cards: selectableCards,
+      hands: hands
+        ? Object.entries(hands)
+            .map(([k, card]): PlayerHand | null => {
+              if (!card) {
+                return null;
+              }
+              return {
+                playerId: createGamePlayerId(k),
+                card: deserializeCard(card),
+              };
+            })
+            .filter((v) => !!v)
+            .map((v) => v!)
+        : undefined,
     });
 
     if (showedDown) {

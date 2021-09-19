@@ -30,7 +30,7 @@ describe("domains", () => {
       const ret = await service.invite(user, createGameId());
 
       // Assert
-      expect(ret).toHaveLength(0);
+      expect(ret).toBeUndefined;
     });
 
     test("should return domain event to notify player joined", async () => {
@@ -65,7 +65,7 @@ describe("domains", () => {
 
       // Assert
       expect(ret).toHaveLength(1);
-      expect(ret[0].kind).toEqual(DOMAIN_EVENTS.UserInvited);
+      expect(ret?.kind).toEqual(DOMAIN_EVENTS.UserInvited);
     });
 
     test("should save a new player", async () => {

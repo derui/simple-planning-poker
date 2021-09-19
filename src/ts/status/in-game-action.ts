@@ -7,9 +7,9 @@ import { NewGameUseCase } from "@/usecases/new-game";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
 import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
-import { UserMode } from "@/domains/game-player";
+import { GamePlayer, UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
+import { GamePlayerViewModel, GameViewModel, setUpAtomsInGame } from "./in-game-atom";
 import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
 
@@ -61,6 +61,15 @@ const gameToViewModel = async (
   };
 };
 
+const gamePlayerToViewModel = (gamePlayer: GamePlayer): GamePlayerViewModel => {
+  return {
+    id: gamePlayer.id,
+    userId: gamePlayer.user,
+    mode: gamePlayer.mode,
+    hand: gamePlayer.hand,
+  };
+};
+
 export const createInGameAction = ({
   gameRepository,
   gamePlayerRepository,
@@ -80,7 +89,7 @@ export const createInGameAction = ({
   changeUserModeUseCase: ChangeUserModeUseCase;
   joinUserUseCase: JoinUserUseCase;
 }): InGameAction => {
-  const { gameStateQuery, currentGameState, gamePlayerQuery } = setUpAtomsInGame();
+  const { gameStateQuery, currentGameState, gamePlayerQuery, currentGamePlayer } = setUpAtomsInGame();
 
   return {
     useSelectCard: () => {
@@ -91,7 +100,7 @@ export const createInGameAction = ({
         if (!currentPlayer || !currentGame) {
           return;
         }
-        const card = currentPlayer.cards[index];
+        const card = currentGame.cards[index];
 
         await handCardUseCase.execute({
           playerId: currentPlayer.id,
@@ -135,10 +144,17 @@ export const createInGameAction = ({
           return;
         }
 
-        await joinUserUseCase.execute({
+        const ret = await joinUserUseCase.execute({
           gameId: currentGame.id,
           userId: currentUser.id,
         });
+
+        if (ret.kind === "success") {
+          const gamePlayer = await gamePlayerRepository.findBy(ret.gamePlayerId);
+          set(currentGamePlayer, (prev) => {
+            return gamePlayer ? gamePlayerToViewModel(gamePlayer) : undefined || prev;
+          });
+        }
 
         const game = await gameRepository.findBy(currentGame.id);
         const state = game ? await gameToViewModel(game, gamePlayerRepository, userRepository) : undefined;

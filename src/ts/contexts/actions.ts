@@ -9,6 +9,7 @@ import { Game } from "@/domains/game";
 import { InGameAction } from "@/status/in-game-action";
 import { UserRepository } from "@/domains/user-repository";
 import { UserActions } from "@/status/user";
+import { InGameSelector } from "@/status/in-game-selector";
 
 class DummyAuthenticator implements Authenticator {
   authenticate(email: string): Promise<UserId> {
@@ -42,8 +43,9 @@ export const gameCreationActionContext = createContext<GameCreationAction>(
   createGameCreationActions(new CreateGameUseCase(new DummyDispatcher(), new DummyGameRepository()))
 );
 
-// context for GameCreationAction.
 export const inGameActionContext = createContext<InGameAction>({} as InGameAction);
+
+export const inGameSelectorContext = createContext<InGameSelector>({} as InGameSelector);
 
 // context for UserActions.
 export const userActionsContext = createContext<UserActions>({} as UserActions);

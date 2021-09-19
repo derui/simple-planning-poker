@@ -7,6 +7,7 @@ import { App } from "./app";
 import {
   gameCreationActionContext,
   inGameActionContext,
+  inGameSelectorContext,
   signInActionContext,
   userActionsContext,
 } from "./contexts/actions";
@@ -33,6 +34,7 @@ import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
 import { createInvitationService } from "./domains/invitation-service";
+import { createInGameSelectors } from "./status/in-game-selector";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -71,6 +73,7 @@ const inGameAction = createInGameAction({
 const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
 const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database, userRepository), userRepository);
 const userActions = createUserActions(new ChangeUserNameUseCase(dispatcher, userRepository));
+const inGameSelector = createInGameSelectors();
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
@@ -78,7 +81,9 @@ ReactDOM.render(
       <inGameActionContext.Provider value={inGameAction}>
         <userActionsContext.Provider value={userActions}>
           <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-            <App />
+            <inGameSelectorContext.Provider value={inGameSelector}>
+              <App />
+            </inGameSelectorContext.Provider>
           </gameObserverContext.Provider>
         </userActionsContext.Provider>
       </inGameActionContext.Provider>

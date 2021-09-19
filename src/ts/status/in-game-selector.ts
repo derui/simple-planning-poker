@@ -123,12 +123,12 @@ export const createInGameSelectors = (): InGameSelector => {
         return "EmptyUserHand";
       }
 
-      if (game.hands.some((v) => v.selected)) {
-        return "CanShowDown";
-      }
-
       if (game.showedDown) {
         return "ShowedDown";
+      }
+
+      if (game.hands.some((v) => v.selected)) {
+        return "CanShowDown";
       }
 
       return "EmptyUserHand";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { inGameActionContext, userActionsContext } from "@/contexts/actions";
+import { inGameActionContext, inGameSelectorContext, userActionsContext } from "@/contexts/actions";
 import { InGameAction, InGameStatus } from "@/status/in-game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
@@ -7,7 +7,7 @@ import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 import { signInSelectors } from "@/status/signin";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
-import { createInGameSelectors, InGameSelector } from "@/status/in-game-selector";
+import { InGameSelector } from "@/status/in-game-selector";
 import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
@@ -80,7 +80,7 @@ const convertHands = (hands: UserHandViewModel[], currentStatus: InGameStatus) =
 
 export const GameContainer: React.FunctionComponent<Props> = () => {
   const inGameActions = React.useContext(inGameActionContext);
-  const inGameSelector = createInGameSelectors();
+  const inGameSelector = React.useContext(inGameSelectorContext);
   const component = createCardHolderComponent(inGameActions, inGameSelector);
   const currentGameName = inGameSelector.currentGameName();
   const upperLine = inGameSelector.upperLineUserHands();
@@ -95,7 +95,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
 
   React.useEffect(() => {
     joinUser();
-  });
+  }, [currentGameName]);
   let Component = <EmptyCardHolderComponent />;
   if (currentStatus === "ShowedDown") {
     Component = createAveragePointShowcase(showDownResult);

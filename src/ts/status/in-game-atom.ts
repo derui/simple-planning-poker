@@ -32,8 +32,27 @@ export interface GamePlayerViewModel {
   userId: UserId;
   mode: UserMode;
   hand?: Card;
-  cards: Card[];
 }
+
+const currentGameState = atom<GameViewModel | undefined>({
+  key: AtomKeys.currentGameState,
+  default: undefined,
+});
+
+const gameStateQuery = selector({
+  key: SelectorKeys.inGameCurrentGame,
+  get: ({ get }) => get(currentGameState),
+});
+
+const currentGamePlayer = atom<GamePlayerViewModel | undefined>({
+  key: AtomKeys.currentGamePlayerState,
+  default: undefined,
+});
+
+const gamePlayerQuery = selector({
+  key: SelectorKeys.inGameCurrentGamePlayer,
+  get: ({ get }) => get(currentGamePlayer),
+});
 
 export const setUpAtomsInGame = (): {
   gameStateQuery: RecoilValueReadOnly<GameViewModel | undefined>;
@@ -41,26 +60,6 @@ export const setUpAtomsInGame = (): {
   gamePlayerQuery: RecoilValueReadOnly<GamePlayerViewModel | undefined>;
   currentGamePlayer: RecoilState<GamePlayerViewModel | undefined>;
 } => {
-  const currentGameState = atom<GameViewModel | undefined>({
-    key: AtomKeys.currentGameState,
-    default: undefined,
-  });
-
-  const gameStateQuery = selector({
-    key: SelectorKeys.inGameCurrentGame,
-    get: ({ get }) => get(currentGameState),
-  });
-
-  const currentGamePlayer = atom<GamePlayerViewModel | undefined>({
-    key: AtomKeys.currentGameState,
-    default: undefined,
-  });
-
-  const gamePlayerQuery = selector({
-    key: SelectorKeys.inGameCurrentGamePlayer,
-    get: ({ get }) => get(currentGamePlayer),
-  });
-
   return {
     gameStateQuery,
     currentGameState,
