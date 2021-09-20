@@ -1,6 +1,7 @@
 import { UserMode } from "@/domains/game-player";
 import React from "react";
 import { GameInfoComponent } from "./game-info";
+import { InvitationLinkViewerComponent } from "./invitation-link-viewer";
 import { UserInfoComponent } from "./user-info";
 
 interface Props {
@@ -9,12 +10,15 @@ interface Props {
   userName: string;
   onChangeMode: (name: UserMode) => void;
   userMode: UserMode;
+  origin: string;
+  invitationSignature: string;
 }
 
 export const GameHeaderComponent: React.FunctionComponent<Props> = (props) => {
   return (
     <div className="app__game__header">
       <GameInfoComponent gameName={props.gameName} />
+      <InvitationLinkViewerComponent origin={props.origin} invitationSignature={props.invitationSignature} />
       <UserInfoComponent
         name={props.userName}
         onChangeName={(name) => props.onChangeName(name)}

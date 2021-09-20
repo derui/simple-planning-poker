@@ -91,6 +91,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const changeName = React.useContext(userActionsContext).useChangeUserName();
   const changeMode = inGameActions.useChangeMode();
   const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
+  const signature = inGameSelector.invitationSignature();
 
   let Component = <EmptyCardHolderComponent />;
   if (currentStatus === "ShowedDown") {
@@ -109,6 +110,8 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
         userMode={currentUserMode}
         onChangeName={(name) => changeName(name)}
         onChangeMode={(mode) => changeMode(mode)}
+        origin={document.location.origin}
+        invitationSignature={signature || ""}
       />
       <main className="app__game__main">
         <div className="app__game__main__game-area">
