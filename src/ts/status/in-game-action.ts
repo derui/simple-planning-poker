@@ -131,10 +131,9 @@ export const createInGameAction = ({
 
     useJoinUser: () => {
       const currentUser = useRecoilValue(currentUserState);
-      const currentGame = useRecoilValue(gameStateQuery);
 
       return useRecoilCallback(({ set }) => async (signature: InvitationSignature, callback: (id: GameId) => void) => {
-        if (!currentGame || !currentUser.id) {
+        if (!currentUser.id) {
           return;
         }
 
@@ -148,16 +147,21 @@ export const createInGameAction = ({
           set(currentGamePlayer, (prev) => {
             return gamePlayer ? gamePlayerToViewModel(gamePlayer) : undefined || prev;
           });
-        }
 
-        const game = await gameRepository.findBy(currentGame.id);
-        const state = game ? await gameToViewModel(game, gamePlayerRepository, userRepository) : undefined;
-        set(currentGameState, (prev) => {
-          return state || prev;
-        });
+          if (!gamePlayer) {
+            return;
+          }
 
-        if (game) {
-          callback(game.id);
+          const game = await gameRepository.findBy(gamePlayer.game);
+          const state = game ? await gameToViewModel(game, gamePlayerRepository, userRepository) : undefined;
+          set(currentGameState, (prev) => {
+            return state || prev;
+          });
+
+          if (game) {
+            console.log(game);
+            callback(game.id);
+          }
         }
       });
     },

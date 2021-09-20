@@ -28,7 +28,7 @@ export const createJoinService = (
         cards: game.cards,
       });
 
-      gamePlayerRepository.save(player);
+      await gamePlayerRepository.save(player);
 
       return EventFactory.userInvited(player.id, game.id, user.id);
     },
