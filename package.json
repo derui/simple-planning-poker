@@ -19,8 +19,8 @@
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
     "lint:ts": "eslint --fix --ext .ts,.tsx src/ts/",
     "lint": "npm-run-all -s lint:ts lint:css",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "firebase emulators:exec 'yarn run jest'",
+    "test:watch": "firebase emulators:exec 'yarn run jest --watch'"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -52,6 +52,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^2.0.0",
     "@swc/core": "^1.2.88",
     "@swc/jest": "^0.2.3",
     "@types/classnames": "^2.3.1",

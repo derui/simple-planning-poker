@@ -10,7 +10,7 @@ import { GameId } from "@/domains/game";
 export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}
 
-  save(gamePlayer: GamePlayer): void {
+  async save(gamePlayer: GamePlayer): Promise<void> {
     const updates: { [key: string]: any } = {};
     const hand = gamePlayer.hand;
     updates[`/games/${gamePlayer.game}/users/${gamePlayer.id}`] = gamePlayer.mode;
@@ -22,7 +22,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
       playerId: gamePlayer.id,
     };
 
-    update(ref(this.database), updates);
+    await update(ref(this.database), updates);
   }
 
   async findBy(id: GamePlayerId): Promise<GamePlayer | undefined> {
@@ -44,9 +44,9 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     if (!val) {
       return undefined;
     }
-    const hands = gameVal.userHands as { [k: string]: SerializedCard | undefined };
+    const hands = gameVal.userHands as { [k: string]: SerializedCard | undefined } | undefined;
     const mode = gameVal.users[id] as UserMode;
-    const hand = hands ? hands[id] : (undefined as SerializedCard | undefined);
+    const hand: SerializedCard | undefined = hands ? hands[id] : undefined;
     const cards = gameVal["cards"] as number[];
 
     const selectableCards = createSelectableCards(cards.map(createStoryPoint));

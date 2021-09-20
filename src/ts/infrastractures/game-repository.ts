@@ -6,22 +6,24 @@ import { child, Database, get, ref, update } from "firebase/database";
 import { createGamePlayerId } from "@/domains/game-player";
 import { deserializeCard, SerializedCard } from "./card-converter";
 import { InvitationSignature } from "@/domains/invitation";
+import { createGameRefResolver } from "./game-ref-resolver";
 
 export class GameRepositoryImpl implements GameRepository {
+  private resolver = createGameRefResolver();
   constructor(private database: Database) {}
 
-  save(game: Game): void {
+  async save(game: Game): Promise<void> {
     const updates: { [key: string]: any } = {};
-    updates[`/games/${game.id}/name`] = game.name;
-    updates[`/games/${game.id}/showedDown`] = game.showedDown;
-    updates[`/games/${game.id}/cards`] = game.cards.cards
+    updates[this.resolver.name(game.id)] = game.name;
+    updates[this.resolver.showedDown(game.id)] = game.showedDown;
+    updates[this.resolver.cards(game.id)] = game.cards.cards
       .filter((v) => v.kind === "storypoint")
       .map((v) => (v.kind === "storypoint" ? v.storyPoint.value : null));
 
     const invitation = game.makeInvitation();
     updates[`/invitations/${invitation.signature}`] = game.id;
 
-    update(ref(this.database), updates);
+    await update(ref(this.database), updates);
   }
 
   async findByInvitationSignature(signature: InvitationSignature): Promise<Game | undefined> {
@@ -49,17 +51,17 @@ export class GameRepositoryImpl implements GameRepository {
       return undefined;
     }
 
-    const name = val["name"] as string;
-    const cards = val["cards"] as number[];
-    const players = val["users"] as { [key: string]: any };
-    const showedDown = val["showedDown"] as boolean;
+    const name = val.name as string;
+    const cards = val.cards as number[];
+    const players = val.users as { [key: string]: any } | undefined;
+    const showedDown = val.showedDown as boolean;
     const hands = val.userHands as { [k: string]: SerializedCard | undefined } | undefined;
 
     const selectableCards = createSelectableCards(cards.map(createStoryPoint));
     const game = createGame({
       id,
       name,
-      players: Object.keys(players).map((v) => createGamePlayerId(v)),
+      players: Object.keys(players || {}).map((v) => createGamePlayerId(v)),
       cards: selectableCards,
       hands: hands
         ? Object.entries(hands)

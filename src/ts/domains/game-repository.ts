@@ -3,7 +3,7 @@ import { InvitationSignature } from "./invitation";
 
 export interface GameRepository {
   // save game entity into repository
-  save(game: Game): void;
+  save(game: Game): Promise<void>;
 
   // find game by id
   findBy(id: GameId): Promise<Game | undefined>;
