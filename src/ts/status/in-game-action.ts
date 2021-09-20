@@ -7,12 +7,13 @@ import { NewGameUseCase } from "@/usecases/new-game";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
 import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
-import { GamePlayer, UserMode } from "@/domains/game-player";
+import { UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { GamePlayerViewModel, GameViewModel, setUpAtomsInGame } from "./in-game-atom";
+import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
 import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
 import { InvitationSignature } from "@/domains/invitation";
+import { gamePlayerToViewModel } from "./dxo";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
@@ -60,15 +61,6 @@ const gameToViewModel = async (
     cards: game.cards.cards,
     showedDown: game.showedDown,
     invitationSignature: game.makeInvitation().signature,
-  };
-};
-
-const gamePlayerToViewModel = (gamePlayer: GamePlayer): GamePlayerViewModel => {
-  return {
-    id: gamePlayer.id,
-    userId: gamePlayer.user,
-    mode: gamePlayer.mode,
-    hand: gamePlayer.hand,
   };
 };
 

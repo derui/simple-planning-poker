@@ -25,6 +25,7 @@ export const createMockedGamePlayerRepository = () => {
   return {
     save: jest.fn(),
     findBy: jest.fn(),
+    findByUserAndGame: jest.fn(),
   };
 };
 

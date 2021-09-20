@@ -10,6 +10,17 @@ import { GameId } from "@/domains/game";
 export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}
 
+  async findByUserAndGame(userId: UserId, gameId: GameId): Promise<GamePlayer | undefined> {
+    const snapshot = await get(ref(this.database, `/users/${userId}/joinedGame/${gameId}`));
+
+    const val: GamePlayerId | undefined = snapshot.val()?.playerId;
+    if (!val) {
+      return undefined;
+    }
+
+    return this.findBy(val);
+  }
+
   async save(gamePlayer: GamePlayer): Promise<void> {
     const updates: { [key: string]: any } = {};
     const hand = gamePlayer.hand;

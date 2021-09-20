@@ -70,7 +70,10 @@ const inGameAction = createInGameAction({
   ),
 });
 
-const gameCreationActions = createGameCreationActions(new CreateGameUseCase(dispatcher, gameRepository));
+const gameCreationActions = createGameCreationActions(
+  gamePlayerRepository,
+  new CreateGameUseCase(dispatcher, gameRepository)
+);
 const signInActions = createSigninActions(new FirebaseAuthenticator(auth, database, userRepository), userRepository);
 const userActions = createUserActions(new ChangeUserNameUseCase(dispatcher, userRepository));
 const inGameSelector = createInGameSelectors();
