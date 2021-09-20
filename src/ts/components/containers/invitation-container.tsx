@@ -14,5 +14,12 @@ export const InvitationContainer: React.FunctionComponent<Props> = () => {
     joinUser(param.signature, (gameId) => history.replace(`/game/${gameId}`));
   }, [param.signature]);
 
-  return <div className="app__invitation">Joining to the game...</div>;
+  return (
+    <div className="app__invitation">
+      <div className="app__invitation__overlay"></div>
+      <div className="app__invitation__dialog">
+        <h2>Joining to the game...</h2>
+      </div>
+    </div>
+  );
 };
