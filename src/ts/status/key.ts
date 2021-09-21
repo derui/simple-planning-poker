@@ -11,6 +11,7 @@ export const AtomKeys = {
 
 // key definitions for selector
 export const SelectorKeys = {
+  userJoinedGames: "userJoinedGames",
   authenticated: "authenticated",
   authenticating: "authenticating",
   emailToSignIn: "emailToSignIn",

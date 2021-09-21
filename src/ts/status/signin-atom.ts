@@ -2,9 +2,15 @@ import { AtomKeys, SelectorKeys } from "./key";
 import { atom, selector } from "recoil";
 import { UserId } from "@/domains/user";
 
+export interface UserJoinedGameViewModel {
+  id: string;
+  name: string;
+}
+
 export type CurrentUserViewModel = {
   id: UserId | null;
   name: string;
+  joinedGames: UserJoinedGameViewModel[];
 };
 
 export const currentUserState = atom<CurrentUserViewModel>({
@@ -12,6 +18,7 @@ export const currentUserState = atom<CurrentUserViewModel>({
   default: {
     id: null,
     name: "",
+    joinedGames: [],
   },
 });
 
