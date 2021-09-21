@@ -1,5 +1,7 @@
+import { unique } from "@/utils/array";
 import { createId, Id } from "./base";
 import { EventFactory, UserNameChanged } from "./event";
+import { GameId } from "./game";
 
 export type UserId = Id<"User">;
 
@@ -14,6 +16,7 @@ export const createUserId = (value?: string): UserId => {
 export interface User {
   get id(): UserId;
   get name(): string;
+  get joinedGames(): GameId[];
 
   // change name
   changeName(name: string): UserNameChanged;
@@ -25,10 +28,11 @@ export interface User {
 /**
    create user from id and name
  */
-export const createUser = ({ id, name }: { id: UserId; name: string }): User => {
+export const createUser = ({ id, name, joinedGames }: { id: UserId; name: string; joinedGames: GameId[] }): User => {
   if (name === "") {
     throw new Error("can not create user with empty name");
   }
+  const games = unique(joinedGames);
 
   const obj = {
     _userName: name,
@@ -38,6 +42,10 @@ export const createUser = ({ id, name }: { id: UserId; name: string }): User => 
 
     get name() {
       return obj._userName;
+    },
+
+    get joinedGames() {
+      return games;
     },
 
     changeName(name: string) {

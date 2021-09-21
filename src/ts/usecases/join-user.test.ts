@@ -30,7 +30,7 @@ describe("use case", () => {
     test("should save game that user joined in", async () => {
       // Arrange
       const gameId = createGameId();
-      const user = createUser({ id: createUserId(), name: "test" });
+      const user = createUser({ id: createUserId(), name: "test", joinedGames: [] });
       const input = {
         signature: "a",
         userId: user.id,
@@ -54,7 +54,7 @@ describe("use case", () => {
     test("should dispatch event to be joined by user", async () => {
       // Arrange
       const gameId = createGameId();
-      const user = createUser({ id: createUserId(), name: "test" });
+      const user = createUser({ id: createUserId(), name: "test", joinedGames: [] });
       const input = {
         signature: "a",
         userId: user.id,

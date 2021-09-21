@@ -37,7 +37,7 @@ export class FirebaseAuthenticator implements Authenticator {
       set(ref(this.database, `authenticated/${uid}`), email);
 
       const userId = createUserId(uid);
-      const user = createUser({ id: userId, name: email });
+      const user = createUser({ id: userId, name: email, joinedGames: [] });
       this.userRepository.save(user);
 
       return userId;

@@ -31,7 +31,7 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const repository = createMockedUserRepository();
       const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo" }));
+      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo", joinedGames: [] }));
 
       // Act
       const ret = await useCase.execute(input);
@@ -50,7 +50,7 @@ describe("use case", () => {
       const dispatcher = createMockedDispatcher();
       const repository = createMockedUserRepository();
       const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo" }));
+      repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo", joinedGames: [] }));
 
       // Act
       const ret = await useCase.execute(input);

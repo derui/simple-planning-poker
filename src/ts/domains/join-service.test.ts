@@ -28,7 +28,7 @@ describe("domains", () => {
       const service = createJoinService(gameRepository, gamePlayerRepository);
 
       // Act
-      const user = createUser({ id: createUserId(), name: "foo" });
+      const user = createUser({ id: createUserId(), name: "foo", joinedGames: [] });
       const ret = await service.join(user, createGameId());
 
       // Assert
@@ -37,7 +37,7 @@ describe("domains", () => {
 
     test("should return domain event to notify player joined", async () => {
       // Arrange
-      const user = createUser({ id: createUserId(), name: "foo" });
+      const user = createUser({ id: createUserId(), name: "foo", joinedGames: [] });
       const player = createGamePlayer({
         id: createGamePlayerId(),
         userId: user.id,
@@ -73,7 +73,7 @@ describe("domains", () => {
 
     test("should save a new player", async () => {
       // Arrange
-      const user = createUser({ id: createUserId(), name: "foo" });
+      const user = createUser({ id: createUserId(), name: "foo", joinedGames: [] });
       const game = createGame({
         id: createGameId(),
         name: "name",

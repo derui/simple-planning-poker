@@ -1,4 +1,5 @@
 import { DOMAIN_EVENTS } from "./event";
+import { createGameId, GameId } from "./game";
 import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
@@ -11,6 +12,7 @@ describe("domains", () => {
       const ret = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Assert
@@ -25,6 +27,7 @@ describe("domains", () => {
       const ret = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Assert
@@ -37,6 +40,7 @@ describe("domains", () => {
       const user = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Act
@@ -56,6 +60,7 @@ describe("domains", () => {
         createUser({
           id: createUserId(),
           name: "",
+          joinedGames: [],
         })
       ).toThrowError();
     });
@@ -66,6 +71,7 @@ describe("domains", () => {
       const user = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Act
@@ -80,6 +86,7 @@ describe("domains", () => {
       const user = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Act
@@ -95,6 +102,7 @@ describe("domains", () => {
       const user = createUser({
         id: createUserId(),
         name,
+        joinedGames: [],
       });
 
       // Act
@@ -104,6 +112,22 @@ describe("domains", () => {
       expect(event.kind).toEqual(DOMAIN_EVENTS.UserNameChanged);
       expect(event.name).toEqual("foobar");
       expect(event.userId).toBe(user.id);
+    });
+
+    test("should be able to get joined games", () => {
+      // Arrange
+      const gameId = createGameId();
+      const name = "name";
+
+      // Act
+      const user = createUser({
+        id: createUserId(),
+        name,
+        joinedGames: [gameId, gameId],
+      });
+
+      // Assert
+      expect(user.joinedGames).toEqual([gameId]);
     });
   });
 });
