@@ -5,6 +5,7 @@ import { UserId } from "@/domains/user";
 export interface UserJoinedGameViewModel {
   id: string;
   name: string;
+  playerId: string;
 }
 
 export type CurrentUserViewModel = {

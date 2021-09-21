@@ -11,7 +11,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}
 
   async findByUserAndGame(userId: UserId, gameId: GameId): Promise<GamePlayer | undefined> {
-    const snapshot = await get(ref(this.database, `/users/${userId}/joinedGame/${gameId}`));
+    const snapshot = await get(ref(this.database, `/users/${userId}/joinedGames/${gameId}`));
 
     const val: GamePlayerId | undefined = snapshot.val()?.playerId;
     if (!val) {
@@ -29,7 +29,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
       updates[`/games/${gamePlayer.game}/userHands/${gamePlayer.id}`] = serializeCard(hand);
     }
     updates[`/gamePlayers/${gamePlayer.id}`] = { user: gamePlayer.user, game: gamePlayer.game };
-    updates[`/users/${gamePlayer.user}/joinedGame/${gamePlayer.game}`] = {
+    updates[`/users/${gamePlayer.user}/joinedGames/${gamePlayer.game}`] = {
       playerId: gamePlayer.id,
     };
 

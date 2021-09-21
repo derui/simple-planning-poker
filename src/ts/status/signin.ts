@@ -1,5 +1,5 @@
-import { UserId } from "@/domains/user";
-import { useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
+import { JoinedGame, UserId } from "@/domains/user";
+import { selector, useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
 import React from "react";
 import { UserRepository } from "@/domains/user-repository";
 import {
@@ -11,7 +11,7 @@ import {
   UserJoinedGameViewModel,
 } from "./signin-atom";
 import { GameRepository } from "@/domains/game-repository";
-import { GameId } from "@/domains/game";
+import { SelectorKeys } from "./key";
 
 export interface SigninActions {
   useSignIn: () => (email: string, callback: () => void) => void;
@@ -31,12 +31,18 @@ export const createSigninActions = (
   userRepository: UserRepository,
   gameRepository: GameRepository
 ): SigninActions => {
-  const getGames = async (gameIds: GameId[]) => {
-    const games = await Promise.all(gameIds.map(gameRepository.findBy));
+  const getGames = async (joinedGames: JoinedGame[]) => {
+    const games = await Promise.all(
+      joinedGames.map(async (v) => {
+        const game = await gameRepository.findBy(v.gameId);
+        return game ? { game, playerId: v.playerId } : undefined;
+      })
+    );
+
     return games
       .filter((v) => !!v)
       .map((v): UserJoinedGameViewModel => {
-        return { id: v!.id, name: v!.name };
+        return { id: v!.game.id, name: v!.game.name, playerId: v!.playerId };
       });
   };
 
@@ -85,10 +91,16 @@ export const createSigninActions = (
   };
 };
 
+const joinedGamesSelector = selector({
+  key: SelectorKeys.userJoinedGames,
+  get: ({ get }) => get(currentUserState).joinedGames,
+});
+
 export const signInSelectors = {
   useAuthenticated: () => useRecoilValue(authenticated),
   useCurrentUser: () => useRecoilValue(currentUserState),
 
   useSignInEmail: () => useRecoilValue(emailToSignIn),
   useAuthenticating: () => useRecoilValue(authenticating),
+  useJoinedGames: () => useRecoilValue(joinedGamesSelector),
 };

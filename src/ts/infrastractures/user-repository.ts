@@ -1,5 +1,6 @@
 import { GameId } from "@/domains/game";
-import { createUser, User, UserId } from "@/domains/user";
+import { GamePlayerId } from "@/domains/game-player";
+import { createUser, JoinedGame, User, UserId } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { Database, get, ref, update } from "firebase/database";
 
@@ -22,7 +23,10 @@ export class UserRepositoryImpl implements UserRepository {
       return undefined;
     }
     const name = val["name"] as string;
-    const joinedGames = (val.joinedGames as GameId[] | undefined) ?? [];
+    const rawJoinedGames = (val.joinedGames as { [k: string]: string } | undefined) ?? {};
+    const joinedGames: JoinedGame[] = Object.entries(rawJoinedGames).map(([gameId, playerId]) => {
+      return { gameId: gameId as GameId, playerId: playerId as GamePlayerId };
+    });
 
     return createUser({ id, name, joinedGames });
   }

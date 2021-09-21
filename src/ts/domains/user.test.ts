@@ -1,5 +1,6 @@
 import { DOMAIN_EVENTS } from "./event";
-import { createGameId, GameId } from "./game";
+import { createGameId } from "./game";
+import { createGamePlayerId } from "./game-player";
 import { createUser, createUserId } from "./user";
 
 describe("domains", () => {
@@ -118,16 +119,20 @@ describe("domains", () => {
       // Arrange
       const gameId = createGameId();
       const name = "name";
+      const playerId = createGamePlayerId();
 
       // Act
       const user = createUser({
         id: createUserId(),
         name,
-        joinedGames: [gameId, gameId],
+        joinedGames: [
+          { gameId, playerId },
+          { gameId, playerId },
+        ],
       });
 
       // Assert
-      expect(user.joinedGames).toEqual([gameId]);
+      expect(user.joinedGames).toEqual([{ gameId, playerId }]);
     });
   });
 });
