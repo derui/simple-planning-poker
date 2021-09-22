@@ -21,6 +21,11 @@ export const createJoinService = (
         return undefined;
       }
 
+      const joinedGame = user.findJoinedGame(game.id);
+      if (joinedGame) {
+        return EventFactory.userInvited(joinedGame.playerId, joinedGame.gameId, user.id);
+      }
+
       const player = createGamePlayer({
         id: createGamePlayerId(),
         userId: user.id,

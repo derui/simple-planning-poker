@@ -100,5 +100,37 @@ describe("domains", () => {
       // Assert
       expect(save).toBeCalledTimes(1);
     });
+
+    test("should not create new player if user is already joined a game", async () => {
+      // Arrange
+      const playerId = createGamePlayerId();
+      const game = createGame({
+        id: createGameId(),
+        name: "name",
+        players: [playerId],
+        cards: CARDS,
+      });
+      const user = createUser({ id: createUserId(), name: "foo", joinedGames: [{ gameId: game.id, playerId }] });
+      const gameRepository: GameRepository = {
+        save: jest.fn(),
+        findBy: jest.fn(),
+        findByInvitationSignature: jest.fn().mockImplementation(() => game),
+      };
+      const save = jest.fn();
+      const gamePlayerRepository: GamePlayerRepository = {
+        save,
+        findBy: jest.fn(),
+        findByUserAndGame: jest.fn(),
+      };
+
+      const service = createJoinService(gameRepository, gamePlayerRepository);
+
+      // Act
+      const ret = await service.join(user, game.id);
+
+      // Assert
+      expect(ret!.kind).toEqual(DOMAIN_EVENTS.UserInvited);
+      expect(save).not.toBeCalled();
+    });
   });
 });

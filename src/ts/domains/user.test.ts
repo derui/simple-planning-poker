@@ -134,5 +134,22 @@ describe("domains", () => {
       // Assert
       expect(user.joinedGames).toEqual([{ gameId, playerId }]);
     });
+
+    test("should be able to check a user is joined to a game", () => {
+      // Arrange
+      const gameId = createGameId();
+      const name = "name";
+      const playerId = createGamePlayerId();
+
+      // Act
+      const user = createUser({
+        id: createUserId(),
+        name,
+        joinedGames: [{ gameId, playerId }],
+      });
+
+      // Assert
+      expect(user.isJoined(gameId)).toBeTruthy();
+    });
   });
 });

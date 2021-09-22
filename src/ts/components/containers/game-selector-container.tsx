@@ -6,6 +6,7 @@ interface Props {}
 
 export const GameSelectorContainerComponent: React.FunctionComponent<Props> = () => {
   const games = signInSelectors.useJoinedGames();
+
   const gameComponents = games.map((v) => {
     return (
       <Link key={v.id} className="app__game-selector__main__selection-container" to={`/game/${v.id}`}>

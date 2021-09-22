@@ -29,7 +29,15 @@ export interface User {
 
   // can change name with given value
   canChangeName(name: string): boolean;
+
+  isJoined(gameId: GameId): boolean;
+
+  findJoinedGame(gameId: GameId): JoinedGame | undefined;
 }
+
+const equalJoinedGame = (v1: JoinedGame, v2: JoinedGame) => {
+  return v1.gameId === v2.gameId && v1.playerId === v2.playerId;
+};
 
 /**
    create user from id and name
@@ -46,7 +54,7 @@ export const createUser = ({
   if (name === "") {
     throw new Error("can not create user with empty name");
   }
-  const games = unique(joinedGames);
+  const games = unique(joinedGames, equalJoinedGame);
 
   const obj = {
     _userName: name,
@@ -73,6 +81,14 @@ export const createUser = ({
 
     canChangeName(name: string) {
       return name !== "";
+    },
+
+    isJoined(gameId: GameId) {
+      return obj.joinedGames.some((v) => v.gameId === gameId);
+    },
+
+    findJoinedGame(gameId: GameId) {
+      return obj.joinedGames.find((v) => v.gameId === gameId);
     },
   } as User & { _userName: string };
 
