@@ -92,7 +92,13 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const changeMode = inGameActions.useChangeMode();
   const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
   const signature = inGameSelector.invitationSignature();
+  const joinUser = inGameActions.useJoinUser();
 
+  React.useEffect(() => {
+    if (signature) {
+      joinUser(signature, () => {});
+    }
+  }, [signature]);
   let Component = <EmptyCardHolderComponent />;
   if (currentStatus === "ShowedDown") {
     Component = createAveragePointShowcase(showDownResult);

@@ -8,9 +8,13 @@ export class UserRepositoryImpl implements UserRepository {
   constructor(private database: Database) {}
 
   save(user: User): void {
-    const databaseRef = ref(this.database, `users/${user.id}`);
+    const databaseRef = ref(this.database);
     const updates: { [key: string]: any } = {};
-    updates["name"] = user.name;
+    updates[`users/${user.id}/name`] = user.name;
+
+    user.joinedGames.forEach(({ gameId, playerId }) => {
+      updates[`games/${gameId}/users/${playerId}/name`] = user.name;
+    });
 
     update(databaseRef, updates);
   }
@@ -23,9 +27,9 @@ export class UserRepositoryImpl implements UserRepository {
       return undefined;
     }
     const name = val["name"] as string;
-    const rawJoinedGames = (val.joinedGames as { [k: string]: string } | undefined) ?? {};
-    const joinedGames: JoinedGame[] = Object.entries(rawJoinedGames).map(([gameId, playerId]) => {
-      return { gameId: gameId as GameId, playerId: playerId as GamePlayerId };
+    const rawJoinedGames = (val.joinedGames as { [k: string]: { playerId: string } } | undefined) ?? {};
+    const joinedGames: JoinedGame[] = Object.entries(rawJoinedGames).map(([gameId, gameInfo]) => {
+      return { gameId: gameId as GameId, playerId: gameInfo.playerId as GamePlayerId };
     });
 
     return createUser({ id, name, joinedGames });

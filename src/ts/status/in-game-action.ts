@@ -159,7 +159,6 @@ export const createInGameAction = ({
           });
 
           if (game) {
-            console.log(game);
             callback(game.id);
           }
         }

@@ -91,3 +91,16 @@
     background-color: var(--secondary-1-4);
   }
 }
+
+.app__game-selector__empty {
+  flex: 1 1 auto;
+  text-align: center;
+  position: relative;
+}
+
+.app__game-selector__empty__text {
+  top: calc(50% - var(--base-font-size));
+  position: relative;
+  font-size: var(--large-font-size);
+  font-weight: bold;
+}
