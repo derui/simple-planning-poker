@@ -7,7 +7,7 @@ import { NewGameUseCase } from "@/usecases/new-game";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
 import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
-import { GamePlayerId, UserMode } from "@/domains/game-player";
+import { UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
 import { UserRepository } from "@/domains/user-repository";

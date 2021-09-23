@@ -11,7 +11,7 @@ import { InGameSelector } from "@/status/in-game-selector";
 import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { GameId } from "@/domains/game";
 
 interface Props {}
