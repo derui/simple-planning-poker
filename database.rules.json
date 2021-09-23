@@ -4,7 +4,15 @@
       ".read": "auth != null",
       ".write": "auth != null"
     },
+    "gamePlayers": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "authenticated": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "invitations": {
       ".read": "auth != null",
       ".write": "auth != null"
     },
