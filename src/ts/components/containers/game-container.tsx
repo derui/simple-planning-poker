@@ -11,6 +11,8 @@ import { InGameSelector } from "@/status/in-game-selector";
 import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { GameId } from "@/domains/game";
 
 interface Props {}
 
@@ -79,6 +81,7 @@ const convertHands = (hands: UserHandViewModel[], currentStatus: InGameStatus) =
   }));
 
 export const GameContainer: React.FunctionComponent<Props> = () => {
+  const param = useParams<{ gameId: string }>();
   const inGameActions = React.useContext(inGameActionContext);
   const inGameSelector = React.useContext(inGameSelectorContext);
   const component = createCardHolderComponent(inGameActions, inGameSelector);
@@ -92,13 +95,15 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const changeMode = inGameActions.useChangeMode();
   const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
   const signature = inGameSelector.invitationSignature();
-  const joinUser = inGameActions.useJoinUser();
+  const openGame = inGameActions.useOpenGame();
+  const history = useHistory();
 
   React.useEffect(() => {
-    if (signature) {
-      joinUser(signature, () => {});
-    }
-  }, [signature]);
+    openGame(param.gameId as GameId, () => {
+      history.replace("/");
+    });
+  }, [param.gameId]);
+
   let Component = <EmptyCardHolderComponent />;
   if (currentStatus === "ShowedDown") {
     Component = createAveragePointShowcase(showDownResult);

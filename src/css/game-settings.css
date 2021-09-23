@@ -34,7 +34,7 @@
   &.app__game__game-settings__opener--opened {
     border: 2px solid var(--secondary-1-4);
     background-color: var(--secondary-1-4);
-    border-radius: 16px 16px 0 0;
+    border-radius: 16px 16px 4px 4px;
 
     &::before {
       background-color: white;

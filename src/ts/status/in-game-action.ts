@@ -7,7 +7,7 @@ import { NewGameUseCase } from "@/usecases/new-game";
 import { currentUserState } from "./signin-atom";
 import { JoinUserUseCase } from "@/usecases/join-user";
 import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
-import { UserMode } from "@/domains/game-player";
+import { GamePlayerId, UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
 import { UserRepository } from "@/domains/user-repository";
@@ -24,6 +24,7 @@ export interface InGameAction {
   useShowDown: () => () => void;
   useChangeMode: () => (mode: UserMode) => void;
   useSetCurrentGame: (gameId: GameId) => (game: Game) => void;
+  useOpenGame: () => (gameId: GameId, errorCallback: () => void) => void;
 }
 
 const gameToViewModel = async (
@@ -162,6 +163,39 @@ export const createInGameAction = ({
             callback(game.id);
           }
         }
+      });
+    },
+
+    useOpenGame: () => {
+      const currentUser = useRecoilValue(currentUserState);
+
+      return useRecoilCallback(({ set }) => async (gameId: GameId, error: () => void) => {
+        if (!currentUser.id) {
+          error();
+          return;
+        }
+
+        const user = await userRepository.findBy(currentUser.id);
+        const joinedGame = user?.joinedGames?.find((v) => v.gameId === gameId) ?? undefined;
+        if (!joinedGame) {
+          error();
+          return;
+        }
+
+        const gamePlayer = await gamePlayerRepository.findBy(joinedGame.playerId);
+        set(currentGamePlayer, (prev) => {
+          return gamePlayer ? gamePlayerToViewModel(gamePlayer) : undefined || prev;
+        });
+
+        if (!gamePlayer) {
+          return;
+        }
+
+        const game = await gameRepository.findBy(gamePlayer.game);
+        const state = game ? await gameToViewModel(game, gamePlayerRepository, userRepository) : undefined;
+        set(currentGameState, (prev) => {
+          return state || prev;
+        });
       });
     },
 
