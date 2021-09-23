@@ -1,21 +1,20 @@
 import { signInActionContext } from "@/contexts/actions";
 import { signInSelectors } from "@/status/signin";
 import * as React from "react";
+import { CSSTransition } from "react-transition-group";
 import { RouteComponentProps } from "react-router";
-import classnames from "classnames";
 
 interface Props extends RouteComponentProps {}
 
 const Overlay = () => {
   const authenticating = signInSelectors.useAuthenticating();
-  const authenticated = signInSelectors.useAuthenticated();
+  const showOverlay = authenticating;
 
-  const classes = {
-    "app__signin-overlay": true,
-    "app__signin-overlay--show": authenticating && !authenticated,
-  };
-
-  return <div className={classnames(classes)}></div>;
+  return (
+    <CSSTransition in={showOverlay} timeout={200} classNames="app__signin-overlay" tran>
+      <div className="app__signin-overlay"></div>
+    </CSSTransition>
+  );
 };
 
 export const SigninContainer: React.FunctionComponent<Props> = ({ location, history }) => {
@@ -30,7 +29,7 @@ export const SigninContainer: React.FunctionComponent<Props> = ({ location, hist
     history.replace(from);
   };
 
-  React.useEffect(() => applyAuthenticated(signInCallback));
+  React.useEffect(() => applyAuthenticated(signInCallback), []);
 
   return (
     <React.Fragment>

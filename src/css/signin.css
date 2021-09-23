@@ -9,8 +9,28 @@
   visibility: hidden;
 }
 
-.app__signin-overlay--show {
+.app__signin-overlay-enter {
   visibility: visible;
+  opacity: 0;
+}
+
+.app__signin-overlay-enter-active {
+  opacity: 1;
+  transition: opacity 200ms ease-out;
+}
+
+.app__signin-overlay-exit {
+  visibility: visible;
+  opacity: 1;
+}
+
+.app__signin-overlay-exit-active {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.app__signin-overlay-exit-done {
+  visibility: hidden;
 }
 
 .app__signin-root {

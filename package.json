@@ -63,6 +63,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.9",
+    "@types/react-transition-group": "^4.4.3",
     "@types/recoil": "^0.0.9",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
@@ -104,6 +105,7 @@
     "react-dom": "^17.0.2",
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
+    "react-transition-group": "^4.4.2",
     "recoil": "^0.4.1",
     "uuid": "^8.3.2"
   }

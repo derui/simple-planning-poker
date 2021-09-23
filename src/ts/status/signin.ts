@@ -69,18 +69,18 @@ export const createSigninActions = (
 
     useApplyAuthenticated: () =>
       useRecoilCallback(({ set }) => async (callback: () => void) => {
+        set(signInState, (prev) => ({ ...prev, authenticating: true }));
         const userId = await authenticator.getAuthenticatedUser();
-        if (!userId) {
-          return;
-        }
 
-        const user = await userRepository.findBy(userId);
+        const user = await (userId ? userRepository.findBy(userId) : Promise.resolve(undefined));
         if (!user) {
+          set(signInState, (prev) => ({ ...prev, authenticating: false }));
           return;
         }
 
         const joinedGames = await getGames(user.joinedGames);
-        set(currentUserState, () => ({ id: userId, name: user.name, joinedGames }));
+        set(signInState, (prev) => ({ ...prev, authenticating: false }));
+        set(currentUserState, () => ({ id: user.id, name: user.name, joinedGames }));
         callback();
       }),
 
