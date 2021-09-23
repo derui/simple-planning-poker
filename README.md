@@ -12,6 +12,23 @@ This project provides functions to do planning poker in online.
 
 # Development #
 
+## Prerequirement ##
+You should login to firebase before to start development.
+
+```sh
+$ yarn
+$ yarn run firebase login
+$ yarn run firebase init
+```
+
+You must select in initialization below:
+
+- Realtime database
+- Hosting
+- Emulator
+
+> NOTICE: Please do not overwrite firebase.json in a process of initialization. If you overwrite it, this project can not run correctly.
+
 ## Run test ##
 
 ```sh
