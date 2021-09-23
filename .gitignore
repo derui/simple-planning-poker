@@ -3,6 +3,7 @@ public/
 yarn-error.log
 .log/
 .firebase/
+.firebaserc
 
 database-debug.log
 ui-debug.log
