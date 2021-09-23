@@ -4,7 +4,8 @@
   align-items: center;
   padding: var(--space-base) 0;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease-out;
+  cursor: pointer;
 
   &:hover {
     border-color: var(--secondary-1-4);

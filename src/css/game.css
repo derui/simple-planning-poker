@@ -14,6 +14,13 @@
   z-index: 3;
 }
 
+.app__game__header__right {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .app__game__header__game-info {
   flex: 0 0 auto;
   display: flex;
