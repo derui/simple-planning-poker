@@ -1,6 +1,6 @@
 import { unique } from "@/utils/array";
 import { createId, Id } from "./base";
-import { EventFactory, UserNameChanged } from "./event";
+import { EventFactory, UserLeavedFromGame, UserNameChanged } from "./event";
 import { GameId } from "./game";
 import { GamePlayerId } from "./game-player";
 
@@ -33,6 +33,8 @@ export interface User {
   isJoined(gameId: GameId): boolean;
 
   findJoinedGame(gameId: GameId): JoinedGame | undefined;
+
+  leaveFrom(gameId: GameId): UserLeavedFromGame | undefined;
 }
 
 const equalJoinedGame = (v1: JoinedGame, v2: JoinedGame) => {
@@ -58,6 +60,7 @@ export const createUser = ({
 
   const obj = {
     _userName: name,
+    _games: games,
     get id() {
       return id;
     },
@@ -67,7 +70,7 @@ export const createUser = ({
     },
 
     get joinedGames() {
-      return games;
+      return obj._games;
     },
 
     changeName(name: string) {
@@ -90,7 +93,18 @@ export const createUser = ({
     findJoinedGame(gameId: GameId) {
       return obj.joinedGames.find((v) => v.gameId === gameId);
     },
-  } as User & { _userName: string };
+
+    leaveFrom(gameId: GameId) {
+      const leavedGame = obj.findJoinedGame(gameId);
+      if (!leavedGame) {
+        return;
+      }
+
+      this._games = this._games.filter((v) => v.gameId !== gameId);
+
+      return EventFactory.userLeaveFromGame(obj.id, leavedGame.playerId, leavedGame.gameId);
+    },
+  } as User & { _userName: string; _games: JoinedGame[] };
 
   return obj;
 };

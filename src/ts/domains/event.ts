@@ -26,6 +26,7 @@ export const DOMAIN_EVENTS = {
   UserInvited: "UserInvited",
   GameShowedDown: "GameShowedDown",
   GamePlayerCardSelected: "GamePlayerCardSelected",
+  UserLeavedFromGame: "UserLeavedFromGame",
 } as const;
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
@@ -37,7 +38,8 @@ export type DefinedDomainEvents =
   | GamePlayerModeChanged
   | GameShowedDown
   | UserInvited
-  | GamePlayerCardSelected;
+  | GamePlayerCardSelected
+  | UserLeavedFromGame;
 
 // define domain events
 
@@ -78,6 +80,12 @@ export interface GameShowedDown extends Event<DomainEvents["GameShowedDown"]> {
 export interface GamePlayerCardSelected extends Event<DomainEvents["GamePlayerCardSelected"]> {
   gamePlayerId: GamePlayerId;
   card: Card;
+}
+
+export interface UserLeavedFromGame extends Event<DomainEvents["UserLeavedFromGame"]> {
+  userId: UserId;
+  gamePlayerId: GamePlayerId;
+  gameId: GameId;
 }
 
 export const EventFactory = {
@@ -151,6 +159,16 @@ export const EventFactory = {
       kind: DOMAIN_EVENTS.GamePlayerModeChanged,
       gamePlayerId,
       mode,
+    };
+  },
+
+  userLeaveFromGame(userId: UserId, gamePlayerId: GamePlayerId, gameId: GameId): UserLeavedFromGame {
+    return {
+      id: createEventId(),
+      kind: DOMAIN_EVENTS.UserLeavedFromGame,
+      gamePlayerId,
+      userId,
+      gameId,
     };
   },
 };

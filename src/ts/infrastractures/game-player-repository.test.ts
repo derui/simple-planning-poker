@@ -72,5 +72,34 @@ describe("infrastructure", () => {
       // Assert
       expect(instance).toBeUndefined();
     });
+
+    test("should be able to delete a player", async () => {
+      // Arrange
+      const game = createGame({
+        id: createGameId(),
+        name: "test",
+        players: [createGamePlayerId()],
+        cards: createSelectableCards([1, 2].map(createStoryPoint)),
+      });
+
+      const player = createGamePlayer({
+        id: game.players[0],
+        userId: createUserId(),
+        gameId: game.id,
+        cards: game.cards,
+      });
+
+      const gameRepository = new GameRepositoryImpl(database);
+      const repository = new GamePlayerRepositoryImpl(database);
+
+      // Act
+      await gameRepository.save(game);
+      await repository.save(player);
+      await repository.delete(player.id);
+      const instance = await repository.findBy(player.id);
+
+      // Assert
+      expect(instance).toBeUndefined();
+    });
   });
 });

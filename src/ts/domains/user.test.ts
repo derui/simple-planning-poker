@@ -151,5 +151,43 @@ describe("domains", () => {
       // Assert
       expect(user.isJoined(gameId)).toBeTruthy();
     });
+
+    test("should be able to leave from the game user already joined", () => {
+      // Arrange
+      const gameId = createGameId();
+      const name = "name";
+      const playerId = createGamePlayerId();
+
+      const user = createUser({
+        id: createUserId(),
+        name,
+        joinedGames: [{ gameId, playerId }],
+      });
+
+      // Act
+      const ret = user.leaveFrom(gameId);
+
+      // Assert
+      expect(ret).not.toBeUndefined();
+      expect(ret?.kind).toEqual(DOMAIN_EVENTS.UserLeavedFromGame);
+    });
+
+    test("should not be able to leave from the game user did not join", () => {
+      // Arrange
+      const gameId = createGameId();
+      const name = "name";
+
+      const user = createUser({
+        id: createUserId(),
+        name,
+        joinedGames: [],
+      });
+
+      // Act
+      const ret = user.leaveFrom(gameId);
+
+      // Assert
+      expect(ret).toBeUndefined();
+    });
   });
 });

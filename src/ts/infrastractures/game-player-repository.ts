@@ -21,9 +21,25 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     return this.findBy(val);
   }
 
+  async delete(id: GamePlayerId) {
+    const player = await this.findBy(id);
+    if (!player) {
+      return;
+    }
+
+    const updates: { [key: string]: any } = {};
+
+    updates[`/games/${player.game}users/${player.id}`] = null;
+    updates[`/games/${player.game}/userHands/${player.id}`] = null;
+    updates[`/gamePlayers/${player.id}`] = null;
+
+    await update(ref(this.database), updates);
+  }
+
   async save(gamePlayer: GamePlayer): Promise<void> {
     const updates: { [key: string]: any } = {};
     const hand = gamePlayer.hand;
+
     updates[`/games/${gamePlayer.game}/users/${gamePlayer.id}`] = gamePlayer.mode;
     if (hand) {
       updates[`/games/${gamePlayer.game}/userHands/${gamePlayer.id}`] = serializeCard(hand);
