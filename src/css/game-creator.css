@@ -22,11 +22,12 @@
   max-width: 50%;
   height: 250px;
   margin: auto;
+  box-shadow: var(--box-shadow);
+  z-index: 0;
+
   /* border */
   border: 1px solid var(--secondary-1-3);
   border-radius: var(--base-border-radius);
-  box-shadow: var(--box-shadow);
-  z-index: 0;
 }
 
 .app__game-creator__header {
@@ -36,6 +37,7 @@
   font-weight: bold;
   border-radius: var(--base-border-radius) var(--base-border-radius) 0 0;
 
+  /* colors */
   background-color: var(--primary-3);
   color: var(--secondary-1-1);
 }
@@ -85,10 +87,11 @@
   font-size: var(--large-font-size);
   font-weight: bold;
   border-radius: 0 0 var(--base-border-radius) var(--base-border-radius);
+  text-align: right;
 
+  /* colors */
   background-color: var(--primary-3);
   color: var(--secondary-1-1);
-  text-align: right;
 }
 
 .app__game-creator__submit {

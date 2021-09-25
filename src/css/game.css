@@ -224,6 +224,7 @@
   justify-content: center;
   margin: var(--space-base);
 
+  /* transition */
   transition: transform 100ms ease-out;
 
   &:first-of-type {
