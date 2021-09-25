@@ -14,6 +14,7 @@ import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
 import { InvitationSignature } from "@/domains/invitation";
 import { gamePlayerToViewModel } from "./dxo";
+import { LeaveGameUseCase } from "@/usecases/leave-game";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
@@ -25,6 +26,7 @@ export interface InGameAction {
   useChangeMode: () => (mode: UserMode) => void;
   useSetCurrentGame: (gameId: GameId) => (game: Game) => void;
   useOpenGame: () => (gameId: GameId, errorCallback: () => void) => void;
+  useLeaveGame: () => () => void;
 }
 
 const gameToViewModel = async (
@@ -74,6 +76,7 @@ export const createInGameAction = ({
   newGameUseCase,
   changeUserModeUseCase,
   joinUserUseCase,
+  leaveGameUseCase,
 }: {
   gameRepository: GameRepository;
   gamePlayerRepository: GamePlayerRepository;
@@ -83,10 +86,36 @@ export const createInGameAction = ({
   newGameUseCase: NewGameUseCase;
   changeUserModeUseCase: ChangeUserModeUseCase;
   joinUserUseCase: JoinUserUseCase;
+  leaveGameUseCase: LeaveGameUseCase;
 }): InGameAction => {
   const { gameStateQuery, currentGameState, gamePlayerQuery, currentGamePlayer } = setUpAtomsInGame();
 
   return {
+    useLeaveGame: () => {
+      const currentPlayer = useRecoilValue(gamePlayerQuery);
+      const currentGame = useRecoilValue(gameStateQuery);
+
+      return useRecoilCallback(({ set }) => async () => {
+        if (!currentPlayer || !currentGame) {
+          return;
+        }
+        const user = await userRepository.findBy(currentPlayer.userId);
+        if (!user) {
+          return;
+        }
+
+        await leaveGameUseCase.execute({
+          gameId: currentGame.id,
+          userId: user.id,
+        });
+
+        set(currentUserState, (prev) => {
+          return { ...prev, joinedGames: prev.joinedGames.filter((v) => v.id !== currentGame.id) };
+        });
+        set(currentGamePlayer, () => undefined);
+        set(currentGameState, () => undefined);
+      });
+    },
     useSelectCard: () => {
       const currentPlayer = useRecoilValue(gamePlayerQuery);
       const currentGame = useRecoilValue(gameStateQuery);

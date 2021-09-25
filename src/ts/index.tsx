@@ -36,6 +36,7 @@ import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-reposito
 import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
+import { LeaveGameUseCase } from "./usecases/leave-game";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -70,6 +71,7 @@ const inGameAction = createInGameAction({
     userRepository,
     createJoinService(gameRepository, gamePlayerRepository)
   ),
+  leaveGameUseCase: new LeaveGameUseCase(dispatcher, userRepository),
 });
 
 const gameCreationActions = createGameCreationActions(

@@ -11,7 +11,7 @@ const Overlay = () => {
   const showOverlay = authenticating;
 
   return (
-    <CSSTransition in={showOverlay} timeout={200} classNames="app__signin-overlay" tran>
+    <CSSTransition in={showOverlay} timeout={200} classNames="app__signin-overlay">
       <div className="app__signin-overlay"></div>
     </CSSTransition>
   );

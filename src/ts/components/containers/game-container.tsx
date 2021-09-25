@@ -96,6 +96,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
   const signature = inGameSelector.invitationSignature();
   const openGame = inGameActions.useOpenGame();
+  const leaveGame = inGameActions.useLeaveGame();
   const history = useHistory();
 
   React.useEffect(() => {
@@ -121,6 +122,10 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
         userMode={currentUserMode}
         onChangeName={(name) => changeName(name)}
         onChangeMode={(mode) => changeMode(mode)}
+        onLeaveGame={() => {
+          leaveGame();
+          history.replace("/");
+        }}
         origin={document.location.origin}
         invitationSignature={signature || ""}
       />

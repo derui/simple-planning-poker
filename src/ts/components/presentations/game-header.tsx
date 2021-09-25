@@ -12,12 +12,13 @@ interface Props {
   userMode: UserMode;
   origin: string;
   invitationSignature: string;
+  onLeaveGame: () => void;
 }
 
 export const GameHeaderComponent: React.FunctionComponent<Props> = (props) => {
   return (
     <div className="app__game__header">
-      <GameInfoComponent gameName={props.gameName} />
+      <GameInfoComponent gameName={props.gameName} onLeaveGame={() => props.onLeaveGame()} />
       <div className="app__game__header__right">
         <GameSettingsComponent origin={props.origin} invitationSignature={props.invitationSignature} />
         <UserInfoComponent

@@ -20,6 +20,7 @@ export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<
       return { kind: "notFoundUser" };
     }
     const event = user.leaveFrom(input.gameId);
+    this.userRepository.save(user);
 
     if (!event) {
       return { kind: "leaveFailed" };

@@ -23,6 +23,7 @@ describe("domains", () => {
         save: jest.fn(),
         findBy: jest.fn(),
         findByUserAndGame: jest.fn(),
+        delete: jest.fn(),
       };
 
       const service = createJoinService(gameRepository, gamePlayerRepository);
@@ -60,6 +61,7 @@ describe("domains", () => {
         save: jest.fn(),
         findBy: jest.fn(),
         findByUserAndGame: jest.fn(),
+        delete: jest.fn(),
       };
 
       const service = createJoinService(gameRepository, gamePlayerRepository);
@@ -90,6 +92,7 @@ describe("domains", () => {
         save,
         findBy: jest.fn(),
         findByUserAndGame: jest.fn(),
+        delete: jest.fn(),
       };
 
       const service = createJoinService(gameRepository, gamePlayerRepository);
@@ -121,6 +124,7 @@ describe("domains", () => {
         save,
         findBy: jest.fn(),
         findByUserAndGame: jest.fn(),
+        delete: jest.fn(),
       };
 
       const service = createJoinService(gameRepository, gamePlayerRepository);
