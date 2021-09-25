@@ -13,5 +13,5 @@ export interface GamePlayerRepository {
   findByUserAndGame(userId: UserId, gameId: GameId): Promise<GamePlayer | undefined>;
 
   // delete a player
-  delete(id: GamePlayerId): Promise<void>;
+  delete(player: GamePlayer): Promise<void>;
 }

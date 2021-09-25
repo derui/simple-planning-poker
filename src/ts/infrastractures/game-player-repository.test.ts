@@ -95,7 +95,7 @@ describe("infrastructure", () => {
       // Act
       await gameRepository.save(game);
       await repository.save(player);
-      await repository.delete(player.id);
+      await repository.delete(player);
       const instance = await repository.findBy(player.id);
 
       // Assert

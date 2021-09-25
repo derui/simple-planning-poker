@@ -35,6 +35,7 @@ import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
 import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
+import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -53,6 +54,7 @@ const dispatcher = new EventDispatcherImpl([
   new GameCreatedEventListener(gamePlayerRepository),
   new GameShowedDownEventListener(database),
   new NewGameStartedEventListener(database),
+  new UserLeaveFromGameEventListener(gamePlayerRepository),
 ]);
 
 const inGameAction = createInGameAction({

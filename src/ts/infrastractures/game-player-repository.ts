@@ -21,12 +21,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     return this.findBy(val);
   }
 
-  async delete(id: GamePlayerId) {
-    const player = await this.findBy(id);
-    if (!player) {
-      return;
-    }
-
+  async delete(player: GamePlayer) {
     const updates: { [key: string]: any } = {};
 
     updates[`/games/${player.game}users/${player.id}`] = null;
