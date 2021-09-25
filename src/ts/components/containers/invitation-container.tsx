@@ -18,7 +18,7 @@ export const InvitationContainer: React.FunctionComponent<Props> = () => {
     <div className="app__invitation">
       <div className="app__invitation__overlay"></div>
       <div className="app__invitation__dialog">
-        <h2>Joining to the game...</h2>
+        <h3>Joining to the game...</h3>
       </div>
     </div>
   );
