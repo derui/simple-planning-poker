@@ -1,7 +1,7 @@
-import { JoinedGame, UserId } from "@/domains/user";
+import { JoinedGame, UserId } from "~/src/ts/domains/user";
 import { selector, useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
 import React from "react";
-import { UserRepository } from "@/domains/user-repository";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import {
   authenticated,
   authenticating,
@@ -10,7 +10,7 @@ import {
   signInState,
   UserJoinedGameViewModel,
 } from "./signin-atom";
-import { GameRepository } from "@/domains/game-repository";
+import { GameRepository } from "~/src/ts/domains/game-repository";
 import { SelectorKeys } from "./key";
 
 export interface SigninActions {

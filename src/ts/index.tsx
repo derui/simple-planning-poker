@@ -11,7 +11,6 @@ import {
   signInActionContext,
   userActionsContext,
 } from "./contexts/actions";
-import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createSigninActions } from "./status/signin";
 import { createGameCreationActions } from "./status/game-creator";
@@ -37,6 +36,14 @@ import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 import { LeaveGameUseCase } from "./usecases/leave-game";
+
+let firebaseConfig: any;
+if (process.env.NODE_ENV !== "production") {
+  // Only runs in development and will be stripped in production builds.
+  firebaseConfig = import("./firebase.config");
+} else {
+  firebaseConfig = import("./firebase.config.prod");
+}
 
 const firebaseApp = initializeApp(firebaseConfig);
 

@@ -1,4 +1,4 @@
-import { unique } from "@/utils/array";
+import { unique } from "~/src/ts/utils/array";
 import { Card, createGiveUpCard, createStoryPointCard, equalCard } from "./card";
 import { compareStoryPoint, equalStoryPoint, StoryPoint } from "./story-point";
 

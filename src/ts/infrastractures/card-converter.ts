@@ -1,5 +1,5 @@
-import { Card, createGiveUpCard, createStoryPointCard } from "@/domains/card";
-import { createStoryPoint } from "@/domains/story-point";
+import { Card, createGiveUpCard, createStoryPointCard } from "~/src/ts/domains/card";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
 
 export type SerializedCard =
   | {

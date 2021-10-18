@@ -1,4 +1,4 @@
-import { ChangeUserNameUseCase } from "@/usecases/change-user-name";
+import { ChangeUserNameUseCase } from "~/src/ts/usecases/change-user-name";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 import { currentUserState } from "./signin-atom";
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import classnames from "classnames";
-import { UserMode } from "@/domains/game-player";
+import { UserMode } from "~/src/ts/domains/game-player";
 
 export interface UserInfoProps {
   name: string;

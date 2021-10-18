@@ -1,7 +1,7 @@
-import { GameId } from "@/domains/game";
-import { GamePlayerId } from "@/domains/game-player";
-import { createUser, JoinedGame, User, UserId } from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
+import { GameId } from "~/src/ts/domains/game";
+import { GamePlayerId } from "~/src/ts/domains/game-player";
+import { createUser, JoinedGame, User, UserId } from "~/src/ts/domains/user";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import { Database, get, ref, update } from "firebase/database";
 
 export class UserRepositoryImpl implements UserRepository {

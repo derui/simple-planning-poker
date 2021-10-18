@@ -1,5 +1,5 @@
-import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { DefinedDomainEvents, DOMAIN_EVENTS } from "~/src/ts/domains/event";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
 import { DomainEventListener } from "./domain-event-listener";
 
 export class UserLeaveFromGameEventListener implements DomainEventListener {

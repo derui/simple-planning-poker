@@ -1,5 +1,5 @@
-import { GamePlayerId, UserMode } from "@/domains/game-player";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { GamePlayerId, UserMode } from "~/src/ts/domains/game-player";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserModeInput {

@@ -20,10 +20,12 @@
     "isolatedModules": true,
     "jsx": "react",
     "incremental": false,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "outDir": "generated",
     "paths": {
-      "@/*": ["src/ts/*"]
+      "~*": [
+        "./*"
+      ]
     }
   },
   "include": [

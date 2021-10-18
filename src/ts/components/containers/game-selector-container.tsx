@@ -1,4 +1,4 @@
-import { signInSelectors } from "@/status/signin";
+import { signInSelectors } from "~/src/ts/status/signin";
 import * as React from "react";
 import { Link } from "react-router-dom";
 

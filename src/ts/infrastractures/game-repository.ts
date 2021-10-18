@@ -1,11 +1,11 @@
-import { createGame, Game, GameId, PlayerHand } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
-import { createStoryPoint } from "@/domains/story-point";
-import { createSelectableCards } from "@/domains/selectable-cards";
+import { createGame, Game, GameId, PlayerHand } from "~/src/ts/domains/game";
+import { GameRepository } from "~/src/ts/domains/game-repository";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
+import { createSelectableCards } from "~/src/ts/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
-import { createGamePlayerId } from "@/domains/game-player";
+import { createGamePlayerId } from "~/src/ts/domains/game-player";
 import { deserializeCard, SerializedCard } from "./card-converter";
-import { InvitationSignature } from "@/domains/invitation";
+import { InvitationSignature } from "~/src/ts/domains/invitation";
 import { createGameRefResolver } from "./game-ref-resolver";
 
 export class GameRepositoryImpl implements GameRepository {

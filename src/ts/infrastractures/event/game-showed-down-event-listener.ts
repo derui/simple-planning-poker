@@ -1,4 +1,4 @@
-import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
+import { DefinedDomainEvents, DOMAIN_EVENTS } from "~/src/ts/domains/event";
 import { Database, ref, runTransaction } from "firebase/database";
 import { DomainEventListener } from "./domain-event-listener";
 

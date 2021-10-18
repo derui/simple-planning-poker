@@ -1,4 +1,4 @@
-import { unique } from "@/utils/array";
+import { unique } from "~/src/ts/utils/array";
 import { createId, Id } from "./base";
 import { EventFactory, UserLeavedFromGame, UserNameChanged } from "./event";
 import { GameId } from "./game";

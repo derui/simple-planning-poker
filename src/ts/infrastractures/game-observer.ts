@@ -1,6 +1,6 @@
-import { GameObserver } from "@/contexts/observer";
-import { Game, GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
+import { GameObserver } from "~/src/ts/contexts/observer";
+import { Game, GameId } from "~/src/ts/domains/game";
+import { GameRepository } from "~/src/ts/domains/game-repository";
 import { Database, ref, onValue, Unsubscribe } from "firebase/database";
 
 export class GameObserverImpl implements GameObserver {

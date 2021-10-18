@@ -1,6 +1,6 @@
-import { inGameActionContext } from "@/contexts/actions";
-import { gameObserverContext } from "@/contexts/observer";
-import { GameId } from "@/domains/game";
+import { inGameActionContext } from "~/src/ts/contexts/actions";
+import { gameObserverContext } from "~/src/ts/contexts/observer";
+import { GameId } from "~/src/ts/domains/game";
 import * as React from "react";
 import { useParams } from "react-router";
 

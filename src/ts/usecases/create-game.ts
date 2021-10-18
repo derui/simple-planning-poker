@@ -1,10 +1,10 @@
-import { EventFactory } from "@/domains/event";
-import { createGame, createGameId, GameId } from "@/domains/game";
-import { createGamePlayerId, GamePlayerId } from "@/domains/game-player";
-import { GameRepository } from "@/domains/game-repository";
-import { createSelectableCards, isValidStoryPoints } from "@/domains/selectable-cards";
-import { createStoryPoint, isValidStoryPoint } from "@/domains/story-point";
-import { UserId } from "@/domains/user";
+import { EventFactory } from "~/src/ts/domains/event";
+import { createGame, createGameId, GameId } from "~/src/ts/domains/game";
+import { createGamePlayerId, GamePlayerId } from "~/src/ts/domains/game-player";
+import { GameRepository } from "~/src/ts/domains/game-repository";
+import { createSelectableCards, isValidStoryPoints } from "~/src/ts/domains/selectable-cards";
+import { createStoryPoint, isValidStoryPoint } from "~/src/ts/domains/story-point";
+import { UserId } from "~/src/ts/domains/user";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface CreateGameUseCaseInput {

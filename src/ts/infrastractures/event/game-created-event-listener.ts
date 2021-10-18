@@ -1,7 +1,7 @@
-import { DefinedDomainEvents, DOMAIN_EVENTS } from "@/domains/event";
+import { DefinedDomainEvents, DOMAIN_EVENTS } from "~/src/ts/domains/event";
 import { DomainEventListener } from "./domain-event-listener";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { createGamePlayer } from "@/domains/game-player";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
+import { createGamePlayer } from "~/src/ts/domains/game-player";
 
 export class GameCreatedEventListener implements DomainEventListener {
   constructor(private gamePlayerRepository: GamePlayerRepository) {}

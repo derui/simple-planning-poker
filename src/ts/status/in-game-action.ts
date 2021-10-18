@@ -1,20 +1,20 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
-import { Game, GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
-import { HandCardUseCase } from "@/usecases/hand-card";
-import { ShowDownUseCase } from "@/usecases/show-down";
-import { NewGameUseCase } from "@/usecases/new-game";
+import { Game, GameId } from "~/src/ts/domains/game";
+import { GameRepository } from "~/src/ts/domains/game-repository";
+import { HandCardUseCase } from "~/src/ts/usecases/hand-card";
+import { ShowDownUseCase } from "~/src/ts/usecases/show-down";
+import { NewGameUseCase } from "~/src/ts/usecases/new-game";
 import { currentUserState } from "./signin-atom";
-import { JoinUserUseCase } from "@/usecases/join-user";
-import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
-import { UserMode } from "@/domains/game-player";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { JoinUserUseCase } from "~/src/ts/usecases/join-user";
+import { ChangeUserModeUseCase } from "~/src/ts/usecases/change-user-mode";
+import { UserMode } from "~/src/ts/domains/game-player";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
 import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
-import { UserRepository } from "@/domains/user-repository";
-import { User } from "@/domains/user";
-import { InvitationSignature } from "@/domains/invitation";
+import { UserRepository } from "~/src/ts/domains/user-repository";
+import { User } from "~/src/ts/domains/user";
+import { InvitationSignature } from "~/src/ts/domains/invitation";
 import { gamePlayerToViewModel } from "./dxo";
-import { LeaveGameUseCase } from "@/usecases/leave-game";
+import { LeaveGameUseCase } from "~/src/ts/usecases/leave-game";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 

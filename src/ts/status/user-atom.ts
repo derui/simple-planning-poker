@@ -1,8 +1,8 @@
 import { AtomKeys } from "./key";
 import { atomFamily, RecoilState } from "recoil";
-import { UserRepository } from "@/domains/user-repository";
-import { UserId } from "@/domains/user";
-import { UserObserver } from "@/contexts/observer";
+import { UserRepository } from "~/src/ts/domains/user-repository";
+import { UserId } from "~/src/ts/domains/user";
+import { UserObserver } from "~/src/ts/contexts/observer";
 
 export interface UserViewModel {
   id: string;

@@ -1,6 +1,6 @@
-import { GameId } from "@/domains/game";
-import { UserId } from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
+import { GameId } from "~/src/ts/domains/game";
+import { UserId } from "~/src/ts/domains/user";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {

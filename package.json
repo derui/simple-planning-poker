@@ -2,16 +2,12 @@
   "name": "planning-poker-react",
   "version": "2.2.0",
   "description": "",
-  "main": "index.js",
+  "source": "src/index.html",
   "scripts": {
-    "start:webpack": "webpack serve --config webpack.config.js --port 5000 --static public --history-api-fallback",
-    "start:css": "postcss --watch -o public/static/css/app.css src/css/root.css",
-    "start": "npm-run-all -p start:webpack start:css emulators",
+    "start:parcel": "parcel serve",
+    "start": "npm-run-all -p start:parcel  emulators",
     "emulators": "firebase emulators:start",
-    "build:bundle": "NODE_ENV=production webpack --config webpack.config.js",
-    "build:css": "postcss -o public/static/css/app.css src/css/root.css",
-    "copy-assets": "cpx 'assets/**' public/static/",
-    "build": "npm-run-all -s build:bundle build:css copy-assets",
+    "build": "parcel build",
     "deploy:preview": "firebase hosting:channel:deploy preview_name",
     "deploy:production": "firebase deploy",
     "publish:preview": "npm-run-all -s build deploy:preview",
@@ -19,6 +15,7 @@
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
     "lint:ts": "eslint --fix --ext .ts,.tsx src/ts/",
     "lint": "npm-run-all -s lint:ts lint:css",
+    "check": "tsc --noEmit",
     "test": "firebase emulators:exec 'yarn run jest'",
     "test:watch": "firebase emulators:exec 'yarn run jest --watch'"
   },
@@ -38,7 +35,7 @@
       "[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/ts/$1"
+      "^~/(.*)$": "<rootDir>/$1"
     },
     "moduleFileExtensions": [
       "js",
@@ -53,6 +50,7 @@
   "license": "MIT",
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.0",
+    "@parcel/transformer-typescript-tsc": "^2.0.0",
     "@swc/core": "^1.2.88",
     "@swc/jest": "^0.2.3",
     "@types/classnames": "^2.3.1",
@@ -77,9 +75,9 @@
     "eslint-plugin-react": "^7.25.2",
     "eslint_d": "^11.0.0",
     "firebase-tools": "^9.18.0",
-    "html-webpack-plugin": "^5.3.2",
     "jest": "^27.2.0",
     "npm-run-all": "^4.1.5",
+    "parcel": "^2.0.0",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
     "postcss-extend-rule": "^3.0.0",
@@ -91,11 +89,8 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-prettier": "^1.2.0",
     "ts-jest": "^27.0.5",
-    "ts-loader": "^9.2.5",
-    "typescript": "^4.4.3",
-    "webpack": "^5.53.0",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1"
+    "tsc": "^2.0.3",
+    "typescript": "^4.4.3"
   },
   "dependencies": {
     "classnames": "^2.3.1",

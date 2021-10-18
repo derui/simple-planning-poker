@@ -1,12 +1,12 @@
-import { GameShowedDown } from "@/domains/event";
-import { createGame, createGameId } from "@/domains/game";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
-import { createGiveUpCard } from "@/domains/card";
+import { GameShowedDown } from "~/src/ts/domains/event";
+import { createGame, createGameId } from "~/src/ts/domains/game";
+import { createSelectableCards } from "~/src/ts/domains/selectable-cards";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
+import { createUserId } from "~/src/ts/domains/user";
+import { createMockedDispatcher, createMockedGameRepository } from "~/src/ts/lib.test";
+import { createGiveUpCard } from "~/src/ts/domains/card";
 import { ShowDownUseCase } from "./show-down";
-import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
+import { createGamePlayer, createGamePlayerId } from "~/src/ts/domains/game-player";
 
 describe("use case", () => {
   describe("show down", () => {

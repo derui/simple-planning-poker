@@ -1,9 +1,9 @@
 import { AtomKeys, SelectorKeys } from "./key";
 import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
-import { GamePlayerId, UserMode } from "@/domains/game-player";
-import { UserId } from "@/domains/user";
-import { GameId } from "@/domains/game";
-import { Card } from "@/domains/card";
+import { GamePlayerId, UserMode } from "~/src/ts/domains/game-player";
+import { UserId } from "~/src/ts/domains/user";
+import { GameId } from "~/src/ts/domains/game";
+import { Card } from "~/src/ts/domains/card";
 
 export interface UserHandViewModel {
   gamePlayerId: GamePlayerId;

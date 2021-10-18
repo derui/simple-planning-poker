@@ -1,5 +1,5 @@
-import { signInActionContext } from "@/contexts/actions";
-import { signInSelectors } from "@/status/signin";
+import { signInActionContext } from "~/src/ts/contexts/actions";
+import { signInSelectors } from "~/src/ts/status/signin";
 import * as React from "react";
 import { CSSTransition } from "react-transition-group";
 import { RouteComponentProps } from "react-router";

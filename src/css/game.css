@@ -73,8 +73,8 @@
     width: 1.5rem;
     height: 1.5rem;
     display: inline-block;
-    background-image: url(/static/svg/opened-door-aperture.svg);
-    mask: url(/static/svg/opened-door-aperture.svg);
+    background-image: url(/assets/svg/opened-door-aperture.svg);
+    mask: url(/assets/svg/opened-door-aperture.svg);
     background-color: var(--secondary-2-4);
     mask-size: cover;
     vertical-align: middle;
@@ -293,7 +293,7 @@
 
 .app__game__main__user-hand__user-card__eye {
   display: block;
-  mask: url(/static/svg/eye.svg) no-repeat center center;
+  mask: url(/assets/svg/eye.svg) no-repeat center center;
   mask-size: contain;
   background-color: var(--primary-3);
   height: calc(var(--card-height) - var(--space-base));

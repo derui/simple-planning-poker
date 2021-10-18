@@ -1,6 +1,6 @@
 import { Authenticator } from "../status/signin";
 import { createUser, createUserId, UserId } from "../domains/user";
-import { UserRepository } from "@/domains/user-repository";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import { Auth, signInAnonymously } from "firebase/auth";
 import { Database, get, ref, set } from "firebase/database";
 

@@ -1,5 +1,5 @@
-import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { createUser, createUserId } from "~/src/ts/domains/user";
+import { createMockedDispatcher, createMockedUserRepository } from "~/src/ts/lib.test";
 import { ChangeUserNameUseCase } from "./change-user-name";
 
 describe("use case", () => {

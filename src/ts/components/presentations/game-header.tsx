@@ -1,4 +1,4 @@
-import { UserMode } from "@/domains/game-player";
+import { UserMode } from "~/src/ts/domains/game-player";
 import React from "react";
 import { GameInfoComponent } from "./game-info";
 import { GameSettingsComponent } from "./game-settings";

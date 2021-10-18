@@ -1,5 +1,5 @@
-import { GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
+import { GameId } from "~/src/ts/domains/game";
+import { GameRepository } from "~/src/ts/domains/game-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ShowDownUseCaseInput {

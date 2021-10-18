@@ -1,6 +1,6 @@
-import { Card } from "@/domains/card";
-import { GamePlayerId } from "@/domains/game-player";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { Card } from "~/src/ts/domains/card";
+import { GamePlayerId } from "~/src/ts/domains/game-player";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface HandCardUseCaseInput {

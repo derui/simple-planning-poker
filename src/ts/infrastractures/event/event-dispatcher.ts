@@ -1,5 +1,5 @@
-import { DefinedDomainEvents } from "@/domains/event";
-import { EventDispatcher } from "@/usecases/base";
+import { DefinedDomainEvents } from "~/src/ts/domains/event";
+import { EventDispatcher } from "~/src/ts/usecases/base";
 import { DomainEventListener } from "./domain-event-listener";
 
 export class EventDispatcherImpl implements EventDispatcher {

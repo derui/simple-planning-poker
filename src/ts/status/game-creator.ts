@@ -1,9 +1,9 @@
 import { constSelector, useRecoilCallback, useRecoilValue } from "recoil";
-import { CreateGameUseCase } from "@/usecases/create-game";
+import { CreateGameUseCase } from "~/src/ts/usecases/create-game";
 import { DEFAULT_CARDS, gameCreationState } from "./game-creator-atom";
-import { GameId } from "@/domains/game";
+import { GameId } from "~/src/ts/domains/game";
 import { signInSelectors } from "./signin";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
 import { setUpAtomsInGame } from "./in-game-atom";
 import { gamePlayerToViewModel } from "./dxo";
 

@@ -1,8 +1,8 @@
-import { GamePlayerId } from "@/domains/game-player";
-import { InvitationSignature } from "@/domains/invitation";
-import { JoinService } from "@/domains/join-service";
-import { UserId } from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
+import { GamePlayerId } from "~/src/ts/domains/game-player";
+import { InvitationSignature } from "~/src/ts/domains/invitation";
+import { JoinService } from "~/src/ts/domains/join-service";
+import { UserId } from "~/src/ts/domains/user";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {

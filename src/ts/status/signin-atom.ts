@@ -1,6 +1,6 @@
 import { AtomKeys, SelectorKeys } from "./key";
 import { atom, selector } from "recoil";
-import { UserId } from "@/domains/user";
+import { UserId } from "~/src/ts/domains/user";
 
 export interface UserJoinedGameViewModel {
   id: string;

@@ -1,6 +1,6 @@
-import { User, UserId } from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
-import { UserObserver } from "@/contexts/observer";
+import { User, UserId } from "~/src/ts/domains/user";
+import { UserRepository } from "~/src/ts/domains/user-repository";
+import { UserObserver } from "~/src/ts/contexts/observer";
 import { Database, onValue, ref } from "firebase/database";
 
 export class UserObserverImpl implements UserObserver {

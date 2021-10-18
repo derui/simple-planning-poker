@@ -1,4 +1,4 @@
-import { DefinedDomainEvents } from "@/domains/event";
+import { DefinedDomainEvents } from "~/src/ts/domains/event";
 
 // base interface for use case
 export interface UseCase<I, O = void> {

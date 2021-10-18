@@ -1,4 +1,4 @@
-import { GameId } from "@/domains/game";
+import { GameId } from "~/src/ts/domains/game";
 
 export interface GameRefResolver {
   name(id: GameId): string;

@@ -1,11 +1,11 @@
-import { createStoryPoint } from "@/domains/story-point";
-import { UserId } from "@/domains/user";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
+import { UserId } from "~/src/ts/domains/user";
 import { deserializeCard, serializeCard, SerializedCard } from "./card-converter";
-import { createSelectableCards } from "@/domains/selectable-cards";
+import { createSelectableCards } from "~/src/ts/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
-import { createGamePlayer, GamePlayer, GamePlayerId, UserMode } from "@/domains/game-player";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { GameId } from "@/domains/game";
+import { createGamePlayer, GamePlayer, GamePlayerId, UserMode } from "~/src/ts/domains/game-player";
+import { GamePlayerRepository } from "~/src/ts/domains/game-player-repository";
+import { GameId } from "~/src/ts/domains/game";
 
 export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}

@@ -1,5 +1,5 @@
-import { createGiveUpCard, createStoryPointCard } from "@/domains/card";
-import { createStoryPoint } from "@/domains/story-point";
+import { createGiveUpCard, createStoryPointCard } from "~/src/ts/domains/card";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
 import { deserializeCard, serializeCard } from "./card-converter";
 
 describe("infrastracture", () => {

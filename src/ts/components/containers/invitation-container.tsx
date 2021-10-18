@@ -1,4 +1,4 @@
-import { inGameActionContext } from "@/contexts/actions";
+import { inGameActionContext } from "~/src/ts/contexts/actions";
 import * as React from "react";
 import { useHistory, useParams } from "react-router-dom";
 

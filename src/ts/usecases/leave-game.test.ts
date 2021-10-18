@@ -1,7 +1,7 @@
-import { createGameId } from "@/domains/game";
-import { createGamePlayerId } from "@/domains/game-player";
-import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { createGameId } from "~/src/ts/domains/game";
+import { createGamePlayerId } from "~/src/ts/domains/game-player";
+import { createUser, createUserId } from "~/src/ts/domains/user";
+import { createMockedDispatcher, createMockedUserRepository } from "~/src/ts/lib.test";
 import { LeaveGameUseCase } from "./leave-game";
 
 describe("use case", () => {

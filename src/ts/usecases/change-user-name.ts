@@ -1,5 +1,5 @@
-import { UserId } from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
+import { UserId } from "~/src/ts/domains/user";
+import { UserRepository } from "~/src/ts/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserNameInput {

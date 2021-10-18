@@ -1,5 +1,5 @@
-import { gameCreationActionContext } from "@/contexts/actions";
-import { GameCreatorSelector } from "@/status/game-creator";
+import { gameCreationActionContext } from "~/src/ts/contexts/actions";
+import { GameCreatorSelector } from "~/src/ts/status/game-creator";
 import * as React from "react";
 import { useHistory } from "react-router";
 

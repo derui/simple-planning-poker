@@ -1,18 +1,18 @@
 import * as React from "react";
-import { inGameActionContext, inGameSelectorContext, userActionsContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus } from "@/status/in-game-action";
+import { inGameActionContext, inGameSelectorContext, userActionsContext } from "~/src/ts/contexts/actions";
+import { InGameAction, InGameStatus } from "~/src/ts/status/in-game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
-import { signInSelectors } from "@/status/signin";
+import { signInSelectors } from "~/src/ts/status/signin";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
-import { InGameSelector } from "@/status/in-game-selector";
-import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
-import { UserMode } from "@/domains/game-player";
-import { asStoryPoint } from "@/domains/card";
+import { InGameSelector } from "~/src/ts/status/in-game-selector";
+import { ShowDownResultViewModel, UserHandViewModel } from "~/src/ts/status/in-game-atom";
+import { UserMode } from "~/src/ts/domains/game-player";
+import { asStoryPoint } from "~/src/ts/domains/card";
 import { useHistory, useParams } from "react-router-dom";
-import { GameId } from "@/domains/game";
+import { GameId } from "~/src/ts/domains/game";
 
 interface Props {}
 

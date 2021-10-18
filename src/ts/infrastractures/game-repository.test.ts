@@ -1,8 +1,8 @@
-import { createGame, createGameId } from "@/domains/game";
-import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
+import { createGame, createGameId } from "~/src/ts/domains/game";
+import { createGamePlayer, createGamePlayerId } from "~/src/ts/domains/game-player";
+import { createSelectableCards } from "~/src/ts/domains/selectable-cards";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
+import { createUserId } from "~/src/ts/domains/user";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { get, ref } from "firebase/database";
 import { GamePlayerRepositoryImpl } from "./game-player-repository";

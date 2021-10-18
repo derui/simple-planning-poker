@@ -1,5 +1,5 @@
-import { Game, GameId } from "@/domains/game";
-import { User, UserId } from "@/domains/user";
+import { Game, GameId } from "~/src/ts/domains/game";
+import { User, UserId } from "~/src/ts/domains/user";
 import { createContext } from "react";
 
 export interface GameObserver {

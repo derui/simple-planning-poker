@@ -1,8 +1,8 @@
-import { EventFactory } from "@/domains/event";
-import { createGameId } from "@/domains/game";
-import { createGamePlayerId } from "@/domains/game-player";
-import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { EventFactory } from "~/src/ts/domains/event";
+import { createGameId } from "~/src/ts/domains/game";
+import { createGamePlayerId } from "~/src/ts/domains/game-player";
+import { createUser, createUserId } from "~/src/ts/domains/user";
+import { createMockedDispatcher, createMockedUserRepository } from "~/src/ts/lib.test";
 import { JoinUserUseCase } from "./join-user";
 
 describe("use case", () => {

@@ -1,9 +1,9 @@
 import { SigninActions } from "../status/signin";
 import { createContext } from "react";
-import { InGameAction } from "@/status/in-game-action";
-import { UserActions } from "@/status/user";
-import { InGameSelector } from "@/status/in-game-selector";
-import { GameCreationAction } from "@/status/game-creator";
+import { InGameAction } from "~/src/ts/status/in-game-action";
+import { UserActions } from "~/src/ts/status/user";
+import { InGameSelector } from "~/src/ts/status/in-game-selector";
+import { GameCreationAction } from "~/src/ts/status/game-creator";
 
 // context for SignInAction.
 export const signInActionContext = createContext<SigninActions>({} as SigninActions);

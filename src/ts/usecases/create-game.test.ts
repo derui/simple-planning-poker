@@ -1,10 +1,10 @@
-import { GameCreated } from "@/domains/event";
-import { Game } from "@/domains/game";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
+import { GameCreated } from "~/src/ts/domains/event";
+import { Game } from "~/src/ts/domains/game";
+import { createSelectableCards } from "~/src/ts/domains/selectable-cards";
+import { createStoryPoint } from "~/src/ts/domains/story-point";
+import { createUserId } from "~/src/ts/domains/user";
 import { CreateGameUseCase } from "./create-game";
-import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedGameRepository } from "~/src/ts/lib.test";
 
 describe("use case", () => {
   describe("create game", () => {

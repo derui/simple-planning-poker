@@ -4,6 +4,9 @@ yarn-error.log
 .log/
 .firebase/
 .firebaserc
+.parcel-cache/
+dist/
+generated/
 
 database-debug.log
 ui-debug.log
