@@ -24,7 +24,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   async delete(player: GamePlayer) {
     const updates: { [key: string]: any } = {};
 
-    updates[`/games/${player.game}users/${player.id}`] = null;
+    updates[`/games/${player.game}/users/${player.id}`] = null;
     updates[`/games/${player.game}/userHands/${player.id}`] = null;
     updates[`/gamePlayers/${player.id}`] = null;
     updates[`/users/${player.user}/joinedGames/${player.game}`] = null;
