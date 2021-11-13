@@ -15,6 +15,7 @@ export const SelectorKeys = {
   authenticated: "authenticated",
   authenticating: "authenticating",
   emailToSignIn: "emailToSignIn",
+  passwordToSignIn: "passwordToSignIn",
   defaultCards: "defaultCards",
   inGameCurrentSelectableCards: "inGameCurrentSelectableCards",
   inGameCurrentUserSelectedCard: "inGameCurrentUserSelectedCard",

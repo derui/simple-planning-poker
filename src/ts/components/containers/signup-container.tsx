@@ -6,10 +6,10 @@ import { SignInComponent } from "../presentations/signin";
 
 interface Props extends RouteComponentProps {}
 
-export const SignInContainer: React.FunctionComponent<Props> = ({ location, history }) => {
+export const SignUpContainer: React.FunctionComponent<Props> = ({ location, history }) => {
   const action = React.useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
-  const signIn = action.useSignIn();
+  const signUp = action.useSignUp();
   const setEmail = action.useUpdateEmail();
   const setPassword = action.useUpdatePassword();
   const emailState = signInSelectors.useSignInEmail();
@@ -25,15 +25,11 @@ export const SignInContainer: React.FunctionComponent<Props> = ({ location, hist
 
   return (
     <SignInComponent
-      title="Sign In"
+      title="Sign Up"
       onUpdateEmail={setEmail}
       onUpdatePassword={setPassword}
-      onSubmit={() => signIn(emailState, passwordState, signInCallback)}
+      onSubmit={() => signUp(emailState, passwordState, signInCallback)}
       showOverlay={authenticating}
-    >
-      <p className="app__signin-main__sign-up-link">
-        or <a href="/signup">Sign up</a>
-      </p>
-    </SignInComponent>
+    ></SignInComponent>
   );
 };

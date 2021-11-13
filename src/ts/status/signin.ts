@@ -7,6 +7,7 @@ import {
   authenticating,
   currentUserState,
   emailToSignIn,
+  passwordToSignIn,
   signInState,
   UserJoinedGameViewModel,
 } from "./signin-atom";
@@ -14,16 +15,20 @@ import { GameRepository } from "@/domains/game-repository";
 import { SelectorKeys } from "./key";
 
 export interface SigninActions {
-  useSignIn: () => (email: string, callback: () => void) => void;
-  useApplyAuthenticated: () => (callback: () => void) => void;
+  useSignIn: () => (email: string, password: string, callback: () => void) => void;
+  useSignUp: () => (email: string, password: string, callback: () => void) => void;
+  useApplyAuthenticated: () => (callback: () => void, errorCallback?: () => void) => void;
 
-  useUpdateEmail: () => (email: string) => void;
+  useUpdateEmail: () => (value: string) => void;
+  useUpdatePassword: () => (value: string) => void;
 }
 
 export interface Authenticator {
-  authenticate(email: string): Promise<UserId>;
+  signIn(email: string, password: string): Promise<UserId>;
 
-  getAuthenticatedUser(): Promise<UserId | undefined>;
+  signUp(name: string, email: string, password: string): Promise<UserId>;
+
+  currentUserIdIfExists(): Promise<UserId | undefined>;
 }
 
 export const createSigninActions = (
@@ -48,10 +53,30 @@ export const createSigninActions = (
 
   return {
     useSignIn: () =>
-      useRecoilCallback(({ set }) => async (email: string, callback: () => void) => {
+      useRecoilCallback(({ set }) => async (email: string, password: string, callback: () => void) => {
         set(signInState, (prev) => ({ ...prev, authenticating: true }));
         try {
-          const userId = await authenticator.authenticate(email);
+          const userId = await authenticator.signIn(email, password);
+          const user = await userRepository.findBy(userId);
+          if (!user) {
+            return;
+          }
+
+          const joinedGames = await getGames(user.joinedGames);
+          set(currentUserState, () => ({ id: userId, name: email, joinedGames }));
+          callback();
+        } catch (e) {
+          throw e;
+        } finally {
+          set(signInState, (prev) => ({ ...prev, authenticating: false }));
+        }
+      }),
+
+    useSignUp: () =>
+      useRecoilCallback(({ set }) => async (email: string, password: string, callback: () => void) => {
+        set(signInState, (prev) => ({ ...prev, authenticating: true }));
+        try {
+          const userId = await authenticator.signUp(email, email, password);
           const user = await userRepository.findBy(userId);
           if (!user) {
             return;
@@ -68,13 +93,16 @@ export const createSigninActions = (
       }),
 
     useApplyAuthenticated: () =>
-      useRecoilCallback(({ set }) => async (callback: () => void) => {
+      useRecoilCallback(({ set }) => async (callback: () => void, errorCallback) => {
         set(signInState, (prev) => ({ ...prev, authenticating: true }));
-        const userId = await authenticator.getAuthenticatedUser();
+        const userId = await authenticator.currentUserIdIfExists();
 
         const user = await (userId ? userRepository.findBy(userId) : Promise.resolve(undefined));
         if (!user) {
           set(signInState, (prev) => ({ ...prev, authenticating: false }));
+          if (errorCallback) {
+            errorCallback();
+          }
           return;
         }
 
@@ -87,6 +115,11 @@ export const createSigninActions = (
     useUpdateEmail: () => {
       const setState = useSetRecoilState(signInState);
       return React.useCallback((email: string) => setState((prev) => ({ ...prev, email })), []);
+    },
+
+    useUpdatePassword: () => {
+      const setState = useSetRecoilState(signInState);
+      return React.useCallback((password: string) => setState((prev) => ({ ...prev, password })), []);
     },
   };
 };
@@ -101,6 +134,7 @@ export const signInSelectors = {
   useCurrentUser: () => useRecoilValue(currentUserState),
 
   useSignInEmail: () => useRecoilValue(emailToSignIn),
+  useSignInPassword: () => useRecoilValue(passwordToSignIn),
   useAuthenticating: () => useRecoilValue(authenticating),
   useJoinedGames: () => useRecoilValue(joinedGamesSelector),
 };

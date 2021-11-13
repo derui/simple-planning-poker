@@ -6,7 +6,8 @@ import { GameCreatorContainer } from "./components/containers/game-creator-conta
 import { GameObserverContainer } from "./components/containers/game-observer";
 import { GameSelectorContainerComponent } from "./components/containers/game-selector-container";
 import { InvitationContainer } from "./components/containers/invitation-container";
-import { SigninContainer } from "./components/containers/signin-container";
+import { SignInContainer } from "./components/containers/signin-container";
+import { SignUpContainer } from "./components/containers/signup-container";
 import { signInSelectors } from "./status/signin";
 
 const PrivateRoute: React.FunctionComponent<RouteProps> = ({ children, ...rest }) => {
@@ -51,7 +52,8 @@ export const App: React.FunctionComponent<{}> = () => {
               <PrivateRoute path="/invitation/:signature">
                 <InvitationContainer />
               </PrivateRoute>
-              <Route exact path="/signin" component={SigninContainer}></Route>
+              <Route exact path="/signin" component={SignInContainer}></Route>
+              <Route exact path="/signup" component={SignUpContainer}></Route>
             </Switch>
           </BrowserRouter>
         </div>

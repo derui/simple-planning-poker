@@ -1,43 +1,40 @@
 import { Authenticator } from "../status/signin";
 import { createUser, createUserId, UserId } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
-import { Auth, signInAnonymously } from "firebase/auth";
-import { Database, get, ref, set } from "firebase/database";
-
-const localKey = "authenticated/uid";
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { Database, get, ref } from "firebase/database";
 
 export class FirebaseAuthenticator implements Authenticator {
   constructor(private auth: Auth, private database: Database, private userRepository: UserRepository) {}
-  async authenticate(email: string): Promise<UserId> {
-    const authenticatedUid = localStorage.getItem(localKey);
-    if (authenticatedUid) {
-      this.checkUserIsAuthenticated(authenticatedUid);
-      return createUserId(authenticatedUid);
-    }
-
-    const definedUser = await get(ref(this.database, "defined-users"));
-    const mails = (definedUser.val() as string[] | null) || [];
-    let existsMail = mails.some((v) => v === email);
-
-    if (!existsMail) {
-      throw new Error("Do not allow login the email");
-    }
+  async signIn(email: string, password: string): Promise<UserId> {
+    await this.checkToAllowSigningUserWith(email);
 
     try {
-      const auth = await signInAnonymously(this.auth);
+      const auth = await signInWithEmailAndPassword(this.auth, email, password);
       const uid = auth.user.uid;
 
-      const isSignedIn = await get(ref(this.database, `authenticated/${uid}`));
-      const emailSignedInAsUid = isSignedIn.val();
-      if (emailSignedInAsUid && emailSignedInAsUid !== email) {
-        throw new Error(`${email} is already signed in`);
+      const userId = createUserId(uid);
+      const user = await this.userRepository.findBy(userId);
+      if (!user) {
+        throw Error("Not found user");
       }
 
-      localStorage.setItem(localKey, uid);
-      set(ref(this.database, `authenticated/${uid}`), email);
+      return user.id;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
+  async signUp(name: string, email: string, password: string): Promise<UserId> {
+    await this.checkToAllowSigningUserWith(email);
+
+    try {
+      const auth = await createUserWithEmailAndPassword(this.auth, email, password);
+      const uid = auth.user.uid;
 
       const userId = createUserId(uid);
-      const user = createUser({ id: userId, name: email, joinedGames: [] });
+      const user = createUser({ id: userId, name, joinedGames: [] });
       this.userRepository.save(user);
 
       return userId;
@@ -47,25 +44,26 @@ export class FirebaseAuthenticator implements Authenticator {
     }
   }
 
-  private async checkUserIsAuthenticated(uidInStorage: string) {
-    const auth = await signInAnonymously(this.auth);
-    const uid = auth.user.uid;
+  private async checkToAllowSigningUserWith(email: string) {
+    const definedUser = await get(ref(this.database, "defined-users"));
+    const mails = (definedUser.val() as string[] | null) || [];
+    const existsMail = mails.some((v) => v === email);
 
-    if (uidInStorage !== uid) {
-      localStorage.removeItem(localKey);
-      throw new Error("Need re-authentication");
-    }
-
-    const isSignedIn = await get(ref(this.database, `authenticated/${uid}`));
-    if (!isSignedIn.val()) {
-      localStorage.removeItem(localKey);
-      throw new Error("Need re-authentication");
+    if (!existsMail) {
+      throw new Error("Do not allow login the email");
     }
   }
 
-  async getAuthenticatedUser(): Promise<UserId | undefined> {
-    const val = localStorage.getItem(localKey);
-
-    return val ? (val as UserId) : undefined;
+  async currentUserIdIfExists(): Promise<UserId | undefined> {
+    return new Promise((resolve) => {
+      onAuthStateChanged(this.auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          resolve(createUserId(uid));
+        } else {
+          resolve(undefined);
+        }
+      });
+    });
   }
 }

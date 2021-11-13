@@ -38,9 +38,7 @@
   position: relative;
   flex-direction: column;
   top: calc(50% - 125px);
-  min-width: 250px;
-  max-width: 50%;
-  height: 250px;
+  width: 400px;
   margin: auto;
 
   /* border */
@@ -68,18 +66,31 @@
   padding: var(--space-large);
 }
 
-.app__signin-main__description {
-  text-align: center;
-  color: var(--primary-3);
-}
-
 .app__signin-main__input-container {
+  display: flex;
+  flex-direction: column;
   width: 90%;
   margin: 0 auto;
+  list-style: none;
+  padding: 0;
+}
+
+.app__signin-main__input-item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+}
+
+.app__signin-main__input-item:not(:first-child) {
+  margin-top: var(--space-large);
+}
+
+.app__signin-main__input-label {
+  flex: 0 0 100px;
 }
 
 .app__signin-main__input {
-  width: 100%;
+  flex: 1 1 auto;
   height: calc(var(--large-font-size) * 2);
 }
 
@@ -115,4 +126,8 @@
     color: var(--secondary-1-1);
     background-color: var(--secondary-1-4);
   }
+}
+
+.app__signin-main__sign-up-link {
+  text-align: center;
 }

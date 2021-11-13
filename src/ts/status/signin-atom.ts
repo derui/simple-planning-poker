@@ -23,10 +23,11 @@ export const currentUserState = atom<CurrentUserViewModel>({
   },
 });
 
-export const signInState = atom<{ email: string; authenticating: boolean }>({
+export const signInState = atom<{ password: string; email: string; authenticating: boolean }>({
   key: AtomKeys.signInState,
   default: {
     email: "",
+    password: "",
     authenticating: false,
   },
 });
@@ -42,6 +43,13 @@ export const emailToSignIn = selector<string>({
   key: SelectorKeys.emailToSignIn,
   get: ({ get }) => {
     return get(signInState).email;
+  },
+});
+
+export const passwordToSignIn = selector<string>({
+  key: SelectorKeys.passwordToSignIn,
+  get: ({ get }) => {
+    return get(signInState).password;
   },
 });
 
