@@ -4,5 +4,8 @@ module.exports = {
   plugins: ["stylelint-prettier"],
   rules: {
     "prettier/prettier": true
-  }
+  },
+  ignoreFiles: [
+    "src/css/reset.css"
+  ]
 }
