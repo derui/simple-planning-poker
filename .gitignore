@@ -10,3 +10,7 @@ ui-debug.log
 firebase-debug.log
 
 src/ts/firebase.config.prod.ts
+
+# Added by cargo
+
+/target
