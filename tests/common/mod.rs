@@ -1,3 +1,5 @@
+use yew::{html, virtual_dom::VNode, FunctionComponent, FunctionProvider, Html, Properties};
+
 pub fn obtain_result() -> String {
     gloo_utils::document()
         .get_element_by_id("result")
@@ -12,4 +14,35 @@ pub fn obtain_result_by_class(class_name: &str) -> String {
         .item(0)
         .expect("No result found. Most likely, the application crashed and burned")
         .inner_html()
+}
+
+pub fn mount(vnode: &VNode) {
+    struct TemporaryFunction {}
+    #[derive(Properties, PartialEq)]
+    struct TProps {
+        node: VNode,
+    }
+
+    impl FunctionProvider for TemporaryFunction {
+        type TProps = TProps;
+
+        fn run(p: &Self::TProps) -> Html {
+            // No race conditions will be caused since its only used in one place
+
+            return html! {
+                <div id="output">
+            { p.node.clone() }
+                </div>
+            };
+        }
+    }
+
+    type UseComponent = FunctionComponent<TemporaryFunction>;
+
+    yew::start_app_with_props_in_element::<UseComponent>(
+        gloo_utils::document().get_element_by_id("output").unwrap(),
+        TProps {
+            node: vnode.clone(),
+        },
+    );
 }

@@ -13,16 +13,6 @@ pub enum UserMode {
     Inspector,
 }
 
-#[derive(Properties, PartialEq)]
-pub struct PlayerHandProps {
-    pub name_position: NamePosition,
-    pub name: String,
-    pub mode: UserMode,
-    pub card: Card,
-    pub selected: bool,
-    pub showed_down: bool,
-}
-
 #[derive(Properties, PartialEq, Clone)]
 struct CardProps {
     card: Card,
@@ -51,17 +41,25 @@ fn card(props: &CardProps) -> Html {
     } else {
         let class_name = classes!(
             "app__game__main__user-hand__user-card",
-            if props.selected {
-                Some("app__game__main__user-hand__user-card--handed")
-            } else {
-                None
-            }
+            props
+                .selected
+                .then(|| { Some("app__game__main__user-hand__user-card--handed") })
         );
 
         html! {
             <span class={class_name}></span>
         }
     }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct PlayerHandProps {
+    pub name_position: NamePosition,
+    pub name: String,
+    pub mode: UserMode,
+    pub card: Card,
+    pub selected: bool,
+    pub showed_down: bool,
 }
 
 #[function_component(PlayerHand)]
@@ -86,7 +84,6 @@ pub fn player_hand(props: &PlayerHandProps) -> Html {
             {upper_position.clone()}
         <CardComponent showed_down={props.showed_down} card={props.card.clone()} selected={props.selected} mode={props.mode.clone()}  />
             {lower_position.clone()}
-
             </div>
             </div>
     }
