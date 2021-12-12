@@ -1,5 +1,6 @@
 use planning_poker::{
-    components::presentations::player_hand::*,
+    components::presentations::player_hand::PlayerHand,
+    components::presentations::types::{NamePosition, UserMode},
     domains::{card::Card, story_point::StoryPoint},
 };
 use wasm_bindgen_test::wasm_bindgen_test;

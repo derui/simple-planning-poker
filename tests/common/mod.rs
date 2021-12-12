@@ -1,3 +1,4 @@
+use web_sys::Event;
 use yew::{html, virtual_dom::VNode, FunctionComponent, FunctionProvider, Html, Properties};
 
 pub fn obtain_result() -> String {
@@ -45,4 +46,14 @@ pub fn mount(vnode: &VNode) {
             node: vnode.clone(),
         },
     );
+}
+
+pub fn emit(class: &str, event: &Event) {
+    let element = gloo_utils::document().get_elements_by_class_name(class);
+
+    element
+        .item(0)
+        .unwrap()
+        .dispatch_event(event)
+        .expect(format!("Should not emit event {}, {:?}", class, event).as_str());
 }

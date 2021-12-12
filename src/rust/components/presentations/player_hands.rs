@@ -1,8 +1,8 @@
 use yew::{classes, function_component, html, Properties};
 
-use crate::{components::presentations::player_hand::NamePosition, domains::card::Card};
+use crate::{components::presentations::player_hand::PlayerHand, domains::card::Card};
 
-use super::player_hand::{PlayerHand, UserMode};
+use super::types::{NamePosition, UserMode};
 
 #[derive(PartialEq, Debug)]
 pub enum Position {

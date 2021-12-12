@@ -28,4 +28,6 @@ features = [
   "Document",
   "HtmlCollection",
   "Window",
+  "Event",
+  "EventTarget"
 ]

@@ -1,17 +1,7 @@
 use crate::domains::card::Card;
 use yew::{classes, function_component, html, Properties};
 
-#[derive(Debug, PartialEq)]
-pub enum NamePosition {
-    Upper,
-    Lower,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum UserMode {
-    Normal,
-    Inspector,
-}
+use super::types::{NamePosition, UserMode};
 
 #[derive(Properties, PartialEq, Clone)]
 struct CardProps {
