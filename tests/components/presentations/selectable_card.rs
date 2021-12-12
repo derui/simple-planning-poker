@@ -31,11 +31,11 @@ fn mark_as_selected() {
 
 #[wasm_bindgen_test]
 fn callback_onclick() {
-    static mut value: u32 = 0;
+    static mut VALUE: u32 = 0;
 
     let node = html! {
         <SelectableCard story_point={String::from("1")} selected={true} onclick={Callback::from(move |_| unsafe {
-            value += 1
+            VALUE += 1
         })} />
     };
     mount(&node);
@@ -45,6 +45,6 @@ fn callback_onclick() {
         &MouseEvent::new("click").unwrap(),
     );
     unsafe {
-        assert_eq!(value, 1);
+        assert_eq!(VALUE, 1);
     }
 }
