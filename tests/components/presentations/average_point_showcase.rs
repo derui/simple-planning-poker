@@ -3,10 +3,10 @@ use planning_poker::{
     domains::story_point::StoryPoint,
 };
 use wasm_bindgen_test::wasm_bindgen_test;
-use web_sys::MouseEvent;
-use yew::{html, Callback};
 
-use crate::common::{emit, mount, obtain_result_by_class};
+use yew::{html};
+
+use crate::common::{mount, obtain_result_by_class};
 
 wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 
