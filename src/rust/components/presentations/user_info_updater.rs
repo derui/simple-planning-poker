@@ -1,5 +1,5 @@
 use wasm_bindgen::JsCast;
-use web_sys::{HtmlInputElement, MouseEvent};
+use web_sys::{HtmlInputElement, InputEvent, MouseEvent};
 use yew::{
     classes, function_component, html, html::onchange::Event, use_node_ref, use_state, Callback,
     Html, Properties, UseStateHandle,
@@ -16,15 +16,12 @@ pub struct UserInfoProps {
 }
 
 fn name_editor(name_state: &UseStateHandle<String>) -> Html {
-    let onchange = {
+    let oninput = {
         let name_state = name_state.clone();
 
-        move |v: Event| {
-            let value = v
-                .target()
-                .map(|v| v.unchecked_into::<HtmlInputElement>())
-                .unwrap();
-            name_state.set(value.value())
+        move |v: InputEvent| {
+            let value = v.data().unwrap();
+            name_state.set(value)
         }
     };
 
@@ -35,7 +32,7 @@ fn name_editor(name_state: &UseStateHandle<String>) -> Html {
         class="app__game__user-info-updater__name-editor__input"
         type="text"
        value={String::from(name)}
-       onchange={onchange}
+       oninput={oninput}
       />
     }
 }
@@ -146,7 +143,7 @@ pub fn user_info_updater(props: &UserInfoProps) -> Html {
     >
       {name_editor(&name)}
       {mode_changer(&mode)}
-      {update_applyer(!( *name).is_empty(), submit)}
+      {update_applyer(!(*name).is_empty(), submit)}
     </div>
     }
 }

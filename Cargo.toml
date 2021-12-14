@@ -29,5 +29,8 @@ features = [
   "HtmlCollection",
   "Window",
   "Event",
-  "EventTarget"
+  "EventTarget",
+  "InputEventInit",
+  "EventTarget",
+
 ]
