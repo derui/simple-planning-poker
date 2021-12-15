@@ -82,15 +82,15 @@ fn mode_changer(mode_state: &UseStateHandle<UserMode>) -> Html {
       <div class="app__game__user-info-updater__mode-changer__switch-container">
         <span class="app__game__user-info-updater__mode-changer__switch-label">{"Off"}</span>
         <span class="app__game__user-info-updater__mode-changer__switch">
-          <span class={rail_classes} onclick={onclick}>
+          <span class={rail_classes} {onclick}>
             <span class={box_classes}></span>
           </span>
           <input
             ref={input_ref}
             class="app__game__user-info-updater__mode-changer__switch__input"
             type="checkbox"
-            checked={checked}
-            onchange={onchange}
+            {checked}
+            {onchange}
           />
         </span>
         <span class="app__game__user-info-updater__mode-changer__switch-label">{"On"}</span>
@@ -139,7 +139,7 @@ pub fn user_info_updater(props: &UserInfoProps) -> Html {
     html! {
     <div
       class="app__game__user-info-updater"
-      onclick={onclick}
+      {onclick}
     >
       {name_editor(&name)}
       {mode_changer(&mode)}

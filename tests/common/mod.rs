@@ -1,4 +1,5 @@
-use web_sys::Event;
+use wasm_bindgen::JsCast;
+use web_sys::{Element, Event, HtmlElement};
 use yew::{html, virtual_dom::VNode, FunctionComponent, FunctionProvider, Html, Properties};
 
 pub fn obtain_result() -> String {
@@ -15,6 +16,14 @@ pub fn obtain_result_by_class(class_name: &str) -> String {
         .item(0)
         .expect("No result found. Most likely, the application crashed and burned")
         .inner_html()
+}
+pub fn obtain_element_by_class<T: wasm_bindgen::JsCast>(class_name: &str) -> T {
+    let elements = gloo_utils::document().get_elements_by_class_name(class_name);
+
+    elements
+        .item(0)
+        .expect("No result found. Most likely, the application crashed and burned")
+        .unchecked_into::<T>()
 }
 
 pub fn mount(vnode: &VNode) {
