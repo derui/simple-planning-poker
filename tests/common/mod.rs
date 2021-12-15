@@ -1,5 +1,5 @@
 use wasm_bindgen::JsCast;
-use web_sys::{Element, Event, HtmlElement};
+use web_sys::{Event};
 use yew::{html, virtual_dom::VNode, FunctionComponent, FunctionProvider, Html, Properties};
 
 pub fn obtain_result() -> String {

@@ -1,13 +1,12 @@
 use planning_poker::{
-    components::presentations::{game_settings::GameSettings, types::CardCount},
-    domains::story_point::StoryPoint,
+    components::presentations::{game_settings::GameSettings},
 };
 use wasm_bindgen_test::wasm_bindgen_test;
 
 use web_sys::{HtmlElement, HtmlInputElement, MouseEvent};
 use yew::html;
 
-use crate::common::{emit, mount, obtain_element_by_class, obtain_result_by_class};
+use crate::common::{emit, mount, obtain_element_by_class};
 
 wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 
