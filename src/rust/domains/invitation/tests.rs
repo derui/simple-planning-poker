@@ -1,4 +1,4 @@
-use crate::domains::invitation::{Invitation, InvitationSignature};
+use crate::domains::invitation::{Invitation};
 use uuid::Uuid;
 
 use crate::{domains::game::GameId, utils::uuid_factory::UuidFactory};
