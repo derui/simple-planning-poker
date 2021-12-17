@@ -2,6 +2,9 @@ use super::story_point::StoryPoint;
 
 use super::card::Card;
 
+#[cfg(test)]
+mod tests;
+
 pub struct SelectableCards {
     cards: Vec<Card>,
 }
@@ -40,7 +43,11 @@ impl SelectableCards {
     }
 
     pub fn at(&self, index: usize) -> Option<&Card> {
-        self.cards.get(index)
+        if index >= self.cards.len() - 1 {
+            None
+        } else {
+            self.cards.get(index)
+        }
     }
 
     pub fn contains(&self, card: &Card) -> bool {
