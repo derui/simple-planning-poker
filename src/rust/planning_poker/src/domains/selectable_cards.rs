@@ -5,6 +5,7 @@ use super::card::Card;
 #[cfg(test)]
 mod tests;
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct SelectableCards {
     cards: Vec<Card>,
 }
