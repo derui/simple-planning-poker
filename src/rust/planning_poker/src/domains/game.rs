@@ -1,24 +1,11 @@
 use crate::utils::uuid_factory::UuidFactory;
+use domain_id::IdLike;
 use uuid::Uuid;
 
-use super::id::Id;
+use super::id::{Id, IdLike};
 
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, IdLike)]
 pub struct GameId(Id<Uuid>);
-
-impl GameId {
-    pub fn new(uuid_factory: UuidFactory) -> GameId {
-        let v = uuid_factory.create();
-
-        GameId(Id::new(v))
-    }
-}
-
-impl ToString for GameId {
-    fn to_string(&self) -> String {
-        format!("{}", self.0.to_string())
-    }
-}

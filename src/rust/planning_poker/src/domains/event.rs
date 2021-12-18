@@ -1,3 +1,4 @@
+use domain_id::IdLike;
 use uuid::Uuid;
 
 use crate::utils::uuid_factory::UuidFactory;
@@ -6,27 +7,13 @@ use super::{
     card::Card,
     game::GameId,
     game_player::{GamePlayerId, UserMode},
-    id::Id,
+    id::{Id, IdLike},
     selectable_cards::SelectableCards,
     user::UserId,
 };
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, IdLike)]
 pub struct EventId(Id<Uuid>);
-
-impl EventId {
-    pub fn new(uuid_factory: UuidFactory) -> Self {
-        let v = uuid_factory.create();
-
-        Self(Id::new(v))
-    }
-}
-
-impl ToString for EventId {
-    fn to_string(&self) -> String {
-        format!("{}", self.0.to_string())
-    }
-}
 
 #[derive(Debug, PartialEq)]
 pub struct DomainEvent {
@@ -70,4 +57,11 @@ enum DomainEventKind {
         game_player_id: GamePlayerId,
         game_id: GameId,
     },
+}
+
+impl DomainEvent {
+    fn new(factory: &UuidFactory, kind: DomainEventKind) -> Self {
+        let id = EventId::new(factory);
+        Self {id, kind}
+    }
 }

@@ -1,4 +1,4 @@
-use crate::domains::invitation::{Invitation};
+use crate::domains::{invitation::{Invitation}, id::IdLike};
 use uuid::Uuid;
 
 use crate::{domains::game::GameId, utils::uuid_factory::UuidFactory};
@@ -6,12 +6,11 @@ use crate::{domains::game::GameId, utils::uuid_factory::UuidFactory};
 #[test]
 fn create_signature_from_game_id() {
     // arrange
-    let game_id = GameId::new(UuidFactory::new(&|| {
+    let factory = UuidFactory::new(&|| {
         Uuid::parse_str("936DA01F9ABD4d9d80C702AF85C822A8").unwrap()
-    }));
-    let game_id2 = GameId::new(UuidFactory::new(&|| {
-        Uuid::parse_str("936DA01F9ABD4d9d80C702AF85C822A8").unwrap()
-    }));
+    });
+    let game_id = GameId::new(&factory);
+    let game_id2 = GameId::new(&factory);
 
     // do
     let invitation = Invitation::new(game_id);

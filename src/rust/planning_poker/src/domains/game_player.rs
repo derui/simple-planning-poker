@@ -1,25 +1,12 @@
+use domain_id::IdLike;
 use uuid::Uuid;
 
 use crate::utils::uuid_factory::UuidFactory;
 
-use super::{card::Card, game::GameId, id::Id, selectable_cards::SelectableCards, user::UserId};
+use super::{card::Card, game::GameId, id::{Id, IdLike}, selectable_cards::SelectableCards, user::UserId};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, IdLike)]
 pub struct GamePlayerId(Id<Uuid>);
-
-impl GamePlayerId {
-    pub fn new(uuid_factory: UuidFactory) -> Self {
-        let v = uuid_factory.create();
-
-        Self(Id::new(v))
-    }
-}
-
-impl ToString for GamePlayerId {
-    fn to_string(&self) -> String {
-        format!("{}", self.0.to_string())
-    }
-}
 
 #[derive(Debug, PartialEq)]
 pub enum UserMode {

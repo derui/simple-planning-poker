@@ -1,5 +1,7 @@
 use std::fmt::{Debug, Display};
 
+use crate::utils::uuid_factory::UuidFactory;
+
 #[cfg(test)]
 mod tests;
 
@@ -22,4 +24,8 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(format!("{}", self.0.to_string()).as_str())
     }
+}
+
+pub trait IdLike {
+    fn new(uuid_factory: &UuidFactory) -> Self;
 }

@@ -1,4 +1,4 @@
-use crate::domains::game::GameId;
+use crate::domains::{game::GameId, id::IdLike};
 use uuid::Uuid;
 
 use crate::utils::uuid_factory::UuidFactory;
@@ -10,7 +10,7 @@ fn allow_create_id_with_uuid() {
     let factory = UuidFactory::new(&f);
 
     // do
-    let id = GameId::new(factory);
+    let id = GameId::new(&factory);
 
     // verify
     assert_eq!(id.to_string(), "936da01f-9abd-4d9d-80c7-02af85c822a8");
