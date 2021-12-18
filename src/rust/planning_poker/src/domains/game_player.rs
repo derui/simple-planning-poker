@@ -1,10 +1,12 @@
+use core::panic;
+
 use domain_macro::DomainId;
 use uuid::Uuid;
 
 use super::{
     base::Entity,
-    card::{self, Card},
-    event::{DomainEvent, DomainEventKind},
+    card::Card,
+    event::DomainEventKind,
     game::GameId,
     id::{DomainId, Id},
     selectable_cards::SelectableCards,
@@ -49,8 +51,19 @@ impl Entity<GamePlayerId> for GamePlayer {
     }
 }
 
+fn should_contains_hand(hand: &Option<Card>, cards: &SelectableCards) {
+    match hand {
+        Some(v) => {
+            if !cards.contains(&v) {
+                panic!("Can not take hand with not contained card")
+            }
+        }
+        _ => (),
+    }
+}
+
 impl GamePlayer {
-    fn new(
+    pub fn new(
         id: GamePlayerId,
         game: GameId,
         user: UserId,
@@ -58,6 +71,8 @@ impl GamePlayer {
         cards: &SelectableCards,
         mode: UserMode,
     ) -> Self {
+        should_contains_hand(&hand, cards);
+
         Self {
             id,
             game,
@@ -68,30 +83,29 @@ impl GamePlayer {
         }
     }
 
-    fn mode(&self) -> &UserMode {
+    pub fn mode(&self) -> &UserMode {
         &self.mode
     }
 
-    fn game(&self) -> &GameId {
+    pub fn game(&self) -> &GameId {
         &self.game
     }
 
-    fn hand(&self) -> Option<&Card> {
+    pub fn hand(&self) -> Option<&Card> {
         match &self.hand {
             Some(v) => Some(&v),
             None => None,
         }
     }
 
-    fn user(&self) -> &UserId {
+    pub fn user(&self) -> &UserId {
         &self.user
     }
 
-    fn change_user_mode(
-        &mut self,
-        mode: UserMode,
-        receiver: &mut dyn FnMut(DomainEventKind) -> (),
-    ) {
+    pub fn change_user_mode<F>(&mut self, mode: UserMode, mut receiver: F)
+    where
+        F: FnMut(DomainEventKind) + 'static,
+    {
         if mode == self.mode {
             return;
         }
@@ -103,7 +117,10 @@ impl GamePlayer {
         })
     }
 
-    fn take_hand(&mut self, card: Card, receiver: &mut dyn FnMut(DomainEventKind) -> ()) {
+    pub fn take_hand<F>(&mut self, card: Card, mut receiver: F)
+    where
+        F: FnMut(DomainEventKind) + 'static,
+    {
         if !self.cards.contains(&card) {
             panic!(
                 "Can not hand not in cards defined in the game: {}",

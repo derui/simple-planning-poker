@@ -1,4 +1,4 @@
-use crate::domains::{game::GameId, id::Id, };
+use crate::domains::{game::GameId, id::Id};
 use uuid::Uuid;
 
 use crate::utils::uuid_factory::UuidFactory;
