@@ -1,5 +1,5 @@
 [workspace]
 members = [
   "src/rust/planning_poker",
-  "src/rust/domain_id"
+  "src/rust/domain_macro"
 ]

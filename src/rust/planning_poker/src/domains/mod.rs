@@ -7,3 +7,4 @@ pub mod invitation;
 pub mod selectable_cards;
 pub mod story_point;
 pub mod user;
+pub mod base;

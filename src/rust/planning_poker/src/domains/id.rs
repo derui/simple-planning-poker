@@ -1,11 +1,13 @@
 use std::fmt::{Debug, Display};
 
+use uuid::Uuid;
+
 use crate::utils::uuid_factory::UuidFactory;
 
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Id<T: PartialEq + ToString = &'static str>(T);
 
 impl Id {
@@ -14,6 +16,13 @@ impl Id {
         T: PartialEq + ToString,
     {
         Id(value)
+    }
+
+    pub(crate) fn create<T>(factory: &UuidFactory) -> T
+    where
+        T: DomainId,
+    {
+        T::new(factory.create())
     }
 }
 
@@ -26,6 +35,8 @@ where
     }
 }
 
-pub trait IdLike {
-    fn new(uuid_factory: &UuidFactory) -> Self;
+pub trait DomainId {
+    fn new(uuid: Uuid) -> Self
+    where
+        Self: Sized;
 }

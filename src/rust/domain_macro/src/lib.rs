@@ -1,25 +1,23 @@
 use proc_macro::TokenStream;
-use syn;
 use quote::quote;
+use syn;
 
 extern crate proc_macro;
 
-#[proc_macro_derive(IdLike)]
-pub fn id_like_derive(input: TokenStream) -> TokenStream {
-
+#[proc_macro_derive(DomainId)]
+pub fn domain_id_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).unwrap();
 
-    impl_id_like_derive(&ast)
+    impl_domain_id_derive(&ast)
 }
 
-fn impl_id_like_derive(ast: &syn::DeriveInput) -> TokenStream {
+fn impl_domain_id_derive(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let gen = quote! {
-        impl IdLike for #name {
-            fn new (uuid_factory: &UuidFactory) -> Self {
-                let v = uuid_factory.create();
 
-                Self(Id::new(v))
+        impl DomainId for #name {
+            fn new (uuid: Uuid) -> Self {
+                Self(Id::new(uuid))
             }
         }
 

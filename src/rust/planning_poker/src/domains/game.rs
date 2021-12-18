@@ -1,11 +1,10 @@
-use crate::utils::uuid_factory::UuidFactory;
-use domain_id::IdLike;
+use domain_macro::DomainId;
 use uuid::Uuid;
 
-use super::id::{Id, IdLike};
+use super::id::{DomainId, Id};
 
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug, IdLike)]
+#[derive(PartialEq, Debug, DomainId, Clone, Copy)]
 pub struct GameId(Id<Uuid>);

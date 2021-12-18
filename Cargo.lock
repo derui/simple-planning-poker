@@ -79,7 +79,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "domain_id"
+name = "domain_macro"
 version = "0.1.0"
 dependencies = [
  "quote",
@@ -349,7 +349,7 @@ checksum = "d4fd5641d01c8f18a23da7b6fe29298ff4b55afcccdf78973b24cf3175fee32e"
 name = "planning_poker"
 version = "0.1.0"
 dependencies = [
- "domain_id",
+ "domain_macro",
  "gloo 0.5.0",
  "gloo-utils",
  "sha256",
