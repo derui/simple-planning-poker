@@ -7,13 +7,13 @@ use crate::utils::uuid_factory::UuidFactory;
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug, Clone, Copy)]
-pub struct Id<T: PartialEq + ToString = &'static str>(T);
+#[derive(PartialEq, Eq, Debug, Clone, Copy, Hash)]
+pub struct Id<T: Eq + ToString = &'static str>(T);
 
 impl Id {
     pub fn new<T>(value: T) -> Id<T>
     where
-        T: PartialEq + ToString,
+        T: Eq + ToString,
     {
         Id(value)
     }
@@ -28,7 +28,7 @@ impl Id {
 
 impl<T> Display for Id<T>
 where
-    T: PartialEq + ToString,
+    T: Eq + ToString,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(format!("{}", self.0.to_string()).as_str())

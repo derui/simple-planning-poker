@@ -16,7 +16,7 @@ use super::{
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug, DomainId, Copy, Clone)]
+#[derive(PartialEq, Eq, Debug, DomainId, Copy, Clone, Hash)]
 pub struct GamePlayerId(Id<Uuid>);
 
 #[derive(Debug, PartialEq, Clone)]

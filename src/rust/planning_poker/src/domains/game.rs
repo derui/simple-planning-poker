@@ -1,4 +1,4 @@
-use std::{ops::RangeBounds, vec};
+use std::{collections::HashMap, ops::Add, vec};
 
 use domain_macro::DomainId;
 use uuid::Uuid;
@@ -55,7 +55,6 @@ impl Game {
     pub fn new(
         id: GameId,
         name: String,
-        showed_down: bool,
         players: &Vec<GamePlayerId>,
         cards: &SelectableCards,
     ) -> Self {
@@ -66,7 +65,7 @@ impl Game {
         Self {
             id,
             name,
-            _showed_down: showed_down,
+            _showed_down: false,
             players: players.clone(),
             cards: cards.clone(),
             hands: vec![],
@@ -130,22 +129,26 @@ impl Game {
         Ok(AveragePoint(average))
     }
 
-    pub fn change_name(&mut self, name: &String) {
+    pub fn change_name(&mut self, name: &str) {
         if name.len() == 0 {
             panic!("Can not change name to empty");
         }
 
-        self.name = name.clone()
+        self.name = String::from(name)
     }
 
-    pub fn can_change_name(name: &String) -> bool {
-        name.len() == 0
+    pub fn can_change_name(name: &str) -> bool {
+        name.len() > 0
     }
 
     pub fn next_game<F>(&mut self, mut receiver: F)
     where
         F: FnMut(DomainEventKind) + 'static,
     {
+        if !self.showed_down() {
+            return;
+        }
+
         self._showed_down = false;
 
         receiver(DomainEventKind::NewGameStarted { game_id: self.id })
@@ -153,24 +156,24 @@ impl Game {
 
     pub fn give_player_hand(&mut self, player_id: GamePlayerId, card: &Card) {
         if !self.players.contains(&player_id) {
-            panic!("Can not give player")
+            panic!("Can not give player");
+        }
+        if !self.cards.contains(card) {
+            panic!("Can not give incorrect card");
         }
 
-        let hands = self
-            .hands
+        let mut map: HashMap<GamePlayerId, &Card> = HashMap::new();
+        self.hands.iter().for_each(|v| {
+            map.insert(v.player, &v.card);
+        });
+
+        map.insert(player_id, card);
+        self.hands = map
             .iter()
-            .map(|v| {
-                if player_id == v.player {
-                    PlayerHand {
-                        card: card.clone(),
-                        ..v.clone()
-                    }
-                } else {
-                    v.clone()
-                }
+            .map(|(k, v)| PlayerHand {
+                player: *k,
+                card: (*v).clone(),
             })
             .collect();
-
-        self.hands = hands;
     }
 }
