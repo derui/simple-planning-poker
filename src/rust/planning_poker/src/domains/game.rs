@@ -9,7 +9,7 @@ use super::{
     event::DomainEventKind,
     game_player::GamePlayerId,
     id::{DomainId, Id},
-    invitation::Invitation,
+    invitation::{Invitation, InvitationSignature},
     selectable_cards::SelectableCards,
     story_point::StoryPoint,
 };
@@ -176,4 +176,13 @@ impl Game {
             })
             .collect();
     }
+}
+
+/// Repository interface for [Game]
+pub trait GameRepository {
+    fn save(game: &Game);
+
+    fn find_by(id: GameId) -> Option<Game>;
+
+    fn find_by_invitation_signature(signature: InvitationSignature) -> Option<Game>;
 }

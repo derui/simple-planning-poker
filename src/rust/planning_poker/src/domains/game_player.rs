@@ -136,3 +136,14 @@ impl GamePlayer {
         })
     }
 }
+
+/// Repository interface for [GamePlayer]
+pub trait GamePlayerRepository {
+    fn save(player: &GamePlayer);
+
+    fn find_by(id: GamePlayerId) -> Option<GamePlayer>;
+
+    fn find_by_user_and_game(user_id: UserId, game_id: GameId) -> Option<GamePlayer>;
+
+    fn delete(player: &GamePlayer);
+}
