@@ -1,5 +1,6 @@
-use std::{collections::HashMap, vec};
+use std::{collections::HashMap, future::Future, vec};
 
+use async_trait::async_trait;
 use domain_macro::DomainId;
 use uuid::Uuid;
 
@@ -178,10 +179,11 @@ impl Game {
 }
 
 /// Repository interface for [Game]
+#[async_trait]
 pub trait GameRepository {
-    fn save(&self, game: &Game);
+    async fn save(&self, game: &Game);
 
-    fn find_by(&self, id: GameId) -> Option<Game>;
+    async fn find_by(&self, id: GameId) -> Option<Game>;
 
-    fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game>;
+    async fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game>;
 }

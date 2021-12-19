@@ -1,5 +1,7 @@
 use std::{cell::RefCell, collections::HashMap};
 
+use async_trait::async_trait;
+
 use crate::{
     domains::{
         event::DomainEventKind,
@@ -27,17 +29,20 @@ impl MockGameRepository {
     }
 }
 
+unsafe impl Sync for MockGameRepository {}
+
+#[async_trait]
 impl GameRepository for MockGameRepository {
-    fn save(&self, game: &Game) {
+    async fn save(&self, game: &Game) {
         let mut v = self.hash_map.borrow_mut();
         v.insert(game.id(), game.clone());
     }
 
-    fn find_by(&self, _id: crate::domains::game::GameId) -> Option<Game> {
+    async fn find_by(&self, _id: crate::domains::game::GameId) -> Option<Game> {
         todo!()
     }
 
-    fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game> {
+    async fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game> {
         let v = self.hash_map.borrow();
         v.iter()
             .find(|(_, g)| signature == InvitationSignature::new(g.id()))
@@ -46,17 +51,18 @@ impl GameRepository for MockGameRepository {
 }
 
 struct MockGamePlayerRepository;
+#[async_trait]
 impl GamePlayerRepository for MockGamePlayerRepository {
-    fn save(&self, _player: &crate::domains::game_player::GamePlayer) {}
+    async fn save(&self, _player: &crate::domains::game_player::GamePlayer) {}
 
-    fn find_by(
+    async fn find_by(
         &self,
         _id: crate::domains::game_player::GamePlayerId,
     ) -> Option<crate::domains::game_player::GamePlayer> {
         todo!()
     }
 
-    fn find_by_user_and_game(
+    async fn find_by_user_and_game(
         &self,
         _user_id: crate::domains::user::UserId,
         _game_id: crate::domains::game::GameId,
@@ -64,13 +70,13 @@ impl GamePlayerRepository for MockGamePlayerRepository {
         todo!()
     }
 
-    fn delete(&self, _player: &crate::domains::game_player::GamePlayer) {
+    async fn delete(&self, _player: &crate::domains::game_player::GamePlayer) {
         todo!()
     }
 }
 
-#[test]
-fn do_not_invite_if_invitation_signature_is_invalid() {
+#[tokio::test]
+async fn do_not_invite_if_invitation_signature_is_invalid() {
     // arrange
     let default_uuid_factory = DefaultUuidFactory::new();
     let game_id = Id::create(&default_uuid_factory);
@@ -85,13 +91,15 @@ fn do_not_invite_if_invitation_signature_is_invalid() {
     );
 
     // do
-    service.join(&user, signature, |_| panic!("do not send event"))
+    service
+        .join(&user, signature, |_| panic!("do not send event"))
+        .await
 
     // verify
 }
 
-#[test]
-fn invite_if_user_is_not_invited_yet() {
+#[tokio::test]
+async fn invite_if_user_is_not_invited_yet() {
     // arrange
     let default_uuid_factory = DefaultUuidFactory::new();
     let game_id = Id::create(&default_uuid_factory);
@@ -101,7 +109,7 @@ fn invite_if_user_is_not_invited_yet() {
     let cards = SelectableCards::new(&vec![StoryPoint::new(2)]);
     let player_id = Id::create(&default_uuid_factory);
     let game = Game::new(game_id, "name", &[player_id], &cards);
-    mock_game_repository.save(&game);
+    mock_game_repository.save(&game).await;
 
     let service = JoinService::new(
         Box::new(mock_game_repository),
@@ -111,17 +119,19 @@ fn invite_if_user_is_not_invited_yet() {
     let user = User::new(user_id, "name", &[]);
 
     // do
-    service.join(&user, signature, move |e| match e {
-        DomainEventKind::UserInvited {
-            game_id: given_game_id,
-            user_id: given_user_id,
-            ..
-        } => {
-            assert_eq!(given_game_id, game_id);
-            assert_eq!(given_user_id, user_id);
-        }
-        _ => panic!("receive only UserInvited"),
-    })
+    service
+        .join(&user, signature, move |e| match e {
+            DomainEventKind::UserInvited {
+                game_id: given_game_id,
+                user_id: given_user_id,
+                ..
+            } => {
+                assert_eq!(given_game_id, game_id);
+                assert_eq!(given_user_id, user_id);
+            }
+            _ => panic!("receive only UserInvited"),
+        })
+        .await
 
     // verify
 }

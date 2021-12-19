@@ -1,5 +1,6 @@
 use core::panic;
 
+use async_trait::async_trait;
 use domain_macro::DomainId;
 use uuid::Uuid;
 
@@ -142,12 +143,13 @@ impl GamePlayer {
 }
 
 /// Repository interface for [GamePlayer]
+#[async_trait]
 pub trait GamePlayerRepository {
-    fn save(&self, player: &GamePlayer);
+    async fn save(&self, player: &GamePlayer);
 
-    fn find_by(&self, id: GamePlayerId) -> Option<GamePlayer>;
+    async fn find_by(&self, id: GamePlayerId) -> Option<GamePlayer>;
 
-    fn find_by_user_and_game(&self, user_id: UserId, game_id: GameId) -> Option<GamePlayer>;
+    async fn find_by_user_and_game(&self, user_id: UserId, game_id: GameId) -> Option<GamePlayer>;
 
-    fn delete(&self, player: &GamePlayer);
+    async fn delete(&self, player: &GamePlayer);
 }

@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use domain_macro::DomainId;
 use uuid::Uuid;
 
@@ -97,8 +98,9 @@ impl User {
 }
 
 /// Repository interface for [User]
+#[async_trait]
 pub trait UserRepository {
-    fn save(&mut self, user: &User);
+    async fn save(&mut self, user: &User);
 
-    fn find_by(&self, id: UserId) -> Option<User>;
+    async fn find_by(&self, id: UserId) -> Option<User>;
 }

@@ -31,18 +31,19 @@ impl JoinService {
         }
     }
 
-    pub fn join<F>(&self, user: &User, signature: InvitationSignature, mut receiver: F)
+    pub async fn join<F>(&self, user: &User, signature: InvitationSignature, mut receiver: F)
     where
         F: FnMut(DomainEventKind) + 'static,
     {
-        if let Some((game, joined_game)) = self
+        let game = self
             .game_repository
             .find_by_invitation_signature(signature)
-            .and_then(|game| {
-                let id = game.id();
-                Some((game, user.find_joined_game(id)))
-            })
-        {
+            .await;
+
+        if let Some((game, joined_game)) = game.and_then(|game| {
+            let id = game.id();
+            Some((game, user.find_joined_game(id)))
+        }) {
             let (game_id, game_player_id) = match joined_game {
                 Some(joined_game) => (joined_game.game, joined_game.game_player),
                 None => {
