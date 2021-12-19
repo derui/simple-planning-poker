@@ -17,7 +17,7 @@ fn should_have_least_one_story_point() {
 #[test]
 fn always_add_giveup() {
     // arrange
-    let story_points = vec![StoryPoint::new(1)];
+    let story_points = [StoryPoint::new(1)];
 
     // do
     let cards = SelectableCards::new(&story_points);
@@ -29,7 +29,7 @@ fn always_add_giveup() {
 #[test]
 fn get_point_at() {
     // arrange
-    let story_points = vec![StoryPoint::new(1), StoryPoint::new(3)];
+    let story_points = [StoryPoint::new(1), StoryPoint::new(3)];
 
     // do
     let cards = SelectableCards::new(&story_points);
@@ -41,7 +41,7 @@ fn get_point_at() {
 #[test]
 fn do_not_get_out_outside() {
     // arrange
-    let story_points = vec![StoryPoint::new(1), StoryPoint::new(3)];
+    let story_points = [StoryPoint::new(1), StoryPoint::new(3)];
 
     // do
     let cards = SelectableCards::new(&story_points);
@@ -53,7 +53,7 @@ fn do_not_get_out_outside() {
 #[test]
 fn contains_card() {
     // arrange
-    let story_points = vec![StoryPoint::new(1), StoryPoint::new(3)];
+    let story_points = [StoryPoint::new(1), StoryPoint::new(3)];
     let card = Card::storypoint(StoryPoint::new(1));
     let not_contained_card = Card::storypoint(StoryPoint::new(2));
 
@@ -68,7 +68,7 @@ fn contains_card() {
 #[test]
 fn do_not_contains_same_story_point() {
     // arrange
-    let story_points = vec![
+    let story_points = [
         StoryPoint::new(1),
         StoryPoint::new(1),
         StoryPoint::new(3),

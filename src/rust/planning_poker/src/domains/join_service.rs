@@ -1,5 +1,3 @@
-use std::borrow::BorrowMut;
-
 use crate::utils::uuid_factory::UuidFactory;
 
 use super::{
@@ -14,22 +12,22 @@ use super::{
 #[cfg(test)]
 mod tests;
 
-pub struct JoinService<'a> {
-    game_repository: Box<&'a dyn GameRepository>,
-    game_player_repository: Box<&'a dyn GamePlayerRepository>,
-    factory: Box<&'a dyn UuidFactory>,
+pub struct JoinService {
+    game_repository: Box<dyn GameRepository>,
+    game_player_repository: Box<dyn GamePlayerRepository>,
+    factory: Box<dyn UuidFactory>,
 }
 
-impl<'a> JoinService<'a> {
+impl JoinService {
     pub fn new(
-        game_repository: &'a dyn GameRepository,
-        game_player_repository: &'a dyn GamePlayerRepository,
-        factory: &'a dyn UuidFactory,
+        game_repository: Box<dyn GameRepository>,
+        game_player_repository: Box<dyn GamePlayerRepository>,
+        factory: Box<dyn UuidFactory>,
     ) -> Self {
         Self {
-            game_repository: Box::new(game_repository),
-            game_player_repository: Box::new(game_player_repository),
-            factory: Box::new(factory),
+            game_repository: (game_repository),
+            game_player_repository: (game_player_repository),
+            factory,
         }
     }
 
@@ -48,7 +46,7 @@ impl<'a> JoinService<'a> {
             let (game_id, game_player_id) = match joined_game {
                 Some(joined_game) => (joined_game.game, joined_game.game_player),
                 None => {
-                    let id = Id::create(*self.factory);
+                    let id = Id::create(&*self.factory);
                     let player = GamePlayer::new(
                         id,
                         game.id(),

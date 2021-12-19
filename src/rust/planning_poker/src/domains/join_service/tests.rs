@@ -1,10 +1,10 @@
-use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use std::{cell::RefCell, collections::HashMap};
 
 use crate::{
     domains::{
         event::DomainEventKind,
         game::{Game, GameId, GameRepository},
-        game_player::{GamePlayer, GamePlayerRepository},
+        game_player::GamePlayerRepository,
         id::Id,
         invitation::InvitationSignature,
         selectable_cards::SelectableCards,
@@ -33,7 +33,7 @@ impl GameRepository for MockGameRepository {
         v.insert(game.id(), game.clone());
     }
 
-    fn find_by(&self, id: crate::domains::game::GameId) -> Option<Game> {
+    fn find_by(&self, _id: crate::domains::game::GameId) -> Option<Game> {
         todo!()
     }
 
@@ -47,24 +47,24 @@ impl GameRepository for MockGameRepository {
 
 struct MockGamePlayerRepository;
 impl GamePlayerRepository for MockGamePlayerRepository {
-    fn save(&self, player: &crate::domains::game_player::GamePlayer) {}
+    fn save(&self, _player: &crate::domains::game_player::GamePlayer) {}
 
     fn find_by(
         &self,
-        id: crate::domains::game_player::GamePlayerId,
+        _id: crate::domains::game_player::GamePlayerId,
     ) -> Option<crate::domains::game_player::GamePlayer> {
         todo!()
     }
 
     fn find_by_user_and_game(
         &self,
-        user_id: crate::domains::user::UserId,
-        game_id: crate::domains::game::GameId,
+        _user_id: crate::domains::user::UserId,
+        _game_id: crate::domains::game::GameId,
     ) -> Option<crate::domains::game_player::GamePlayer> {
         todo!()
     }
 
-    fn delete(&self, player: &crate::domains::game_player::GamePlayer) {
+    fn delete(&self, _player: &crate::domains::game_player::GamePlayer) {
         todo!()
     }
 }
@@ -76,12 +76,13 @@ fn do_not_invite_if_invitation_signature_is_invalid() {
     let game_id = Id::create(&default_uuid_factory);
     let signature = InvitationSignature::new(game_id);
     let mock_game_repository = MockGameRepository::new();
-    let service = JoinService::new(
-        &mock_game_repository,
-        &MockGamePlayerRepository {},
-        &default_uuid_factory,
-    );
     let user = User::new(Id::create(&default_uuid_factory), "name", &[]);
+
+    let service = JoinService::new(
+        Box::new(mock_game_repository),
+        Box::new(MockGamePlayerRepository {}),
+        Box::new(default_uuid_factory),
+    );
 
     // do
     service.join(&user, signature, |_| panic!("do not send event"))
@@ -103,9 +104,9 @@ fn invite_if_user_is_not_invited_yet() {
     mock_game_repository.save(&game);
 
     let service = JoinService::new(
-        &mock_game_repository,
-        &MockGamePlayerRepository {},
-        &default_uuid_factory,
+        Box::new(mock_game_repository),
+        Box::new(MockGamePlayerRepository {}),
+        Box::new(default_uuid_factory),
     );
     let user = User::new(user_id, "name", &[]);
 

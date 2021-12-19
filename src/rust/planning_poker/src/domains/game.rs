@@ -79,7 +79,7 @@ impl Game {
         self._showed_down
     }
 
-    pub fn players(&self) -> &Vec<GamePlayerId> {
+    pub fn players(&self) -> &[GamePlayerId] {
         &self.players
     }
 
