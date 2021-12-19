@@ -16,8 +16,8 @@ pub struct UserId(Id<Uuid>);
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct JoinedGame {
-    game: GameId,
-    game_player: GamePlayerId,
+    pub game: GameId,
+    pub game_player: GamePlayerId,
 }
 
 pub struct User {
@@ -98,7 +98,7 @@ impl User {
 
 /// Repository interface for [User]
 pub trait UserRepository {
-    fn save(user: &User);
+    fn save(&mut self, user: &User);
 
-    fn find_by(id: UserId) -> Option<User>;
+    fn find_by(&self, id: UserId) -> Option<User>;
 }

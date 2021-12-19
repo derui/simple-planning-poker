@@ -60,7 +60,7 @@ pub enum DomainEventKind {
 }
 
 impl DomainEvent {
-    fn new(factory: &UuidFactory, kind: DomainEventKind) -> Self {
+    fn new(factory: &dyn UuidFactory, kind: DomainEventKind) -> Self {
         let id = Id::create(factory);
         Self { id, kind }
     }

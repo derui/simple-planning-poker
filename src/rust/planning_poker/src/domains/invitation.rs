@@ -13,7 +13,7 @@ pub struct Invitation {
 }
 
 impl InvitationSignature {
-    pub fn new(game_id: &GameId) -> Self {
+    pub fn new(game_id: GameId) -> Self {
         let hash = sha256::digest(game_id.to_string());
         InvitationSignature(hash)
     }
@@ -27,7 +27,7 @@ impl ToString for InvitationSignature {
 
 impl Invitation {
     pub fn new(game_id: GameId) -> Self {
-        let signature = InvitationSignature::new(&game_id);
+        let signature = InvitationSignature::new(game_id);
         Self { game_id, signature }
     }
 

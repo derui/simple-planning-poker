@@ -18,7 +18,7 @@ impl Id {
         Id(value)
     }
 
-    pub(crate) fn create<T>(factory: &UuidFactory) -> T
+    pub(crate) fn create<T>(factory: &dyn UuidFactory) -> T
     where
         T: DomainId,
     {

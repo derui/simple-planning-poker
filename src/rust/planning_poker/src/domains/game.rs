@@ -26,7 +26,7 @@ impl AveragePoint {
     }
 }
 
-#[derive(PartialEq, Debug, DomainId, Clone, Copy)]
+#[derive(PartialEq, Eq, Debug, DomainId, Clone, Copy, Hash)]
 pub struct GameId(Id<Uuid>);
 
 #[derive(PartialEq, Debug, Clone)]
@@ -52,27 +52,26 @@ impl Entity<GameId> for Game {
 }
 
 impl Game {
-    pub fn new(
-        id: GameId,
-        name: String,
-        players: &Vec<GamePlayerId>,
-        cards: &SelectableCards,
-    ) -> Self {
+    pub fn new(id: GameId, name: &str, players: &[GamePlayerId], cards: &SelectableCards) -> Self {
         if players.is_empty() {
             panic!("Least one players need");
         }
 
         Self {
             id,
-            name,
+            name: String::from(name),
             _showed_down: false,
-            players: players.clone(),
+            players: Vec::from(players),
             cards: cards.clone(),
             hands: vec![],
         }
     }
 
-    pub fn name(&self) -> &String {
+    pub fn id(&self) -> GameId {
+        self.id
+    }
+
+    pub fn name(&self) -> &str {
         &self.name
     }
 
@@ -108,9 +107,9 @@ impl Game {
         receiver(DomainEventKind::GameShowedDown { game_id: self.id })
     }
 
-    pub fn calculate_average(&self) -> Result<AveragePoint, String> {
+    pub fn calculate_average(&self) -> Result<AveragePoint, &str> {
         if !self.showed_down() {
-            return Err(String::from("can not calculate if did not show down yet"));
+            return Err("can not calculate if did not show down yet");
         }
 
         let hands = self
@@ -180,9 +179,9 @@ impl Game {
 
 /// Repository interface for [Game]
 pub trait GameRepository {
-    fn save(game: &Game);
+    fn save(&self, game: &Game);
 
-    fn find_by(id: GameId) -> Option<Game>;
+    fn find_by(&self, id: GameId) -> Option<Game>;
 
-    fn find_by_invitation_signature(signature: InvitationSignature) -> Option<Game>;
+    fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game>;
 }

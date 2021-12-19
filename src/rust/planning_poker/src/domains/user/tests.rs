@@ -1,4 +1,4 @@
-use crate::{domains::id::Id, utils::uuid_factory::UuidFactory};
+use crate::{domains::id::Id, utils::uuid_factory::DefaultUuidFactory};
 
 use super::*;
 
@@ -6,7 +6,7 @@ use super::*;
 #[should_panic]
 fn can_not_create_with_empty_name() {
     // arrange
-    let id = Id::create(&UuidFactory::default());
+    let id = Id::create(&DefaultUuidFactory::new());
 
     // do
     User::new(id, "", &[]);
@@ -17,7 +17,7 @@ fn can_not_create_with_empty_name() {
 #[test]
 fn create_user() {
     // arrange
-    let id = Id::create(&UuidFactory::default());
+    let id = Id::create(&DefaultUuidFactory::new());
 
     // do
     let user = User::new(id, "name", &[]);
@@ -30,7 +30,7 @@ fn create_user() {
 #[test]
 fn change_name() {
     // arrange
-    let id = Id::create(&UuidFactory::default());
+    let id = Id::create(&DefaultUuidFactory::new());
     let mut user = User::new(id, "name", &[]);
 
     // do
@@ -44,7 +44,7 @@ fn change_name() {
 #[should_panic]
 fn can_not_change_name() {
     // arrange
-    let id = Id::create(&UuidFactory::default());
+    let id = Id::create(&DefaultUuidFactory::new());
     let mut user = User::new(id, "name", &[]);
 
     // do
@@ -73,9 +73,9 @@ mod joined_game {
     #[test]
     fn is_joined_for_joined_game() {
         // arrange
-        let id = Id::create(&UuidFactory::default());
-        let game_id = Id::create(&UuidFactory::default());
-        let player_id = Id::create(&UuidFactory::default());
+        let id = Id::create(&DefaultUuidFactory::new());
+        let game_id = Id::create(&DefaultUuidFactory::new());
+        let player_id = Id::create(&DefaultUuidFactory::new());
         let user = User::new(
             id,
             "name",
@@ -95,8 +95,8 @@ mod joined_game {
     #[test]
     fn is_joined_for_not_joined_game() {
         // arrange
-        let id = Id::create(&UuidFactory::default());
-        let game_id = Id::create(&UuidFactory::default());
+        let id = Id::create(&DefaultUuidFactory::new());
+        let game_id = Id::create(&DefaultUuidFactory::new());
         let user = User::new(id, "name", &[]);
 
         // do
@@ -109,9 +109,9 @@ mod joined_game {
     #[test]
     fn find_joined_game() {
         // arrange
-        let id = Id::create(&UuidFactory::default());
-        let game_id = Id::create(&UuidFactory::default());
-        let player_id = Id::create(&UuidFactory::default());
+        let id = Id::create(&DefaultUuidFactory::new());
+        let game_id = Id::create(&DefaultUuidFactory::new());
+        let player_id = Id::create(&DefaultUuidFactory::new());
         let joined_game = JoinedGame {
             game: game_id,
             game_player: player_id,
@@ -132,9 +132,9 @@ mod leave_game {
     #[test]
     fn leave_from_joined_game() {
         // arrange
-        let id = Id::create(&UuidFactory::default());
-        let game_id = Id::create(&UuidFactory::default());
-        let player_id = Id::create(&UuidFactory::default());
+        let id = Id::create(&DefaultUuidFactory::new());
+        let game_id = Id::create(&DefaultUuidFactory::new());
+        let player_id = Id::create(&DefaultUuidFactory::new());
         let joined_game = JoinedGame {
             game: game_id,
             game_player: player_id,
@@ -158,8 +158,8 @@ mod leave_game {
     #[test]
     fn leave_from_not_joined_game() {
         // arrange
-        let id = Id::create(&UuidFactory::default());
-        let game_id = Id::create(&UuidFactory::default());
+        let id = Id::create(&DefaultUuidFactory::new());
+        let game_id = Id::create(&DefaultUuidFactory::new());
         let mut user = User::new(id, "name", &[]);
 
         // do

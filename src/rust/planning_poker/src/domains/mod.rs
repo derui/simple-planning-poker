@@ -5,6 +5,7 @@ pub mod game;
 pub mod game_player;
 pub mod id;
 pub mod invitation;
+pub mod join_service;
 pub mod selectable_cards;
 pub mod story_point;
 pub mod user;

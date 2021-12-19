@@ -1,25 +1,36 @@
 use uuid::Uuid;
 
-pub struct UuidFactory<'a> {
-    new: &'a dyn Fn() -> Uuid,
+pub trait UuidFactory {
+    fn create(&self) -> Uuid;
 }
 
-fn default_uuid_factory() -> Uuid {
-    Uuid::new_v4()
+pub struct DefaultUuidFactory;
+impl DefaultUuidFactory {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+impl UuidFactory for DefaultUuidFactory {
+    fn create(&self) -> Uuid {
+        Uuid::new_v4()
+    }
 }
 
-impl<'a> UuidFactory<'a> {
-    pub fn default() -> Self {
-        UuidFactory {
-            new: &default_uuid_factory,
-        }
+pub struct FunctionUuidFactory<'a> {
+    function: &'a dyn Fn() -> Uuid,
+}
+impl<'a> FunctionUuidFactory<'a> {
+    pub fn new<F>(f: &'a F) -> Self
+    where
+        F: Fn() -> Uuid,
+    {
+        Self { function: f }
     }
+}
 
-    pub fn new(f: &'a dyn Fn() -> Uuid) -> Self {
-        UuidFactory { new: f }
-    }
-
-    pub fn create(&self) -> Uuid {
-        (*self.new)()
+impl UuidFactory for FunctionUuidFactory<'static> {
+    fn create(&self) -> Uuid {
+        let f = self.function;
+        f()
     }
 }
