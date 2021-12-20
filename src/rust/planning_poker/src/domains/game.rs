@@ -1,4 +1,4 @@
-use std::{collections::HashMap, future::Future, vec};
+use std::{collections::HashMap, vec};
 
 use async_trait::async_trait;
 use domain_macro::DomainId;
