@@ -18,12 +18,15 @@ yew = { git = "https://github.com/yewstack/yew/" }
 yew-agent = { git = "https://github.com/yewstack/yew/" }
 gloo = "0.5"
 gloo-utils = "0.1.1"
-wasm-bindgen = "0.2"
+wasm-bindgen = {version = "0.2", features = [ "serde-serialize" ]}
+wasm-bindgen-futures = "0.4"
 uuid = {version = "0.8", features = ["v4"]  }
 sha256 = "1.0.1"
 domain_macro = {path = "../domain_macro"}
 async-trait = "0.1"
 tokio = {version = "1.15", features = ["macros", "rt"]}
+js-sys = "0.3"
+serde = "1.0"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"

@@ -1,4 +1,5 @@
-use async_trait::async_trait;
+use std::future::Future;
+
 use domain_macro::DomainId;
 use uuid::Uuid;
 
@@ -46,6 +47,10 @@ impl User {
 
     pub fn name(&self) -> &str {
         &self.name
+    }
+
+    pub fn joined_games(&self) -> &[JoinedGame] {
+        &self.joined_games
     }
 
     pub fn can_change_name(name: &str) -> bool {
@@ -98,9 +103,11 @@ impl User {
 }
 
 /// Repository interface for [User]
-#[async_trait]
 pub trait UserRepository {
-    async fn save(&mut self, user: &User);
+    type SaveOutput: Future<Output = ()>;
+    type FindByOutput: Future<Output = Option<User>>;
 
-    async fn find_by(&self, id: UserId) -> Option<User>;
+    fn save(&self, user: &User) -> Self::SaveOutput;
+
+    fn find_by(&self, id: UserId) -> Self::FindByOutput;
 }
