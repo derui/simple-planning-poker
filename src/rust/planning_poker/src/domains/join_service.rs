@@ -1,7 +1,4 @@
-use crate::utils::{
-    types::LocalBoxFuture,
-    uuid_factory::{HaveUuidFactory, UuidFactory},
-};
+use crate::utils::{types::LocalBoxFuture, uuid_factory::HaveUuidFactory};
 
 use super::{
     event::DomainEventKind,
@@ -83,20 +80,5 @@ impl<T: JoinServiceDependency> JoinService for T {
                 });
             }
         })
-    }
-}
-
-mod internal {
-
-    use super::*;
-
-    pub async fn join<T: JoinServiceDependency, F>(
-        _service: &T,
-        _user: &User,
-        _signature: InvitationSignature,
-        _receiver: F,
-    ) where
-        F: FnMut(DomainEventKind),
-    {
     }
 }

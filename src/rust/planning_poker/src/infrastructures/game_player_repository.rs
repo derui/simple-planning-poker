@@ -47,8 +47,10 @@ impl GamePlayerRepository for Database {
         }
         let key = format!("/gamePlayers/{}/user", player.id().to_string());
         updates.set(&S(key).into(), &S(player.user().to_string()).into());
+
         let key = format!("/gamePlayers/{}/game", player.id().to_string());
         updates.set(&S(key).into(), &S(player.game().to_string()).into());
+
         let key = format!(
             "/users/{}/joinedGames/{}/playerId",
             player.user().to_string(),

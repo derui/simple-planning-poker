@@ -2,15 +2,6 @@ use wasm_bindgen::JsValue;
 
 use crate::domains::{card::Card, story_point::StoryPoint};
 
-#[cfg(test)]
-mod tests;
-
-#[derive(PartialEq, Debug)]
-pub enum SerializedCard {
-    Giveup,
-    StoryPoint(u32),
-}
-
 fn value(v: &str) -> JsValue {
     JsValue::from_str(v)
 }
@@ -25,7 +16,9 @@ pub fn serialize(card: &Card) -> JsValue {
             map.set(&value("storypoint"), &value(&v.as_u32().to_string()))
         }
     };
-    JsValue::from(map)
+
+    // no throw error
+    JsValue::from(js_sys::Object::from_entries(&map).unwrap())
 }
 
 pub fn deserialize(object: &JsValue) -> Result<Card, JsValue> {

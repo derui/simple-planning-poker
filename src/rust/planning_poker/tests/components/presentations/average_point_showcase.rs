@@ -4,7 +4,7 @@ use planning_poker::{
 };
 use wasm_bindgen_test::wasm_bindgen_test;
 
-use yew::{html};
+use yew::html;
 
 use crate::common::{mount, obtain_result_by_class};
 

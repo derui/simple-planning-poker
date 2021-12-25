@@ -1,6 +1,4 @@
-use planning_poker::{
-    components::presentations::{game_settings::GameSettings},
-};
+use planning_poker::components::presentations::game_settings::GameSettings;
 use wasm_bindgen_test::wasm_bindgen_test;
 
 use web_sys::{HtmlElement, HtmlInputElement, MouseEvent};
