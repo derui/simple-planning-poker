@@ -1,7 +1,7 @@
-use std::future::Future;
-
 use domain_macro::DomainId;
 use uuid::Uuid;
+
+use crate::utils::types::LocalBoxFuture;
 
 use super::{
     event::DomainEventKind,
@@ -22,6 +22,7 @@ pub struct JoinedGame {
     pub game_player: GamePlayerId,
 }
 
+#[derive(Clone)]
 pub struct User {
     id: UserId,
     name: String,
@@ -104,10 +105,7 @@ impl User {
 
 /// Repository interface for [User]
 pub trait UserRepository {
-    type SaveOutput: Future<Output = ()>;
-    type FindByOutput: Future<Output = Option<User>>;
+    fn save<'a>(&'a self, user: &'a User) -> LocalBoxFuture<'a, ()>;
 
-    fn save(&self, user: &User) -> Self::SaveOutput;
-
-    fn find_by(&self, id: UserId) -> Self::FindByOutput;
+    fn find_by<'a>(&'a self, id: UserId) -> LocalBoxFuture<'a, Option<User>>;
 }

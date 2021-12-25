@@ -1,8 +1,9 @@
 use core::panic;
 
-use async_trait::async_trait;
 use domain_macro::DomainId;
 use uuid::Uuid;
+
+use crate::utils::types::LocalBoxFuture;
 
 use super::{
     base::Entity,
@@ -24,6 +25,17 @@ pub struct GamePlayerId(Id<Uuid>);
 pub enum UserMode {
     Inspector,
     Normal,
+}
+
+impl From<String> for UserMode {
+    fn from(v: String) -> Self {
+        let v = v.as_str();
+        match v {
+            "inspector" => UserMode::Inspector,
+            "normal" => UserMode::Normal,
+            _ => panic!("Can not convert"),
+        }
+    }
 }
 
 impl ToString for UserMode {
@@ -143,13 +155,25 @@ impl GamePlayer {
 }
 
 /// Repository interface for [GamePlayer]
-#[async_trait]
+
 pub trait GamePlayerRepository {
-    async fn save(&self, player: &GamePlayer);
+    fn save<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()>;
 
-    async fn find_by(&self, id: GamePlayerId) -> Option<GamePlayer>;
+    fn find_by<'a>(&'a self, id: GamePlayerId) -> LocalBoxFuture<'a, Option<GamePlayer>>;
 
-    async fn find_by_user_and_game(&self, user_id: UserId, game_id: GameId) -> Option<GamePlayer>;
+    fn find_by_user_and_game<'a>(
+        &'a self,
+        user_id: UserId,
+        game_id: GameId,
+    ) -> LocalBoxFuture<'a, Option<GamePlayer>>;
 
-    async fn delete(&self, player: &GamePlayer);
+    fn delete<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()>;
+}
+
+pub trait GamePlayerRepositoryDep {}
+
+pub trait HaveGamePlayerRepository {
+    type T: GamePlayerRepository;
+
+    fn get_game_player_repository(&self) -> &Self::T;
 }

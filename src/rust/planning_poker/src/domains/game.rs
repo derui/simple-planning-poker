@@ -1,8 +1,9 @@
 use std::{collections::HashMap, vec};
 
-use async_trait::async_trait;
 use domain_macro::DomainId;
 use uuid::Uuid;
+
+use crate::utils::types::LocalBoxFuture;
 
 use super::{
     base::Entity,
@@ -176,14 +177,31 @@ impl Game {
             })
             .collect();
     }
+
+    pub fn player_hand(&self, player_id: GamePlayerId) -> Option<&Card> {
+        self.hands
+            .iter()
+            .find(|v| v.player == player_id)
+            .map(|v| &v.card)
+    }
 }
 
 /// Repository interface for [Game]
-#[async_trait]
 pub trait GameRepository {
-    async fn save(&self, game: &Game);
+    fn save<'a>(&'a self, game: &'a Game) -> LocalBoxFuture<'a, ()>;
 
-    async fn find_by(&self, id: GameId) -> Option<Game>;
+    fn find_by<'a>(&'a self, id: GameId) -> LocalBoxFuture<'a, Option<Game>>;
 
-    async fn find_by_invitation_signature(&self, signature: InvitationSignature) -> Option<Game>;
+    fn find_by_invitation_signature<'a>(
+        &'a self,
+        signature: InvitationSignature,
+    ) -> LocalBoxFuture<'a, Option<Game>>;
+}
+
+pub trait GameRepositoryDep {}
+
+pub trait HaveGameRepository {
+    type T: GameRepository;
+
+    fn get_game_repository(&self) -> &Self::T;
 }

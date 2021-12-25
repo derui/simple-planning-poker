@@ -10,9 +10,8 @@ pub mod database {
 
         pub type Database;
         pub type Reference;
-        pub type Snapshot;
 
-        #[wasm_bindgen(js_namespace = firebaseDatabase, constructor)]
+        #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub fn new() -> Database;
 
         #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = ref)]
@@ -20,6 +19,9 @@ pub mod database {
 
         #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = ref)]
         pub fn reference_with_key(this: &Database, key: &str) -> Reference;
+
+        #[wasm_bindgen(js_namespace = firebaseDatabase)]
+        pub fn child(this: &Reference, key: &str) -> Reference;
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub async fn get(this: &Reference) -> JsValue;

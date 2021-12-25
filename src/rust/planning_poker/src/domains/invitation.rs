@@ -3,7 +3,7 @@ use super::game::GameId;
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct InvitationSignature(String);
 
 #[derive(PartialEq)]

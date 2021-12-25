@@ -11,20 +11,16 @@ use crate::domains::{
     user::{JoinedGame, User, UserId, UserRepository},
 };
 
-use super::firebase::{
-    self,
-    database::{self, reference, update, val},
+use super::{
+    database::Database,
+    firebase::database::{self, reference, update, val},
 };
 
-pub struct Impl {
-    database: firebase::database::Database,
-}
+type SaveOutput = Pin<Box<dyn Future<Output = ()>>>;
+type FindByOutput = Pin<Box<dyn Future<Output = Option<User>>>>;
 
-impl UserRepository for Impl {
-    type SaveOutput = Pin<Box<dyn Future<Output = ()>>>;
-    type FindByOutput = Pin<Box<dyn Future<Output = Option<User>>>>;
-
-    fn save(&self, user: &User) -> Self::SaveOutput {
+impl UserRepository for Database {
+    fn save(&self, user: &User) -> SaveOutput {
         let reference = reference(&self.database);
         let mut updates = HashMap::new();
 
@@ -50,7 +46,7 @@ impl UserRepository for Impl {
         Box::pin(fut)
     }
 
-    fn find_by(&self, id: UserId) -> Self::FindByOutput {
+    fn find_by(&self, id: UserId) -> FindByOutput {
         let reference = reference(&self.database);
 
         let fut = async move {
@@ -91,14 +87,6 @@ impl UserRepository for Impl {
                     .collect::<Vec<JoinedGame>>()
             };
             Some(User::new(id, &name, &joined_games))
-
-            // const name = val["name"] as string;
-            // const rawJoinedGames = (val.joinedGames as { [k: string]: { playerId: string } } | undefined) ?? {};
-            // const joinedGames: JoinedGame[] = Object.entries(rawJoinedGames).map(([gameId, gameInfo]) => {
-            //   return { gameId: gameId as GameId, playerId: gameInfo.playerId as GamePlayerId };
-            // });
-
-            // return createUser({ id, name, joinedGames });
         };
 
         Box::pin(fut)

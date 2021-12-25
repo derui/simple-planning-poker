@@ -1,9 +1,12 @@
-use crate::utils::uuid_factory::UuidFactory;
+use crate::utils::{
+    types::LocalBoxFuture,
+    uuid_factory::{HaveUuidFactory, UuidFactory},
+};
 
 use super::{
     event::DomainEventKind,
-    game::GameRepository,
-    game_player::{GamePlayer, GamePlayerRepository, UserMode},
+    game::{GameRepository, HaveGameRepository},
+    game_player::{GamePlayer, GamePlayerRepository, HaveGamePlayerRepository, UserMode},
     id::Id,
     invitation::InvitationSignature,
     user::User,
@@ -12,61 +15,88 @@ use super::{
 #[cfg(test)]
 mod tests;
 
-pub struct JoinService {
-    game_repository: Box<dyn GameRepository>,
-    game_player_repository: Box<dyn GamePlayerRepository>,
-    factory: Box<dyn UuidFactory>,
+pub trait JoinService {
+    fn join<'a, F: 'a>(
+        &'a self,
+        user: &User,
+        signature: InvitationSignature,
+        receiver: F,
+    ) -> LocalBoxFuture<'a, ()>
+    where
+        F: FnMut(DomainEventKind);
 }
 
-impl JoinService {
-    pub fn new(
-        game_repository: Box<dyn GameRepository>,
-        game_player_repository: Box<dyn GamePlayerRepository>,
-        factory: Box<dyn UuidFactory>,
-    ) -> Self {
-        Self {
-            game_repository: (game_repository),
-            game_player_repository: (game_player_repository),
-            factory,
-        }
-    }
+pub trait JoinServiceDependency:
+    HaveGameRepository + HaveGamePlayerRepository + HaveUuidFactory
+{
+}
 
-    pub async fn join<F>(&self, user: &User, signature: InvitationSignature, mut receiver: F)
+impl<T: JoinServiceDependency> JoinService for T {
+    fn join<'a, F: 'a>(
+        &'a self,
+        user: &User,
+        signature: InvitationSignature,
+        mut receiver: F,
+    ) -> LocalBoxFuture<'a, ()>
     where
-        F: FnMut(DomainEventKind) + 'static,
+        F: FnMut(DomainEventKind),
     {
-        let game = self
-            .game_repository
-            .find_by_invitation_signature(signature)
-            .await;
+        let user = user.clone();
 
-        if let Some((game, joined_game)) = game.and_then(|game| {
-            let id = game.id();
-            Some((game, user.find_joined_game(id)))
-        }) {
-            let (game_id, game_player_id) = match joined_game {
-                Some(joined_game) => (joined_game.game, joined_game.game_player),
-                None => {
-                    let id = Id::create(&*self.factory);
-                    let player = GamePlayer::new(
-                        id,
-                        game.id(),
-                        user.id(),
-                        None,
-                        game.cards(),
-                        UserMode::Normal,
-                    );
+        Box::pin(async move {
+            let game_repository = self.get_game_repository();
+            let game_player_repository = self.get_game_player_repository();
+            let factory = self.get_uuid_factory();
+            let signature = signature.clone();
+            let user = user.clone();
 
-                    self.game_player_repository.save(&player);
-                    (game.id(), id)
-                }
-            };
+            let game = game_repository
+                .find_by_invitation_signature(signature)
+                .await;
 
-            receiver(DomainEventKind::UserInvited {
-                game_id,
-                user_id: user.id(),
-                game_player_id,
-            })
-        }
+            if let Some((game, joined_game)) = game.and_then(|game| {
+                let id = game.id();
+                Some((game, user.find_joined_game(id)))
+            }) {
+                let (game_id, game_player_id) = match joined_game {
+                    Some(joined_game) => (joined_game.game, joined_game.game_player),
+                    None => {
+                        let id = Id::create(factory);
+                        let player = GamePlayer::new(
+                            id,
+                            game.id(),
+                            user.id(),
+                            None,
+                            game.cards(),
+                            UserMode::Normal,
+                        );
+
+                        game_player_repository.save(&player);
+                        (game.id(), id)
+                    }
+                };
+
+                receiver(DomainEventKind::UserInvited {
+                    game_id,
+                    user_id: user.id(),
+                    game_player_id,
+                });
+            }
+        })
+    }
+}
+
+mod internal {
+
+    use super::*;
+
+    pub async fn join<T: JoinServiceDependency, F>(
+        _service: &T,
+        _user: &User,
+        _signature: InvitationSignature,
+        _receiver: F,
+    ) where
+        F: FnMut(DomainEventKind),
+    {
     }
 }

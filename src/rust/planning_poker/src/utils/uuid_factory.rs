@@ -34,3 +34,9 @@ impl UuidFactory for FunctionUuidFactory<'static> {
         f()
     }
 }
+
+pub trait HaveUuidFactory {
+    type T: UuidFactory;
+
+    fn get_uuid_factory(&self) -> &Self::T;
+}
