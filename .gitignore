@@ -14,3 +14,6 @@ src/ts/firebase.config.prod.ts
 # Added by cargo
 
 /target
+
+# yarn v2
+.yarn/
