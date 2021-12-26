@@ -42,7 +42,7 @@ impl UserRepository for Database {
         };
         let v = js_sys::Map::from(v);
 
-        let fut = async move { update(&reference, v).await };
+        let fut = async move { update(&reference, Object::from_entries(&v).unwrap()).await };
         Box::pin(fut)
     }
 

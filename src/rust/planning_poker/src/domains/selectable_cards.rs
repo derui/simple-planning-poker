@@ -58,4 +58,11 @@ impl SelectableCards {
     pub fn giveup(&self) -> &Card {
         &self.cards[self.cards.len() - 1]
     }
+
+    pub fn storypoints(&self) -> Vec<StoryPoint> {
+        self.cards
+            .iter()
+            .filter_map(|v| v.as_story_point())
+            .collect::<Vec<StoryPoint>>()
+    }
 }
