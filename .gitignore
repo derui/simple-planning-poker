@@ -16,4 +16,5 @@ src/ts/firebase.config.prod.ts
 /target
 
 # yarn v2
-.yarn/
+.yarn/*
+!.yarn/releases
