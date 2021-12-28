@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 // firebase binding
 
 pub mod database {
@@ -37,5 +39,53 @@ pub mod database {
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub fn val(this: &JsValue) -> JsValue;
+    }
+}
+
+pub mod auth {
+    use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
+
+    #[wasm_bindgen]
+    extern "C" {
+        pub type Auth;
+
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "create")]
+        pub fn new() -> Auth;
+
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "signInWithEmailAndPassword")]
+        pub async fn sign_in_with_email_and_password(
+            auth: &Auth,
+            name: &str,
+            password: &str,
+        ) -> JsValue;
+
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "createUserWithEmailAndPassword")]
+        pub async fn create_user_with_email_and_password(
+            auth: &Auth,
+            name: &str,
+            password: &str,
+        ) -> JsValue;
+
+        pub fn signed_in_user_id(cred: &JsValue) -> String;
+    }
+}
+
+pub struct Auth {
+    pub auth: Arc<auth::Auth>,
+}
+
+impl Auth {
+    pub fn new() -> Self {
+        Self {
+            auth: Arc::new(auth::new()),
+        }
+    }
+}
+
+impl Clone for Auth {
+    fn clone(&self) -> Self {
+        Self {
+            auth: Arc::clone(&self.auth),
+        }
     }
 }
