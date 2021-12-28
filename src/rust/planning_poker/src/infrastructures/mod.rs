@@ -1,6 +1,5 @@
 pub mod authenticator;
 pub mod card_converter;
-pub mod database;
 pub mod event;
 pub mod firebase;
 pub mod game_player_repository;

@@ -4,7 +4,7 @@ use wasm_bindgen::JsValue;
 use crate::domains::user::{User, UserId, UserRepository};
 
 use super::{
-    database::Database,
+    firebase::Database,
     firebase::{
         auth::{
             create_user_with_email_and_password, sign_in_with_email_and_password, signed_in_user_id,

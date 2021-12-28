@@ -12,8 +12,8 @@ use crate::{
 
 use super::{
     card_converter,
-    database::Database,
     firebase::database::{self, child, reference, reference_with_key, update, val},
+    firebase::Database,
 };
 
 struct S(String);

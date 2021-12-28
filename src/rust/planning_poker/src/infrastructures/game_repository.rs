@@ -9,8 +9,8 @@ use crate::domains::story_point::StoryPoint;
 use crate::utils::types::LocalBoxFuture;
 
 use super::card_converter::deserialize;
-use super::database::Database;
 use super::firebase::database::{child, get, reference, reference_with_key, update, val};
+use super::firebase::Database;
 
 fn js_value(s: &str) -> JsValue {
     JsValue::from_str(s)

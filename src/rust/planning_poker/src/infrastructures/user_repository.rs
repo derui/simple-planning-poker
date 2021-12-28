@@ -12,8 +12,8 @@ use crate::domains::{
 };
 
 use super::{
-    database::Database,
     firebase::database::{self, reference, update, val},
+    firebase::Database,
 };
 
 type SaveOutput = Pin<Box<dyn Future<Output = ()>>>;

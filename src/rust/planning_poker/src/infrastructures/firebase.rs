@@ -89,3 +89,23 @@ impl Clone for Auth {
         }
     }
 }
+
+pub struct Database {
+    pub database: Arc<database::Database>,
+}
+
+impl Database {
+    pub fn new() -> Self {
+        Self {
+            database: Arc::new(database::new()),
+        }
+    }
+}
+
+impl Clone for Database {
+    fn clone(&self) -> Self {
+        Self {
+            database: Arc::clone(&self.database),
+        }
+    }
+}

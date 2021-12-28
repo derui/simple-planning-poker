@@ -7,8 +7,8 @@ use crate::{
         game_player::{GamePlayer, GamePlayerRepository, UserMode},
     },
     infrastructures::{
-        database::Database,
         firebase::database::{child, reference_with_key, remove, set_value, update},
+        firebase::Database,
     },
     utils::types::LocalBoxFuture,
 };
