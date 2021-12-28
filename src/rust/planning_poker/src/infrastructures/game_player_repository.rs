@@ -60,7 +60,7 @@ impl GamePlayerRepository for Database {
         updates.set(&S(key).into(), &S(player.id().to_string()).into());
 
         let reference = reference(&self.database);
-        let fut = async move { update(&reference, Object::from_entries(&updates).unwrap()).await };
+        let fut = async move { update(&reference, &Object::from_entries(&updates).unwrap()).await };
         Box::pin(fut)
     }
 
@@ -175,7 +175,7 @@ impl GamePlayerRepository for Database {
         );
 
         let reference = reference(&self.database);
-        let fut = async move { update(&reference, Object::from_entries(&v).unwrap()).await };
+        let fut = async move { update(&reference, &Object::from_entries(&v).unwrap()).await };
         Box::pin(fut)
     }
 }

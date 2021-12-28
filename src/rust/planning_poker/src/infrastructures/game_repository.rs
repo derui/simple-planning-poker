@@ -76,7 +76,7 @@ impl GameRepository for Database {
         let updates = js_sys::Object::from_entries(&updates).unwrap();
 
         let reference = reference(&self.database);
-        Box::pin(async move { update(&reference, updates).await })
+        Box::pin(async move { update(&reference, &updates).await })
     }
 
     fn find_by<'a>(&'a self, id: GameId) -> LocalBoxFuture<'a, Option<Game>> {

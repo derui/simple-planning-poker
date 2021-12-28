@@ -27,7 +27,13 @@ pub mod database {
         pub async fn get(this: &Reference) -> JsValue;
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
-        pub async fn update(this: &Reference, values: Object);
+        pub async fn update(this: &Reference, values: &Object);
+
+        #[wasm_bindgen(js_namespace = firebaseDatabase)]
+        pub async fn remove(this: &Reference);
+
+        #[wasm_bindgen(js_namespace = firebaseDatabase)]
+        pub async fn set_value(this: &Reference, values: &JsValue);
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub fn val(this: &JsValue) -> JsValue;
