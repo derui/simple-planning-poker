@@ -22,7 +22,7 @@ pub struct JoinedGame {
     pub game_player: GamePlayerId,
 }
 
-#[derive(Clone)]
+#[derive(PartialEq, Clone)]
 pub struct User {
     id: UserId,
     name: String,

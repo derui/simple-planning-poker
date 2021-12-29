@@ -20,6 +20,7 @@ gloo = "0.5"
 gloo-utils = "0.1.1"
 wasm-bindgen = {version = "0.2", features = [ "serde-serialize" ]}
 wasm-bindgen-futures = "0.4"
+futures = "0.3.19"
 uuid = {version = "0.8", features = ["v4", "wasm-bindgen"] }
 sha256 = "1.0.1"
 domain_macro = {path = "../domain_macro"}

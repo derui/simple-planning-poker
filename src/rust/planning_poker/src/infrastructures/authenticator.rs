@@ -14,6 +14,7 @@ use super::{
     },
 };
 
+#[derive(Clone)]
 pub struct Authenticator {
     database: Database,
     auth: Auth,

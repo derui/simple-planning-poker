@@ -1,3 +1,4 @@
+mod agents;
 mod components;
 mod domains;
 mod infrastructures;

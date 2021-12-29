@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+    mem::MaybeUninit,
+    sync::{Arc, Once},
+};
 
 // firebase binding
 
@@ -76,8 +79,17 @@ pub struct Auth {
 
 impl Auth {
     pub fn new() -> Self {
-        Self {
-            auth: Arc::new(auth::new()),
+        static mut AUTH: MaybeUninit<Auth> = MaybeUninit::uninit();
+        static mut ONCE: Once = Once::new();
+        unsafe {
+            ONCE.call_once(|| {
+                let auth = Auth {
+                    auth: Arc::new(auth::new()),
+                };
+                AUTH.write(auth);
+            });
+
+            AUTH.assume_init_ref().clone()
         }
     }
 }
@@ -96,8 +108,17 @@ pub struct Database {
 
 impl Database {
     pub fn new() -> Self {
-        Self {
-            database: Arc::new(database::new()),
+        static mut DATABASE: MaybeUninit<Database> = MaybeUninit::uninit();
+        static mut ONCE: Once = Once::new();
+        unsafe {
+            ONCE.call_once(|| {
+                let instance = Database {
+                    database: Arc::new(database::new()),
+                };
+
+                DATABASE.write(instance);
+            });
+            DATABASE.assume_init_ref().clone()
         }
     }
 }
