@@ -14,8 +14,8 @@ path = "src/main.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = { git = "https://github.com/yewstack/yew/" }
-yew-agent = { git = "https://github.com/yewstack/yew/" }
+yew = "0.19.3"
+yew-agent = "0.1.0"
 gloo = "0.5"
 gloo-utils = "0.1.1"
 wasm-bindgen = {version = "0.2", features = [ "serde-serialize" ]}
