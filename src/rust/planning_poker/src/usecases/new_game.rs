@@ -7,7 +7,6 @@ pub trait NewGameDependency: HaveGameRepository {}
 
 pub enum NewGameOutput {
     NotFound,
-    LeaveFailed,
 }
 
 pub trait NewGame {
