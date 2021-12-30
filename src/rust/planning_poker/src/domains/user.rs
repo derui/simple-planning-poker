@@ -55,7 +55,7 @@ impl User {
     }
 
     pub fn can_change_name(name: &str) -> bool {
-        name.len() > 0
+        !name.is_empty()
     }
 
     pub fn change_name(&mut self, name: &str) {
@@ -74,7 +74,7 @@ impl User {
         self.joined_games
             .iter()
             .find(|v| v.game == game_id)
-            .map(|v| v.clone())
+            .cloned()
     }
 
     pub fn leave_from<F>(&mut self, game_id: GameId, mut receiver: F)
@@ -107,7 +107,7 @@ impl User {
 pub trait UserRepository {
     fn save<'a>(&'a self, user: &'a User) -> LocalBoxFuture<'a, ()>;
 
-    fn find_by<'a>(&'a self, id: UserId) -> LocalBoxFuture<'a, Option<User>>;
+    fn find_by(&'_ self, id: UserId) -> LocalBoxFuture<'_, Option<User>>;
 }
 
 pub trait HaveUserRepository {

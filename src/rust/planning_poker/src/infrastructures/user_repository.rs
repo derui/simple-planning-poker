@@ -61,7 +61,7 @@ impl UserRepository for Database {
                 .map(|v| v.as_string().unwrap())
                 .unwrap();
             let joined_games = js_sys::Reflect::get(&v, &JsValue::from_str("joinedGames"))
-                .unwrap_or(JsValue::undefined());
+                .unwrap_or_else(|_| JsValue::undefined());
 
             let joined_games = if joined_games.is_falsy() {
                 vec![]
@@ -76,7 +76,7 @@ impl UserRepository for Database {
                             .unwrap();
                         let info = js_sys::Array::get(&v, 1);
                         let player_id = js_sys::Reflect::get(&info, &JsValue::from_str("playerId"))
-                            .map(|v| v.as_string().unwrap_or(String::from("")))
+                            .map(|v| v.as_string().unwrap_or_else(|| String::from("")))
                             .map(|v| uuid::Uuid::parse_str(v.as_str()).unwrap())
                             .unwrap();
                         JoinedGame {

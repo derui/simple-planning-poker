@@ -4,12 +4,9 @@ pub trait UuidFactory {
     fn create(&self) -> Uuid;
 }
 
+#[derive(Default)]
 pub struct DefaultUuidFactory;
-impl DefaultUuidFactory {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
+
 impl UuidFactory for DefaultUuidFactory {
     fn create(&self) -> Uuid {
         Uuid::new_v4()

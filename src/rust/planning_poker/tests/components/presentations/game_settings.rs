@@ -33,6 +33,6 @@ fn toggle_open_dialog() {
     let opener = obtain_element_by_class::<HtmlElement>("app__game__game-settings__opener");
     let container = obtain_element_by_class::<HtmlElement>("app__game__game-settings__container");
 
-    assert_eq!(opener.class_name().contains("--opened"), true);
-    assert_eq!(container.class_name().contains("--opened"), true);
+    assert!(opener.class_name().contains("--opened"));
+    assert!(container.class_name().contains("--opened"));
 }

@@ -30,11 +30,11 @@ fn allow_create_id_with_uuid() {
 #[should_panic]
 fn create_with_zero_player() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
 
     // do
-    Game::new(game_id, "value", &vec![], &cards);
+    Game::new(game_id, "value", &[], &cards);
 
     // verify
 }
@@ -42,12 +42,12 @@ fn create_with_zero_player() {
 #[test]
 fn can_not_average_when_no_showed_down() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
     let game = Game::new(
         game_id,
         "value",
-        &vec![Id::create(&DefaultUuidFactory::new())],
+        &[Id::create(&DefaultUuidFactory::default())],
         &cards,
     );
 
@@ -55,21 +55,21 @@ fn can_not_average_when_no_showed_down() {
     let v = game.calculate_average();
 
     // verify
-    assert_eq!(game.showed_down(), false);
-    assert_eq!(v.is_err(), true);
+    assert!(!game.showed_down());
+    assert!(v.is_err());
 }
 
 #[test]
 fn calculate_average_with_story_point() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let mut game = Game::new(game_id, "value", &vec![player_id], &cards);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let mut game = Game::new(game_id, "value", &[player_id], &cards);
 
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(1)));
-    game.show_down(move |e| assert_eq!(e, DomainEventKind::GameShowedDown { game_id: game_id }));
+    game.show_down(move |e| assert_eq!(e, DomainEventKind::GameShowedDown { game_id }));
     let v = game.calculate_average();
 
     // verify
@@ -80,10 +80,10 @@ fn calculate_average_with_story_point() {
 #[should_panic]
 fn give_incorrect_card_from_player() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let mut game = Game::new(game_id, "value", &vec![player_id], &cards);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let mut game = Game::new(game_id, "value", &[player_id], &cards);
 
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(2)));
@@ -94,28 +94,28 @@ fn give_incorrect_card_from_player() {
 #[test]
 fn next_game_if_showed_down() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let mut game = Game::new(game_id, "value", &vec![player_id], &cards);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let mut game = Game::new(game_id, "value", &[player_id], &cards);
 
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(1)));
     game.show_down(|_| {});
-    game.next_game(move |e| assert_eq!(e, DomainEventKind::NewGameStarted { game_id: game_id }));
+    game.next_game(move |e| assert_eq!(e, DomainEventKind::NewGameStarted { game_id }));
     let v = game.calculate_average();
 
     // verify
-    assert_eq!(v.is_err(), true);
+    assert!(v.is_err());
 }
 
 #[test]
 fn next_game_do_not_raise_event() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let mut game = Game::new(game_id, "value", &vec![player_id], &cards);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let mut game = Game::new(game_id, "value", &[player_id], &cards);
 
     // do
     game.next_game(|_| panic!("call event why"));
@@ -126,10 +126,10 @@ fn next_game_do_not_raise_event() {
 #[test]
 fn change_name() {
     // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::new());
-    let cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let mut game = Game::new(game_id, "value", &vec![player_id], &cards);
+    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
+    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let mut game = Game::new(game_id, "value", &[player_id], &cards);
 
     // do
     game.change_name("foo");
@@ -145,6 +145,6 @@ fn can_change_name() {
     // do
 
     // verify
-    assert_eq!(Game::can_change_name(""), false);
-    assert_eq!(Game::can_change_name("a"), true);
+    assert!(!Game::can_change_name(""));
+    assert!(Game::can_change_name("a"));
 }

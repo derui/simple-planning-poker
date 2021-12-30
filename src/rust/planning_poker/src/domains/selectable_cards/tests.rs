@@ -61,8 +61,8 @@ fn contains_card() {
     let cards = SelectableCards::new(&story_points);
 
     // verify
-    assert_eq!(cards.contains(&card), true);
-    assert_eq!(cards.contains(&not_contained_card), false);
+    assert!(cards.contains(&card));
+    assert!(!cards.contains(&not_contained_card));
 }
 
 #[test]
@@ -80,6 +80,6 @@ fn do_not_contains_same_story_point() {
     let cards = SelectableCards::new(&story_points);
 
     // verify
-    assert_eq!(cards.contains(&card), true);
+    assert!(cards.contains(&card));
     assert_eq!(cards.at(2), None);
 }

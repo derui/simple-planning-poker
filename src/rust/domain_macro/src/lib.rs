@@ -1,6 +1,5 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn;
 
 extern crate proc_macro;
 

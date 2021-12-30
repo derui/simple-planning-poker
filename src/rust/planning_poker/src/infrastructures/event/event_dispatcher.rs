@@ -17,7 +17,7 @@ pub trait HaveEventDispatcher {
 impl<'a> EventDispatcher<'a> {
     pub fn new(listeners: &'a [Rc<dyn EventListener<'a>>]) -> Self {
         Self {
-            listeners: Vec::from_iter(listeners.iter().map(|v| Rc::clone(v))),
+            listeners: Vec::from_iter(listeners.iter().map(Rc::clone)),
         }
     }
 

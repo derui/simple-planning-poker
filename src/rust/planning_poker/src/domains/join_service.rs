@@ -51,9 +51,9 @@ impl<T: JoinServiceDependency> JoinService for T {
                 .find_by_invitation_signature(signature)
                 .await;
 
-            if let Some((game, joined_game)) = game.and_then(|game| {
+            if let Some((game, joined_game)) = game.map(|game| {
                 let id = game.id();
-                Some((game, user.find_joined_game(id)))
+                (game, user.find_joined_game(id))
             }) {
                 let (game_id, game_player_id) = match joined_game {
                     Some(joined_game) => (joined_game.game, joined_game.game_player),

@@ -94,7 +94,7 @@ impl GamePlayerRepository for Mock {
         &self,
         _player: &crate::domains::game_player::GamePlayer,
     ) -> LocalBoxFuture<'static, ()> {
-        let fut = async { () };
+        let fut = async {  };
         Box::pin(fut)
     }
 
@@ -126,7 +126,7 @@ impl JoinServiceDependency for Mock {}
 #[tokio::test]
 async fn do_not_invite_if_invitation_signature_is_invalid() {
     // arrange
-    let default_uuid_factory = DefaultUuidFactory::new();
+    let default_uuid_factory = DefaultUuidFactory::default();
     let game_id = Id::create(&default_uuid_factory);
     let signature = InvitationSignature::new(game_id);
     let user = User::new(Id::create(&default_uuid_factory), "name", &[]);
@@ -144,11 +144,11 @@ async fn do_not_invite_if_invitation_signature_is_invalid() {
 #[tokio::test]
 async fn invite_if_user_is_not_invited_yet() {
     // arrange
-    let default_uuid_factory = DefaultUuidFactory::new();
+    let default_uuid_factory = DefaultUuidFactory::default();
     let game_id = Id::create(&default_uuid_factory);
     let signature = InvitationSignature::new(game_id);
     let user_id = Id::create(&default_uuid_factory);
-    let cards = SelectableCards::new(&vec![StoryPoint::new(2)]);
+    let cards = SelectableCards::new(&[StoryPoint::new(2)]);
     let player_id = Id::create(&default_uuid_factory);
     let game = Game::new(game_id, "name", &[player_id], &cards);
     let service = Mock::new();

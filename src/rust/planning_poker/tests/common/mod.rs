@@ -64,5 +64,5 @@ pub fn emit(class: &str, event: &Event) {
         .item(0)
         .unwrap()
         .dispatch_event(event)
-        .expect(format!("Should not emit event {}, {:?}", class, event).as_str());
+        .unwrap_or_else(|_| panic!("Should not emit event {}, {:?}", class, event));
 }

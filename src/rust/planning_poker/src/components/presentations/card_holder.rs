@@ -32,7 +32,7 @@ fn make_cards(props: &Props) -> Vec<VNode> {
             };
 
             let onclick = {
-                let index = index.clone() as u32;
+                let index = index as u32;
                 props.onclickcard.reform(move |_| index)
             };
 

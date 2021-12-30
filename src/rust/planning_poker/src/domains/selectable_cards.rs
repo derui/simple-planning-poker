@@ -15,7 +15,7 @@ fn unique_vec(vec: &[StoryPoint]) -> Vec<StoryPoint> {
 
     for v in vec.iter() {
         if !accum.contains(v) {
-            accum.push(v.clone())
+            accum.push(*v)
         }
     }
 
@@ -26,7 +26,7 @@ impl SelectableCards {
     pub fn is_valid_storypoints(vec: &[StoryPoint]) -> bool {
         let uniqued = unique_vec(vec);
 
-        uniqued.len() > 0
+        !uniqued.is_empty()
     }
 
     pub fn new(points: &[StoryPoint]) -> Self {
@@ -36,7 +36,7 @@ impl SelectableCards {
         let points = unique_vec(points);
         let mut cards = points
             .iter()
-            .map(|v| Card::storypoint(v.clone()))
+            .map(|v| Card::storypoint(*v))
             .collect::<Vec<Card>>();
         cards.push(Card::giveup());
 

@@ -12,41 +12,35 @@ pub enum ChangeUserModeOutput {
 }
 
 pub trait ChangeUserMode {
-    fn execute<'a>(
-        &'a self,
+    fn execute(
+        &self,
         game_player_id: GamePlayerId,
         mode: UserMode,
-    ) -> LocalBoxFuture<'a, Result<GamePlayer, ChangeUserModeOutput>>;
+    ) -> LocalBoxFuture<'_, Result<GamePlayer, ChangeUserModeOutput>>;
 }
 
 impl<T: ChangeUserModeDependency> ChangeUserMode for T {
-    fn execute<'a>(
-        &'a self,
+    fn execute(
+        &self,
         game_player_id: GamePlayerId,
         mode: UserMode,
-    ) -> LocalBoxFuture<'a, Result<GamePlayer, ChangeUserModeOutput>> {
+    ) -> LocalBoxFuture<'_, Result<GamePlayer, ChangeUserModeOutput>> {
         let repository = self.get_game_player_repository();
-        let mode = mode.to_owned();
 
-        Box::pin(execute(repository, game_player_id, mode))
-    }
-}
+        let fut = async move {
+            let user = repository.find_by(game_player_id).await;
 
-// internal implementation
-async fn execute(
-    repository: &dyn GamePlayerRepository,
-    game_player_id: GamePlayerId,
-    mode: UserMode,
-) -> Result<GamePlayer, ChangeUserModeOutput> {
-    let user = repository.find_by(game_player_id).await;
+            match user {
+                None => Err(ChangeUserModeOutput::NotFound),
+                Some(mut player) => {
+                    player.change_user_mode(mode, |_| {});
+                    repository.save(&player).await;
 
-    match user {
-        None => Err(ChangeUserModeOutput::NotFound),
-        Some(mut player) => {
-            player.change_user_mode(mode, |_| {});
-            repository.save(&player).await;
+                    Ok(player)
+                }
+            }
+        };
 
-            Ok(player)
-        }
+        Box::pin(fut)
     }
 }

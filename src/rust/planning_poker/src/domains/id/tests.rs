@@ -16,7 +16,7 @@ fn create_with_u32() {
     // arrange
 
     // do
-    let id = Id::new(12 as u32);
+    let id = Id::new(12_u32);
 
     // verify
     assert_eq!(id.to_string(), "12")
@@ -25,8 +25,8 @@ fn create_with_u32() {
 #[test]
 fn same_id_is_same() {
     // arrange
-    let id1 = Id::new(12 as u32);
-    let id2 = Id::new(12 as u32);
+    let id1 = Id::new(12_u32);
+    let id2 = Id::new(12_u32);
 
     // do
 

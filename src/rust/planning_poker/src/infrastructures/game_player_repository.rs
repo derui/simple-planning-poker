@@ -18,14 +18,14 @@ use super::{
 
 struct S(String);
 
-impl Into<JsValue> for S {
-    fn into(self) -> JsValue {
+impl S {
+    fn to(&self) -> JsValue {
         JsValue::from_str(self.0.as_str())
     }
 }
 
 impl GamePlayerRepository for Database {
-    fn save<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()> {
+    fn save(&self, player: &GamePlayer) -> LocalBoxFuture<'_, ()> {
         let updates = js_sys::Map::new();
 
         let game = player.game();
@@ -34,7 +34,7 @@ impl GamePlayerRepository for Database {
             game.to_string(),
             player.id().to_string()
         );
-        updates.set(&S(key).into(), &S(player.mode().to_string()).into());
+        updates.set(&S(key).to(), &S(player.mode().to_string()).to());
 
         if let Some(hand) = player.hand() {
             let card = card_converter::serialize(hand);
@@ -44,31 +44,31 @@ impl GamePlayerRepository for Database {
                 game.to_string(),
                 player.id().to_string()
             );
-            updates.set(&S(key).into(), &card);
+            updates.set(&S(key).to(), &card);
         }
         let key = format!("/gamePlayers/{}/user", player.id().to_string());
-        updates.set(&S(key).into(), &S(player.user().to_string()).into());
+        updates.set(&S(key).to(), &S(player.user().to_string()).to());
 
         let key = format!("/gamePlayers/{}/game", player.id().to_string());
-        updates.set(&S(key).into(), &S(player.game().to_string()).into());
+        updates.set(&S(key).to(), &S(player.game().to_string()).to());
 
         let key = format!(
             "/users/{}/joinedGames/{}/playerId",
             player.user().to_string(),
             player.game().to_string()
         );
-        updates.set(&S(key).into(), &S(player.id().to_string()).into());
+        updates.set(&S(key).to(), &S(player.id().to_string()).to());
 
         let reference = reference(&self.database);
         let fut = async move { update(&reference, &Object::from_entries(&updates).unwrap()).await };
         Box::pin(fut)
     }
 
-    fn find_by<'a>(&'a self, id: GamePlayerId) -> LocalBoxFuture<'a, Option<GamePlayer>> {
+    fn find_by(&self, id: GamePlayerId) -> LocalBoxFuture<'_, Option<GamePlayer>> {
         let database = self.clone();
 
         Box::pin(async move {
-            let id = id.clone();
+            let id = id;
             let reference = child(
                 &reference_with_key(&database.database, "gamePlayers"),
                 id.to_string().as_str(),
@@ -80,10 +80,10 @@ impl GamePlayerRepository for Database {
                 return None;
             }
 
-            let game_id = js_sys::Reflect::get(&v, &S("game".to_owned()).into())
+            let game_id = js_sys::Reflect::get(&v, &S("game".to_owned()).to())
                 .map(|v| v.as_string().unwrap())
                 .unwrap();
-            let user_id = js_sys::Reflect::get(&v, &S("user".to_owned()).into())
+            let user_id = js_sys::Reflect::get(&v, &S("user".to_owned()).to())
                 .map(|v| v.as_string().unwrap())
                 .unwrap();
 
@@ -97,13 +97,13 @@ impl GamePlayerRepository for Database {
                 return None;
             }
 
-            let mode = js_sys::Reflect::get(&v, &S(user_id.clone()).into())
+            let mode = js_sys::Reflect::get(&v, &S(user_id.clone()).to())
                 .map(|v| UserMode::from(v.as_string().unwrap()))
                 .unwrap();
             let game = GameRepository::find_by(self, GameId::from(game_id)).await;
 
             game.map(|game| {
-                let hand = game.player_hand(id).map(|v| v.clone());
+                let hand = game.player_hand(id).cloned();
                 let cards = game.cards().clone();
 
                 GamePlayer::new(id, game.id(), UserId::from(user_id), hand, &cards, mode)
@@ -111,11 +111,11 @@ impl GamePlayerRepository for Database {
         })
     }
 
-    fn find_by_user_and_game<'a>(
-        &'a self,
+    fn find_by_user_and_game(
+        &self,
         user_id: UserId,
         game_id: GameId,
-    ) -> LocalBoxFuture<'a, Option<GamePlayer>> {
+    ) -> LocalBoxFuture<'_, Option<GamePlayer>> {
         let database = self.clone();
         let fut = async move {
             let reference = format!(
@@ -140,7 +140,7 @@ impl GamePlayerRepository for Database {
         Box::pin(fut)
     }
 
-    fn delete<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()> {
+    fn delete(&self, player: &GamePlayer) -> LocalBoxFuture<'_, ()> {
         let v = js_sys::Map::new();
         let player_id = player.id();
         let game = player.game();

@@ -31,7 +31,7 @@ where
     T: Eq + ToString,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(format!("{}", self.0.to_string()).as_str())
+        f.write_str(self.0.to_string().as_str())
     }
 }
 

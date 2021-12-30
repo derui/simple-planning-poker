@@ -77,6 +77,12 @@ pub struct Auth {
     pub auth: Arc<auth::Auth>,
 }
 
+impl Default for Auth {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Auth {
     pub fn new() -> Self {
         static mut AUTH: MaybeUninit<Auth> = MaybeUninit::uninit();
@@ -104,6 +110,12 @@ impl Clone for Auth {
 
 pub struct Database {
     pub database: Arc<database::Database>,
+}
+
+impl Default for Database {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Database {

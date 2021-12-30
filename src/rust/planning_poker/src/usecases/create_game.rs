@@ -1,17 +1,14 @@
 use crate::{
     domains::{
         event::DomainEvent,
-        game::{Game, GameId, GameRepository, HaveGameRepository},
+        game::{Game, GameRepository, HaveGameRepository},
         id::Id,
         selectable_cards::SelectableCards,
         story_point::StoryPoint,
-        user::{HaveUserRepository, User, UserId, UserRepository},
+        user::UserId,
     },
     infrastructures::event::event_dispatcher::HaveEventDispatcher,
-    utils::{
-        types::LocalBoxFuture,
-        uuid_factory::{HaveUuidFactory, UuidFactory},
-    },
+    utils::{types::LocalBoxFuture, uuid_factory::HaveUuidFactory},
 };
 
 pub trait CreateGameDependency: HaveGameRepository + HaveUuidFactory + HaveEventDispatcher {}

@@ -29,8 +29,9 @@ impl GameShowedDownEventListener {
 
 impl<'a> EventListener<'a> for GameShowedDownEventListener {
     fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'a, ()> {
-        match event.kind() {
-            &DomainEventKind::GameShowedDown { game_id } => {
+        let kind = event.kind();
+        match kind {
+            DomainEventKind::GameShowedDown { game_id } => {
                 let key = format!("/games/{}/", game_id.to_string());
                 let target = reference_with_key(&self.database.database, &key);
                 let obj = Object::new();

@@ -11,10 +11,10 @@ use super::GamePlayer;
 #[test]
 fn create_game_player() {
     // arrange
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let user_id = Id::create(&DefaultUuidFactory::new());
-    let game_id = Id::create(&DefaultUuidFactory::new());
-    let selectable_cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let user_id = Id::create(&DefaultUuidFactory::default());
+    let game_id = Id::create(&DefaultUuidFactory::default());
+    let selectable_cards = SelectableCards::new(&[StoryPoint::new(1)]);
 
     // do
     let player = GamePlayer::new(
@@ -37,10 +37,10 @@ fn create_game_player() {
 #[should_panic]
 fn not_contains_card_handed() {
     // arrange
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let user_id = Id::create(&DefaultUuidFactory::new());
-    let game_id = Id::create(&DefaultUuidFactory::new());
-    let selectable_cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let user_id = Id::create(&DefaultUuidFactory::default());
+    let game_id = Id::create(&DefaultUuidFactory::default());
+    let selectable_cards = SelectableCards::new(&[StoryPoint::new(1)]);
 
     // do
     GamePlayer::new(
@@ -58,10 +58,10 @@ fn not_contains_card_handed() {
 #[test]
 fn change_mode() {
     // arrange
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let user_id = Id::create(&DefaultUuidFactory::new());
-    let game_id = Id::create(&DefaultUuidFactory::new());
-    let selectable_cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let user_id = Id::create(&DefaultUuidFactory::default());
+    let game_id = Id::create(&DefaultUuidFactory::default());
+    let selectable_cards = SelectableCards::new(&[StoryPoint::new(1)]);
     let mut player = GamePlayer::new(
         player_id,
         game_id,
@@ -91,10 +91,10 @@ fn change_mode() {
 #[should_panic]
 fn can_not_take_card_not_contained_game() {
     // arrange
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let user_id = Id::create(&DefaultUuidFactory::new());
-    let game_id = Id::create(&DefaultUuidFactory::new());
-    let selectable_cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let user_id = Id::create(&DefaultUuidFactory::default());
+    let game_id = Id::create(&DefaultUuidFactory::default());
+    let selectable_cards = SelectableCards::new(&[StoryPoint::new(1)]);
     let mut player = GamePlayer::new(
         player_id,
         game_id,
@@ -114,10 +114,10 @@ fn can_not_take_card_not_contained_game() {
 #[test]
 fn take_card() {
     // arrange
-    let player_id = Id::create(&DefaultUuidFactory::new());
-    let user_id = Id::create(&DefaultUuidFactory::new());
-    let game_id = Id::create(&DefaultUuidFactory::new());
-    let selectable_cards = SelectableCards::new(&vec![StoryPoint::new(1)]);
+    let player_id = Id::create(&DefaultUuidFactory::default());
+    let user_id = Id::create(&DefaultUuidFactory::default());
+    let game_id = Id::create(&DefaultUuidFactory::default());
+    let selectable_cards = SelectableCards::new(&[StoryPoint::new(1)]);
     let mut player = GamePlayer::new(
         player_id,
         game_id,

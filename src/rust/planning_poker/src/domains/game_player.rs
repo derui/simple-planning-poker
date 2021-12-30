@@ -40,9 +40,9 @@ impl From<String> for UserMode {
 
 impl ToString for UserMode {
     fn to_string(&self) -> String {
-        match self {
-            &UserMode::Inspector => String::from("inspector"),
-            &UserMode::Normal => String::from("normal"),
+        match *self {
+            UserMode::Inspector => String::from("inspector"),
+            UserMode::Normal => String::from("normal"),
         }
     }
 }
@@ -65,13 +65,10 @@ impl Entity<GamePlayerId> for GamePlayer {
 }
 
 fn should_contains_hand(hand: &Option<Card>, cards: &SelectableCards) {
-    match hand {
-        Some(v) => {
-            if !cards.contains(&v) {
-                panic!("Can not take hand with not contained card")
-            }
+    if let Some(v) = hand {
+        if !cards.contains(v) {
+            panic!("Can not take hand with not contained card")
         }
-        _ => (),
     }
 }
 
@@ -110,7 +107,7 @@ impl GamePlayer {
 
     pub fn hand(&self) -> Option<&Card> {
         match &self.hand {
-            Some(v) => Some(&v),
+            Some(v) => Some(v),
             None => None,
         }
     }
@@ -149,7 +146,7 @@ impl GamePlayer {
 
         receiver(DomainEventKind::GamePlayerCardSelected {
             game_player_id: self.id,
-            card: card.clone(),
+            card,
         })
     }
 }
@@ -159,13 +156,13 @@ impl GamePlayer {
 pub trait GamePlayerRepository {
     fn save<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()>;
 
-    fn find_by<'a>(&'a self, id: GamePlayerId) -> LocalBoxFuture<'a, Option<GamePlayer>>;
+    fn find_by(&'_ self, id: GamePlayerId) -> LocalBoxFuture<'_, Option<GamePlayer>>;
 
-    fn find_by_user_and_game<'a>(
-        &'a self,
+    fn find_by_user_and_game(
+        &'_ self,
         user_id: UserId,
         game_id: GameId,
-    ) -> LocalBoxFuture<'a, Option<GamePlayer>>;
+    ) -> LocalBoxFuture<'_, Option<GamePlayer>>;
 
     fn delete<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()>;
 }

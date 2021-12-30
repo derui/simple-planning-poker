@@ -6,7 +6,7 @@ use super::*;
 #[should_panic]
 fn can_not_create_with_empty_name() {
     // arrange
-    let id = Id::create(&DefaultUuidFactory::new());
+    let id = Id::create(&DefaultUuidFactory::default());
 
     // do
     User::new(id, "", &[]);
@@ -17,7 +17,7 @@ fn can_not_create_with_empty_name() {
 #[test]
 fn create_user() {
     // arrange
-    let id = Id::create(&DefaultUuidFactory::new());
+    let id = Id::create(&DefaultUuidFactory::default());
 
     // do
     let user = User::new(id, "name", &[]);
@@ -30,7 +30,7 @@ fn create_user() {
 #[test]
 fn change_name() {
     // arrange
-    let id = Id::create(&DefaultUuidFactory::new());
+    let id = Id::create(&DefaultUuidFactory::default());
     let mut user = User::new(id, "name", &[]);
 
     // do
@@ -44,7 +44,7 @@ fn change_name() {
 #[should_panic]
 fn can_not_change_name() {
     // arrange
-    let id = Id::create(&DefaultUuidFactory::new());
+    let id = Id::create(&DefaultUuidFactory::default());
     let mut user = User::new(id, "name", &[]);
 
     // do
@@ -60,8 +60,8 @@ fn can_change_name() {
     // do
 
     // verify
-    assert_eq!(User::can_change_name(""), false);
-    assert_eq!(User::can_change_name("a"), true);
+    assert!(!User::can_change_name(""));
+    assert!(User::can_change_name("a"));
 }
 
 #[cfg(test)]
@@ -73,9 +73,9 @@ mod joined_game {
     #[test]
     fn is_joined_for_joined_game() {
         // arrange
-        let id = Id::create(&DefaultUuidFactory::new());
-        let game_id = Id::create(&DefaultUuidFactory::new());
-        let player_id = Id::create(&DefaultUuidFactory::new());
+        let id = Id::create(&DefaultUuidFactory::default());
+        let game_id = Id::create(&DefaultUuidFactory::default());
+        let player_id = Id::create(&DefaultUuidFactory::default());
         let user = User::new(
             id,
             "name",
@@ -89,29 +89,29 @@ mod joined_game {
         let ret = user.is_joined(game_id);
 
         // verify
-        assert_eq!(ret, true)
+        assert!(ret)
     }
 
     #[test]
     fn is_joined_for_not_joined_game() {
         // arrange
-        let id = Id::create(&DefaultUuidFactory::new());
-        let game_id = Id::create(&DefaultUuidFactory::new());
+        let id = Id::create(&DefaultUuidFactory::default());
+        let game_id = Id::create(&DefaultUuidFactory::default());
         let user = User::new(id, "name", &[]);
 
         // do
         let ret = user.is_joined(game_id);
 
         // verify
-        assert_eq!(ret, false)
+        assert!(!ret)
     }
 
     #[test]
     fn find_joined_game() {
         // arrange
-        let id = Id::create(&DefaultUuidFactory::new());
-        let game_id = Id::create(&DefaultUuidFactory::new());
-        let player_id = Id::create(&DefaultUuidFactory::new());
+        let id = Id::create(&DefaultUuidFactory::default());
+        let game_id = Id::create(&DefaultUuidFactory::default());
+        let player_id = Id::create(&DefaultUuidFactory::default());
         let joined_game = JoinedGame {
             game: game_id,
             game_player: player_id,
@@ -132,14 +132,14 @@ mod leave_game {
     #[test]
     fn leave_from_joined_game() {
         // arrange
-        let id = Id::create(&DefaultUuidFactory::new());
-        let game_id = Id::create(&DefaultUuidFactory::new());
-        let player_id = Id::create(&DefaultUuidFactory::new());
+        let id = Id::create(&DefaultUuidFactory::default());
+        let game_id = Id::create(&DefaultUuidFactory::default());
+        let player_id = Id::create(&DefaultUuidFactory::default());
         let joined_game = JoinedGame {
             game: game_id,
             game_player: player_id,
         };
-        let mut user = User::new(id, "name", &[joined_game.clone()]);
+        let mut user = User::new(id, "name", &[joined_game]);
 
         // do
         user.leave_from(game_id, move |e| {
@@ -158,8 +158,8 @@ mod leave_game {
     #[test]
     fn leave_from_not_joined_game() {
         // arrange
-        let id = Id::create(&DefaultUuidFactory::new());
-        let game_id = Id::create(&DefaultUuidFactory::new());
+        let id = Id::create(&DefaultUuidFactory::default());
+        let game_id = Id::create(&DefaultUuidFactory::default());
         let mut user = User::new(id, "name", &[]);
 
         // do

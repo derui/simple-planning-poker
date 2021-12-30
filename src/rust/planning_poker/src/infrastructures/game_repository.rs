@@ -54,7 +54,7 @@ mod resolver {
 }
 
 impl GameRepository for Database {
-    fn save<'a>(&'a self, game: &'a Game) -> LocalBoxFuture<'a, ()> {
+    fn save(&self, game: &Game) -> LocalBoxFuture<'_, ()> {
         let updates = js_sys::Map::new();
 
         updates.set(&resolver::name(game.id()), &js_value(game.name()));
@@ -79,7 +79,7 @@ impl GameRepository for Database {
         Box::pin(async move { update(&reference, &updates).await })
     }
 
-    fn find_by<'a>(&'a self, id: GameId) -> LocalBoxFuture<'a, Option<Game>> {
+    fn find_by(&self, id: GameId) -> LocalBoxFuture<'_, Option<Game>> {
         let db = self.clone();
 
         Box::pin(async move {
@@ -111,7 +111,7 @@ impl GameRepository for Database {
                 };
                 let selectable_cards = selectable_cards
                     .iter()
-                    .filter_map(|v| v.as_f64().map(|v| v as u32).map(|v| StoryPoint::new(v)))
+                    .filter_map(|v| v.as_f64().map(|v| v as u32).map(StoryPoint::new))
                     .collect::<Vec<StoryPoint>>();
                 let selectable_cards = SelectableCards::new(&selectable_cards);
 
@@ -122,12 +122,12 @@ impl GameRepository for Database {
                 };
                 let players = players
                     .iter()
-                    .filter_map(|v| v.as_string().map(|v| GamePlayerId::from(v)))
+                    .filter_map(|v| v.as_string().map(GamePlayerId::from))
                     .collect::<Vec<GamePlayerId>>();
 
                 let mut tmp = Game::new(
                     id,
-                    &name.as_string().unwrap_or("".to_owned()),
+                    &name.as_string().unwrap_or_else(|| "".to_owned()),
                     &players,
                     &selectable_cards,
                 );
@@ -148,17 +148,17 @@ impl GameRepository for Database {
         })
     }
 
-    fn find_by_invitation_signature<'a>(
-        &'a self,
+    fn find_by_invitation_signature(
+        &self,
         signature: InvitationSignature,
-    ) -> LocalBoxFuture<'a, Option<Game>> {
+    ) -> LocalBoxFuture<'_, Option<Game>> {
         let db_ref = child(
             &reference_with_key(&self.database, "signatures"),
             &signature.to_string(),
         );
 
         Box::pin(async move {
-            let game_id = get(&db_ref).await.as_string().map(|v| GameId::from(v));
+            let game_id = get(&db_ref).await.as_string().map(GameId::from);
 
             match game_id {
                 None => None,
@@ -171,11 +171,11 @@ impl GameRepository for Database {
 fn apply_hands(game: &mut Game, hands: &js_sys::Array) {
     hands.iter().for_each(|v| {
         let v = js_sys::Array::from(&v);
-        let player_id = v.get(0).as_string().map(|v| GamePlayerId::from(v)).unwrap();
+        let player_id = v.get(0).as_string().map(GamePlayerId::from).unwrap();
         let card = deserialize(&v.get(1));
 
         match card {
-            Err(_) => return,
+            Err(_) => {}
             Ok(card) => game.give_player_hand(player_id, &card),
         }
     })

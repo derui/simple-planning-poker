@@ -11,11 +11,11 @@ pub enum ChangeUserNameOutput {
 }
 
 pub trait ChangeUserName {
-    fn execute<'a>(
-        &'a self,
+    fn execute(
+        &self,
         user_id: UserId,
         name: &str,
-    ) -> LocalBoxFuture<'a, Result<User, ChangeUserNameOutput>>;
+    ) -> LocalBoxFuture<'_, Result<User, ChangeUserNameOutput>>;
 }
 
 impl<T: ChangeUserNameDependency> ChangeUserName for T {
@@ -27,29 +27,24 @@ impl<T: ChangeUserNameDependency> ChangeUserName for T {
         let repository = self.get_user_repository();
         let name = name.to_owned();
 
-        Box::pin(execute(repository, user_id, name))
-    }
-}
+        let fut = async move {
+            let user = repository.find_by(user_id).await;
 
-// internal implementation
-async fn execute(
-    repository: &dyn UserRepository,
-    user_id: UserId,
-    name: String,
-) -> Result<User, ChangeUserNameOutput> {
-    let user = repository.find_by(user_id).await;
+            match user {
+                None => Err(ChangeUserNameOutput::NotFound),
+                Some(mut user) => {
+                    if !User::can_change_name(&name) {
+                        return Err(ChangeUserNameOutput::CanNotChangeName);
+                    }
 
-    match user {
-        None => Err(ChangeUserNameOutput::NotFound),
-        Some(mut user) => {
-            if !User::can_change_name(&name) {
-                return Err(ChangeUserNameOutput::CanNotChangeName);
+                    user.change_name(&name);
+                    repository.save(&user).await;
+
+                    Ok(user)
+                }
             }
+        };
 
-            user.change_name(&name);
-            repository.save(&user).await;
-
-            Ok(user)
-        }
+        Box::pin(fut)
     }
 }

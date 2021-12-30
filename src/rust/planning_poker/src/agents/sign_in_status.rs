@@ -45,15 +45,9 @@ pub struct CurrentUserStatusProjection {
     joined_games: Vec<JoinedGameProjection>,
 }
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Default)]
 pub struct CurrentUserStatus {
     current_user: Option<User>,
-}
-
-impl Default for CurrentUserStatus {
-    fn default() -> Self {
-        Self { current_user: None }
-    }
 }
 
 #[derive(Clone)]
@@ -102,6 +96,10 @@ impl CurrentUserBus {
         let database = self.database.clone();
         let this = self.clone();
 
+        for sub in this.subscribers.iter() {
+            this.link.respond(*sub, SignInMessage::Authenticating);
+        }
+
         let fut = async move {
             let user_id = if sign_in {
                 authenticator.sign_in(&email, &password).await
@@ -131,6 +129,7 @@ impl CurrentUserBus {
             for sub in this.subscribers.iter() {
                 this.link
                     .respond(*sub, SignInMessage::SignedIn(proj.clone()));
+                this.link.respond(*sub, SignInMessage::Authenticated);
             }
         };
 
@@ -142,14 +141,13 @@ impl CurrentUserBus {
 
         let user = match self.current_user.clone() {
             None => return,
-            Some(v) => v.clone(),
+            Some(v) => v,
         };
 
         let fut = async move {
             let result = ChangeUserName::execute(&this, user.id(), &name).await;
-            match result {
-                Ok(user) => this.link.send_message(CurrentUserMessage::ChangeName(user)),
-                _ => (),
+            if let Ok(user) = result {
+                this.link.send_message(CurrentUserMessage::ChangeName(user))
             }
         };
 

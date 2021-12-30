@@ -120,7 +120,7 @@ impl Game {
             .filter_map(|v| v.card.as_story_point())
             .collect::<Vec<StoryPoint>>();
 
-        if hands.len() == 0 {
+        if hands.is_empty() {
             return Ok(AveragePoint(0.0));
         }
 
@@ -131,7 +131,7 @@ impl Game {
     }
 
     pub fn change_name(&mut self, name: &str) {
-        if name.len() == 0 {
+        if name.is_empty() {
             panic!("Can not change name to empty");
         }
 
@@ -139,7 +139,7 @@ impl Game {
     }
 
     pub fn can_change_name(name: &str) -> bool {
-        name.len() > 0
+        !name.is_empty()
     }
 
     pub fn next_game<F>(&mut self, mut receiver: F)
@@ -190,12 +190,12 @@ impl Game {
 pub trait GameRepository {
     fn save<'a>(&'a self, game: &'a Game) -> LocalBoxFuture<'a, ()>;
 
-    fn find_by<'a>(&'a self, id: GameId) -> LocalBoxFuture<'a, Option<Game>>;
+    fn find_by(&'_ self, id: GameId) -> LocalBoxFuture<'_, Option<Game>>;
 
-    fn find_by_invitation_signature<'a>(
-        &'a self,
+    fn find_by_invitation_signature(
+        &'_ self,
         signature: InvitationSignature,
-    ) -> LocalBoxFuture<'a, Option<Game>>;
+    ) -> LocalBoxFuture<'_, Option<Game>>;
 }
 
 pub trait GameRepositoryDep {}
