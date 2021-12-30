@@ -1,7 +1,6 @@
 use crate::{
     domains::{
         card::Card,
-        event::DomainEventKind,
         game::{AveragePoint, Game, GameId},
         id::Id,
         selectable_cards::SelectableCards,
@@ -67,7 +66,7 @@ fn calculate_average_with_story_point() {
 
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(1)));
-    game.show_down(move |e| assert_eq!(e, DomainEventKind::GameShowedDown { game_id }));
+    game.show_down();
     let v = game.calculate_average();
 
     // verify
@@ -99,7 +98,7 @@ fn next_game_if_showed_down() {
 
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(1)));
-    game.show_down(|_| {});
+    game.show_down();
     game.next_game();
     let v = game.calculate_average();
 

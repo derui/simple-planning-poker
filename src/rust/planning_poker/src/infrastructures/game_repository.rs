@@ -138,7 +138,7 @@ impl GameRepository for Database {
                     Object::entries(&Object::from(hands))
                 };
                 if showed_down.is_truthy() {
-                    tmp.show_down(|_| {});
+                    tmp.show_down();
                 }
                 apply_hands(&mut tmp, &hands);
                 tmp

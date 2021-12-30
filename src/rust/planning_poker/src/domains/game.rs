@@ -97,16 +97,13 @@ impl Game {
         !self.hands.is_empty() && !self._showed_down
     }
 
-    pub fn show_down<F>(&mut self, mut receiver: F)
-    where
-        F: FnMut(DomainEventKind) + 'static,
-    {
+    pub fn show_down(&mut self) {
         if !self.can_show_down() {
             return;
         }
 
         self._showed_down = true;
-        receiver(DomainEventKind::GameShowedDown { game_id: self.id })
+        DomainEventKind::GameShowedDown { game_id: self.id };
     }
 
     pub fn calculate_average(&self) -> Result<AveragePoint, &str> {

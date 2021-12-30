@@ -3,30 +3,31 @@ use crate::{
     utils::types::LocalBoxFuture,
 };
 
-pub trait NewGameDependency: HaveGameRepository {}
+pub trait ShowDownDependency: HaveGameRepository {}
 
-pub enum NewGameOutput {
+pub enum ShowDownOutput {
     NotFound,
-    LeaveFailed,
 }
 
-pub trait NewGame {
-    fn execute(&self, game_id: GameId) -> LocalBoxFuture<'_, Result<(), NewGameOutput>>;
+pub trait ShowDown {
+    fn execute(&self, game_id: GameId) -> LocalBoxFuture<'_, Result<(), ShowDownOutput>>;
 }
 
-impl<T: NewGameDependency> NewGame for T {
-    fn execute(&self, game_id: GameId) -> LocalBoxFuture<'_, Result<(), NewGameOutput>> {
+impl<T: ShowDownDependency> ShowDown for T {
+    fn execute(&self, game_id: GameId) -> LocalBoxFuture<'_, Result<(), ShowDownOutput>> {
         let repository = self.get_game_repository();
 
         let fut = async move {
             let game = repository.find_by(game_id).await;
 
             if let Some(mut game) = game {
-                game.next_game();
+                game.show_down();
+
                 repository.save(&game).await;
+
                 Ok(())
             } else {
-                Err(NewGameOutput::NotFound)
+                Err(ShowDownOutput::NotFound)
             }
         };
 
