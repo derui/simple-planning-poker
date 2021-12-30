@@ -13,7 +13,7 @@ use super::{
 #[cfg(test)]
 mod tests;
 
-#[derive(PartialEq, Debug, DomainId, Clone, Copy)]
+#[derive(PartialEq, Debug, DomainId, Clone, Copy, Hash, Eq)]
 pub struct UserId(Id<Uuid>);
 
 #[derive(PartialEq, Debug, Clone)]
@@ -22,7 +22,7 @@ pub struct JoinedGame {
     pub game_player: GamePlayerId,
 }
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct User {
     id: UserId,
     name: String,

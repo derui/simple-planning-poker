@@ -3,8 +3,12 @@ use crate::{
     utils::types::LocalBoxFuture,
 };
 
+#[cfg(test)]
+mod tests;
+
 pub trait ChangeUserNameDependency: HaveUserRepository {}
 
+#[derive(PartialEq, Debug)]
 pub enum ChangeUserNameOutput {
     NotFound,
     CanNotChangeName,
