@@ -142,17 +142,12 @@ impl Game {
         !name.is_empty()
     }
 
-    pub fn next_game<F>(&mut self, mut receiver: F)
-    where
-        F: FnMut(DomainEventKind) + 'static,
-    {
+    pub fn next_game(&mut self) {
         if !self.showed_down() {
             return;
         }
 
         self._showed_down = false;
-
-        receiver(DomainEventKind::NewGameStarted { game_id: self.id })
     }
 
     pub fn give_player_hand(&mut self, player_id: GamePlayerId, card: &Card) {

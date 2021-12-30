@@ -1,5 +1,3 @@
-use core::panic;
-
 use crate::{
     domains::{
         card::Card,
@@ -102,25 +100,11 @@ fn next_game_if_showed_down() {
     // do
     game.give_player_hand(player_id, &Card::storypoint(StoryPoint::new(1)));
     game.show_down(|_| {});
-    game.next_game(move |e| assert_eq!(e, DomainEventKind::NewGameStarted { game_id }));
+    game.next_game();
     let v = game.calculate_average();
 
     // verify
     assert!(v.is_err());
-}
-
-#[test]
-fn next_game_do_not_raise_event() {
-    // arrange
-    let game_id = Id::create::<GameId>(&DefaultUuidFactory::default());
-    let cards = SelectableCards::new(&[StoryPoint::new(1)]);
-    let player_id = Id::create(&DefaultUuidFactory::default());
-    let mut game = Game::new(game_id, "value", &[player_id], &cards);
-
-    // do
-    game.next_game(|_| panic!("call event why"));
-
-    // verify
 }
 
 #[test]
