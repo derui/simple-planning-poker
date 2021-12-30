@@ -13,14 +13,11 @@ use super::{
 mod tests;
 
 pub trait JoinService {
-    fn join<'a, F: 'a>(
-        &'a self,
+    fn join(
+        &self,
         user: &User,
         signature: InvitationSignature,
-        receiver: F,
-    ) -> LocalBoxFuture<'a, ()>
-    where
-        F: FnMut(DomainEventKind);
+    ) -> LocalBoxFuture<'_, Option<DomainEventKind>>;
 }
 
 pub trait JoinServiceDependency:
@@ -28,16 +25,18 @@ pub trait JoinServiceDependency:
 {
 }
 
+pub trait HaveJoinService {
+    type T: JoinService;
+
+    fn get_join_service(&self) -> &Self::T;
+}
+
 impl<T: JoinServiceDependency> JoinService for T {
-    fn join<'a, F: 'a>(
-        &'a self,
+    fn join(
+        &self,
         user: &User,
         signature: InvitationSignature,
-        mut receiver: F,
-    ) -> LocalBoxFuture<'a, ()>
-    where
-        F: FnMut(DomainEventKind),
-    {
+    ) -> LocalBoxFuture<'_, Option<DomainEventKind>> {
         let user = user.clone();
 
         Box::pin(async move {
@@ -73,11 +72,13 @@ impl<T: JoinServiceDependency> JoinService for T {
                     }
                 };
 
-                receiver(DomainEventKind::UserInvited {
+                Some(DomainEventKind::UserInvited {
                     game_id,
                     user_id: user.id(),
                     game_player_id,
-                });
+                })
+            } else {
+                None
             }
         })
     }

@@ -94,7 +94,7 @@ impl GamePlayerRepository for Mock {
         &self,
         _player: &crate::domains::game_player::GamePlayer,
     ) -> LocalBoxFuture<'static, ()> {
-        let fut = async {  };
+        let fut = async {};
         Box::pin(fut)
     }
 
@@ -134,9 +134,7 @@ async fn do_not_invite_if_invitation_signature_is_invalid() {
     let service = Mock::new();
 
     // do
-    service
-        .join(&user, signature, &|_| panic!("do not send event"))
-        .await
+    service.join(&user, signature).await;
 
     // verify
 }
@@ -157,19 +155,18 @@ async fn invite_if_user_is_not_invited_yet() {
     let user = User::new(user_id, "name", &[]);
 
     // do
-    service
-        .join(&user, signature, &move |e| match e {
-            DomainEventKind::UserInvited {
-                game_id: given_game_id,
-                user_id: given_user_id,
-                ..
-            } => {
-                assert_eq!(given_game_id, game_id);
-                assert_eq!(given_user_id, user_id);
-            }
-            _ => panic!("receive only UserInvited"),
-        })
-        .await
+    let event = service.join(&user, signature).await.unwrap();
 
     // verify
+    match event {
+        DomainEventKind::UserInvited {
+            game_id: given_game_id,
+            user_id: given_user_id,
+            ..
+        } => {
+            assert_eq!(given_game_id, game_id);
+            assert_eq!(given_user_id, user_id);
+        }
+        _ => panic!("receive only UserInvited"),
+    }
 }

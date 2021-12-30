@@ -105,8 +105,7 @@ fn can_not_take_card_not_contained_game() {
     );
 
     // do
-    let callback = |_| {};
-    player.take_hand(Card::storypoint(StoryPoint::new(3)), callback);
+    player.take_hand(Card::storypoint(StoryPoint::new(3)));
 
     // verify
 }
@@ -128,17 +127,16 @@ fn take_card() {
     );
 
     // do
-    let callback = move |e| {
-        assert_eq!(
-            e,
-            DomainEventKind::GamePlayerCardSelected {
-                game_player_id: player_id,
-                card: selectable_cards.at(0).unwrap().clone()
-            }
-        )
-    };
-    player.take_hand(Card::storypoint(StoryPoint::new(1)), callback);
+    let event = player.take_hand(Card::storypoint(StoryPoint::new(1)));
 
     // verify
     assert_eq!(player.hand(), Some(&Card::storypoint(StoryPoint::new(1))));
+    if let DomainEventKind::GamePlayerCardSelected {
+        game_player_id,
+        card,
+    } = event
+    {
+        assert_eq!(game_player_id, player_id);
+        assert_eq!(card, selectable_cards.at(0).unwrap().clone())
+    }
 }

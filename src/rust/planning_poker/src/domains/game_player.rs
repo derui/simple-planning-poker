@@ -131,10 +131,7 @@ impl GamePlayer {
         })
     }
 
-    pub fn take_hand<F>(&mut self, card: Card, mut receiver: F)
-    where
-        F: FnMut(DomainEventKind) + 'static,
-    {
+    pub fn take_hand(&mut self, card: Card) -> DomainEventKind {
         if !self.cards.contains(&card) {
             panic!(
                 "Can not hand not in cards defined in the game: {}",
@@ -144,10 +141,10 @@ impl GamePlayer {
 
         self.hand = Some(card.clone());
 
-        receiver(DomainEventKind::GamePlayerCardSelected {
+        DomainEventKind::GamePlayerCardSelected {
             game_player_id: self.id,
             card,
-        })
+        }
     }
 }
 
@@ -156,10 +153,10 @@ impl GamePlayer {
 pub trait GamePlayerRepository {
     fn save<'a>(&'a self, player: &'a GamePlayer) -> LocalBoxFuture<'a, ()>;
 
-    fn find_by(&'_ self, id: GamePlayerId) -> LocalBoxFuture<'_, Option<GamePlayer>>;
+    fn find_by(&self, id: GamePlayerId) -> LocalBoxFuture<'_, Option<GamePlayer>>;
 
     fn find_by_user_and_game(
-        &'_ self,
+        &self,
         user_id: UserId,
         game_id: GameId,
     ) -> LocalBoxFuture<'_, Option<GamePlayer>>;

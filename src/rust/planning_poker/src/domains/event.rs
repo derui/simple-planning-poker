@@ -21,7 +21,7 @@ pub struct DomainEvent {
     kind: DomainEventKind,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum DomainEventKind {
     GameCreated {
         game_id: GameId,

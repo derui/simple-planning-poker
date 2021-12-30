@@ -1,13 +1,12 @@
 use crate::{
     domains::{
-        event::DomainEvent,
         game::{Game, GameRepository, HaveGameRepository},
         id::Id,
         selectable_cards::SelectableCards,
         story_point::StoryPoint,
         user::UserId,
     },
-    infrastructures::event::event_dispatcher::HaveEventDispatcher,
+    infrastructures::event::event_dispatcher::{EventDispatcher, HaveEventDispatcher},
     utils::{types::LocalBoxFuture, uuid_factory::HaveUuidFactory},
 };
 
@@ -53,16 +52,13 @@ impl<T: CreateGameDependency> CreateGame for T {
 
             let game = Game::new(id, name, &[player_id], &cards);
             repository.save(&game).await;
-            let event = DomainEvent::new(
-                factory,
-                crate::domains::event::DomainEventKind::GameCreated {
-                    game_id: game.id(),
-                    name: game.name().to_owned(),
-                    created_game_player_id: player_id,
-                    created_user_id: created_by,
-                    selectable_cards: cards.clone(),
-                },
-            );
+            let event = crate::domains::event::DomainEventKind::GameCreated {
+                game_id: game.id(),
+                name: game.name().to_owned(),
+                created_game_player_id: player_id,
+                created_user_id: created_by,
+                selectable_cards: cards.clone(),
+            };
             dispatcher.dispatch(&event);
 
             Ok(game)
