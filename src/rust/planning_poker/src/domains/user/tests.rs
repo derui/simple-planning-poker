@@ -142,17 +142,16 @@ mod leave_game {
         let mut user = User::new(id, "name", &[joined_game]);
 
         // do
-        user.leave_from(game_id, move |e| {
-            assert_eq!(
-                e,
-                DomainEventKind::UserLeavedFromGame {
-                    game_id,
-                    game_player_id: player_id
-                }
-            )
-        });
+        let event = user.leave_from(game_id);
 
         // verify
+        assert_eq!(
+            event,
+            Some(DomainEventKind::UserLeavedFromGame {
+                game_id,
+                game_player_id: player_id
+            })
+        )
     }
 
     #[test]
@@ -163,7 +162,7 @@ mod leave_game {
         let mut user = User::new(id, "name", &[]);
 
         // do
-        user.leave_from(game_id, move |_| panic!("do not call receiver"));
+        user.leave_from(game_id);
 
         // verify
     }

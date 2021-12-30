@@ -77,11 +77,8 @@ impl User {
             .cloned()
     }
 
-    pub fn leave_from<F>(&mut self, game_id: GameId, mut receiver: F)
-    where
-        F: FnMut(DomainEventKind) + 'static,
-    {
-        if let Some(game) = self.find_joined_game(game_id) {
+    pub fn leave_from(&mut self, game_id: GameId) -> Option<DomainEventKind> {
+        self.find_joined_game(game_id).map(|game| {
             let new_games = self
                 .joined_games
                 .iter()
@@ -95,11 +92,11 @@ impl User {
                 .collect::<Vec<JoinedGame>>();
             self.joined_games = new_games;
 
-            receiver(DomainEventKind::UserLeavedFromGame {
+            DomainEventKind::UserLeavedFromGame {
                 game_id: game.game,
                 game_player_id: game.game_player,
-            })
-        }
+            }
+        })
     }
 }
 
