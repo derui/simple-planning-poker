@@ -1,9 +1,6 @@
 use crate::{
-    domains::{
-        game_player::{
-            GamePlayer, GamePlayerId, GamePlayerRepository, HaveGamePlayerRepository, UserMode,
-        },
-        user::UserRepository,
+    domains::game_player::{
+        GamePlayer, GamePlayerId, GamePlayerRepository, HaveGamePlayerRepository, UserMode,
     },
     utils::types::LocalBoxFuture,
 };
@@ -22,6 +19,20 @@ pub trait ChangeUserMode {
     ) -> LocalBoxFuture<'a, Result<GamePlayer, ChangeUserModeOutput>>;
 }
 
+impl<T: ChangeUserModeDependency> ChangeUserMode for T {
+    fn execute<'a>(
+        &'a self,
+        game_player_id: GamePlayerId,
+        mode: UserMode,
+    ) -> LocalBoxFuture<'a, Result<GamePlayer, ChangeUserModeOutput>> {
+        let repository = self.get_game_player_repository();
+        let mode = mode.to_owned();
+
+        Box::pin(execute(repository, game_player_id, mode))
+    }
+}
+
+// internal implementation
 async fn execute(
     repository: &dyn GamePlayerRepository,
     game_player_id: GamePlayerId,
@@ -37,18 +48,5 @@ async fn execute(
 
             Ok(player)
         }
-    }
-}
-
-impl<T: ChangeUserModeDependency> ChangeUserMode for T {
-    fn execute<'a>(
-        &'a self,
-        game_player_id: GamePlayerId,
-        mode: UserMode,
-    ) -> LocalBoxFuture<'a, Result<GamePlayer, ChangeUserModeOutput>> {
-        let repository = self.get_game_player_repository();
-        let mode = mode.to_owned();
-
-        Box::pin(execute(repository, game_player_id, mode))
     }
 }

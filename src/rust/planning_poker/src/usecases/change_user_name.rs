@@ -18,6 +18,20 @@ pub trait ChangeUserName {
     ) -> LocalBoxFuture<'a, Result<User, ChangeUserNameOutput>>;
 }
 
+impl<T: ChangeUserNameDependency> ChangeUserName for T {
+    fn execute<'a>(
+        &'a self,
+        user_id: UserId,
+        name: &str,
+    ) -> LocalBoxFuture<'a, Result<User, ChangeUserNameOutput>> {
+        let repository = self.get_user_repository();
+        let name = name.to_owned();
+
+        Box::pin(execute(repository, user_id, name))
+    }
+}
+
+// internal implementation
 async fn execute(
     repository: &dyn UserRepository,
     user_id: UserId,
@@ -37,18 +51,5 @@ async fn execute(
 
             Ok(user)
         }
-    }
-}
-
-impl<T: ChangeUserNameDependency> ChangeUserName for T {
-    fn execute<'a>(
-        &'a self,
-        user_id: UserId,
-        name: &str,
-    ) -> LocalBoxFuture<'a, Result<User, ChangeUserNameOutput>> {
-        let repository = self.get_user_repository();
-        let name = name.to_owned();
-
-        Box::pin(execute(repository, user_id, name))
     }
 }

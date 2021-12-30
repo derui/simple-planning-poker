@@ -10,6 +10,10 @@ pub struct EventDispatcher<'a> {
     listeners: Vec<Rc<dyn EventListener<'a>>>,
 }
 
+pub trait HaveEventDispatcher {
+    fn get_event_dispatcher(&self) -> &EventDispatcher;
+}
+
 impl<'a> EventDispatcher<'a> {
     pub fn new(listeners: &'a [Rc<dyn EventListener<'a>>]) -> Self {
         Self {
@@ -17,7 +21,7 @@ impl<'a> EventDispatcher<'a> {
         }
     }
 
-    pub fn dispatch(&mut self, event: &DomainEvent) {
+    pub fn dispatch(&self, event: &DomainEvent) {
         self.listeners.iter().for_each(move |v| {
             let v = Rc::clone(v);
             v.handle(event);

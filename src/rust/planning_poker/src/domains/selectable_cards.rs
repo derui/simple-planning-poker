@@ -22,15 +22,15 @@ fn unique_vec(vec: &[StoryPoint]) -> Vec<StoryPoint> {
     accum
 }
 
-fn is_valid_storypoints(vec: &[StoryPoint]) -> bool {
-    let uniqued = unique_vec(vec);
-
-    uniqued.len() > 0
-}
-
 impl SelectableCards {
+    pub fn is_valid_storypoints(vec: &[StoryPoint]) -> bool {
+        let uniqued = unique_vec(vec);
+
+        uniqued.len() > 0
+    }
+
     pub fn new(points: &[StoryPoint]) -> Self {
-        if !is_valid_storypoints(points) {
+        if !SelectableCards::is_valid_storypoints(points) {
             panic!("story points must be unique in list")
         }
         let points = unique_vec(points);
