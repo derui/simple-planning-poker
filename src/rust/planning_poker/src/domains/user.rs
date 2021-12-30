@@ -109,3 +109,9 @@ pub trait UserRepository {
 
     fn find_by<'a>(&'a self, id: UserId) -> LocalBoxFuture<'a, Option<User>>;
 }
+
+pub trait HaveUserRepository {
+    type T: UserRepository;
+
+    fn get_user_repository(&self) -> &Self::T;
+}

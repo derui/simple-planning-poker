@@ -9,12 +9,13 @@ use crate::{
     domains::{
         game::{Game, GameRepository},
         game_player::GamePlayerId,
-        user::{User, UserId, UserRepository},
+        user::{HaveUserRepository, User, UserId, UserRepository},
     },
     infrastructures::{
         authenticator::Authenticator,
         firebase::{Auth, Database},
     },
+    usecases::change_user_name::{ChangeUserName, ChangeUserNameDependency},
 };
 
 use super::global_status::Actions;
@@ -25,6 +26,11 @@ pub enum SignInActions {
     SignUp { email: String, password: String },
 }
 
+#[derive(Clone, PartialEq, Deserialize, Serialize, Debug)]
+pub enum UserActions {
+    ChangeUserName(String),
+}
+
 #[derive(PartialEq, Clone)]
 pub struct JoinedGameProjection {
     game_id: String,
@@ -33,36 +39,49 @@ pub struct JoinedGameProjection {
 }
 
 #[derive(PartialEq, Clone)]
-pub struct SignInStatusProjection {
+pub struct CurrentUserStatusProjection {
     id: UserId,
     name: String,
     joined_games: Vec<JoinedGameProjection>,
 }
 
 #[derive(PartialEq, Clone)]
-pub struct SignInStatus {
+pub struct CurrentUserStatus {
     current_user: Option<User>,
 }
 
-impl Default for SignInStatus {
+impl Default for CurrentUserStatus {
     fn default() -> Self {
         Self { current_user: None }
     }
 }
 
 #[derive(Clone)]
-pub struct SignInBus {
-    link: AgentLink<SignInBus>,
+pub struct CurrentUserBus {
+    link: AgentLink<CurrentUserBus>,
     subscribers: HashSet<HandlerId>,
     database: Database,
     authenticator: Authenticator,
+    current_user: Option<User>,
 }
 
 pub enum SignInMessage {
     Authenticating,
     Authenticated,
-    SignedIn(SignInStatusProjection),
+    SignedIn(CurrentUserStatusProjection),
 }
+
+pub enum CurrentUserMessage {
+    ChangeName(User),
+}
+
+impl HaveUserRepository for CurrentUserBus {
+    type T = Database;
+    fn get_user_repository(&self) -> &Self::T {
+        &self.database
+    }
+}
+impl ChangeUserNameDependency for CurrentUserBus {}
 
 async fn get_games(database: &Database, user: &User) -> Vec<(Game, GamePlayerId)> {
     let game_ids = user.joined_games();
@@ -75,7 +94,7 @@ async fn get_games(database: &Database, user: &User) -> Vec<(Game, GamePlayerId)
     fut.iter().filter_map(|v| v.clone()).collect()
 }
 
-impl SignInBus {
+impl CurrentUserBus {
     fn sign_in_or_sign_up(&mut self, email: &str, password: &str, sign_in: bool) {
         let email = email.to_string();
         let password = password.to_string();
@@ -103,7 +122,7 @@ impl SignInBus {
                 })
                 .collect();
 
-            let proj = SignInStatusProjection {
+            let proj = CurrentUserStatusProjection {
                 id: user.id(),
                 name: user.name().to_string(),
                 joined_games,
@@ -117,12 +136,31 @@ impl SignInBus {
 
         spawn_local(fut)
     }
+
+    fn change_user_name(&mut self, name: String) {
+        let this = self.clone();
+
+        let user = match self.current_user.clone() {
+            None => return,
+            Some(v) => v.clone(),
+        };
+
+        let fut = async move {
+            let result = ChangeUserName::execute(&this, user.id(), &name).await;
+            match result {
+                Ok(user) => this.link.send_message(CurrentUserMessage::ChangeName(user)),
+                _ => (),
+            }
+        };
+
+        spawn_local(fut)
+    }
 }
 
-impl Agent for SignInBus {
+impl Agent for CurrentUserBus {
     type Reach = Context<Self>;
 
-    type Message = ();
+    type Message = CurrentUserMessage;
 
     type Input = Actions;
 
@@ -135,10 +173,15 @@ impl Agent for SignInBus {
             subscribers: HashSet::new(),
             database: database.clone(),
             authenticator: Authenticator::new(&database, &Auth::new()),
+            current_user: None,
         }
     }
 
-    fn update(&mut self, _msg: Self::Message) {}
+    fn update(&mut self, msg: Self::Message) {
+        match msg {
+            CurrentUserMessage::ChangeName(user) => self.current_user = Some(user),
+        }
+    }
 
     fn handle_input(&mut self, msg: Self::Input, _id: yew_agent::HandlerId) {
         match msg {
@@ -148,6 +191,7 @@ impl Agent for SignInBus {
             Actions::ForSignIn(SignInActions::SignUp { email, password }) => {
                 self.sign_in_or_sign_up(&email, &password, false)
             }
+            Actions::ForUser(UserActions::ChangeUserName(name)) => self.change_user_name(name),
         }
     }
 
