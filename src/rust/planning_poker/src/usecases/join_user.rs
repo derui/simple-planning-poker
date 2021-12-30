@@ -1,8 +1,7 @@
 use crate::{
     domains::{
         event::DomainEventKind,
-        game::GameRepository,
-        game_player::{GamePlayerId, GamePlayerRepository},
+        game_player::GamePlayerId,
         invitation::InvitationSignature,
         join_service::{HaveJoinService, JoinService},
         user::{HaveUserRepository, UserId, UserRepository},

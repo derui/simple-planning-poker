@@ -5,8 +5,12 @@ use crate::{
     utils::types::LocalBoxFuture,
 };
 
+#[cfg(test)]
+mod tests;
+
 pub trait ChangeUserModeDependency: HaveGamePlayerRepository {}
 
+#[derive(PartialEq, Debug)]
 pub enum ChangeUserModeOutput {
     NotFound,
 }

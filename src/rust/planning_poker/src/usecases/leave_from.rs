@@ -1,7 +1,6 @@
 use crate::{
     domains::{
         game::GameId,
-        game_player::GamePlayerRepository,
         user::{HaveUserRepository, UserId, UserRepository},
     },
     infrastructures::event::event_dispatcher::{EventDispatcher, HaveEventDispatcher},

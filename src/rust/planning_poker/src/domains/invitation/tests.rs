@@ -4,7 +4,7 @@ use crate::{
 };
 use uuid::Uuid;
 
-use crate::{domains::game::GameId, utils::uuid_factory::UuidFactory};
+use crate::domains::game::GameId;
 
 #[test]
 fn create_signature_from_game_id() {

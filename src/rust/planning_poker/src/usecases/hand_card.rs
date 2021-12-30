@@ -2,7 +2,6 @@ use crate::{
     domains::{
         card::Card,
         game_player::{GamePlayer, GamePlayerId, GamePlayerRepository, HaveGamePlayerRepository},
-        user::UserRepository,
     },
     infrastructures::event::event_dispatcher::{EventDispatcher, HaveEventDispatcher},
     utils::types::LocalBoxFuture,

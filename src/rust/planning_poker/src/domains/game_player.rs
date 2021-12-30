@@ -48,7 +48,7 @@ impl ToString for UserMode {
 }
 
 // Game player entity
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct GamePlayer {
     id: GamePlayerId,
     mode: UserMode,
