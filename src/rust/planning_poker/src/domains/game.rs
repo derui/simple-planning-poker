@@ -23,7 +23,7 @@ mod tests;
 pub struct AveragePoint(f32);
 
 impl AveragePoint {
-    fn as_f32(&self) -> f32 {
+    pub fn as_f32(&self) -> f32 {
         self.0
     }
 }

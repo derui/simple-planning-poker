@@ -3,7 +3,10 @@ use std::collections::HashSet;
 use serde::{Deserialize, Serialize};
 use yew_agent::{Agent, AgentLink, Context, HandlerId};
 
-use super::sign_in_status::{SignInActions, UserActions};
+use super::{
+    game_status::GameActions,
+    sign_in_status::{SignInActions, UserActions},
+};
 
 pub struct GlobalStatus {
     link: AgentLink<GlobalStatus>,
@@ -14,6 +17,7 @@ pub struct GlobalStatus {
 pub enum Actions {
     ForSignIn(SignInActions),
     ForUser(UserActions),
+    ForGame(GameActions),
 }
 
 impl Agent for GlobalStatus {

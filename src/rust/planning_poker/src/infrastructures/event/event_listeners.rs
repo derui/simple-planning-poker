@@ -15,6 +15,7 @@ use crate::{
 
 use super::event_dispatcher::EventListener;
 
+#[derive(Clone)]
 pub struct GameShowedDownEventListener {
     database: Database,
 }
@@ -27,8 +28,8 @@ impl GameShowedDownEventListener {
     }
 }
 
-impl<'a> EventListener<'a> for GameShowedDownEventListener {
-    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'a, ()> {
+impl EventListener for GameShowedDownEventListener {
+    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'_, ()> {
         let kind = event.kind();
         match kind {
             DomainEventKind::GameShowedDown { game_id } => {
@@ -45,6 +46,7 @@ impl<'a> EventListener<'a> for GameShowedDownEventListener {
     }
 }
 
+#[derive(Clone)]
 pub struct GameCreatedEventListener {
     database: Database,
 }
@@ -57,8 +59,8 @@ impl GameCreatedEventListener {
     }
 }
 
-impl<'a> EventListener<'a> for GameCreatedEventListener {
-    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'a, ()> {
+impl EventListener for GameCreatedEventListener {
+    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'_, ()> {
         let event = event.kind();
         match event {
             DomainEventKind::GameCreated {
@@ -86,6 +88,7 @@ impl<'a> EventListener<'a> for GameCreatedEventListener {
     }
 }
 
+#[derive(Clone)]
 pub struct NewGameStartedEventListener {
     database: Database,
 }
@@ -98,8 +101,8 @@ impl NewGameStartedEventListener {
     }
 }
 
-impl<'a> EventListener<'a> for NewGameStartedEventListener {
-    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'a, ()> {
+impl EventListener for NewGameStartedEventListener {
+    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'_, ()> {
         let event = event.kind();
         match event {
             DomainEventKind::NewGameStarted { game_id } => {

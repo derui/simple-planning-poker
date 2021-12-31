@@ -3,8 +3,8 @@ use crate::{
     utils::types::LocalBoxFuture,
 };
 
-pub trait EventListener<'a> {
-    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'a, ()>;
+pub trait EventListener {
+    fn handle(&self, event: &DomainEvent) -> LocalBoxFuture<'_, ()>;
 }
 
 pub trait EventDispatcher {

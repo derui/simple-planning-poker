@@ -190,6 +190,7 @@ impl Agent for CurrentUserBus {
                 self.sign_in_or_sign_up(&email, &password, false)
             }
             Actions::ForUser(UserActions::ChangeUserName(name)) => self.change_user_name(name),
+            _ => (),
         }
     }
 
