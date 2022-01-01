@@ -5,6 +5,7 @@ use crate::{
 
 pub trait ShowDownDependency: HaveGameRepository {}
 
+#[derive(Debug, Clone, PartialEq)]
 pub enum ShowDownOutput {
     NotFound,
 }

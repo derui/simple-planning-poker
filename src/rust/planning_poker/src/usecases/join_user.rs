@@ -12,6 +12,7 @@ use crate::{
 
 pub trait JoinUserDependency: HaveUserRepository + HaveEventDispatcher + HaveJoinService {}
 
+#[derive(Clone, Debug, PartialEq)]
 pub enum JoinUserOutput {
     NotFound,
     JoinFailed,

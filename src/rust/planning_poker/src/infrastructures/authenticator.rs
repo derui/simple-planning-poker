@@ -1,7 +1,10 @@
 use js_sys::Array;
 use wasm_bindgen::JsValue;
 
-use crate::domains::user::{User, UserId, UserRepository};
+use crate::{
+    domains::user::{User, UserId, UserRepository},
+    utils::types::LocalBoxFuture,
+};
 
 use super::{
     firebase::Database,
@@ -18,6 +21,34 @@ use super::{
 pub struct Authenticator {
     database: Database,
     auth: Auth,
+}
+
+pub trait AuthenticatorIntf {
+    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
+
+    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
+}
+
+pub trait HaveAuthenticator {
+    type T: AuthenticatorIntf;
+
+    fn get_authenticator(&self) -> &Self::T;
+}
+
+impl AuthenticatorIntf for Authenticator {
+    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId> {
+        let email = email.to_owned();
+        let password = password.to_owned();
+        let fut = async move { self.sign_in(&email, &password).await };
+        Box::pin(fut)
+    }
+
+    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId> {
+        let email = email.to_owned();
+        let password = password.to_owned();
+        let fut = async move { self.sign_up(&email, &password).await };
+        Box::pin(fut)
+    }
 }
 
 impl Authenticator {

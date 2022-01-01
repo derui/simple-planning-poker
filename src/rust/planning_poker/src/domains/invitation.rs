@@ -19,6 +19,12 @@ impl InvitationSignature {
     }
 }
 
+impl From<&str> for InvitationSignature {
+    fn from(v: &str) -> Self {
+        InvitationSignature(v.to_owned())
+    }
+}
+
 impl ToString for InvitationSignature {
     fn to_string(&self) -> String {
         self.0.to_string()
