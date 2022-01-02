@@ -163,6 +163,27 @@ mod internal {
             vec![]
         }
     }
+
+    pub async fn leave_game(this: &GlobalStatus) -> Vec<InnerMessage> {
+        let game = this.current_game.clone();
+
+        match game {
+            Some(game) => {
+                ShowDown::execute(this, game.id())
+                    .await
+                    .expect("should be new game");
+
+                let repository = this.get_game_repository();
+                let game = GameRepository::find_by(repository, game.id())
+                    .await
+                    .expect("should be found");
+
+                this.publish_game_response(&game).await;
+                vec![InnerMessage::UpdateGame(game)]
+            }
+            None => vec![],
+        }
+    }
 }
 
 pub async fn reduce_game_action(this: &GlobalStatus, action: GameActions) -> Vec<InnerMessage> {
@@ -174,6 +195,6 @@ pub async fn reduce_game_action(this: &GlobalStatus, action: GameActions) -> Vec
         GameActions::JoinUser(signature) => internal::join_user(&this, &signature).await,
         GameActions::ShowDown => internal::show_down(&this).await,
         GameActions::OpenGame(game_id) => internal::open_game(&this, game_id).await,
-        _ => unimplemented!(""),
+        GameActions::LeaveGame => internal::leave_game(&this).await,
     }
 }
