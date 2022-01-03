@@ -11,8 +11,8 @@ use crate::{
     },
     usecases::{
         change_user_mode::ChangeUserModeDependency, change_user_name::ChangeUserNameDependency,
-        hand_card::HandCardDependency, join_user::JoinUserDependency, new_game::NewGameDependency,
-        show_down::ShowDownDependency,
+        create_game::CreateGameDependency, hand_card::HandCardDependency,
+        join_user::JoinUserDependency, new_game::NewGameDependency, show_down::ShowDownDependency,
     },
 };
 
@@ -53,6 +53,7 @@ impl NewGameDependency for GlobalStatus {}
 impl JoinUserDependency for GlobalStatus {}
 impl ShowDownDependency for GlobalStatus {}
 impl ChangeUserNameDependency for GlobalStatus {}
+impl CreateGameDependency for GlobalStatus {}
 
 // implementation
 impl GlobalStatus {

@@ -16,7 +16,10 @@ use super::global_bus::{GameActions, GlobalStatus, InnerMessage};
 mod internal {
     use std::vec;
 
-    use crate::{agents::global_bus::GlobalStatus, domains::game::GameRepository};
+    use crate::{
+        agents::global_bus::GlobalStatus, domains::game::GameRepository,
+        usecases::create_game::CreateGame,
+    };
 
     use super::*;
 
@@ -184,6 +187,50 @@ mod internal {
             None => vec![],
         }
     }
+
+    pub async fn create_game(
+        this: &GlobalStatus,
+        name: &str,
+        points: &[String],
+    ) -> Vec<InnerMessage> {
+        let user = this.current_user.clone();
+
+        if let Some(user) = user {
+            let points = points
+                .iter()
+                .filter_map(|v| u32::from_str_radix(v, 10).ok())
+                .collect::<Vec<u32>>();
+            if name.is_empty() || points.is_empty() {
+                return vec![];
+            }
+
+            let ret = CreateGame::execute(this, name, user.id(), &points).await;
+
+            if let Ok(game) = ret {
+                let player = GamePlayerRepository::find_by_user_and_game(
+                    this.get_game_player_repository(),
+                    user.id(),
+                    game.id(),
+                )
+                .await;
+
+                if let Some(player) = player {
+                    this.publish_game_player_response(&player).await;
+                    this.publish_game_response(&game).await;
+                    vec![
+                        InnerMessage::UpdateGame(game),
+                        InnerMessage::UpdateGamePlayer(player),
+                    ]
+                } else {
+                    vec![]
+                }
+            } else {
+                vec![]
+            }
+        } else {
+            vec![]
+        }
+    }
 }
 
 pub async fn reduce_game_action(this: &GlobalStatus, action: GameActions) -> Vec<InnerMessage> {
@@ -196,5 +243,8 @@ pub async fn reduce_game_action(this: &GlobalStatus, action: GameActions) -> Vec
         GameActions::ShowDown => internal::show_down(&this).await,
         GameActions::OpenGame(game_id) => internal::open_game(&this, game_id).await,
         GameActions::LeaveGame => internal::leave_game(&this).await,
+        GameActions::CreateGame { name, points } => {
+            internal::create_game(&this, &name, &points).await
+        }
     }
 }

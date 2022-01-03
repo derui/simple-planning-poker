@@ -29,6 +29,7 @@ use super::{
 
 #[derive(Clone, PartialEq, Deserialize, Serialize, Debug)]
 pub enum GameActions {
+    CreateGame { name: String, points: Vec<String> },
     SelectCard(u32),
     NextGame,
     JoinUser(String),
