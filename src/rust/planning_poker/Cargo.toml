@@ -6,10 +6,7 @@ edition = "2021"
 [lib]
 name = "planning_poker"
 path = "src/lib.rs"
-
-# [[bin]]
-# name = "planning-poker"
-# path = "src/main.rs"
+crate-type = ["cdylib", "rlib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -43,5 +40,4 @@ features = [
   "EventTarget",
   "InputEventInit",
   "EventTarget",
-
 ]

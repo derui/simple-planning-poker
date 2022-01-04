@@ -2515,6 +2515,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wasm-tool/wasm-pack-plugin@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@wasm-tool/wasm-pack-plugin@npm:1.6.0"
+  dependencies:
+    chalk: ^2.4.1
+    command-exists: ^1.2.7
+    watchpack: ^2.1.1
+    which: ^2.0.2
+  checksum: ae2af8507a83b2994630a1393832ede09ecf86b1986e2506f4ad8c8908875e8b9e40d3fff97b2fbca1835eaf6cbe5a69611643d613dea961b1279122db60a0ec
+  languageName: node
+  linkType: hard
+
 "@webassemblyjs/ast@npm:1.11.1":
   version: 1.11.1
   resolution: "@webassemblyjs/ast@npm:1.11.1"
@@ -4457,6 +4469,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"command-exists@npm:^1.2.7":
+  version: 1.2.9
+  resolution: "command-exists@npm:1.2.9"
+  checksum: 729ae3d88a2058c93c58840f30341b7f82688a573019535d198b57a4d8cb0135ced0ad7f52b591e5b28a90feb2c675080ce916e56254a0f7c15cb2395277cac3
   languageName: node
   linkType: hard
 
@@ -11901,6 +11920,7 @@ __metadata:
     "@types/uuid": ^8.3.1
     "@typescript-eslint/eslint-plugin": ^4.31.1
     "@typescript-eslint/parser": ^4.31.1
+    "@wasm-tool/wasm-pack-plugin": ^1.6.0
     classnames: ^2.3.1
     cpx: ^1.5.0
     crypto-js: ^4.1.1
@@ -15753,6 +15773,16 @@ __metadata:
   dependencies:
     makeerror: 1.0.x
   checksum: 4038fcf92f6ab0288267ad05008aec9e089a759f1bd32e1ea45cc2eb498eb12095ec43cf8ca2bf23a465f4580a0d33b25b89f450ba521dd27083cbc695ee6bf5
+  languageName: node
+  linkType: hard
+
+"watchpack@npm:^2.1.1":
+  version: 2.3.1
+  resolution: "watchpack@npm:2.3.1"
+  dependencies:
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.1.2
+  checksum: 70a34f92842d94b5d842980f866d568d7a467de667c96ae5759c759f46587e49265863171f4650bdbafc5f3870a28f2b4453e9e847098ec4b718b38926d47d22
   languageName: node
   linkType: hard
 

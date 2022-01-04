@@ -16,7 +16,7 @@ pub mod database {
         pub type Database;
         pub type Reference;
 
-        #[wasm_bindgen(js_namespace = firebaseDatabase)]
+        #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = create)]
         pub fn new() -> Database;
 
         #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = ref)]
@@ -37,7 +37,7 @@ pub mod database {
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub async fn remove(this: &Reference);
 
-        #[wasm_bindgen(js_namespace = firebaseDatabase)]
+        #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = set)]
         pub async fn set_value(this: &Reference, values: &JsValue);
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
@@ -69,6 +69,7 @@ pub mod auth {
             password: &str,
         ) -> JsValue;
 
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = signedInUserId)]
         pub fn signed_in_user_id(cred: &JsValue) -> String;
     }
 }

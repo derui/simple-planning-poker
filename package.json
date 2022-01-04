@@ -98,6 +98,7 @@
     "webpack-dev-server": "^4.2.1"
   },
   "dependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "firebase": "^9.0.2",
