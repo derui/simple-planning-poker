@@ -13,6 +13,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 yew = "0.19.3"
 yew-agent = "0.1.0"
+yew-router = "0.16.0"
 gloo = "0.5"
 gloo-utils = "0.1.1"
 wasm-bindgen = {version = "0.2", features = [ "serde-serialize" ]}

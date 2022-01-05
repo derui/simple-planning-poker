@@ -10,14 +10,17 @@ use crate::{
     },
 };
 
-use super::global_bus::{GameActions, GlobalStatus, InnerMessage};
+use super::{
+    global_bus::{GameActions, InnerMessage},
+    global_status::GlobalStatus,
+};
 
 // implementation
 mod internal {
     use std::vec;
 
     use crate::{
-        agents::global_bus::GlobalStatus, domains::game::GameRepository,
+        agents::global_status::GlobalStatus, domains::game::GameRepository,
         usecases::create_game::CreateGame,
     };
 
@@ -31,7 +34,7 @@ mod internal {
 
             let player = ChangeUserMode::execute(&this, player.id(), mode).await;
             if let Ok(player) = player {
-                this.publish_game_player_response(&player).await;
+                this.publish_snapshot().await;
                 vec![InnerMessage::UpdateGamePlayer(player)]
             } else {
                 vec![]
@@ -50,7 +53,7 @@ mod internal {
             if let Some(card) = card {
                 let player = HandCard::execute(this, player.id(), card).await;
                 if let Ok(player) = player {
-                    this.publish_game_player_response(&player).await;
+                    this.publish_snapshot().await;
                     vec![InnerMessage::UpdateGamePlayer(player)]
                 } else {
                     vec![]
@@ -75,7 +78,7 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_game_response(&game).await;
+                this.publish_snapshot().await;
                 vec![InnerMessage::UpdateGame(game)]
             }
             None => vec![],
@@ -98,12 +101,11 @@ mod internal {
 
                 if let Some(player) = player {
                     let repository = this.get_game_repository();
-                    let game = GameRepository::find_by(repository, *game_id)
+                    let _game = GameRepository::find_by(repository, *game_id)
                         .await
                         .expect("should be found");
 
-                    this.publish_game_response(&game).await;
-                    this.publish_game_player_response(&player).await;
+                    this.publish_snapshot().await;
                     vec![InnerMessage::UpdateGamePlayer(player)]
                 } else {
                     vec![]
@@ -127,7 +129,7 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_game_response(&game).await;
+                this.publish_snapshot().await;
                 vec![InnerMessage::UpdateGame(game)]
             }
             None => vec![],
@@ -150,8 +152,7 @@ mod internal {
                 let (player, game) = futures::join!(player, game);
                 match (player, game) {
                     (Some(player), Some(game)) => {
-                        this.publish_game_player_response(&player).await;
-                        this.publish_game_response(&game).await;
+                        this.publish_snapshot().await;
                         vec![
                             InnerMessage::UpdateGame(game),
                             InnerMessage::UpdateGamePlayer(player),
@@ -181,7 +182,7 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_game_response(&game).await;
+                this.publish_snapshot().await;
                 vec![InnerMessage::UpdateGame(game)]
             }
             None => vec![],
@@ -198,7 +199,7 @@ mod internal {
         if let Some(user) = user {
             let points = points
                 .iter()
-                .filter_map(|v| u32::from_str_radix(v, 10).ok())
+                .filter_map(|v| v.parse::<u32>().ok())
                 .collect::<Vec<u32>>();
             if name.is_empty() || points.is_empty() {
                 return vec![];
@@ -215,8 +216,7 @@ mod internal {
                 .await;
 
                 if let Some(player) = player {
-                    this.publish_game_player_response(&player).await;
-                    this.publish_game_response(&game).await;
+                    this.publish_snapshot().await;
                     vec![
                         InnerMessage::UpdateGame(game),
                         InnerMessage::UpdateGamePlayer(player),
