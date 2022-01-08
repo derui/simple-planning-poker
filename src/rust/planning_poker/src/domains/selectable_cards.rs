@@ -55,6 +55,18 @@ impl SelectableCards {
         self.cards.contains(card)
     }
 
+    pub fn index(&self, card: &Card) -> Option<usize> {
+        self.cards.iter().enumerate().find_map(
+            |(index, v)| {
+                if v == card {
+                    Some(index)
+                } else {
+                    None
+                }
+            },
+        )
+    }
+
     pub fn giveup(&self) -> &Card {
         &self.cards[self.cards.len() - 1]
     }

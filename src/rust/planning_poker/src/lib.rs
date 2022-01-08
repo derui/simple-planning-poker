@@ -1,5 +1,6 @@
 use components::containers::{
-    game_creator_container::GameCreatorContainer, game_selector_container::GameSelectorContainer,
+    game_container::GameContainer, game_creator_container::GameCreatorContainer,
+    game_selector_container::GameSelectorContainer,
 };
 use wasm_bindgen::prelude::wasm_bindgen;
 use yew::{function_component, html, Html};
@@ -21,6 +22,8 @@ enum Route {
     CreateGame,
     #[at("/game/:id")]
     Game { id: String },
+    #[at("/game/:id/result")]
+    GameResult { id: String },
     #[at("/invitation/:signature")]
     Invitation { signature: String },
     #[at("/signin")]
@@ -33,8 +36,8 @@ fn switch(routes: &Route) -> Html {
     match routes {
         Route::Selector => html! { <GameSelectorContainer /> },
         Route::CreateGame => html! { <GameCreatorContainer /> },
+        Route::Game { id } => html! {<GameContainer game_id={id.clone()} />},
         _ => unimplemented!()
-        // Route::Game { id } => html! {<GameContainer id={id.clone()} />},
         // Route::Invitation { signature } => {
         //     html! {<InvitationContainer signature={signature.clone()} />}
         // }

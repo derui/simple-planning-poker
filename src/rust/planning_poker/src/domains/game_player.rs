@@ -112,6 +112,10 @@ impl GamePlayer {
         }
     }
 
+    pub fn cards(&self) -> &SelectableCards {
+        &self.cards
+    }
+
     pub fn user(&self) -> &UserId {
         &self.user
     }

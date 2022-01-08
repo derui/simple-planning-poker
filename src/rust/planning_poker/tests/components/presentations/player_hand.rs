@@ -1,7 +1,6 @@
 use planning_poker::{
-    components::presentations::player_hand::PlayerHand,
-    components::presentations::types::{NamePosition, UserMode},
-    domains::{card::Card, story_point::StoryPoint},
+    agents::global_status::CardProjection, components::presentations::player_hand::PlayerHand,
+    components::presentations::types::NamePosition, domains::game_player::UserMode,
 };
 use wasm_bindgen_test::wasm_bindgen_test;
 use yew::html;
@@ -13,8 +12,8 @@ wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 #[wasm_bindgen_test]
 fn should_print_name() {
     let node = html! {
-        <PlayerHand card={Card::giveup()} name_position={NamePosition::Lower}
-            mode={UserMode::Normal} name={String::from("test")} selected={false} showed_down={false} />
+        <PlayerHand card={None} name_position={NamePosition::Lower}
+            mode={UserMode::Normal} name={String::from("test")} showed_down={false} />
     };
     mount(&node);
 
@@ -25,8 +24,8 @@ fn should_print_name() {
 #[wasm_bindgen_test]
 fn should_print_giveup_card() {
     let node = html! {
-        <PlayerHand card={Card::giveup()} name_position={NamePosition::Lower}
-            mode={UserMode::Normal} name={String::from("test")} selected={false} showed_down={true} />
+        <PlayerHand card={None} name_position={NamePosition::Lower}
+            mode={UserMode::Normal} name={String::from("test")} showed_down={true} />
     };
     mount(&node);
 
@@ -36,9 +35,10 @@ fn should_print_giveup_card() {
 
 #[wasm_bindgen_test]
 fn should_print_storypoint_card() {
+    let card = Some(CardProjection::StoryPoint(5));
     let node = html! {
-        <PlayerHand card={Card::storypoint(StoryPoint::new(5))} name_position={NamePosition::Lower}
-            mode={UserMode::Normal} name={String::from("test")} selected={false} showed_down={true} />
+        <PlayerHand card={card} name_position={NamePosition::Lower}
+            mode={UserMode::Normal} name={String::from("test")} showed_down={true} />
     };
     mount(&node);
 
@@ -48,9 +48,10 @@ fn should_print_storypoint_card() {
 
 #[wasm_bindgen_test]
 fn should_print_eye_when_inspector() {
+    let card = CardProjection::StoryPoint(5);
     let node = html! {
-        <PlayerHand card={Card::storypoint(StoryPoint::new(5))} name_position={NamePosition::Lower}
-            mode={UserMode::Inspector} name={String::from("test")} selected={false} showed_down={false} />
+        <PlayerHand card={card} name_position={NamePosition::Lower}
+            mode={UserMode::Inspector} name={String::from("test")} showed_down={false} />
     };
     mount(&node);
 
@@ -60,9 +61,10 @@ fn should_print_eye_when_inspector() {
 
 #[wasm_bindgen_test]
 fn should_print_selected_if_it_selected() {
+    let card = Some(CardProjection::StoryPoint(5));
     let node = html! {
-        <PlayerHand card={Card::storypoint(StoryPoint::new(5))} name_position={NamePosition::Lower}
-            mode={UserMode::Normal} name={String::from("test")} selected={true} showed_down={false} />
+        <PlayerHand card={card} name_position={NamePosition::Lower}
+            mode={UserMode::Normal} name={String::from("test")} showed_down={false} />
     };
     mount(&node);
 

@@ -5,7 +5,7 @@ use yew::{
     Html, Properties, UseStateHandle,
 };
 
-use super::types::UserMode;
+use crate::domains::game_player::UserMode;
 
 #[derive(Properties, PartialEq)]
 pub struct UserInfoProps {

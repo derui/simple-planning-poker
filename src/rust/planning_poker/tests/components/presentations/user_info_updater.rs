@@ -1,7 +1,7 @@
 use std::{borrow::BorrowMut, cell::RefCell, rc::Rc};
 
-use planning_poker::components::presentations::{
-    types::UserMode, user_info_updater::UserInfoUpdater,
+use planning_poker::{
+    components::presentations::user_info_updater::UserInfoUpdater, domains::game_player::UserMode,
 };
 use wasm_bindgen_test::wasm_bindgen_test;
 use web_sys::{InputEvent, InputEventInit, MouseEvent};

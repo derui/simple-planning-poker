@@ -1,21 +1,21 @@
-use crate::domains::card::Card;
+use crate::{agents::global_status::CardProjection, domains::game_player::UserMode};
 use yew::{classes, function_component, html, Properties};
 
-use super::types::{NamePosition, UserMode};
+use super::types::NamePosition;
 
 #[derive(Properties, PartialEq, Clone)]
 struct CardProps {
-    card: Card,
+    card: Option<CardProjection>,
     mode: UserMode,
     showed_down: bool,
-    selected: bool,
 }
 
 #[function_component(CardComponent)]
 fn card(props: &CardProps) -> Html {
-    let story_point = match props.card.as_story_point() {
-        None => String::from("?"),
-        Some(v) => format!("{}", v.as_u32()),
+    let story_point = match props.card {
+        None => "".to_owned(),
+        Some(CardProjection::GiveUp) => "?".to_owned(),
+        Some(CardProjection::StoryPoint(v)) => v.to_string(),
     };
 
     if let UserMode::Inspector = props.mode {
@@ -32,7 +32,8 @@ fn card(props: &CardProps) -> Html {
         let class_name = classes!(
             "app__game__main__user-hand__user-card",
             props
-                .selected
+                .card
+                .is_some()
                 .then(|| { Some("app__game__main__user-hand__user-card--handed") })
         );
 
@@ -47,8 +48,7 @@ pub struct PlayerHandProps {
     pub name_position: NamePosition,
     pub name: String,
     pub mode: UserMode,
-    pub card: Card,
-    pub selected: bool,
+    pub card: Option<CardProjection>,
     pub showed_down: bool,
 }
 
@@ -72,7 +72,7 @@ pub fn player_hand(props: &PlayerHandProps) -> Html {
         <div class="app__game__main__user-hand">
             <div class="app__game__main__user-hand-container">
             {upper_position.clone()}
-        <CardComponent showed_down={props.showed_down} card={props.card.clone()} selected={props.selected} mode={props.mode.clone()}  />
+        <CardComponent showed_down={props.showed_down} card={props.card.clone()} mode={props.mode.clone()}  />
             {lower_position.clone()}
             </div>
             </div>

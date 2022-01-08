@@ -3,9 +3,9 @@ use yew::{function_component, html, virtual_dom::VNode, Callback, Properties};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
-    story_points: Vec<String>,
-    selected_index: Option<u32>,
-    onclickcard: Callback<u32>,
+    pub story_points: Vec<String>,
+    pub selected_index: Option<u32>,
+    pub onclickcard: Callback<u32>,
 }
 
 #[function_component(CardHolder)]

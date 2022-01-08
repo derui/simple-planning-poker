@@ -1,7 +1,7 @@
+use crate::domains::game_player::UserMode;
+
 use super::user_info_updater::UserInfoUpdater;
 use yew::{classes, function_component, html, use_state, Callback, Properties};
-
-use super::types::UserMode;
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

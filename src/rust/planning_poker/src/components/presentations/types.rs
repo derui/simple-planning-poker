@@ -7,12 +7,6 @@ pub enum NamePosition {
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum UserMode {
-    Normal,
-    Inspector,
-}
-
-#[derive(Debug, PartialEq, Clone)]
 pub struct CardCount {
     pub story_point: StoryPoint,
     pub count: u32,

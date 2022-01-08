@@ -10,3 +10,7 @@ pub mod signin;
 pub mod types;
 pub mod user_info;
 pub mod user_info_updater;
+
+pub mod next_game_button;
+pub mod show_down_button;
+pub mod waiting_hand_button;

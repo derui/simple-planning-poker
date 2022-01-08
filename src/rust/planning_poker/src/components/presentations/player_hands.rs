@@ -1,8 +1,11 @@
 use yew::{classes, function_component, html, Properties};
 
-use crate::{components::presentations::player_hand::PlayerHand, domains::card::Card};
+use crate::{
+    agents::global_status::CardProjection, components::presentations::player_hand::PlayerHand,
+    domains::game_player::UserMode,
+};
 
-use super::types::{NamePosition, UserMode};
+use super::types::NamePosition;
 
 #[derive(PartialEq, Debug)]
 pub enum Position {
@@ -14,8 +17,7 @@ pub enum Position {
 pub struct PlayerHandProps {
     pub name: String,
     pub mode: UserMode,
-    pub card: Card,
-    pub selected: bool,
+    pub card: Option<CardProjection>,
     pub showed_down: bool,
 }
 
@@ -54,7 +56,7 @@ fn make_user_hands(props: &Props) -> Vec<yew::virtual_dom::VNode> {
 
             html! {
                 <PlayerHand key={index} name_position={name_position} name={v.name.clone()}
-            mode={v.mode.clone()} card={v.card.clone()} selected={v.selected} showed_down={v.showed_down}/>
+            mode={v.mode.clone()} card={v.card.clone()} showed_down={v.showed_down}/>
             }
         })
         .collect::<Vec<_>>()

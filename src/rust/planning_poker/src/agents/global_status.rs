@@ -37,29 +37,30 @@ use super::{
 
 type UserModeProjection = String;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum CardProjection {
     GiveUp,
     StoryPoint(u32),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct GamePlayerProjection {
-    game_player_id: String,
-    name: String,
-    mode: UserModeProjection,
-    card: Option<CardProjection>,
-    selected: bool,
+    pub game_player_id: String,
+    pub name: String,
+    pub mode: UserModeProjection,
+    pub card: Option<CardProjection>,
+    pub selected_index: Option<u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct GameProjection {
-    id: String,
-    name: String,
-    hands: Vec<GamePlayerProjection>,
-    showed_down: bool,
-    average: Option<f32>,
-    invitation_signature: String,
+    pub id: String,
+    pub name: String,
+    pub hands: Vec<GamePlayerProjection>,
+    pub showed_down: bool,
+    pub average: Option<f32>,
+    pub invitation_signature: String,
+    pub cards: Vec<CardProjection>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -155,7 +156,10 @@ impl GlobalStatus {
                 None => CardProjection::GiveUp,
                 Some(p) => CardProjection::StoryPoint(p.as_u32()),
             }),
-            selected: player.hand().is_some(),
+            selected_index: player
+                .hand()
+                .and_then(|c| player.cards().index(c))
+                .map(|v| v as u32),
         }
     }
 
@@ -166,6 +170,13 @@ impl GlobalStatus {
             .map(|player| self.renew_game_player_projection(*player));
 
         let hands = join_all(hands).await;
+        let mut cards = game
+            .cards()
+            .storypoints()
+            .iter()
+            .map(|v| CardProjection::StoryPoint(v.as_u32()))
+            .collect::<Vec<CardProjection>>();
+        cards.push(CardProjection::GiveUp);
 
         GameProjection {
             id: game.id().to_string(),
@@ -174,6 +185,7 @@ impl GlobalStatus {
             average: game.calculate_average().ok().map(|v| v.as_f32()),
             invitation_signature: InvitationSignature::new(game.id()).to_string(),
             hands,
+            cards,
         }
     }
 

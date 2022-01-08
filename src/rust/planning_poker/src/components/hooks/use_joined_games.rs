@@ -11,10 +11,16 @@ pub fn use_joined_game() -> Vec<JoinedGameProjection> {
     let effect_state = state.clone();
 
     use_effect(|| {
-        let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
-            if let Response::SignedIn(user) = msg {
+        let bridge = GlobalStatus::bridge(Callback::from(move |msg| match msg {
+            Response::SignedIn(user) => {
                 effect_state.set(user.joined_games);
             }
+            Response::SnapshotUpdated(data) => {
+                if let Some(user) = data.current_user {
+                    effect_state.set(user.joined_games)
+                };
+            }
+            _ => (),
         }));
 
         || drop(bridge)
