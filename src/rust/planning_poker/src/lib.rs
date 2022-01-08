@@ -1,10 +1,12 @@
 use components::containers::{
     game_container::GameContainer, game_creator_container::GameCreatorContainer,
-    game_selector_container::GameSelectorContainer,
+    game_result_container::GameResultContainer, game_selector_container::GameSelectorContainer,
 };
 use wasm_bindgen::prelude::wasm_bindgen;
 use yew::{function_component, html, Html};
 use yew_router::{BrowserRouter, Routable, Switch};
+
+use crate::components::containers::invitation_container::InvitationContainer;
 
 pub mod agents;
 pub mod components;
@@ -37,10 +39,11 @@ fn switch(routes: &Route) -> Html {
         Route::Selector => html! { <GameSelectorContainer /> },
         Route::CreateGame => html! { <GameCreatorContainer /> },
         Route::Game { id } => html! {<GameContainer game_id={id.clone()} />},
+        Route::GameResult { id } => html! {<GameResultContainer game_id={id.clone()} />},
+        Route::Invitation { signature } => {
+            html! {<InvitationContainer signature={signature.clone()} />}
+        }
         _ => unimplemented!()
-        // Route::Invitation { signature } => {
-        //     html! {<InvitationContainer signature={signature.clone()} />}
-        // }
         // Route::SignIn => html! {<SignInContainer /> },
         // Route::SignUp => html! {<SignUpContainer /> },
     }

@@ -24,7 +24,7 @@ fn should_print_name() {
 #[wasm_bindgen_test]
 fn should_print_giveup_card() {
     let node = html! {
-        <PlayerHand card={None} name_position={NamePosition::Lower}
+        <PlayerHand card={Some(CardProjection::GiveUp)} name_position={NamePosition::Lower}
             mode={UserMode::Normal} name={String::from("test")} showed_down={true} />
     };
     mount(&node);

@@ -1,3 +1,4 @@
+use futures::TryFutureExt;
 use gloo_utils::document;
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
 use yew_agent::Dispatched;
@@ -9,12 +10,16 @@ use crate::{
         global_status::{CardProjection, GamePlayerProjection, GlobalStatus},
     },
     components::{
-        hooks::{use_current_player, use_current_user, use_game, use_select_card, use_show_down},
+        hooks::{
+            use_current_player, use_current_user, use_game, use_next_game, use_select_card,
+            use_show_down,
+        },
         presentations::{
             card_holder::CardHolder,
             empty_card_holder::EmptyCardHolder,
             game_info::GameInfo,
             game_settings::GameSettings,
+            next_game_button::NextGameButton,
             player_hands::{PlayerHandProps, PlayerHands, Position},
             show_down_button::ShowDownButton,
             user_info::UserInfo,
@@ -55,26 +60,17 @@ fn card_holder_wrapper(props: &CardHolderWrapperProps) -> Html {
 }
 
 #[derive(Properties, PartialEq)]
-struct ProgressionButtonProps {
+struct NextButtonProps {
+    game_id: String,
     user_mode: UserMode,
-    empty_hands: bool,
 }
 
-#[function_component(ProgressionButton)]
-fn progression_button(props: &ProgressionButtonProps) -> Html {
-    let show_down = use_show_down();
+#[function_component(NextButton)]
+fn next_button(props: &NextButtonProps) -> Html {
+    let next_game = use_next_game(&props.game_id);
     let user_mode = props.user_mode.clone();
 
-    if props.empty_hands {
-        html! { <WaitingHandButton user_mode={user_mode} /> }
-    } else {
-        html! { <ShowDownButton user_mode={user_mode} onclick={show_down} /> }
-    }
-}
-
-#[derive(Properties, PartialEq)]
-pub struct GameContainerProps {
-    pub game_id: String,
+    html! { <NextGameButton user_mode={user_mode} onclick={next_game} /> }
 }
 
 fn to_upper_hands(hands: &[GamePlayerProjection]) -> Vec<PlayerHandProps> {
@@ -96,7 +92,7 @@ where
                     name: v.name.clone(),
                     mode: UserMode::from(v.mode.clone()),
                     card: v.card.clone(),
-                    showed_down: false,
+                    showed_down: true,
                 })
             }
         })
@@ -107,8 +103,13 @@ fn to_lower_hands(hands: &[GamePlayerProjection]) -> Vec<PlayerHandProps> {
     to_hands(hands, |index| index % 2 == 1)
 }
 
-#[function_component(GameContainer)]
-pub fn game_container(props: &GameContainerProps) -> Html {
+#[derive(Properties, PartialEq)]
+pub struct GameResultContainerProps {
+    pub game_id: String,
+}
+
+#[function_component(GameResultContainer)]
+pub fn game_result_container(props: &GameResultContainerProps) -> Html {
     let history = use_history().unwrap();
     let game = use_game();
     let user = use_current_user().unwrap();
@@ -136,8 +137,8 @@ pub fn game_container(props: &GameContainerProps) -> Html {
         .origin()
         .expect("should get origin");
 
-    if game.showed_down {
-        history.replace(Route::GameResult {
+    if !game.showed_down {
+        history.replace(Route::Game {
             id: game.id.clone(),
         });
         return html! {};
@@ -163,7 +164,7 @@ pub fn game_container(props: &GameContainerProps) -> Html {
             <div class="app__game__main__upper-spacer"></div>
             <PlayerHands position={Position::Upper} user_hands={to_upper_hands(&game.hands)} />
             <div class="app__game__main__table">
-            <ProgressionButton user_mode={user_mode.clone()} empty_hands={game.hands.is_empty()} />
+            <NextButton user_mode={user_mode.clone()} game_id={game.id.clone()} />
             </div>
             <PlayerHands position={Position::Lower} user_hands={to_lower_hands(&game.hands)} />
             <div class="app__game__main__lower-spacer"></div>
