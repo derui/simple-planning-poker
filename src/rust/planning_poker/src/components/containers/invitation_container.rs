@@ -1,9 +1,12 @@
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
-use yew_agent::{use_bridge, Bridged};
+use yew_agent::Bridged;
 use yew_router::{history::History, hooks::use_history};
 
 use crate::{
-    agents::{global_bus::Response, global_status::GlobalStatus},
+    agents::{
+        global_bus::Response,
+        global_status::{GlobalStatus, GlobalStatusProjection},
+    },
     components::hooks::use_join_user,
     Route,
 };
@@ -22,18 +25,17 @@ pub fn invitation_container(props: &InvitationContainerProps) -> Html {
         move |signature| {
             join_user.emit(signature.to_owned());
 
-            GlobalStatus::bridge(Callback::from(move |msg| match msg {
-                Response::SnapshotUpdated(s) => {
-                    if let Some(game) = s.current_game {
-                        history.replace(Route::Game {
-                            id: game.id.clone(),
-                        })
-                    }
+            let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
+                if let Response::SnapshotUpdated(GlobalStatusProjection {
+                    current_game: Some(game),
+                    ..
+                }) = msg
+                {
+                    history.replace(Route::Game { id: game.id })
                 }
-                _ => (),
             }));
 
-            || {}
+            || drop(bridge)
         },
         props.signature.clone(),
     );

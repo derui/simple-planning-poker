@@ -1,4 +1,4 @@
-use futures::TryFutureExt;
+
 use gloo_utils::document;
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
 use yew_agent::Dispatched;
@@ -12,7 +12,6 @@ use crate::{
     components::{
         hooks::{
             use_current_player, use_current_user, use_game, use_next_game, use_select_card,
-            use_show_down,
         },
         presentations::{
             card_holder::CardHolder,
@@ -21,9 +20,7 @@ use crate::{
             game_settings::GameSettings,
             next_game_button::NextGameButton,
             player_hands::{PlayerHandProps, PlayerHands, Position},
-            show_down_button::ShowDownButton,
             user_info::UserInfo,
-            waiting_hand_button::WaitingHandButton,
         },
     },
     domains::game_player::UserMode,
@@ -139,7 +136,7 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
 
     if !game.showed_down {
         history.replace(Route::Game {
-            id: game.id.clone(),
+            id: game.id,
         });
         return html! {};
     }

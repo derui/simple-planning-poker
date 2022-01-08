@@ -1,6 +1,7 @@
 use components::containers::{
     game_container::GameContainer, game_creator_container::GameCreatorContainer,
     game_result_container::GameResultContainer, game_selector_container::GameSelectorContainer,
+    sign_in_container::SignInContainer, sign_up_container::SignUpContainer,
 };
 use wasm_bindgen::prelude::wasm_bindgen;
 use yew::{function_component, html, Html};
@@ -43,9 +44,8 @@ fn switch(routes: &Route) -> Html {
         Route::Invitation { signature } => {
             html! {<InvitationContainer signature={signature.clone()} />}
         }
-        _ => unimplemented!()
-        // Route::SignIn => html! {<SignInContainer /> },
-        // Route::SignUp => html! {<SignUpContainer /> },
+        Route::SignIn => html! {<SignInContainer /> },
+        Route::SignUp => html! {<SignUpContainer /> },
     }
 }
 
