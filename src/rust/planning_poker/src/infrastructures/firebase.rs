@@ -8,7 +8,10 @@ use std::{
 pub mod database {
 
     use js_sys::Object;
-    use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
+    use wasm_bindgen::{
+        prelude::{wasm_bindgen, Closure},
+        JsValue,
+    };
 
     #[wasm_bindgen]
     extern "C" {
@@ -42,6 +45,9 @@ pub mod database {
 
         #[wasm_bindgen(js_namespace = firebaseDatabase)]
         pub fn val(this: &JsValue) -> JsValue;
+
+        #[wasm_bindgen(js_namespace = firebaseDatabase, js_name = onValue)]
+        pub fn on_value(this: &Reference, callback: &Closure<dyn FnMut()>) -> js_sys::Function;
     }
 }
 

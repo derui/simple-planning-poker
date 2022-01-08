@@ -1,3 +1,4 @@
+mod use_authenticated;
 mod use_authenticating;
 mod use_current_player;
 mod use_current_user;
@@ -10,6 +11,7 @@ mod use_show_down;
 mod use_sign_in;
 mod use_sign_up;
 
+pub use use_authenticated::*;
 pub use use_authenticating::*;
 pub use use_current_player::*;
 pub use use_current_user::*;

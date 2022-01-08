@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { child, connectDatabaseEmulator, get, getDatabase, ref, remove, set, update } from "firebase/database";
+import { child, connectDatabaseEmulator, get, getDatabase, ref, remove, set, update, onValue } from "firebase/database";
 import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
@@ -26,6 +26,7 @@ export const firebaseDatabase = {
   remove,
   set,
   eval,
+  onValue
 };
 
 export const firebaseAuth = {
