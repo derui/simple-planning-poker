@@ -1,7 +1,7 @@
 use yew::{function_component, html, use_state, Callback};
 
 use crate::components::{
-    hooks::{use_authenticating, use_sign_in, use_sign_up},
+    hooks::{use_authenticating, use_sign_up},
     presentations::signin::Signin,
 };
 

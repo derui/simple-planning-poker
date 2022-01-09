@@ -1,4 +1,3 @@
-
 use gloo_utils::document;
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
 use yew_agent::Dispatched;
@@ -10,9 +9,7 @@ use crate::{
         global_status::{CardProjection, GamePlayerProjection, GlobalStatus},
     },
     components::{
-        hooks::{
-            use_current_player, use_current_user, use_game, use_next_game, use_select_card,
-        },
+        hooks::{use_current_player, use_current_user, use_game, use_next_game, use_select_card},
         presentations::{
             card_holder::CardHolder,
             empty_card_holder::EmptyCardHolder,
@@ -135,9 +132,7 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
         .expect("should get origin");
 
     if !game.showed_down {
-        history.replace(Route::Game {
-            id: game.id,
-        });
+        history.replace(Route::Game { id: game.id });
         return html! {};
     }
 

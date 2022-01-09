@@ -1,4 +1,3 @@
-use gloo::console::{console, console_dbg};
 use yew::{function_component, html, virtual_dom::VNode, Properties};
 use yew_router::components::Link;
 
@@ -35,7 +34,6 @@ pub fn game_selector_container() -> Html {
     let game_components = games
         .iter()
         .map(|v| {
-            console_dbg!(v);
             html! { <GameLink game_id={v.game_id.clone()} name={v.name.clone()} />}
         })
         .collect::<Vec<VNode>>();

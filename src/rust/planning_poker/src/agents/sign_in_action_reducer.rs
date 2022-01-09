@@ -22,17 +22,13 @@ pub struct CurrentUserStatusProjection {
 }
 
 mod internal {
-    use web_sys::console;
 
     use crate::{
         agents::{
             global_bus::{InnerMessage, Response},
             global_status::GlobalStatus,
         },
-        infrastructures::{
-            authenticator::{AuthenticatorIntf, HaveAuthenticator},
-            firebase::auth::current_user_id,
-        },
+        infrastructures::authenticator::{AuthenticatorIntf, HaveAuthenticator},
     };
 
     use super::*;

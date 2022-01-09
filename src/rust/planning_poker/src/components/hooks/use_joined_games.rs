@@ -1,5 +1,4 @@
-use gloo::console::{console, console_dbg};
-use yew::{use_effect, use_effect_with_deps, use_state, Callback};
+use yew::{use_effect_with_deps, use_state, Callback};
 use yew_agent::Bridged;
 
 use crate::agents::{

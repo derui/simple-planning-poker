@@ -57,13 +57,13 @@ impl AuthenticatorIntf for Authenticator {
         let user = auth::current_user_id(&self.auth.auth);
 
         if user.is_falsy() {
-            return None;
+            None
         } else {
             let user_id = user.as_string().expect("should be string");
             let hash = &sha256::digest(user_id)[0..32];
             let user_id = UserId::from(hash.to_owned());
 
-            return Some(user_id);
+            Some(user_id)
         }
     }
 }

@@ -1,6 +1,6 @@
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, InputEvent};
-use yew::{function_component, html, use_effect, use_state, Callback};
+use yew::{function_component, html, use_effect_with_deps, use_state, Callback};
 use yew_agent::{Bridged, Dispatched};
 use yew_router::{history::History, hooks::use_history};
 
@@ -41,19 +41,22 @@ pub fn game_creator_container() -> Html {
     });
     let history = use_history().unwrap();
 
-    use_effect(|| {
-        let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
-            if let Response::SnapshotUpdated(GlobalStatusProjection {
-                current_game: Some(game),
-                ..
-            }) = msg
-            {
-                history.push(Route::Game { id: game.id });
-            }
-        }));
+    use_effect_with_deps(
+        |_| {
+            let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
+                if let Response::SnapshotUpdated(GlobalStatusProjection {
+                    current_game: Some(game),
+                    ..
+                }) = msg
+                {
+                    history.push(Route::Game { id: game.id });
+                }
+            }));
 
-        || drop(bridge)
-    });
+            || drop(bridge)
+        },
+        (),
+    );
 
     let on_name_input = {
         let state = state.clone();

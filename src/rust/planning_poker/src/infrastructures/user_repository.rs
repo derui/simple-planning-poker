@@ -3,7 +3,6 @@ use std::{collections::HashMap, future::Future, pin::Pin};
 use js_sys::{Array, Object};
 use uuid::Uuid;
 use wasm_bindgen::JsValue;
-use web_sys::console;
 
 use crate::domains::{
     game::GameId,

@@ -1,22 +1,14 @@
 use std::collections::HashSet;
 
-use serde::{Deserialize, Serialize};
 use wasm_bindgen::{prelude::Closure, JsValue};
 use yew_agent::{Agent, AgentLink, Context, Dispatched, HandlerId};
 
-use crate::{
-    domains::{game::Game, game_player::GamePlayer, user::User},
-    infrastructures::firebase::{
-        database::{on_value, reference_with_key},
-        Database,
-    },
+use crate::infrastructures::firebase::{
+    database::{on_value, reference_with_key},
+    Database,
 };
 
-use super::{
-    global_bus::Actions,
-    global_status::{GlobalStatus, GlobalStatusProjection},
-    sign_in_action_reducer::CurrentUserStatusProjection,
-};
+use super::{global_bus::Actions, global_status::GlobalStatus};
 
 pub struct GameObserver {
     link: AgentLink<GameObserver>,

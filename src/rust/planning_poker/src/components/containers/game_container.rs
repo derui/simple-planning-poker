@@ -111,7 +111,7 @@ fn to_lower_hands(hands: &[GamePlayerProjection]) -> Vec<PlayerHandProps> {
 pub fn game_container(props: &GameContainerProps) -> Html {
     let history = use_history().unwrap();
     let game = use_game();
-    let user = use_current_user().unwrap();
+    let user = use_current_user();
     let player = use_current_player();
 
     use_effect_with_deps(
@@ -122,13 +122,14 @@ pub fn game_container(props: &GameContainerProps) -> Html {
         },
         props.game_id.clone(),
     );
-    match (&game, &player) {
-        (None, _) | (_, None) => return html! {},
+    match (&game, &player, &user) {
+        (None, _, _) | (_, None, _) | (_, _, None) => return html! {},
         _ => (),
     };
 
     let game = game.unwrap();
     let player = player.unwrap();
+    let user = user.unwrap();
     let user_mode = UserMode::from(player.mode.clone());
     let origin = document()
         .location()
@@ -137,9 +138,7 @@ pub fn game_container(props: &GameContainerProps) -> Html {
         .expect("should get origin");
 
     if game.showed_down {
-        history.replace(Route::GameResult {
-            id: game.id,
-        });
+        history.replace(Route::GameResult { id: game.id });
         return html! {};
     }
 

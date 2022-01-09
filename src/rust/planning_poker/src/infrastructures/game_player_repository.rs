@@ -97,7 +97,7 @@ impl GamePlayerRepository for Database {
                 return None;
             }
 
-            let mode = js_sys::Reflect::get(&v, &S(user_id.clone()).to())
+            let mode = js_sys::Reflect::get(&v, &S(id.to_string()).to())
                 .map(|v| UserMode::from(v.as_string().unwrap()))
                 .unwrap();
             let game = GameRepository::find_by(self, GameId::from(game_id)).await;

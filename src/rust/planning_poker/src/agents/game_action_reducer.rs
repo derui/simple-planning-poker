@@ -19,7 +19,7 @@ use super::{
 mod internal {
     use std::vec;
 
-    use gloo::console::console_dbg;
+    
 
     use crate::{
         agents::global_status::GlobalStatus, domains::game::GameRepository,
@@ -153,7 +153,6 @@ mod internal {
                 let game = GameRepository::find_by(game_repo, joined_game.game);
 
                 let (player, game) = futures::join!(player, game);
-                console_dbg!(&player, &game);
                 match (player, game) {
                     (Some(player), Some(game)) => {
                         this.publish_snapshot().await;
