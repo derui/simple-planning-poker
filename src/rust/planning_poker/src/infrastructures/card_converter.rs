@@ -29,7 +29,7 @@ pub fn deserialize(object: &JsValue) -> Result<Card, JsValue> {
         Some("giveup") => Ok(Card::giveup()),
         Some("storypoint") => {
             let v = storypoint?;
-            let v: u32 = v.as_f64().map(|v| v as u32).unwrap();
+            let v: u32 = v.as_string().map_or(0, |v| v.parse::<u32>().unwrap_or(0));
             Ok(Card::storypoint(StoryPoint::new(v)))
         }
         Some(_) | None => Err(JsValue::from_str("error")),

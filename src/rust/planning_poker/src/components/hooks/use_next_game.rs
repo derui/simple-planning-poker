@@ -16,6 +16,6 @@ pub fn use_next_game(game_id: &str) -> Callback<()> {
     let game_id = game_id.to_owned();
     Callback::once(move |_| {
         GlobalStatus::dispatcher().send(Actions::ForGame(GameActions::NextGame));
-        history.push(Route::Game { id: game_id })
+        history.push(Route::Game { id: game_id });
     })
 }

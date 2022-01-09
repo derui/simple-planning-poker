@@ -31,7 +31,7 @@ use crate::{
 use super::{
     domain_event_listener::DomainEventListener,
     game_action_reducer::reduce_game_action,
-    global_bus::{Actions, InnerMessage, Response},
+    global_bus::{Actions, GlobalStatusUpdateMessage, InnerMessage, Response},
     sign_in_action_reducer::{reduce_sign_in, CurrentUserStatusProjection, JoinedGameProjection},
     user_action_reducer::reduce_user_actions,
 };
@@ -129,18 +129,25 @@ impl CreateGameDependency for GlobalStatus {}
 
 // implementation
 impl GlobalStatus {
-    pub fn update(&mut self, msg: InnerMessage) {
-        match msg {
-            InnerMessage::UpdateGamePlayer(player) => {
-                self.current_game_player.replace(Some(player));
-            }
-            InnerMessage::UpdateGame(game) => {
-                self.current_game.replace(Some(game));
-            }
-            InnerMessage::UpdateUser(user) => {
-                self.current_user.replace(Some(user));
+    pub fn update(&mut self, msg: GlobalStatusUpdateMessage) {
+        for msg in msg.messages() {
+            match msg {
+                InnerMessage::UpdateGamePlayer(player) => {
+                    self.current_game_player.replace(Some(player.clone()));
+                }
+                InnerMessage::UpdateGame(game) => {
+                    self.current_game.replace(Some(game.clone()));
+                }
+                InnerMessage::UpdateUser(user) => {
+                    self.current_user.replace(Some(user.clone()));
+                }
             }
         }
+
+        let this = self.clone();
+        let fut = async move { this.publish_snapshot().await };
+
+        spawn_local(fut);
     }
 
     async fn renew_game_player_projection(
@@ -229,19 +236,37 @@ impl GlobalStatus {
     }
 
     pub async fn publish_snapshot(&self) {
-        let current_game = match &*self.current_game.borrow() {
+        let current_game = match self.current_game.try_borrow().ok() {
             None => None,
-            Some(game) => Some(self.renew_game_projection(game).await),
+            Some(game) => {
+                if let Some(game) = game.as_ref() {
+                    Some(self.renew_game_projection(game).await)
+                } else {
+                    None
+                }
+            }
         };
 
-        let current_game_player = match &*self.current_game_player.borrow() {
+        let current_game_player = match &self.current_game_player.try_borrow().ok() {
             None => None,
-            Some(player) => Some(self.renew_game_player_projection(player.id()).await),
+            Some(player) => {
+                if let Some(player) = player.as_ref() {
+                    Some(self.renew_game_player_projection(player.id()).await)
+                } else {
+                    None
+                }
+            }
         };
 
-        let current_user = match &*self.current_user.borrow() {
+        let current_user = match &self.current_user.try_borrow().ok() {
             None => None,
-            Some(user) => Some(self.renew_user_projection(user).await),
+            Some(user) => {
+                if let Some(user) = user.as_ref() {
+                    Some(self.renew_user_projection(user).await)
+                } else {
+                    None
+                }
+            }
         };
 
         let proj = GlobalStatusProjection {
@@ -257,7 +282,7 @@ impl GlobalStatus {
 impl Agent for GlobalStatus {
     type Reach = Context<Self>;
 
-    type Message = InnerMessage;
+    type Message = GlobalStatusUpdateMessage;
 
     type Input = Actions;
 
@@ -284,21 +309,15 @@ impl Agent for GlobalStatus {
     fn handle_input(&mut self, msg: Self::Input, _id: yew_agent::HandlerId) {
         let this = self.clone();
         let fut = async move {
-            let messages = match msg {
-                Actions::ForGame(msg) => reduce_game_action(&this, msg).await,
-                Actions::ForUser(msg) => reduce_user_actions(&this, msg).await,
-                Actions::ForSignIn(msg) => reduce_sign_in(&this, msg).await,
-                Actions::RequestSnapshot => {
-                    this.publish_snapshot().await;
-                    Vec::new()
-                }
-            };
-            messages
-                .iter()
-                .for_each(|v| this.link.send_message(v.clone()))
+            match msg {
+                Actions::ForGame(msg) => reduce_game_action(&this, msg).await.unwrap_or_default(),
+                Actions::ForUser(msg) => reduce_user_actions(&this, msg).await.unwrap_or_default(),
+                Actions::ForSignIn(msg) => reduce_sign_in(&this, msg).await.unwrap_or_default(),
+                Actions::RequestSnapshot => Default::default(),
+            }
         };
 
-        spawn_local(fut)
+        self.link.send_future(fut);
     }
 
     fn connected(&mut self, id: HandlerId) {

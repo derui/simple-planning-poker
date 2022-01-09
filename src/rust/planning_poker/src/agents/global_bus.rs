@@ -46,6 +46,19 @@ pub enum InnerMessage {
     UpdateUser(User),
 }
 
+#[derive(Clone, Debug, Default)]
+pub struct GlobalStatusUpdateMessage(Vec<InnerMessage>);
+
+impl GlobalStatusUpdateMessage {
+    pub fn new(messages: Vec<InnerMessage>) -> Self {
+        GlobalStatusUpdateMessage(messages)
+    }
+
+    pub fn messages(&self) -> &[InnerMessage] {
+        &self.0
+    }
+}
+
 /// responses
 #[derive(Clone)]
 pub enum Response {

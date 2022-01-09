@@ -110,7 +110,7 @@ fn to_lower_hands(hands: &[GamePlayerProjection]) -> Vec<PlayerHandProps> {
 #[function_component(GameContainer)]
 pub fn game_container(props: &GameContainerProps) -> Html {
     let history = use_history().unwrap();
-    let game = use_game();
+    let game = use_game(props.game_id.clone());
     let user = use_current_user();
     let player = use_current_player();
 

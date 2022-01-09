@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::domains::user::{HaveUserRepository, UserRepository};
 
 use super::{
-    global_bus::{InnerMessage, SignInActions},
+    global_bus::{GlobalStatusUpdateMessage, SignInActions},
     global_status::GlobalStatus,
 };
 
@@ -38,7 +38,7 @@ mod internal {
         email: &str,
         password: &str,
         sign_in: bool,
-    ) -> Vec<InnerMessage> {
+    ) -> Option<GlobalStatusUpdateMessage> {
         let email = email.to_string();
         let password = password.to_string();
         let authenticator = this.get_authenticator();
@@ -59,17 +59,19 @@ mod internal {
 
         this.publish(Response::SignedIn(proj));
         this.publish(Response::Authenticated);
-        vec![InnerMessage::UpdateUser(user)]
+        Some(GlobalStatusUpdateMessage::new(vec![
+            InnerMessage::UpdateUser(user),
+        ]))
     }
 
-    pub async fn check_current_auth(this: &GlobalStatus) -> Vec<InnerMessage> {
+    pub async fn check_current_auth(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
         let authenticator = this.get_authenticator();
         let user_id = authenticator.check_user_id_if_exists();
 
-        return match user_id {
+        match user_id {
             None => {
                 this.publish(Response::NotSignedIn);
-                Vec::new()
+                None
             }
             Some(user_id) => {
                 let user = UserRepository::find_by(this.get_user_repository(), user_id)
@@ -80,13 +82,18 @@ mod internal {
 
                 this.publish(Response::SignedIn(proj));
                 this.publish(Response::Authenticated);
-                vec![InnerMessage::UpdateUser(user)]
+                Some(GlobalStatusUpdateMessage::new(vec![
+                    InnerMessage::UpdateUser(user),
+                ]))
             }
-        };
+        }
     }
 }
 
-pub async fn reduce_sign_in(this: &GlobalStatus, msg: SignInActions) -> Vec<InnerMessage> {
+pub async fn reduce_sign_in(
+    this: &GlobalStatus,
+    msg: SignInActions,
+) -> Option<GlobalStatusUpdateMessage> {
     match msg {
         SignInActions::SignIn { email, password } => {
             internal::sign_in_or_sign_up(this, &email, &password, true).await

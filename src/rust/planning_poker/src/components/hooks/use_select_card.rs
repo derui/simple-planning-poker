@@ -7,7 +7,7 @@ use crate::agents::{
 };
 
 pub fn use_select_card() -> Callback<u32> {
-    Callback::once(move |index| {
+    Callback::from(move |index| {
         GlobalStatus::dispatcher().send(Actions::ForGame(GameActions::SelectCard(index)))
     })
 }

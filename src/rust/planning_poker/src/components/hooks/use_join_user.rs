@@ -7,7 +7,7 @@ use crate::agents::{
 };
 
 pub fn use_join_user() -> Callback<String> {
-    Callback::once(move |signature: String| {
+    Callback::from(move |signature: String| {
         GlobalStatus::dispatcher().send(Actions::ForGame(GameActions::JoinUser(signature)))
     })
 }

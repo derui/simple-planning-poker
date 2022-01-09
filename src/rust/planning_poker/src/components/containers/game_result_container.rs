@@ -105,7 +105,7 @@ pub struct GameResultContainerProps {
 #[function_component(GameResultContainer)]
 pub fn game_result_container(props: &GameResultContainerProps) -> Html {
     let history = use_history().unwrap();
-    let game = use_game();
+    let game = use_game(props.game_id.clone());
     let user = use_current_user().unwrap();
     let player = use_current_player();
 

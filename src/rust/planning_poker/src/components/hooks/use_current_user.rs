@@ -1,4 +1,4 @@
-use yew::{use_effect, use_state, Callback};
+use yew::{use_effect_with_deps, use_state, Callback};
 use yew_agent::Bridged;
 
 use crate::agents::{
@@ -12,20 +12,23 @@ pub fn use_current_user() -> Option<CurrentUserStatusProjection> {
 
     let effect_state = state.clone();
 
-    use_effect(|| {
-        let mut bridge = GlobalStatus::bridge(Callback::from(move |msg| match msg {
-            Response::SnapshotUpdated(snapshot) => {
-                effect_state.set(snapshot.current_user);
-            }
-            Response::SignedIn(data) => {
-                effect_state.set(Some(data));
-            }
-            _ => (),
-        }));
-        bridge.send(Actions::RequestSnapshot);
+    use_effect_with_deps(
+        |_| {
+            let mut bridge = GlobalStatus::bridge(Callback::from(move |msg| match msg {
+                Response::SnapshotUpdated(snapshot) => {
+                    effect_state.set(snapshot.current_user);
+                }
+                Response::SignedIn(data) => {
+                    effect_state.set(Some(data));
+                }
+                _ => (),
+            }));
+            bridge.send(Actions::RequestSnapshot);
 
-        || drop(bridge)
-    });
+            || drop(bridge)
+        },
+        (),
+    );
 
     (*state).clone()
 }

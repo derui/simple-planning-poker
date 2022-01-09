@@ -13,7 +13,8 @@ use super::{global_bus::Actions, global_status::GlobalStatus};
 pub struct GameObserver {
     link: AgentLink<GameObserver>,
     subscribers: HashSet<HandlerId>,
-    game_subscriber: Option<js_sys::Function>,
+    game_subscriber: Option<Closure<dyn FnMut()>>,
+    game_unsubscriber: Option<js_sys::Function>,
     database: Database,
 }
 
@@ -42,33 +43,41 @@ impl Agent for GameObserver {
         GameObserver {
             link,
             subscribers: HashSet::new(),
+            game_unsubscriber: None,
             game_subscriber: None,
             database: Database::new(),
         }
     }
 
-    fn update(&mut self, _msg: Self::Message) {
-        todo!()
-    }
+    fn update(&mut self, _msg: Self::Message) {}
 
     fn handle_input(&mut self, msg: Self::Input, _id: HandlerId) {
         match msg {
-            GameObserverAction::SubscribeTo(game) => {
-                if let Some(unsubscribe) = &self.game_subscriber {
+            GameObserverAction::SubscribeTo(game_id) => {
+                if let Some(unsubscribe) = &self.game_unsubscriber {
                     unsubscribe
                         .call0(&JsValue::null())
                         .expect("should remove subscription");
                 }
 
                 let mut dispatcher = GlobalStatus::dispatcher();
-                let key = format!("games/{}", game);
+                let key = format!("games/{}", game_id);
                 let reference = reference_with_key(&*self.database.database, &key);
                 let callback = Closure::wrap(Box::new(move || {
                     dispatcher.send(Actions::RequestSnapshot);
                 }) as Box<dyn FnMut()>);
                 let unsubscribe = on_value(&reference, &callback);
-                self.game_subscriber = Some(unsubscribe)
+                self.game_unsubscriber = Some(unsubscribe);
+                self.game_subscriber = Some(callback);
             }
+        }
+    }
+
+    fn destroy(&mut self) {
+        if let Some(unsubscribe) = &self.game_unsubscriber {
+            unsubscribe
+                .call0(&JsValue::null())
+                .expect("should be able to call");
         }
     }
 }

@@ -7,7 +7,7 @@ use crate::agents::{
 };
 
 pub fn use_show_down() -> Callback<()> {
-    Callback::once(move |_| {
+    Callback::from(move |_| {
         GlobalStatus::dispatcher().send(Actions::ForGame(GameActions::ShowDown))
     })
 }
