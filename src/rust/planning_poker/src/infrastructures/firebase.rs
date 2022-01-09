@@ -58,17 +58,17 @@ pub mod auth {
     extern "C" {
         pub type Auth;
 
-        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "create")]
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = createAuth)]
         pub fn new() -> Auth;
 
-        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "signInWithEmailAndPassword")]
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = signInWithEmailAndPassword)]
         pub async fn sign_in_with_email_and_password(
             auth: &Auth,
             name: &str,
             password: &str,
         ) -> JsValue;
 
-        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = "createUserWithEmailAndPassword")]
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = createUserWithEmailAndPassword)]
         pub async fn create_user_with_email_and_password(
             auth: &Auth,
             name: &str,

@@ -15,6 +15,7 @@ src/ts/firebase.config.prod.ts
 
 /target
 /src/rust/planning_poker/pkg
+pkg/
 
 # yarn v2
 .yarn/*

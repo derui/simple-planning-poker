@@ -85,8 +85,10 @@ impl Authenticator {
         let auth = sign_in_with_email_and_password(&self.auth.auth, email, password).await;
 
         let user_id = signed_in_user_id(&auth);
+        let hash = &sha256::digest(user_id)[0..32];
+        let user_id = UserId::from(hash.to_owned());
 
-        let user = UserRepository::find_by(&self.database, UserId::from(user_id)).await;
+        let user = UserRepository::find_by(&self.database, user_id).await;
 
         user.map(|v| v.id()).expect("Not found user")
     }
@@ -96,7 +98,9 @@ impl Authenticator {
 
         let auth = create_user_with_email_and_password(&self.auth.auth, email, password).await;
 
-        let user_id = UserId::from(signed_in_user_id(&auth));
+        let user_id = signed_in_user_id(&auth);
+        let hash = &sha256::digest(user_id)[0..32];
+        let user_id = UserId::from(hash.to_owned());
 
         let user = User::new(user_id, email, &[]);
         UserRepository::save(&self.database, &user).await;

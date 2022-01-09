@@ -37,12 +37,11 @@ impl UserRepository for Database {
         });
 
         let v = match JsValue::from_serde(&updates) {
-            Ok(it) => it,
+            Ok(it) => Object::from(it),
             Err(err) => panic!("get error {}", err),
         };
-        let v = js_sys::Map::from(v);
 
-        let fut = async move { update(&reference, &Object::from_entries(&v).unwrap()).await };
+        let fut = async move { update(&reference, &v).await };
         Box::pin(fut)
     }
 

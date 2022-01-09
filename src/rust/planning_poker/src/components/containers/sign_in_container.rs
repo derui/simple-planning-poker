@@ -38,7 +38,9 @@ pub fn sign_in_container() -> Html {
              onsubmit={on_submit}
       show_overlay={authenticating}
     >
-      <p class="app__signin-main__sign-up-link"> { "or"  }<a href="/signup">{ "Sign up" }</a> </p>
+      <p class="app__signin-main__sign-up-link"> { "or"  } <br/>
+        <a href="/signup">{ "Sign up" }</a>
+            </p>
     </Signin>
     }
 }

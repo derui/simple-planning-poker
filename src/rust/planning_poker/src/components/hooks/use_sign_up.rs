@@ -22,7 +22,7 @@ pub fn use_sign_up() -> Callback<(String, String)> {
         || drop(bridge)
     });
 
-    Callback::once(move |(email, password)| {
+    Callback::from(move |(email, password)| {
         GlobalStatus::dispatcher().send(Actions::ForSignIn(SignInActions::SignUp {
             email,
             password,
