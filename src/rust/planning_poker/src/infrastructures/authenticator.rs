@@ -10,7 +10,8 @@ use super::{
     firebase::Database,
     firebase::{
         auth::{
-            create_user_with_email_and_password, sign_in_with_email_and_password, signed_in_user_id,
+            self, create_user_with_email_and_password, sign_in_with_email_and_password,
+            signed_in_user_id,
         },
         database::{self, reference_with_key, val},
         Auth,
@@ -27,6 +28,8 @@ pub trait AuthenticatorIntf {
     fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
 
     fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
+
+    fn check_user_id_if_exists(&self) -> Option<UserId>;
 }
 
 pub trait HaveAuthenticator {
@@ -48,6 +51,20 @@ impl AuthenticatorIntf for Authenticator {
         let password = password.to_owned();
         let fut = async move { self.sign_up(&email, &password).await };
         Box::pin(fut)
+    }
+
+    fn check_user_id_if_exists(&self) -> Option<UserId> {
+        let user = auth::current_user_id(&self.auth.auth);
+
+        if user.is_falsy() {
+            return None;
+        } else {
+            let user_id = user.as_string().expect("should be string");
+            let hash = &sha256::digest(user_id)[0..32];
+            let user_id = UserId::from(hash.to_owned());
+
+            return Some(user_id);
+        }
     }
 }
 

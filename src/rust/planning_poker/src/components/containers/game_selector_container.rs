@@ -1,4 +1,5 @@
-use yew::{function_component, html, Properties};
+use gloo::console::{console, console_dbg};
+use yew::{function_component, html, virtual_dom::VNode, Properties};
 use yew_router::components::Link;
 
 use crate::{components::hooks::use_joined_game, Route};
@@ -34,9 +35,10 @@ pub fn game_selector_container() -> Html {
     let game_components = games
         .iter()
         .map(|v| {
+            console_dbg!(v);
             html! { <GameLink game_id={v.game_id.clone()} name={v.name.clone()} />}
         })
-        .collect();
+        .collect::<Vec<VNode>>();
     let empty = vec![html! {<Empty />}];
 
     html! {

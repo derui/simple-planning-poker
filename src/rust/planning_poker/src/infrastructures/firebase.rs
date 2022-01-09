@@ -77,6 +77,9 @@ pub mod auth {
 
         #[wasm_bindgen(js_namespace = firebaseAuth, js_name = signedInUserId)]
         pub fn signed_in_user_id(cred: &JsValue) -> String;
+
+        #[wasm_bindgen(js_namespace = firebaseAuth, js_name = currentUserId)]
+        pub fn current_user_id(this: &Auth) -> JsValue;
     }
 }
 

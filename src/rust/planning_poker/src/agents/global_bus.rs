@@ -22,6 +22,7 @@ pub enum GameActions {
 pub enum SignInActions {
     SignIn { email: String, password: String },
     SignUp { email: String, password: String },
+    CheckCurrentAuth,
 }
 
 #[derive(Clone, PartialEq, Deserialize, Serialize, Debug)]
@@ -52,4 +53,5 @@ pub enum Response {
     Authenticating,
     Authenticated,
     SignedIn(CurrentUserStatusProjection),
+    NotSignedIn,
 }

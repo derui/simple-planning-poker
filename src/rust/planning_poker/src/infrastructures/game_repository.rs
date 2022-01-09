@@ -98,7 +98,7 @@ impl GameRepository for Database {
                 let cards =
                     js_sys::Reflect::get(&val, &js_value("cards")).unwrap_or(JsValue::UNDEFINED);
                 let players =
-                    js_sys::Reflect::get(&val, &js_value("players")).unwrap_or(JsValue::UNDEFINED);
+                    js_sys::Reflect::get(&val, &js_value("users")).unwrap_or(JsValue::UNDEFINED);
                 let showed_down =
                     js_sys::Reflect::get(&val, &js_value("showedDown")).unwrap_or(JsValue::FALSE);
                 let hands = js_sys::Reflect::get(&val, &js_value("userHands"))

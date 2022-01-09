@@ -12,7 +12,8 @@ mod internal {
     use super::*;
 
     pub async fn change_user_name(this: &GlobalStatus, name: String) -> Vec<InnerMessage> {
-        let user = match this.current_user.clone() {
+        let user = this.current_user.borrow();
+        let user = match &*user {
             Some(v) => v,
             None => return vec![],
         };

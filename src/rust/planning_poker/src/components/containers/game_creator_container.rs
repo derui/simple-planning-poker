@@ -1,10 +1,15 @@
-use web_sys::InputEvent;
-use yew::{function_component, html, use_state, Callback};
-use yew_agent::Dispatched;
+use wasm_bindgen::JsCast;
+use web_sys::{HtmlInputElement, InputEvent};
+use yew::{function_component, html, use_effect, use_state, Callback};
+use yew_agent::{Bridged, Dispatched};
+use yew_router::{history::History, hooks::use_history};
 
-use crate::agents::{
-    global_bus::{Actions, GameActions},
-    global_status::GlobalStatus,
+use crate::{
+    agents::{
+        global_bus::{Actions, GameActions, Response},
+        global_status::{GlobalStatus, GlobalStatusProjection},
+    },
+    Route,
 };
 
 #[derive(PartialEq)]
@@ -34,12 +39,31 @@ pub fn game_creator_container() -> Html {
             .collect::<Vec<String>>()
             .join(","),
     });
+    let history = use_history().unwrap();
+
+    use_effect(|| {
+        let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
+            if let Response::SnapshotUpdated(GlobalStatusProjection {
+                current_game: Some(game),
+                ..
+            }) = msg
+            {
+                history.push(Route::Game { id: game.id });
+            }
+        }));
+
+        || drop(bridge)
+    });
 
     let on_name_input = {
         let state = state.clone();
 
         Callback::from(move |event: InputEvent| {
-            let value = event.data().unwrap();
+            let value = event
+                .target()
+                .expect("should be target")
+                .unchecked_into::<HtmlInputElement>()
+                .value();
 
             state.set(State {
                 name: value,
@@ -52,7 +76,11 @@ pub fn game_creator_container() -> Html {
         let state = state.clone();
 
         Callback::from(move |event: InputEvent| {
-            let value = event.data().unwrap();
+            let value = event
+                .target()
+                .expect("should be target")
+                .unchecked_into::<HtmlInputElement>()
+                .value();
 
             state.set(State {
                 cards: value,
@@ -87,7 +115,7 @@ pub fn game_creator_container() -> Html {
                 <input
                   type="text"
                   class="app__game-creator__main__card"
-                  defaultValue={default_cards()}
+                  value={default_cards()}
                   oninput={on_cards_input}
                 />
               </span>

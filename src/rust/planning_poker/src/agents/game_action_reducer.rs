@@ -19,6 +19,8 @@ use super::{
 mod internal {
     use std::vec;
 
+    use gloo::console::console_dbg;
+
     use crate::{
         agents::global_status::GlobalStatus, domains::game::GameRepository,
         usecases::create_game::CreateGame,
@@ -29,7 +31,8 @@ mod internal {
     pub async fn change_mode(this: &GlobalStatus, mode: String) -> Vec<InnerMessage> {
         let this = this.clone();
 
-        if let Some(player) = &this.current_game_player {
+        let player = this.current_game_player.borrow();
+        if let Some(player) = &*player {
             let mode = UserMode::from(mode);
 
             let player = ChangeUserMode::execute(&this, player.id(), mode).await;
@@ -45,10 +48,10 @@ mod internal {
     }
 
     pub async fn select_card(this: &GlobalStatus, card_index: u32) -> Vec<InnerMessage> {
-        let game = this.current_game.clone();
-        let game_player = this.current_game_player.clone();
+        let game = this.current_game.borrow();
+        let game_player = this.current_game_player.borrow();
 
-        if let (Some(game), Some(player)) = (game, game_player) {
+        if let (Some(game), Some(player)) = (&*game, &*game_player) {
             let card = game.cards().at(card_index as usize);
             if let Some(card) = card {
                 let player = HandCard::execute(this, player.id(), card).await;
@@ -67,9 +70,9 @@ mod internal {
     }
 
     pub async fn next_game(this: &GlobalStatus) -> Vec<InnerMessage> {
-        let game = this.current_game.clone();
+        let game = this.current_game.borrow();
 
-        match game {
+        match &*game {
             Some(game) => {
                 NewGame::execute(this, game.id())
                     .await
@@ -86,10 +89,10 @@ mod internal {
     }
 
     pub async fn join_user(this: &GlobalStatus, signature: &str) -> Vec<InnerMessage> {
-        let player = this.current_game_player.clone();
+        let player = this.current_game_player.borrow();
         let signature = InvitationSignature::from(signature);
 
-        match player {
+        match &*player {
             Some(player) => {
                 JoinUser::execute(this, signature, *player.user())
                     .await
@@ -116,9 +119,9 @@ mod internal {
     }
 
     pub async fn show_down(this: &GlobalStatus) -> Vec<InnerMessage> {
-        let game = this.current_game.clone();
+        let game = this.current_game.borrow();
 
-        match game {
+        match &*game {
             Some(game) => {
                 ShowDown::execute(this, game.id())
                     .await
@@ -138,11 +141,11 @@ mod internal {
 
     pub async fn open_game(this: &GlobalStatus, game_id: String) -> Vec<InnerMessage> {
         let game_id = GameId::from(game_id);
-        let user = this.current_user.clone();
+        let user = this.current_user.borrow();
         let game_repo = this.get_game_repository();
         let game_player_repo = this.get_game_player_repository();
 
-        if let Some(user) = user {
+        if let Some(user) = &*user {
             let joined_game = user.joined_games().iter().find(|v| v.game == game_id);
             if let Some(joined_game) = joined_game {
                 let player =
@@ -150,6 +153,7 @@ mod internal {
                 let game = GameRepository::find_by(game_repo, joined_game.game);
 
                 let (player, game) = futures::join!(player, game);
+                console_dbg!(&player, &game);
                 match (player, game) {
                     (Some(player), Some(game)) => {
                         this.publish_snapshot().await;
@@ -169,9 +173,9 @@ mod internal {
     }
 
     pub async fn leave_game(this: &GlobalStatus) -> Vec<InnerMessage> {
-        let game = this.current_game.clone();
+        let game = this.current_game.borrow();
 
-        match game {
+        match &*game {
             Some(game) => {
                 ShowDown::execute(this, game.id())
                     .await
@@ -194,9 +198,9 @@ mod internal {
         name: &str,
         points: &[String],
     ) -> Vec<InnerMessage> {
-        let user = this.current_user.clone();
+        let user = this.current_user.borrow();
 
-        if let Some(user) = user {
+        if let Some(user) = &*user {
             let points = points
                 .iter()
                 .filter_map(|v| v.parse::<u32>().ok())

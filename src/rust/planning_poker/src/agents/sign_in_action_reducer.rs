@@ -22,12 +22,17 @@ pub struct CurrentUserStatusProjection {
 }
 
 mod internal {
+    use web_sys::console;
+
     use crate::{
         agents::{
             global_bus::{InnerMessage, Response},
             global_status::GlobalStatus,
         },
-        infrastructures::authenticator::HaveAuthenticator,
+        infrastructures::{
+            authenticator::{AuthenticatorIntf, HaveAuthenticator},
+            firebase::auth::current_user_id,
+        },
     };
 
     use super::*;
@@ -60,6 +65,29 @@ mod internal {
         this.publish(Response::Authenticated);
         vec![InnerMessage::UpdateUser(user)]
     }
+
+    pub async fn check_current_auth(this: &GlobalStatus) -> Vec<InnerMessage> {
+        let authenticator = this.get_authenticator();
+        let user_id = authenticator.check_user_id_if_exists();
+
+        return match user_id {
+            None => {
+                this.publish(Response::NotSignedIn);
+                Vec::new()
+            }
+            Some(user_id) => {
+                let user = UserRepository::find_by(this.get_user_repository(), user_id)
+                    .await
+                    .expect("should find");
+
+                let proj = this.renew_user_projection(&user).await;
+
+                this.publish(Response::SignedIn(proj));
+                this.publish(Response::Authenticated);
+                vec![InnerMessage::UpdateUser(user)]
+            }
+        };
+    }
 }
 
 pub async fn reduce_sign_in(this: &GlobalStatus, msg: SignInActions) -> Vec<InnerMessage> {
@@ -70,5 +98,6 @@ pub async fn reduce_sign_in(this: &GlobalStatus, msg: SignInActions) -> Vec<Inne
         SignInActions::SignUp { email, password } => {
             internal::sign_in_or_sign_up(this, &email, &password, false).await
         }
+        SignInActions::CheckCurrentAuth => internal::check_current_auth(this).await,
     }
 }

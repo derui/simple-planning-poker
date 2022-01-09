@@ -1,6 +1,7 @@
-use std::{collections::HashSet, rc::Rc};
+use std::{cell::RefCell, collections::HashSet, rc::Rc, sync::Arc};
 
 use futures::future::join_all;
+use gloo::console::{console, console_dbg};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen_futures::spawn_local;
 use yew_agent::{Agent, AgentLink, Context, HandlerId};
@@ -77,9 +78,9 @@ pub struct GlobalStatus {
     pub database: Database,
     pub factory: Rc<DefaultUuidFactory>,
     pub authenticator: Authenticator,
-    pub current_game: Option<Game>,
-    pub current_game_player: Option<GamePlayer>,
-    pub current_user: Option<User>,
+    pub current_game: Arc<RefCell<Option<Game>>>,
+    pub current_game_player: Arc<RefCell<Option<GamePlayer>>>,
+    pub current_user: Arc<RefCell<Option<User>>>,
 }
 
 impl Clone for GlobalStatus {
@@ -91,9 +92,9 @@ impl Clone for GlobalStatus {
             database: self.database.clone(),
             authenticator: self.authenticator.clone(),
             factory: Rc::clone(&self.factory),
-            current_game: self.current_game.clone(),
-            current_game_player: self.current_game_player.clone(),
-            current_user: self.current_user.clone(),
+            current_game: Arc::clone(&self.current_game),
+            current_game_player: Arc::clone(&self.current_game_player),
+            current_user: Arc::clone(&self.current_user),
         }
     }
 }
@@ -129,10 +130,17 @@ impl CreateGameDependency for GlobalStatus {}
 // implementation
 impl GlobalStatus {
     pub fn update(&mut self, msg: InnerMessage) {
+        console_dbg!(&msg);
         match msg {
-            InnerMessage::UpdateGamePlayer(player) => self.current_game_player = Some(player),
-            InnerMessage::UpdateGame(game) => self.current_game = Some(game),
-            InnerMessage::UpdateUser(user) => self.current_user = Some(user),
+            InnerMessage::UpdateGamePlayer(player) => {
+                self.current_game_player.replace(Some(player));
+            }
+            InnerMessage::UpdateGame(game) => {
+                self.current_game.replace(Some(game));
+            }
+            InnerMessage::UpdateUser(user) => {
+                self.current_user.replace(Some(user));
+            }
         }
     }
 
@@ -222,19 +230,19 @@ impl GlobalStatus {
     }
 
     pub async fn publish_snapshot(&self) {
-        let current_game = match &self.current_game {
+        let current_game = match &*self.current_game.borrow() {
             None => None,
-            Some(game) => Some(self.renew_game_projection(game).await),
+            Some(game) => Some(self.renew_game_projection(&game).await),
         };
 
-        let current_game_player = match &self.current_game_player {
+        let current_game_player = match &*self.current_game_player.borrow() {
             None => None,
             Some(player) => Some(self.renew_game_player_projection(player.id()).await),
         };
 
-        let current_user = match &self.current_user {
+        let current_user = match &*self.current_user.borrow() {
             None => None,
-            Some(user) => Some(self.renew_user_projection(user).await),
+            Some(user) => Some(self.renew_user_projection(&user).await),
         };
 
         let proj = GlobalStatusProjection {
@@ -264,9 +272,9 @@ impl Agent for GlobalStatus {
             database: Database::new(),
             authenticator: Authenticator::new(&Database::new(), &Auth::new()),
             factory: Rc::new(DefaultUuidFactory::default()),
-            current_game: None,
-            current_game_player: None,
-            current_user: None,
+            current_game: Arc::new(RefCell::new(None)),
+            current_game_player: Arc::new(RefCell::new(None)),
+            current_user: Arc::new(RefCell::new(None)),
         }
     }
 

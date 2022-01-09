@@ -3,6 +3,7 @@ use std::{collections::HashMap, future::Future, pin::Pin};
 use js_sys::{Array, Object};
 use uuid::Uuid;
 use wasm_bindgen::JsValue;
+use web_sys::console;
 
 use crate::domains::{
     game::GameId,
@@ -12,7 +13,7 @@ use crate::domains::{
 };
 
 use super::{
-    firebase::database::{self, reference, update, val},
+    firebase::database::{self, reference, reference_with_key, update, val},
     firebase::Database,
 };
 
@@ -46,7 +47,8 @@ impl UserRepository for Database {
     }
 
     fn find_by(&self, id: UserId) -> FindByOutput {
-        let reference = reference(&self.database);
+        let key = format!("/users/{}", id.to_string());
+        let reference = reference_with_key(&self.database, &key);
 
         let fut = async move {
             let v = database::get(&reference).await;
@@ -65,7 +67,7 @@ impl UserRepository for Database {
             let joined_games = if joined_games.is_falsy() {
                 vec![]
             } else {
-                js_sys::Object::entries(&Object::from(v))
+                js_sys::Object::entries(&Object::from(joined_games))
                     .iter()
                     .map(|v| {
                         let v = Array::from(&v);

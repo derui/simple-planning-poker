@@ -1,22 +1,40 @@
-use yew::{use_effect, use_state, Callback};
+use gloo::console::console;
+use yew::{use_effect, use_effect_with_deps, use_state, Callback};
 use yew_agent::Bridged;
 
-use crate::agents::{global_bus::Response, global_status::GlobalStatus};
+use crate::agents::{
+    global_bus::{Actions, Response, SignInActions},
+    global_status::GlobalStatus,
+};
 
-pub fn use_authenticated() -> bool {
-    let state = use_state(|| false);
+#[derive(PartialEq, Clone, Copy)]
+pub enum AuthenticatedStatus {
+    Authenticated,
+    NotSignedIn,
+    Checking,
+}
+
+pub fn use_authenticated() -> AuthenticatedStatus {
+    let state = use_state(|| AuthenticatedStatus::Checking);
 
     let effect_state = state.clone();
 
-    use_effect(|| {
-        let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
-            if let Response::Authenticated = msg {
-                effect_state.set(true);
-            }
-        }));
+    use_effect_with_deps(
+        move |_| {
+            let mut bridge = GlobalStatus::bridge(Callback::from(move |msg| {
+                if let Response::Authenticated = msg {
+                    console!("authenticated".to_owned());
+                    effect_state.set(AuthenticatedStatus::Authenticated);
+                } else if let Response::NotSignedIn = msg {
+                    effect_state.set(AuthenticatedStatus::NotSignedIn);
+                }
+            }));
+            bridge.send(Actions::ForSignIn(SignInActions::CheckCurrentAuth));
 
-        || drop(bridge)
-    });
+            || drop(bridge)
+        },
+        (),
+    );
 
     *state
 }

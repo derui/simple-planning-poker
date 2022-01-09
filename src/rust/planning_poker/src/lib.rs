@@ -5,6 +5,7 @@ use components::{
         sign_in_container::SignInContainer, sign_up_container::SignUpContainer,
     },
     hooks::use_authenticated,
+    hooks::AuthenticatedStatus,
 };
 use wasm_bindgen::prelude::wasm_bindgen;
 use yew::{function_component, html, use_effect_with_deps, Callback, Children, Html, Properties};
@@ -52,15 +53,20 @@ pub fn secure(props: &SecureProps) -> Html {
     let history = use_history().unwrap();
     let authenticated = use_authenticated();
 
-    if !authenticated {
-        history.replace(Route::SignIn);
-        return html! {};
+    if authenticated == AuthenticatedStatus::NotSignedIn {
+        history.push(Route::SignIn);
+    }
+
+    if authenticated == AuthenticatedStatus::Checking {
+        return html! {
+            <div>{"Checking..."}</div>
+        };
     }
 
     html! {
         <>
             {props.children.clone()}
-            </>
+        </>
     }
 }
 
@@ -88,9 +94,10 @@ fn switch(routes: &Route) -> Html {
     match routes {
         Route::Selector => html! { <Secure><GameSelectorContainer /></Secure> },
         Route::CreateGame => html! { <Secure><GameCreatorContainer /></Secure> },
-        Route::Game { id } => html! {<Secure>
-                                     <GameObserverWrapper game_id={id.clone()} />
-        <GameContainer game_id={id.clone()} />
+        Route::Game { id } => html! {
+        <Secure>
+          <GameObserverWrapper game_id={id.clone()} />
+          <GameContainer game_id={id.clone()} />
         </Secure>},
         Route::GameResult { id } => {
             html! {<Secure>
