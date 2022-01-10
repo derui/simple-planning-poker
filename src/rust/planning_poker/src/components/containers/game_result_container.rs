@@ -146,6 +146,7 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
         },
         props.game_id.clone(),
     );
+
     match (&game, &player, &user) {
         (None, _, _) | (_, None, _) | (_, _, None) => return html! {},
         _ => (),
@@ -162,8 +163,9 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
         .expect("should get origin");
 
     if !game.showed_down {
-        history.replace(Route::Game { id: game.id });
-        return html! {};
+        history.replace(Route::Game {
+            id: game.id.clone(),
+        });
     }
 
     html! {

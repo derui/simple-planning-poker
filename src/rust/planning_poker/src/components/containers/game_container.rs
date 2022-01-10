@@ -153,8 +153,9 @@ pub fn game_container(props: &GameContainerProps) -> Html {
         .is_empty();
 
     if game.showed_down {
-        history.replace(Route::GameResult { id: game.id });
-        return html! {};
+        history.replace(Route::GameResult {
+            id: game.id.clone(),
+        });
     }
 
     html! {
