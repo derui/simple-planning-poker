@@ -47,20 +47,37 @@ pub enum InnerMessage {
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct GlobalStatusUpdateMessage(Vec<InnerMessage>);
+pub struct GlobalStatusUpdateMessage {
+    messages: Vec<InnerMessage>,
+    responses: Vec<Response>,
+}
 
 impl GlobalStatusUpdateMessage {
     pub fn new(messages: Vec<InnerMessage>) -> Self {
-        GlobalStatusUpdateMessage(messages)
+        GlobalStatusUpdateMessage {
+            messages,
+            responses: Vec::new(),
+        }
+    }
+
+    pub fn new_with_responses(messages: Vec<InnerMessage>, responses: Vec<Response>) -> Self {
+        GlobalStatusUpdateMessage {
+            messages,
+            responses,
+        }
     }
 
     pub fn messages(&self) -> &[InnerMessage] {
-        &self.0
+        &self.messages
+    }
+
+    pub fn responses(&self) -> &[Response] {
+        &self.responses
     }
 }
 
 /// responses
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Response {
     SnapshotUpdated(GlobalStatusProjection),
     Authenticating,

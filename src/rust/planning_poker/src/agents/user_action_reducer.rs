@@ -15,15 +15,13 @@ mod internal {
         this: &GlobalStatus,
         name: String,
     ) -> Option<GlobalStatusUpdateMessage> {
-        let user = this.current_user.borrow();
-        let user = match &*user {
+        let user = match this.current_user.clone() {
             Some(v) => v,
             None => return None,
         };
 
         let result = ChangeUserName::execute(this, user.id(), &name).await;
         if let Ok(user) = result {
-            this.publish_snapshot().await;
             Some(GlobalStatusUpdateMessage::new(vec![
                 InnerMessage::UpdateUser(user),
             ]))

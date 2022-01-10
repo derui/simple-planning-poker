@@ -30,13 +30,12 @@ mod internal {
         this: &GlobalStatus,
         mode: String,
     ) -> Option<GlobalStatusUpdateMessage> {
-        let player = this.current_game_player.borrow();
-        if let Some(player) = &*player {
+        let player = this.current_game_player.clone();
+        if let Some(player) = player {
             let mode = UserMode::from(mode);
 
             let player = ChangeUserMode::execute(this, player.id(), mode).await;
             if let Ok(player) = player {
-                this.publish_snapshot().await;
                 Some(GlobalStatusUpdateMessage::new(vec![
                     InnerMessage::UpdateGamePlayer(player),
                 ]))
@@ -52,15 +51,14 @@ mod internal {
         this: &GlobalStatus,
         card_index: u32,
     ) -> Option<GlobalStatusUpdateMessage> {
-        let game = this.current_game.borrow();
-        let game_player = this.current_game_player.borrow();
+        let game = this.current_game.clone();
+        let game_player = this.current_game_player.clone();
 
-        if let (Some(game), Some(player)) = (&*game, &*game_player) {
+        if let (Some(game), Some(player)) = (game, game_player) {
             let card = game.cards().at(card_index as usize);
             if let Some(card) = card {
                 let player = HandCard::execute(this, player.id(), card).await;
                 if let Ok(player) = player {
-                    this.publish_snapshot().await;
                     return Some(GlobalStatusUpdateMessage::new(vec![
                         InnerMessage::UpdateGamePlayer(player),
                     ]));
@@ -72,9 +70,9 @@ mod internal {
     }
 
     pub async fn next_game(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
-        let game = this.current_game.borrow();
+        let game = this.current_game.clone();
 
-        match &*game {
+        match game {
             Some(game) => {
                 NewGame::execute(this, game.id())
                     .await
@@ -83,7 +81,6 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_snapshot().await;
                 Some(GlobalStatusUpdateMessage::new(vec![
                     InnerMessage::UpdateGame(game),
                 ]))
@@ -96,10 +93,10 @@ mod internal {
         this: &GlobalStatus,
         signature: &str,
     ) -> Option<GlobalStatusUpdateMessage> {
-        let player = this.current_game_player.borrow();
+        let player = this.current_game_player.clone();
         let signature = InvitationSignature::from(signature);
 
-        match &*player {
+        match player {
             Some(player) => {
                 JoinUser::execute(this, signature, *player.user())
                     .await
@@ -115,7 +112,6 @@ mod internal {
                         .await
                         .expect("should be found");
 
-                    this.publish_snapshot().await;
                     Some(GlobalStatusUpdateMessage::new(vec![
                         InnerMessage::UpdateGamePlayer(player),
                     ]))
@@ -128,9 +124,9 @@ mod internal {
     }
 
     pub async fn show_down(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
-        let game = this.current_game.borrow();
+        let game = this.current_game.clone();
 
-        match &*game {
+        match game {
             Some(game) => {
                 ShowDown::execute(this, game.id())
                     .await
@@ -141,7 +137,6 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_snapshot().await;
                 Some(GlobalStatusUpdateMessage::new(vec![
                     InnerMessage::UpdateGame(game),
                 ]))
@@ -155,11 +150,11 @@ mod internal {
         game_id: String,
     ) -> Option<GlobalStatusUpdateMessage> {
         let game_id = GameId::from(game_id);
-        let user = this.current_user.borrow();
+        let user = this.current_user.clone();
         let game_repo = this.get_game_repository();
         let game_player_repo = this.get_game_player_repository();
 
-        if let Some(user) = &*user {
+        if let Some(user) = user {
             let joined_game = user.joined_games().iter().find(|v| v.game == game_id);
             if let Some(joined_game) = joined_game {
                 let player =
@@ -181,9 +176,9 @@ mod internal {
     }
 
     pub async fn leave_game(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
-        let game = this.current_game.borrow();
+        let game = this.current_game.clone();
 
-        match &*game {
+        match game {
             Some(game) => {
                 ShowDown::execute(this, game.id())
                     .await
@@ -194,7 +189,6 @@ mod internal {
                     .await
                     .expect("should be found");
 
-                this.publish_snapshot().await;
                 Some(GlobalStatusUpdateMessage::new(vec![
                     InnerMessage::UpdateGame(game),
                 ]))
@@ -208,9 +202,9 @@ mod internal {
         name: &str,
         points: &[String],
     ) -> Option<GlobalStatusUpdateMessage> {
-        let user = this.current_user.borrow();
+        let user = this.current_user.clone();
 
-        if let Some(user) = &*user {
+        if let Some(user) = user {
             let points = points
                 .iter()
                 .filter_map(|v| v.parse::<u32>().ok())
@@ -230,8 +224,6 @@ mod internal {
                 .await;
 
                 if let Some(player) = player {
-                    this.publish_snapshot().await;
-
                     return Some(GlobalStatusUpdateMessage::new(vec![
                         InnerMessage::UpdateGame(game),
                         InnerMessage::UpdateGamePlayer(player),

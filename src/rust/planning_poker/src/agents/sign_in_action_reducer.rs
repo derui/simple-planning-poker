@@ -43,7 +43,7 @@ mod internal {
         let password = password.to_string();
         let authenticator = this.get_authenticator();
 
-        this.publish(Response::Authenticating);
+        this.publish(&Response::Authenticating);
 
         let user_id = if sign_in {
             authenticator.sign_in(&email, &password).await
@@ -57,11 +57,10 @@ mod internal {
 
         let proj = this.renew_user_projection(&user).await;
 
-        this.publish(Response::SignedIn(proj));
-        this.publish(Response::Authenticated);
-        Some(GlobalStatusUpdateMessage::new(vec![
-            InnerMessage::UpdateUser(user),
-        ]))
+        Some(GlobalStatusUpdateMessage::new_with_responses(
+            vec![InnerMessage::UpdateUser(user)],
+            vec![Response::SignedIn(proj), Response::Authenticated],
+        ))
     }
 
     pub async fn check_current_auth(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
@@ -70,7 +69,7 @@ mod internal {
 
         match user_id {
             None => {
-                this.publish(Response::NotSignedIn);
+                this.publish(&Response::NotSignedIn);
                 None
             }
             Some(user_id) => {
@@ -80,11 +79,10 @@ mod internal {
 
                 let proj = this.renew_user_projection(&user).await;
 
-                this.publish(Response::SignedIn(proj));
-                this.publish(Response::Authenticated);
-                Some(GlobalStatusUpdateMessage::new(vec![
-                    InnerMessage::UpdateUser(user),
-                ]))
+                Some(GlobalStatusUpdateMessage::new_with_responses(
+                    vec![InnerMessage::UpdateUser(user)],
+                    vec![Response::SignedIn(proj), Response::Authenticated],
+                ))
             }
         }
     }

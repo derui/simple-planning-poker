@@ -58,6 +58,7 @@ fn card_holder_wrapper(props: &CardHolderWrapperProps) -> Html {
 struct ProgressionButtonProps {
     user_mode: UserMode,
     empty_hands: bool,
+    game_id: String,
 }
 
 #[function_component(ProgressionButton)]
@@ -65,10 +66,16 @@ fn progression_button(props: &ProgressionButtonProps) -> Html {
     let show_down = use_show_down();
     let user_mode = props.user_mode.clone();
 
+    let onclick = {
+        let game_id = props.game_id.clone();
+
+        Callback::once(move |_| show_down.emit(game_id))
+    };
+
     if props.empty_hands {
         html! { <WaitingHandButton user_mode={user_mode} /> }
     } else {
-        html! { <ShowDownButton user_mode={user_mode} onclick={show_down} /> }
+        html! { <ShowDownButton user_mode={user_mode} onclick={onclick} /> }
     }
 }
 
@@ -162,7 +169,7 @@ pub fn game_container(props: &GameContainerProps) -> Html {
             <div class="app__game__main__upper-spacer"></div>
             <PlayerHands position={Position::Upper} user_hands={to_upper_hands(&game.hands)} />
             <div class="app__game__main__table">
-            <ProgressionButton user_mode={user_mode.clone()} empty_hands={game.hands.is_empty()} />
+            <ProgressionButton user_mode={user_mode.clone()} empty_hands={game.hands.is_empty()} game_id={game.id} />
             </div>
             <PlayerHands position={Position::Lower} user_hands={to_lower_hands(&game.hands)} />
             <div class="app__game__main__lower-spacer"></div>
