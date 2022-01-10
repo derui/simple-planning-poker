@@ -16,6 +16,7 @@ pub enum GameActions {
     ChangeMode(String),
     OpenGame(String),
     LeaveGame,
+    ReloadGame,
 }
 
 #[derive(Clone, PartialEq, Deserialize, Serialize, Debug)]

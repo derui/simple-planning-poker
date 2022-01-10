@@ -1,11 +1,15 @@
 use std::collections::HashSet;
 
+use gloo::console::console_dbg;
 use wasm_bindgen::{prelude::Closure, JsValue};
 use yew_agent::{Agent, AgentLink, Context, Dispatched, HandlerId};
 
-use crate::infrastructures::firebase::{
-    database::{on_value, reference_with_key},
-    Database,
+use crate::{
+    agents::global_bus::GameActions,
+    infrastructures::firebase::{
+        database::{on_value, reference_with_key},
+        Database,
+    },
 };
 
 use super::{global_bus::Actions, global_status::GlobalStatus};
@@ -64,7 +68,7 @@ impl Agent for GameObserver {
                 let key = format!("games/{}", game_id);
                 let reference = reference_with_key(&*self.database.database, &key);
                 let callback = Closure::wrap(Box::new(move || {
-                    dispatcher.send(Actions::RequestSnapshot);
+                    dispatcher.send(Actions::ForGame(GameActions::ReloadGame));
                 }) as Box<dyn FnMut()>);
                 let unsubscribe = on_value(&reference, &callback);
                 self.game_unsubscriber = Some(unsubscribe);

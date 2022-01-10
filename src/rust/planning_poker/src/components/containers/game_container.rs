@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use gloo_utils::document;
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
 use yew_agent::Dispatched;
@@ -143,6 +145,12 @@ pub fn game_container(props: &GameContainerProps) -> Html {
         .expect("should be able to get location")
         .origin()
         .expect("should get origin");
+    let is_empty_hands = game
+        .hands
+        .iter()
+        .filter_map(|v| v.card.clone())
+        .collect::<Vec<CardProjection>>()
+        .is_empty();
 
     if game.showed_down {
         history.replace(Route::GameResult { id: game.id });
@@ -169,7 +177,7 @@ pub fn game_container(props: &GameContainerProps) -> Html {
             <div class="app__game__main__upper-spacer"></div>
             <PlayerHands position={Position::Upper} user_hands={to_upper_hands(&game.hands)} />
             <div class="app__game__main__table">
-            <ProgressionButton user_mode={user_mode.clone()} empty_hands={game.hands.is_empty()} game_id={game.id} />
+            <ProgressionButton user_mode={user_mode.clone()} empty_hands={is_empty_hands} game_id={game.id} />
             </div>
             <PlayerHands position={Position::Lower} user_hands={to_lower_hands(&game.hands)} />
             <div class="app__game__main__lower-spacer"></div>

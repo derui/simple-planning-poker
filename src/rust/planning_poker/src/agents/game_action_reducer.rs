@@ -161,6 +161,24 @@ mod internal {
         }
     }
 
+    pub async fn reload_game(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {
+        let game = this.current_game.clone();
+
+        match game {
+            Some(game) => {
+                let repository = this.get_game_repository();
+                let game = GameRepository::find_by(repository, game.id())
+                    .await
+                    .expect("should be found");
+
+                Some(GlobalStatusUpdateMessage::new(vec![
+                    InnerMessage::UpdateGame(game),
+                ]))
+            }
+            None => None,
+        }
+    }
+
     pub async fn open_game(
         this: &GlobalStatus,
         game_id: String,
@@ -262,6 +280,7 @@ pub async fn reduce_game_action(
         GameActions::NextGame => internal::next_game(this).await,
         GameActions::JoinUser(signature) => internal::join_user(this, &signature).await,
         GameActions::ShowDown => internal::show_down(this).await,
+        GameActions::ReloadGame => internal::reload_game(this).await,
         GameActions::OpenGame(game_id) => internal::open_game(this, game_id).await,
         GameActions::LeaveGame => internal::leave_game(this).await,
         GameActions::CreateGame { name, points } => {
