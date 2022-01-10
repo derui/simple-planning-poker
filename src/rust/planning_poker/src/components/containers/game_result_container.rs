@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use gloo_utils::document;
 use yew::{function_component, html, use_effect_with_deps, Callback, Properties};
 use yew_agent::Dispatched;
@@ -6,21 +8,23 @@ use yew_router::{history::History, hooks::use_history};
 use crate::{
     agents::{
         global_bus::{Actions, GameActions},
-        global_status::{CardProjection, GamePlayerProjection, GlobalStatus},
+        global_status::{CardProjection, GamePlayerProjection, GameProjection, GlobalStatus},
     },
     components::{
         hooks::{use_current_player, use_current_user, use_game, use_next_game, use_select_card},
         presentations::{
+            average_point_showcase::AveragePointShowcase,
             card_holder::CardHolder,
             empty_card_holder::EmptyCardHolder,
             game_info::GameInfo,
             game_settings::GameSettings,
             next_game_button::NextGameButton,
             player_hands::{PlayerHandProps, PlayerHands, Position},
+            types::CardCount,
             user_info::UserInfo,
         },
     },
-    domains::game_player::UserMode,
+    domains::{game_player::UserMode, story_point::StoryPoint},
     Route,
 };
 
@@ -97,6 +101,31 @@ fn to_lower_hands(hands: &[GamePlayerProjection]) -> Vec<PlayerHandProps> {
     to_hands(hands, |index| index % 2 == 1)
 }
 
+fn to_card_count(game: &GameProjection) -> Vec<CardCount> {
+    let mut card_map: HashMap<u32, u32> = HashMap::new();
+    game.hands
+        .iter()
+        .filter_map(|v| v.card.as_ref())
+        .for_each(|v| match v {
+            CardProjection::GiveUp => (),
+            CardProjection::StoryPoint(v) => {
+                *card_map.entry(*v).or_insert(0) += 1;
+            }
+        });
+
+    let mut cards = card_map
+        .iter()
+        .map(|(k, v)| CardCount {
+            story_point: StoryPoint::new(*k),
+            count: *v,
+        })
+        .collect::<Vec<CardCount>>();
+
+    cards.sort_by_key(|v| v.story_point);
+
+    return cards;
+}
+
 #[derive(Properties, PartialEq)]
 pub struct GameResultContainerProps {
     pub game_id: String,
@@ -142,7 +171,7 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
     <div class="app__game__header">
             <GameInfo game_name={game.name.clone()} onleavegame={Callback::from(|_| {})} />
       <div class="app__game__header__right">
-        <GameSettings origin={origin} invitation_signature={game.invitation_signature} />
+        <GameSettings origin={origin} invitation_signature={game.invitation_signature.clone()} />
         <UserInfo
           name={user.name.clone()}
         onchangename={Callback::from(|_| {})}
@@ -164,7 +193,7 @@ pub fn game_result_container(props: &GameResultContainerProps) -> Html {
           </div>
         </div>
       </main>
-            <CardHolderWrapper player={player.clone()} cards={game.cards.clone()} user_mode={user_mode.clone()} />
+            <AveragePointShowcase card_counts={to_card_count(&game)} average_point={game.average.unwrap_or(0.0)} />
     </div>
     }
 }

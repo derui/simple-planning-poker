@@ -51,16 +51,20 @@ mod internal {
             authenticator.sign_up(&email, &password).await
         };
 
-        let user = UserRepository::find_by(this.get_user_repository(), user_id)
-            .await
-            .expect("should find");
+        if let Ok(user_id) = user_id {
+            let user = UserRepository::find_by(this.get_user_repository(), user_id)
+                .await
+                .expect("should find");
 
-        let proj = this.renew_user_projection(&user).await;
+            let proj = this.renew_user_projection(&user).await;
 
-        Some(GlobalStatusUpdateMessage::new_with_responses(
-            vec![InnerMessage::UpdateUser(user)],
-            vec![Response::SignedIn(proj), Response::Authenticated],
-        ))
+            Some(GlobalStatusUpdateMessage::new_with_responses(
+                vec![InnerMessage::UpdateUser(user)],
+                vec![Response::SignedIn(proj), Response::Authenticated],
+            ))
+        } else {
+            None
+        }
     }
 
     pub async fn check_current_auth(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {

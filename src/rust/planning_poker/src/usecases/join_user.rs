@@ -1,3 +1,5 @@
+use gloo::console::console_dbg;
+
 use crate::{
     domains::{
         event::DomainEventKind,

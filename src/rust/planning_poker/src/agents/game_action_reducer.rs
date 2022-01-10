@@ -20,7 +20,11 @@ mod internal {
     use std::vec;
 
     use crate::{
-        agents::global_status::GlobalStatus, domains::game::GameRepository,
+        agents::global_status::GlobalStatus,
+        domains::{
+            game::GameRepository,
+            user::{HaveUserRepository, UserRepository},
+        },
         usecases::create_game::CreateGame,
     };
 
@@ -93,34 +97,46 @@ mod internal {
         this: &GlobalStatus,
         signature: &str,
     ) -> Option<GlobalStatusUpdateMessage> {
-        let player = this.current_game_player.clone();
+        let user = this.current_user.clone();
         let signature = InvitationSignature::from(signature);
 
-        match player {
-            Some(player) => {
-                JoinUser::execute(this, signature, *player.user())
-                    .await
-                    .expect("should be new game");
+        if let Some(user) = user {
+            JoinUser::execute(this, signature.clone(), user.id())
+                .await
+                .expect("should be new game");
+            let game =
+                GameRepository::find_by_invitation_signature(this.get_game_repository(), signature)
+                    .await;
 
-                let game_id = player.game();
+            if let None = game {
+                return None;
+            }
+            let game = game.unwrap();
+            let user = UserRepository::find_by(this.get_user_repository(), user.id())
+                .await
+                .unwrap();
+
+            let game_id = game.id();
+            let joined_game = user.find_joined_game(game_id);
+            if let Some(joined_game) = joined_game {
                 let repository = this.get_game_player_repository();
-                let player = GamePlayerRepository::find_by(repository, player.id()).await;
+                let player =
+                    GamePlayerRepository::find_by(repository, joined_game.game_player).await;
 
                 if let Some(player) = player {
                     let repository = this.get_game_repository();
-                    let _game = GameRepository::find_by(repository, *game_id)
+                    let _game = GameRepository::find_by(repository, game_id)
                         .await
                         .expect("should be found");
 
-                    Some(GlobalStatusUpdateMessage::new(vec![
+                    return Some(GlobalStatusUpdateMessage::new(vec![
                         InnerMessage::UpdateGamePlayer(player),
-                    ]))
-                } else {
-                    None
+                    ]));
                 }
             }
-            None => None,
         }
+
+        None
     }
 
     pub async fn show_down(this: &GlobalStatus) -> Option<GlobalStatusUpdateMessage> {

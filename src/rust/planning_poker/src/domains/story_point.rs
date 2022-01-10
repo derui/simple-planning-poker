@@ -3,7 +3,7 @@ use std::ops::Add;
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, PartialEq, Copy)]
+#[derive(Debug, PartialEq, Copy, Eq, PartialOrd, Ord)]
 pub struct StoryPoint(u32);
 
 impl Clone for StoryPoint {

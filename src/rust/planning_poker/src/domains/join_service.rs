@@ -1,3 +1,5 @@
+use gloo::console::console_dbg;
+
 use crate::utils::{types::LocalBoxFuture, uuid_factory::HaveUuidFactory};
 
 use super::{
@@ -67,7 +69,8 @@ impl<T: JoinServiceDependency> JoinService for T {
                             UserMode::Normal,
                         );
 
-                        game_player_repository.save(&player);
+                        console_dbg!(&player);
+                        game_player_repository.save(&player).await;
                         (game.id(), id)
                     }
                 };

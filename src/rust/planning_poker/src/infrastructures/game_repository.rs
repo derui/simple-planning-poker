@@ -1,3 +1,4 @@
+use gloo::console::console_dbg;
 use js_sys::Object;
 use wasm_bindgen::JsValue;
 
@@ -155,12 +156,13 @@ impl GameRepository for Database {
         signature: InvitationSignature,
     ) -> LocalBoxFuture<'_, Option<Game>> {
         let db_ref = child(
-            &reference_with_key(&self.database, "signatures"),
+            &reference_with_key(&self.database, "invitations"),
             &signature.to_string(),
         );
 
         Box::pin(async move {
-            let game_id = get(&db_ref).await.as_string().map(GameId::from);
+            let snapshot = get(&db_ref).await;
+            let game_id = val(&snapshot).as_string().map(GameId::from);
 
             match game_id {
                 None => None,

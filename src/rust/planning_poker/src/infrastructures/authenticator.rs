@@ -1,3 +1,4 @@
+use gloo::console::console;
 use js_sys::Array;
 use wasm_bindgen::JsValue;
 
@@ -25,9 +26,9 @@ pub struct Authenticator {
 }
 
 pub trait AuthenticatorIntf {
-    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
+    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, Result<UserId, String>>;
 
-    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId>;
+    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, Result<UserId, String>>;
 
     fn check_user_id_if_exists(&self) -> Option<UserId>;
 }
@@ -39,14 +40,14 @@ pub trait HaveAuthenticator {
 }
 
 impl AuthenticatorIntf for Authenticator {
-    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId> {
+    fn sign_in(&self, email: &str, password: &str) -> LocalBoxFuture<'_, Result<UserId, String>> {
         let email = email.to_owned();
         let password = password.to_owned();
         let fut = async move { self.sign_in(&email, &password).await };
         Box::pin(fut)
     }
 
-    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, UserId> {
+    fn sign_up(&self, email: &str, password: &str) -> LocalBoxFuture<'_, Result<UserId, String>> {
         let email = email.to_owned();
         let password = password.to_owned();
         let fut = async move { self.sign_up(&email, &password).await };
@@ -76,7 +77,7 @@ impl Authenticator {
         }
     }
 
-    async fn check_to_allow_signing_user_with(&self, email: &str) {
+    async fn check_to_allow_signing_user_with(&self, email: &str) -> Result<(), String> {
         let user = database::get(&reference_with_key(
             &self.database.database,
             "defined-users",
@@ -92,12 +93,15 @@ impl Authenticator {
 
         let email = JsValue::from_str(email);
         if !allowed_mails.some(&mut |v| v == email) {
-            panic!("Do not allow sign in allowed before")
+            console!("Do not allow sign in allowed before".to_owned());
+            return Err("Do not allow sign in allowed before".to_owned());
         }
+
+        Ok(())
     }
 
-    pub async fn sign_in(&self, email: &str, password: &str) -> UserId {
-        self.check_to_allow_signing_user_with(email).await;
+    pub async fn sign_in(&self, email: &str, password: &str) -> Result<UserId, String> {
+        self.check_to_allow_signing_user_with(email).await?;
 
         let auth = sign_in_with_email_and_password(&self.auth.auth, email, password).await;
 
@@ -107,11 +111,11 @@ impl Authenticator {
 
         let user = UserRepository::find_by(&self.database, user_id).await;
 
-        user.map(|v| v.id()).expect("Not found user")
+        Ok(user.map(|v| v.id()).expect("Not found user"))
     }
 
-    pub async fn sign_up(&self, email: &str, password: &str) -> UserId {
-        self.check_to_allow_signing_user_with(email).await;
+    pub async fn sign_up(&self, email: &str, password: &str) -> Result<UserId, String> {
+        self.check_to_allow_signing_user_with(email).await?;
 
         let auth = create_user_with_email_and_password(&self.auth.auth, email, password).await;
 
@@ -122,6 +126,6 @@ impl Authenticator {
         let user = User::new(user_id, email, &[]);
         UserRepository::save(&self.database, &user).await;
 
-        user_id
+        Ok(user_id)
     }
 }

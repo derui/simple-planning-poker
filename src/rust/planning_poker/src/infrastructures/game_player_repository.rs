@@ -1,3 +1,4 @@
+use gloo::console::console_dbg;
 use js_sys::Object;
 use wasm_bindgen::JsValue;
 
@@ -58,9 +59,10 @@ impl GamePlayerRepository for Database {
             player.game().to_string()
         );
         updates.set(&S(key).to(), &S(player.id().to_string()).to());
+        let updates = js_sys::Object::from_entries(&updates).unwrap();
 
         let reference = reference(&self.database);
-        let fut = async move { update(&reference, &Object::from_entries(&updates).unwrap()).await };
+        let fut = async move { update(&reference, &updates).await };
         Box::pin(fut)
     }
 

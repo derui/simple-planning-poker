@@ -23,8 +23,6 @@ pub fn invitation_container(props: &InvitationContainerProps) -> Html {
 
     use_effect_with_deps(
         move |signature| {
-            join_user.emit(signature.to_owned());
-
             let bridge = GlobalStatus::bridge(Callback::from(move |msg| {
                 if let Response::SnapshotUpdated(GlobalStatusProjection {
                     current_game: Some(game),
@@ -34,6 +32,7 @@ pub fn invitation_container(props: &InvitationContainerProps) -> Html {
                     history.replace(Route::Game { id: game.id })
                 }
             }));
+            join_user.emit(signature.to_owned());
 
             || drop(bridge)
         },
