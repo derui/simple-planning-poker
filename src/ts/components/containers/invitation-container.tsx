@@ -1,6 +1,6 @@
 import { inGameActionContext } from "@/contexts/actions";
 import * as React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 interface Props {}
 
@@ -8,10 +8,10 @@ export const InvitationContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ signature: string }>();
   const inGameActions = React.useContext(inGameActionContext);
   const joinUser = inGameActions.useJoinUser();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
-    joinUser(param.signature, (gameId) => history.replace(`/game/${gameId}`));
+    joinUser(param.signature!!, (gameId) => navigate(`/game/${gameId}`, { replace: true }));
   }, [param.signature]);
 
   return (

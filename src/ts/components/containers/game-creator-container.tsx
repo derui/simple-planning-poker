@@ -1,7 +1,7 @@
 import { gameCreationActionContext } from "@/contexts/actions";
 import { GameCreatorSelector } from "@/status/game-creator";
 import * as React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 interface Props {}
 
@@ -10,7 +10,7 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
   const setName = context.useSetName();
   const setCards = context.useSetCards();
   const createGame = context.useCreateGame();
-  const history = useHistory();
+  const navigate = useNavigate();
   const defaultCards = GameCreatorSelector.defaultCards();
 
   return (
@@ -36,7 +36,7 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
       <footer className="app__game-creator__footer">
         <button
           className="app__game-creator__submit"
-          onClick={() => createGame((gameId) => history.replace(`/game/${gameId}`))}
+          onClick={() => createGame((gameId) => navigate(`/game/${gameId}`, { replace: true }))}
         >
           Submit
         </button>

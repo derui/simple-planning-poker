@@ -1,12 +1,14 @@
 import { signInActionContext } from "@/contexts/actions";
 import { signInSelectors } from "@/status/signin";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { SignInComponent } from "../presentations/signin";
 
-interface Props extends RouteComponentProps {}
+interface Props {}
 
-export const SignUpContainer: React.FunctionComponent<Props> = ({ location, history }) => {
+export const SignUpContainer: React.FunctionComponent<Props> = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const action = React.useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
@@ -18,7 +20,7 @@ export const SignUpContainer: React.FunctionComponent<Props> = ({ location, hist
 
   const { from }: any = location.state || { from: { pathname: "/" } };
   const signInCallback = () => {
-    history.replace(from);
+    navigate(from, { replace: true });
   };
 
   React.useEffect(() => applyAuthenticated(signInCallback), []);

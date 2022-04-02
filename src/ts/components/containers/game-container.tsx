@@ -11,8 +11,8 @@ import { InGameSelector } from "@/status/in-game-selector";
 import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
-import { useHistory, useParams } from "react-router-dom";
 import { GameId } from "@/domains/game";
+import { useNavigate, useParams } from "react-router";
 
 interface Props {}
 
@@ -97,11 +97,11 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
   const signature = inGameSelector.invitationSignature();
   const openGame = inGameActions.useOpenGame();
   const leaveGame = inGameActions.useLeaveGame();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     openGame(param.gameId as GameId, () => {
-      history.replace("/");
+      navigate("/", { replace: true });
     });
   }, [param.gameId]);
 
@@ -124,7 +124,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
         onChangeMode={(mode) => changeMode(mode)}
         onLeaveGame={() => {
           leaveGame();
-          history.replace("/");
+          navigate("/", { replace: true });
         }}
         origin={document.location.origin}
         invitationSignature={signature || ""}
