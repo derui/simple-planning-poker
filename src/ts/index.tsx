@@ -37,6 +37,9 @@ import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 import { LeaveGameUseCase } from "./usecases/leave-game";
+import { createDependencyRegistrar } from "./utils/dependency-registrar";
+import { ApplicationDependencyRegistrar } from "./dependencies";
+import { UserObserverImpl } from "./infrastractures/user-observer";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -58,32 +61,33 @@ const dispatcher = new EventDispatcherImpl([
   new UserLeaveFromGameEventListener(gamePlayerRepository),
 ]);
 
-const inGameAction = createInGameAction({
-  gameRepository,
-  gamePlayerRepository,
-  userRepository,
-  handCardUseCase: new HandCardUseCase(dispatcher, gamePlayerRepository),
-  showDownUseCase: new ShowDownUseCase(dispatcher, gameRepository),
-  newGameUseCase: new NewGameUseCase(dispatcher, gameRepository),
-  changeUserModeUseCase: new ChangeUserModeUseCase(dispatcher, gamePlayerRepository),
-  joinUserUseCase: new JoinUserUseCase(
+const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
+registrar.register("userRepository", userRepository);
+registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
+registrar.register("gamePlayerRepository", gamePlayerRepository);
+registrar.register("gameRepository", gameRepository);
+registrar.register("handCardUseCase", new HandCardUseCase(dispatcher, registrar.resolve("gamePlayerRepository")));
+registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, registrar.resolve("gameRepository")));
+registrar.register("newGameUseCase", new NewGameUseCase(dispatcher, registrar.resolve("gameRepository")));
+registrar.register(
+  "changeUserModeUseCase",
+  new ChangeUserModeUseCase(dispatcher, registrar.resolve("gamePlayerRepository"))
+);
+registrar.register(
+  "joinUserUseCase",
+  new JoinUserUseCase(
     dispatcher,
-    userRepository,
-    createJoinService(gameRepository, gamePlayerRepository)
-  ),
-  leaveGameUseCase: new LeaveGameUseCase(dispatcher, userRepository),
-});
+    registrar.resolve("userRepository"),
+    createJoinService(registrar.resolve("gameRepository"), registrar.resolve("gamePlayerRepository"))
+  )
+);
+registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
+registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 
-const gameCreationActions = createGameCreationActions(
-  gamePlayerRepository,
-  new CreateGameUseCase(dispatcher, gameRepository)
-);
-const signInActions = createSigninActions(
-  new FirebaseAuthenticator(auth, database, userRepository),
-  userRepository,
-  gameRepository
-);
-const userActions = createUserActions(new ChangeUserNameUseCase(dispatcher, userRepository));
+const inGameAction = createInGameAction(registrar);
+const gameCreationActions = createGameCreationActions(registrar);
+const signInActions = createSigninActions(registrar);
+const userActions = createUserActions(registrar);
 const inGameSelector = createInGameSelectors();
 
 ReactDOM.render(

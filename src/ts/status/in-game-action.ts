@@ -15,6 +15,8 @@ import { User } from "@/domains/user";
 import { InvitationSignature } from "@/domains/invitation";
 import { gamePlayerToViewModel } from "./dxo";
 import { LeaveGameUseCase } from "@/usecases/leave-game";
+import { DependencyRegistrar } from "@/utils/dependency-registrar";
+import { Dependencies } from "@/dependencies";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
@@ -67,28 +69,17 @@ const gameToViewModel = async (
   };
 };
 
-export const createInGameAction = ({
-  gameRepository,
-  gamePlayerRepository,
-  userRepository,
-  handCardUseCase,
-  showDownUseCase,
-  newGameUseCase,
-  changeUserModeUseCase,
-  joinUserUseCase,
-  leaveGameUseCase,
-}: {
-  gameRepository: GameRepository;
-  gamePlayerRepository: GamePlayerRepository;
-  userRepository: UserRepository;
-  handCardUseCase: HandCardUseCase;
-  showDownUseCase: ShowDownUseCase;
-  newGameUseCase: NewGameUseCase;
-  changeUserModeUseCase: ChangeUserModeUseCase;
-  joinUserUseCase: JoinUserUseCase;
-  leaveGameUseCase: LeaveGameUseCase;
-}): InGameAction => {
+export const createInGameAction = (registrar: DependencyRegistrar<Dependencies>): InGameAction => {
   const { gameStateQuery, currentGameState, gamePlayerQuery, currentGamePlayer } = setUpAtomsInGame();
+  const userRepository = registrar.resolve("userRepository");
+  const leaveGameUseCase = registrar.resolve("leaveGameUseCase");
+  const handCardUseCase = registrar.resolve("handCardUseCase");
+  const gameRepository = registrar.resolve("gameRepository");
+  const gamePlayerRepository = registrar.resolve("gamePlayerRepository");
+  const newGameUseCase = registrar.resolve("newGameUseCase");
+  const joinUserUseCase = registrar.resolve("joinUserUseCase");
+  const changeUserModeUseCase = registrar.resolve("changeUserModeUseCase");
+  const showDownUseCase = registrar.resolve("showDownUseCase");
 
   return {
     useLeaveGame: () => {

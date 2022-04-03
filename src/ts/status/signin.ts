@@ -1,7 +1,6 @@
 import { JoinedGame, UserId } from "@/domains/user";
 import { selector, useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
 import React from "react";
-import { UserRepository } from "@/domains/user-repository";
 import {
   authenticated,
   authenticating,
@@ -11,8 +10,9 @@ import {
   signInState,
   UserJoinedGameViewModel,
 } from "./signin-atom";
-import { GameRepository } from "@/domains/game-repository";
 import { SelectorKeys } from "./key";
+import { DependencyRegistrar } from "@/utils/dependency-registrar";
+import { Dependencies } from "@/dependencies";
 
 export interface SigninActions {
   useSignIn: () => (email: string, password: string, callback: () => void) => void;
@@ -31,11 +31,11 @@ export interface Authenticator {
   currentUserIdIfExists(): Promise<UserId | undefined>;
 }
 
-export const createSigninActions = (
-  authenticator: Authenticator,
-  userRepository: UserRepository,
-  gameRepository: GameRepository
-): SigninActions => {
+export const createSigninActions = (registrar: DependencyRegistrar<Dependencies>): SigninActions => {
+  const authenticator = registrar.resolve("authenticator");
+  const userRepository = registrar.resolve("userRepository");
+  const gameRepository = registrar.resolve("gameRepository");
+
   const getGames = async (joinedGames: JoinedGame[]) => {
     const games = await Promise.all(
       joinedGames.map(async (v) => {

@@ -1,8 +1,7 @@
 import { AtomKeys } from "./key";
 import { atomFamily, RecoilState } from "recoil";
-import { UserRepository } from "@/domains/user-repository";
 import { UserId } from "@/domains/user";
-import { UserObserver } from "@/contexts/observer";
+import { ApplicationDependencyRegistrar } from "@/dependencies";
 
 export interface UserViewModel {
   id: string;
@@ -10,11 +9,13 @@ export interface UserViewModel {
 }
 
 export const setUpAtomsUser = (
-  userRepository: UserRepository,
-  userObserver: UserObserver
+  registrar: ApplicationDependencyRegistrar
 ): {
   userState: (id: UserId) => RecoilState<UserViewModel | undefined>;
 } => {
+  const userRepository = registrar.resolve("userRepository");
+  const userObserver = registrar.resolve("userObserver");
+
   const userState = atomFamily({
     key: AtomKeys.user,
     default: (id: UserId) =>

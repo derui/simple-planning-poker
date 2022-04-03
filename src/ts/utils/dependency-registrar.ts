@@ -12,7 +12,7 @@ type Bean<T> = {
 export interface DependencyRegistrar<S = { [k: string]: any }> {
   register<T>(name: keyof S, bean: T): void;
 
-  resolve<T = S[keyof S]>(name: keyof S): T;
+  resolve<K extends keyof S>(name: K): S[K];
 }
 
 class DependencyRegistrarImpl<S> implements DependencyRegistrar<S> {

@@ -1,11 +1,10 @@
 import { constSelector, useRecoilCallback, useRecoilValue } from "recoil";
-import { CreateGameUseCase } from "@/usecases/create-game";
 import { DEFAULT_CARDS, gameCreationState } from "./game-creator-atom";
 import { GameId } from "@/domains/game";
 import { signInSelectors } from "./signin";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { setUpAtomsInGame } from "./in-game-atom";
 import { gamePlayerToViewModel } from "./dxo";
+import { ApplicationDependencyRegistrar } from "@/dependencies";
 
 export interface GameCreationAction {
   useCreateGame: () => (callback: (gameId: GameId) => void) => void;
@@ -13,10 +12,10 @@ export interface GameCreationAction {
   useSetCards: () => (cards: string) => void;
 }
 
-export const createGameCreationActions = (
-  gamePlayerRepository: GamePlayerRepository,
-  useCase: CreateGameUseCase
-): GameCreationAction => {
+export const createGameCreationActions = (registrar: ApplicationDependencyRegistrar): GameCreationAction => {
+  const gamePlayerRepository = registrar.resolve("gamePlayerRepository");
+  const useCase = registrar.resolve("createGameUseCase");
+
   const { currentGamePlayer } = setUpAtomsInGame();
   return {
     useCreateGame: () => {
