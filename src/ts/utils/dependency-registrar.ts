@@ -10,7 +10,7 @@ type Bean<T> = {
 };
 
 export interface DependencyRegistrar<S = { [k: string]: any }> {
-  register<T>(name: keyof S, bean: T): void;
+  register<K extends keyof S>(name: K, bean: S[K]): void;
 
   resolve<K extends keyof S>(name: K): S[K];
 }
@@ -18,7 +18,7 @@ export interface DependencyRegistrar<S = { [k: string]: any }> {
 class DependencyRegistrarImpl<S> implements DependencyRegistrar<S> {
   constructor(private beans: Bean<any>[] = []) {}
 
-  register<T>(name: keyof S, bean: T) {
+  register<K extends keyof S>(name: K, bean: S[K]) {
     const registeredBean = this.beans.find((v) => v.name === name);
 
     if (registeredBean) {
@@ -30,18 +30,18 @@ class DependencyRegistrarImpl<S> implements DependencyRegistrar<S> {
       bean,
       type: {
         _holder: undefined,
-      } as Phantom<T>,
+      } as Phantom<S[K]>,
     });
   }
 
-  resolve<T = S[keyof S]>(name: keyof S): T {
+  resolve<K extends keyof S>(name: K): S[K] {
     const bean = this.beans.find((v) => v.name === name)?.bean;
 
     if (!bean) {
       throw Error(`Not found bean that is name of ${name}`);
     }
 
-    return bean as T;
+    return bean as S[K];
   }
 }
 
