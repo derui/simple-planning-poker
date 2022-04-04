@@ -2,7 +2,7 @@ import { constSelector, useRecoilCallback, useRecoilValue } from "recoil";
 import { DEFAULT_CARDS, gameCreationState } from "./game-creator-atom";
 import { GameId } from "@/domains/game";
 import { signInSelectors } from "./signin";
-import { setUpAtomsInGame } from "./in-game-atom";
+import { setUpAtomsInGame } from "./game-atom";
 import { gamePlayerToViewModel } from "./dxo";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
 

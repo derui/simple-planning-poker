@@ -1,8 +1,8 @@
 import { SigninActions } from "../status/signin";
 import { createContext } from "react";
-import { InGameAction } from "@/status/in-game-action";
+import { InGameAction } from "@/status/game-action";
 import { UserActions } from "@/status/user";
-import { InGameSelector } from "@/status/in-game-selector";
+import { InGameSelector } from "@/status/game-selector";
 import { GameCreationAction } from "@/status/game-creator";
 
 // context for SignInAction.

@@ -1,14 +1,14 @@
 import * as React from "react";
 import { inGameActionContext, inGameSelectorContext, userActionsContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus } from "@/status/in-game-action";
+import { InGameAction, InGameStatus } from "@/status/game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 import { signInSelectors } from "@/status/signin";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
-import { InGameSelector } from "@/status/in-game-selector";
-import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
+import { InGameSelector } from "@/status/game-selector";
+import { ShowDownResultViewModel, UserHandViewModel } from "@/status/game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { GameId } from "@/domains/game";

@@ -3,7 +3,7 @@ import { Game, GameId } from "@/domains/game";
 import { currentUserState } from "./signin-atom";
 import { UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
+import { GameViewModel, setUpAtomsInGame } from "./game-atom";
 import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
 import { InvitationSignature } from "@/domains/invitation";

@@ -1,5 +1,5 @@
 import { AtomKeys, SelectorKeys } from "./key";
-import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
+import { atom, selector } from "recoil";
 import { GamePlayerId, UserMode } from "@/domains/game-player";
 import { UserId } from "@/domains/user";
 import { GameId } from "@/domains/game";
@@ -55,12 +55,7 @@ const gamePlayerQuery = selector({
   get: ({ get }) => get(currentGamePlayer),
 });
 
-export const setUpAtomsInGame = (): {
-  gameStateQuery: RecoilValueReadOnly<GameViewModel | undefined>;
-  currentGameState: RecoilState<GameViewModel | undefined>;
-  gamePlayerQuery: RecoilValueReadOnly<GamePlayerViewModel | undefined>;
-  currentGamePlayer: RecoilState<GamePlayerViewModel | undefined>;
-} => {
+export const setUpAtomsInGame = () => {
   return {
     gameStateQuery,
     currentGameState,

@@ -1,5 +1,5 @@
 import { GamePlayer } from "@/domains/game-player";
-import { GamePlayerViewModel } from "./in-game-atom";
+import { GamePlayerViewModel } from "./game-atom";
 
 export const gamePlayerToViewModel = (gamePlayer: GamePlayer): GamePlayerViewModel => {
   return {

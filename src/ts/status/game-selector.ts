@@ -1,7 +1,7 @@
 import { SelectorKeys } from "./key";
 import { selector, useRecoilValue } from "recoil";
 import { asStoryPoint, Card, equalCard } from "@/domains/card";
-import { GameViewModel, setUpAtomsInGame, ShowDownResultViewModel, UserHandViewModel } from "./in-game-atom";
+import { GameViewModel, setUpAtomsInGame, ShowDownResultViewModel, UserHandViewModel } from "./game-atom";
 import { GamePlayerId, UserMode } from "@/domains/game-player";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
