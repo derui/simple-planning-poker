@@ -15,7 +15,6 @@ import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createSigninActions } from "./status/signin";
 import { createGameCreationActions } from "./status/game-creator";
-import { CreateGameUseCase } from "./usecases/create-game";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
@@ -36,7 +35,6 @@ import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-reposito
 import { createJoinService } from "./domains/join-service";
 import { createInGameSelectors } from "./status/in-game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
-import { LeaveGameUseCase } from "./usecases/leave-game";
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
 import { UserObserverImpl } from "./infrastractures/user-observer";

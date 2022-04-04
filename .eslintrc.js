@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "unused-imports", "import"],
   parser: '@typescript-eslint/parser',
   extends:  [
     'plugin:prettier/recommended',
@@ -26,9 +26,10 @@ module.exports = {
     "react/jsx-uses-vars": "warn",
     "react/jsx-in-jsx-scope": "off",
     "react/no-unknown-property": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "prettier/prettier": ['error'],
+    "unused-imports/no-unused-imports": "warn"
   },
   settings:  {
     "react": {

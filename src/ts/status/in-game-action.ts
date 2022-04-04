@@ -1,12 +1,6 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
 import { Game, GameId } from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
-import { HandCardUseCase } from "@/usecases/hand-card";
-import { ShowDownUseCase } from "@/usecases/show-down";
-import { NewGameUseCase } from "@/usecases/new-game";
 import { currentUserState } from "./signin-atom";
-import { JoinUserUseCase } from "@/usecases/join-user";
-import { ChangeUserModeUseCase } from "@/usecases/change-user-mode";
 import { UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { GameViewModel, setUpAtomsInGame } from "./in-game-atom";
@@ -14,7 +8,6 @@ import { UserRepository } from "@/domains/user-repository";
 import { User } from "@/domains/user";
 import { InvitationSignature } from "@/domains/invitation";
 import { gamePlayerToViewModel } from "./dxo";
-import { LeaveGameUseCase } from "@/usecases/leave-game";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 
