@@ -2,29 +2,29 @@
   --base-font-size: 13.5px;
   --large-font-size: 16px;
   --base-border-radius: 4px;
-  --header-shadow: 0 7px 3px rgba(0, 0, 0, 0.2);
-  --box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.3), -4px 0 7px rgba(0, 0, 0, 0.3);
+  --header-shadow: 0 7px 3px rgba(0 0 0 20%);
+  --box-shadow: 4px 4px 7px rgba(0 0 0 30%), -4px 0 7px rgba(0 0 0 30%);
   --space-large: 16px;
   --space-base: 8px;
   --space-small: 4px;
   --space-nano: 2px;
 
   /* colors */
-  --primary-0: rgba(109, 142, 148, 1);
-  --primary-1: rgba(208, 219, 221, 1);
-  --primary-2: rgba(155, 178, 183, 1);
-  --primary-3: rgba(74, 117, 125, 1);
-  --primary-4: rgba(46, 95, 104, 1);
-  --secondary-1-0: rgba(241, 221, 175, 1);
-  --secondary-1-1: rgba(255, 251, 240, 1);
-  --secondary-1-2: rgba(255, 243, 216, 1);
-  --secondary-1-3: rgba(204, 179, 119, 1);
-  --secondary-1-4: rgba(169, 140, 72, 1);
-  --secondary-2-0: rgba(241, 178, 175, 1);
-  --secondary-2-1: rgba(255, 241, 240, 1);
-  --secondary-2-2: rgba(255, 218, 216, 1);
-  --secondary-2-3: rgba(204, 123, 119, 1);
-  --secondary-2-4: rgba(169, 77, 72, 1);
+  --primary-0: rgba(109 142 148 100%);
+  --primary-1: rgba(208 219 221 100%);
+  --primary-2: rgba(155 178 183 100%);
+  --primary-3: rgba(74 117 125 100%);
+  --primary-4: rgba(46 95 104 100%);
+  --secondary-1-0: rgba(241 221 175 100%);
+  --secondary-1-1: rgba(255 251 240 100%);
+  --secondary-1-2: rgba(255 243 216 100%);
+  --secondary-1-3: rgba(204 179 119 100%);
+  --secondary-1-4: rgba(169 140 72 100%);
+  --secondary-2-0: rgba(241 178 175 100%);
+  --secondary-2-1: rgba(255 241 240 100%);
+  --secondary-2-2: rgba(255 218 216 100%);
+  --secondary-2-3: rgba(204 123 119 100%);
+  --secondary-2-4: rgba(169 77 72 100%);
 
   /* component */
   --card-width: 48px;

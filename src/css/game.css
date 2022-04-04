@@ -73,8 +73,8 @@
     width: 1.5rem;
     height: 1.5rem;
     display: inline-block;
-    background-image: url(/static/svg/opened-door-aperture.svg);
-    mask: url(/static/svg/opened-door-aperture.svg);
+    background-image: url("/static/svg/opened-door-aperture.svg");
+    mask: url("/static/svg/opened-door-aperture.svg");
     background-color: var(--secondary-2-4);
     mask-size: cover;
     vertical-align: middle;
@@ -114,15 +114,15 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 1fr 128px 96px 128px 1fr;
-  grid-template-columns: 1fr max-content 1fr;
-  grid-template-areas:
-    "upperSpacer upperSpacer upperSpacer"
-    ". upper ."
-    ". table ."
-    ". lower ."
-    "lowerSpacer lowerSpacer lowerSpacer";
+  grid-template:
+    [space-bottom] "upperSpacer upperSpacer upperSpacer" 1fr [space-bottom]
+    [upper] ". upper ." 128px [upper]
+    [table] ". table ." 98px [table]
+    [lower] ". lower ." 128px [lower]
+    [lower-spacer] "lowerSpacer lowerSpacer lowerSpacer" 1fr [lower-spacer]
+    / 1fr max-content 1fr;
 }
+
 .app__game__main__upper-spacer {
   grid-area: upperSpacer;
 }
@@ -293,7 +293,7 @@
 
 .app__game__main__user-hand__user-card__eye {
   display: block;
-  mask: url(/static/svg/eye.svg) no-repeat center center;
+  mask: url("/static/svg/eye.svg") no-repeat center center;
   mask-size: contain;
   background-color: var(--primary-3);
   height: calc(var(--card-height) - var(--space-base));
