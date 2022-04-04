@@ -11,9 +11,9 @@ import { gamePlayerToViewModel } from "./dxo";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 
-export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
+export type GameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
-export interface InGameAction {
+export interface GameAction {
   useSelectCard: () => (index: number) => void;
   useNewGame: () => () => void;
   useJoinUser: () => (signature: InvitationSignature, callback: (gameId: GameId) => void) => void;
@@ -62,7 +62,7 @@ const gameToViewModel = async (
   };
 };
 
-export const createInGameAction = (registrar: DependencyRegistrar<Dependencies>): InGameAction => {
+export const createGameAction = (registrar: DependencyRegistrar<Dependencies>): GameAction => {
   const { gameStateQuery, currentGameState, gamePlayerQuery, currentGamePlayer } = setUpAtomsInGame();
   const userRepository = registrar.resolve("userRepository");
   const leaveGameUseCase = registrar.resolve("leaveGameUseCase");

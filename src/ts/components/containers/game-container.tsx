@@ -1,13 +1,13 @@
 import * as React from "react";
-import { inGameActionContext, inGameSelectorContext, userActionsContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus } from "@/status/game-action";
+import { gameActionContext, gameSelectorContext, userActionsContext } from "@/contexts/actions";
+import { GameAction, GameStatus } from "@/status/game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
 import { signInSelectors } from "@/status/signin";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
-import { InGameSelector } from "@/status/game-selector";
+import { GameSelector } from "@/status/game-selector";
 import { ShowDownResultViewModel, UserHandViewModel } from "@/status/game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
@@ -16,7 +16,7 @@ import { useNavigate, useParams } from "react-router";
 
 interface Props {}
 
-const createCardHolderComponent = ({ useSelectCard }: InGameAction, selectors: InGameSelector) => {
+const createCardHolderComponent = ({ useSelectCard }: GameAction, selectors: GameSelector) => {
   const selectCard = useSelectCard();
   const cards = selectors.currentSelectableCards();
   const selectedIndex = selectors.currentUserSelectedCardIndex();
@@ -47,7 +47,7 @@ const createAveragePointShowcase = (showDownResult: ShowDownResultViewModel) => 
   return <AveragePointShowcaseComponent averagePoint={average} cardCounts={showDownResult.cardCounts} />;
 };
 
-const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: InGameAction) => {
+const GameProgressionButton = (status: GameStatus, mode: UserMode, context: GameAction) => {
   const showDown = context.useShowDown();
   const newGame = context.useNewGame();
 
@@ -73,17 +73,17 @@ const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: In
   }
 };
 
-const convertHands = (hands: UserHandViewModel[], currentStatus: InGameStatus) =>
+const convertHands = (hands: UserHandViewModel[], currentStatus: GameStatus) =>
   hands.map((v) => ({
     ...v,
     storyPoint: v.card ? asStoryPoint(v.card)?.value ?? null : null,
     showedDown: currentStatus === "ShowedDown",
   }));
 
-export const GameContainer: React.FunctionComponent<Props> = () => {
+const GameContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ gameId: string }>();
-  const inGameActions = React.useContext(inGameActionContext);
-  const inGameSelector = React.useContext(inGameSelectorContext);
+  const inGameActions = React.useContext(gameActionContext);
+  const inGameSelector = React.useContext(gameSelectorContext);
   const component = createCardHolderComponent(inGameActions, inGameSelector);
   const currentGameName = inGameSelector.currentGameName();
   const upperLine = inGameSelector.upperLineUserHands();
@@ -146,3 +146,5 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
     </div>
   );
 };
+
+export default GameContainer;

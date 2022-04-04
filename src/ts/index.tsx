@@ -6,8 +6,8 @@ import * as ReactDOM from "react-dom";
 import { App } from "./app";
 import {
   gameCreationActionContext,
-  inGameActionContext,
-  inGameSelectorContext,
+  gameActionContext,
+  gameSelectorContext,
   signInActionContext,
   userActionsContext,
 } from "./contexts/actions";
@@ -19,7 +19,7 @@ import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
 import { GameShowedDownEventListener } from "./infrastractures/event/game-showed-down-event-listener";
-import { createInGameAction } from "./status/game-action";
+import { createGameAction } from "./status/game-action";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { NewGameUseCase } from "./usecases/new-game";
@@ -33,7 +33,7 @@ import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
 import { createJoinService } from "./domains/join-service";
-import { createInGameSelectors } from "./status/game-selector";
+import { createGameSelectors } from "./status/game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
@@ -82,24 +82,24 @@ registrar.register(
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 
-const inGameAction = createInGameAction(registrar);
+const gameAction = createGameAction(registrar);
 const gameCreationActions = createGameCreationActions(registrar);
 const signInActions = createSigninActions(registrar);
 const userActions = createUserActions(registrar);
-const inGameSelector = createInGameSelectors();
+const gameSelector = createGameSelectors();
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
     <gameCreationActionContext.Provider value={gameCreationActions}>
-      <inGameActionContext.Provider value={inGameAction}>
+      <gameActionContext.Provider value={gameAction}>
         <userActionsContext.Provider value={userActions}>
           <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-            <inGameSelectorContext.Provider value={inGameSelector}>
+            <gameSelectorContext.Provider value={gameSelector}>
               <App />
-            </inGameSelectorContext.Provider>
+            </gameSelectorContext.Provider>
           </gameObserverContext.Provider>
         </userActionsContext.Provider>
-      </inGameActionContext.Provider>
+      </gameActionContext.Provider>
     </gameCreationActionContext.Provider>
   </signInActionContext.Provider>,
 

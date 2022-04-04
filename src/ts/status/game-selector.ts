@@ -6,7 +6,7 @@ import { GamePlayerId, UserMode } from "@/domains/game-player";
 
 export type InGameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
-export interface InGameSelector {
+export interface GameSelector {
   currentGameName: () => string;
   currentUserMode: () => UserMode | undefined;
   currentSelectableCards: () => Card[];
@@ -18,7 +18,7 @@ export interface InGameSelector {
   invitationSignature: () => string | undefined;
 }
 
-export const createInGameSelectors = (): InGameSelector => {
+export const createGameSelectors = (): GameSelector => {
   const { gameStateQuery, gamePlayerQuery } = setUpAtomsInGame();
 
   const currentSelectableCards = selector({

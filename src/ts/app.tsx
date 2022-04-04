@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, RouteProps, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { GameContainer } from "./components/containers/game-container";
+import GameContainer from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
 import { GameObserverContainer } from "./components/containers/game-observer";
 import { GameSelectorContainerComponent } from "./components/containers/game-selector-container";
