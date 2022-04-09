@@ -2,7 +2,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "unused-imports", "import"],
   parser: '@typescript-eslint/parser',
   extends:  [
-    'plugin:prettier/recommended',
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -28,7 +27,6 @@ module.exports = {
     "react/no-unknown-property": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
-    "prettier/prettier": ['error'],
     "unused-imports/no-unused-imports": "warn"
   },
   settings:  {
