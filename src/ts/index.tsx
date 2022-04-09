@@ -4,12 +4,7 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import {
-  gameCreationActionContext,
-  gameActionContext,
-  gameSelectorContext,
-  userActionsContext,
-} from "./contexts/actions";
+import { gameCreationActionContext, gameActionContext, gameSelectorContext } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { createGameCreationActions } from "./status/game-creator";
@@ -26,7 +21,6 @@ import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { NewGameStartedEventListener } from "./infrastractures/event/new-game-started-event-listener";
-import { createUserActions } from "./status/user";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
@@ -40,6 +34,8 @@ import signInActionContext, { SigninActions } from "./contexts/actions/signin-ac
 import createUseApplyAuthenticated from "./status/signin/actions/use-apply-authenticated";
 import createUseSignIn from "./status/signin/actions/use-signin";
 import createUseSignUp from "./status/signin/actions/use-signup";
+import userActionsContext, { UserActions } from "./contexts/actions/user-actions";
+import createUseChangeUserName from "./status/user/actions/use-change-user-name";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -91,7 +87,9 @@ const signInActions: SigninActions = {
   useSignIn: createUseSignIn(registrar),
   useSignUp: createUseSignUp(registrar),
 };
-const userActions = createUserActions(registrar);
+const userActions: UserActions = {
+  useChangeUserName: createUseChangeUserName(registrar),
+};
 const gameSelector = createGameSelectors();
 
 ReactDOM.render(
