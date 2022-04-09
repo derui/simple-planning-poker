@@ -1,3 +1,2 @@
-*.js
-node_modules/
-setupTests.ts
+**/*.js
+/src/ts/setupTests.ts

@@ -16,7 +16,7 @@ module.exports = {
     ecmaFeatures:  {
       jsx: true,  // Allows for the parsing of JSX
     },
-    project: "./tsconfig.json",
+    // project: "./tsconfig.json",
   },
   rules: {
     "func-style": ["error", "expression", {allowArrowFunctions: true}],
@@ -25,7 +25,7 @@ module.exports = {
     "react/jsx-uses-vars": "warn",
     "react/no-unknown-property": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    // "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "unused-imports/no-unused-imports": "warn"
   },
   settings:  {
