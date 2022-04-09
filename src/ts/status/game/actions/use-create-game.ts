@@ -2,6 +2,8 @@ import { useRecoilCallback, useRecoilValue } from "recoil";
 import { GameId } from "@/domains/game";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
 import currentUserState from "@/status/signin/atoms/current-user";
+import currentGamePlayerState from "../atoms/current-game-player-state";
+import { gamePlayerToViewModel } from "../dxo";
 
 interface CreationParameter {
   name: string;
@@ -13,7 +15,6 @@ export default function createUseCreateGame(registrar: ApplicationDependencyRegi
   const gamePlayerRepository = registrar.resolve("gamePlayerRepository");
   const useCase = registrar.resolve("createGameUseCase");
 
-  const { currentGamePlayer } = setUpAtomsInGame();
   return () => {
     const currentUser = useRecoilValue(currentUserState);
 
@@ -34,8 +35,9 @@ export default function createUseCreateGame(registrar: ApplicationDependencyRegi
           const ret = useCase.execute(input);
           if (ret.kind === "success") {
             const player = await gamePlayerRepository.findByUserAndGame(currentUserId, ret.gameId);
-            set(currentGamePlayer, (prev) => {
-              return player ? gamePlayerToViewModel(player) : prev;
+
+            set(currentGamePlayerState, (prev) => {
+              return player ? gamePlayerToViewModel(player, currentUser.name) : prev;
             });
             callback(ret.gameId);
           }
