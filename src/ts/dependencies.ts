@@ -1,8 +1,8 @@
-import { UserObserver } from "./contexts/observer";
+import { GameObserver, UserObserver } from "./contexts/observer";
 import { GamePlayerRepository } from "./domains/game-player-repository";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
-import { Authenticator } from "./status/signin";
+import { Authenticator } from "./status/signin/types";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
@@ -27,6 +27,7 @@ export type Dependencies = {
   joinUserUseCase: JoinUserUseCase;
   leaveGameUseCase: LeaveGameUseCase;
   authenticator: Authenticator;
+  gameObserver: GameObserver;
 };
 
 export type ApplicationDependencyRegistrar = DependencyRegistrar<Dependencies>;

@@ -7,6 +7,7 @@ import { Game, GameId } from "@/domains/game";
 import { User } from "@/domains/user";
 import { GameRepository } from "@/domains/game-repository";
 import { GameObserver } from "@/contexts/observer";
+import { ApplicationDependencyRegistrar } from "@/dependencies";
 
 let gameRepository: GameRepository | null = null;
 let gamePlayerRepository: GamePlayerRepository | null = null;
@@ -72,3 +73,10 @@ const gameState = atomFamily({
 });
 
 export default gameState;
+
+export const initializeGameState = (registrar: ApplicationDependencyRegistrar) => {
+  gameRepository = registrar.resolve("gameRepository");
+  gamePlayerRepository = registrar.resolve("gamePlayerRepository");
+  userRepository = registrar.resolve("userRepository");
+  gameObserver = registrar.resolve("gameObserver");
+};

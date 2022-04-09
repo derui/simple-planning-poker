@@ -19,7 +19,7 @@ test("call error callback if user is not found", async () => {
     save: jest.fn(),
   };
 
-  registrar.register("authenticator", authenticator);
+  registrar.register("authenticator", authenticator as any);
   registrar.register("userRepository", userRepository);
 
   const useHook = createUseApplyAuthenticated(registrar);
@@ -56,7 +56,7 @@ test("update state if user is found", async () => {
     save: jest.fn(),
   };
 
-  registrar.register("authenticator", authenticator);
+  registrar.register("authenticator", authenticator as any);
   registrar.register("userRepository", userRepository);
 
   const useHook = createUseApplyAuthenticated(registrar);
