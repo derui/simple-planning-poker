@@ -4,10 +4,9 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import { gameCreationActionContext, gameActionContext, gameSelectorContext } from "./contexts/actions";
+import { gameActionContext } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
-import { createGameCreationActions } from "./status/game-creator";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
@@ -25,7 +24,6 @@ import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
 import { createJoinService } from "./domains/join-service";
-import { createGameSelectors } from "./status/game-selector";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
@@ -36,6 +34,9 @@ import createUseSignIn from "./status/signin/actions/use-signin";
 import createUseSignUp from "./status/signin/actions/use-signup";
 import userActionsContext, { UserActions } from "./contexts/actions/user-actions";
 import createUseChangeUserName from "./status/user/actions/use-change-user-name";
+import gameCreationActionContext, { GameCreationAction } from "./contexts/actions/game-creator-actions";
+import createUseCreateGame from "./status/game/actions/use-create-game";
+import { initializeUserState } from "./status/user/atoms/user-state";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -80,8 +81,13 @@ registrar.register(
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 
+// initialize atoms before launch
+initializeUserState(registrar);
+
 const gameAction = createGameAction(registrar);
-const gameCreationActions = createGameCreationActions(registrar);
+const gameCreationActions: GameCreationAction = {
+  useCreateGame: createUseCreateGame(registrar),
+};
 const signInActions: SigninActions = {
   useApplyAuthenticated: createUseApplyAuthenticated(registrar),
   useSignIn: createUseSignIn(registrar),
@@ -90,7 +96,6 @@ const signInActions: SigninActions = {
 const userActions: UserActions = {
   useChangeUserName: createUseChangeUserName(registrar),
 };
-const gameSelector = createGameSelectors();
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
@@ -98,9 +103,7 @@ ReactDOM.render(
       <gameActionContext.Provider value={gameAction}>
         <userActionsContext.Provider value={userActions}>
           <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-            <gameSelectorContext.Provider value={gameSelector}>
-              <App />
-            </gameSelectorContext.Provider>
+            <App />
           </gameObserverContext.Provider>
         </userActionsContext.Provider>
       </gameActionContext.Provider>
