@@ -1,4 +1,4 @@
-import { selector } from "recoil";
+import { selector, useRecoilValue } from "recoil";
 import currentUserState from "../atoms/current-user";
 import SelectorKeys from "./key";
 
@@ -9,4 +9,6 @@ const authenticatedSelector = selector<boolean>({
   },
 });
 
-export default authenticatedSelector;
+export default function authenticated() {
+  return useRecoilValue(authenticatedSelector);
+}
