@@ -7,6 +7,7 @@ const SelectorKeys = {
   userHandsState: "game:userHandsState",
   currentGameStatusState: "game:currentGameStatusState",
   showDownResultState: "game:showDownResultState",
+  currentGameState: "game:currentGameState",
 } as const;
 
 export default SelectorKeys;
