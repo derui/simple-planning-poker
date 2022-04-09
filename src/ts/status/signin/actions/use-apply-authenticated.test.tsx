@@ -65,7 +65,7 @@ test("update state if user is found", async () => {
     let hook = useHook();
 
     useEffect(() => {
-      hook(callback);
+      hook(callback, () => {});
     });
 
     return <></>;

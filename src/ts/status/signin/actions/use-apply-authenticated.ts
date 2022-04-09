@@ -9,7 +9,7 @@ export default function createUseApplyAuthenticated(registrar: DependencyRegistr
   const userRepository = registrar.resolve("userRepository");
 
   return () =>
-    useRecoilCallback(({ set }) => async (callback: () => void, errorCallback: () => void) => {
+    useRecoilCallback(({ set }) => async (callback: () => void, errorCallback?: () => void) => {
       set(signInState, (prev) => ({ ...prev, authenticating: true }));
       const userId = await authenticator.currentUserIdIfExists();
 

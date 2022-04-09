@@ -1,5 +1,5 @@
-import { signInActionContext } from "@/contexts/actions";
-import { signInSelectors } from "@/status/signin";
+import signInActionContext from "@/contexts/actions/signin-actions";
+import authenticatingState from "@/status/signin/selectors/authenticating";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { SignInComponent } from "../presentations/signin";
@@ -12,25 +12,21 @@ export const SignUpContainer: React.FunctionComponent<Props> = () => {
   const action = React.useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
-  const setEmail = action.useUpdateEmail();
-  const setPassword = action.useUpdatePassword();
-  const emailState = signInSelectors.useSignInEmail();
-  const passwordState = signInSelectors.useSignInPassword();
-  const authenticating = signInSelectors.useAuthenticating();
+  const authenticating = authenticatingState();
 
   const { from }: any = location.state || { from: { pathname: "/" } };
   const signInCallback = () => {
     navigate(from, { replace: true });
   };
 
-  React.useEffect(() => applyAuthenticated(signInCallback), []);
+  React.useEffect(() => {
+    applyAuthenticated(signInCallback);
+  }, []);
 
   return (
     <SignInComponent
       title="Sign Up"
-      onUpdateEmail={setEmail}
-      onUpdatePassword={setPassword}
-      onSubmit={() => signUp(emailState, passwordState, signInCallback)}
+      onSubmit={(email, password) => signUp(email, password, signInCallback)}
       showOverlay={authenticating}
     ></SignInComponent>
   );

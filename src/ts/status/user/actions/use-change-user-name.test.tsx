@@ -15,7 +15,7 @@ test("do not execute use case if not logged in", async () => {
     execute: jest.fn().mockImplementation(async () => undefined),
   };
 
-  registrar.register("changeUserNameUseCase", useCase);
+  registrar.register("changeUserNameUseCase", useCase as any);
 
   const useHook = createUseChangeUserName(registrar);
   const V = () => {
@@ -46,7 +46,7 @@ test("execute use case and update state", async () => {
     execute: jest.fn().mockImplementation(async () => undefined),
   };
 
-  registrar.register("changeUserNameUseCase", useCase);
+  registrar.register("changeUserNameUseCase", useCase as any);
 
   const useHook = createUseChangeUserName(registrar);
   const V = () => {
