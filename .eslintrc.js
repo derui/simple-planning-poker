@@ -20,12 +20,11 @@ module.exports = {
   },
   rules: {
     "func-style": ["error", "expression", {allowArrowFunctions: true}],
-    "react/prop-types": "off",
+    "react/prop-types": "warn",
     "import/no-unresolved": "off",
     "react/jsx-uses-vars": "warn",
-    "react/jsx-in-jsx-scope": "off",
-    "react/no-unknown-property": "off",
-    "@typescript-eslint/no-unused-vars": "off",
+    "react/no-unknown-property": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "unused-imports/no-unused-imports": "warn"
   },
