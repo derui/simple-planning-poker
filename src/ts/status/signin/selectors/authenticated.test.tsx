@@ -1,14 +1,14 @@
 import { createUserId } from "@/domains/user";
 import { RecoilRoot } from "recoil";
 import currentUserState from "../atoms/current-user";
-import authenticated from "./authenticated";
+import authenticatedSelector from "./authenticated";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers } from "@/lib.test";
 import React from "react";
 
 test("user is not authenticated if state is default", async () => {
   const V = () => {
-    const v = authenticated();
+    const v = authenticatedSelector();
 
     expect(v).toEqual(false);
 
@@ -30,7 +30,7 @@ test("user is authenticated if user is setted", async () => {
   };
 
   const V = () => {
-    const v = authenticated();
+    const v = authenticatedSelector();
 
     expect(v).toEqual(true);
 

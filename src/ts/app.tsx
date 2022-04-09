@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, RouteProps, Routes } from "react-router-dom";
-import { RecoilRoot, useRecoilValue } from "recoil";
+import { RecoilRoot } from "recoil";
 import GameContainer from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
 import { GameObserverContainer } from "./components/containers/game-observer";
@@ -8,12 +8,12 @@ import { GameSelectorContainerComponent } from "./components/containers/game-sel
 import { InvitationContainer } from "./components/containers/invitation-container";
 import { SignInContainer } from "./components/containers/signin-container";
 import { SignUpContainer } from "./components/containers/signup-container";
-import authenticatedSelector from "./status/signin/selectors/authenticated";
+import authenticatedState from "./status/signin/selectors/authenticated";
 
 const PrivateRoute: React.FunctionComponent<RouteProps> = ({ children, ...rest }) => {
-  const authenticated = useRecoilValue(authenticatedSelector);
+  const state = authenticatedState();
 
-  const element = authenticated ? children : <Navigate replace to="/signin" state={{ from: location }} />;
+  const element = state ? children : <Navigate replace to="/signin" state={{ from: location }} />;
 
   return <Route {...rest} element={element} />;
 };

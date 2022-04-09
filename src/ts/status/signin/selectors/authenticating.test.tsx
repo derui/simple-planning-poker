@@ -1,13 +1,13 @@
 import { MutableSnapshot, RecoilRoot } from "recoil";
 import signInState from "../atoms/signing";
-import authenticating from "./authenticating";
+import authenticatingState from "./authenticating";
 import { render } from "@testing-library/react";
 import React from "react";
 import { flushPromisesAndTimers } from "@/lib.test";
 
 test("user is not authenticating if state is default", async () => {
   const V = () => {
-    const v = authenticating();
+    const v = authenticatingState();
 
     expect(v).toEqual(false);
 
@@ -29,7 +29,7 @@ test("get authenticating", async () => {
   };
 
   const V = () => {
-    const v = authenticating();
+    const v = authenticatingState();
 
     expect(v).toEqual(true);
 
