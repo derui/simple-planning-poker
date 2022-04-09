@@ -1,0 +1,10 @@
+---
+repos:
+- repo: local
+  hooks:
+    - id: prettier
+      name: prettier
+      entry: yarn run prettier
+      language: system
+      files: "\\.tsx?$"
+      args: ["-w"]
