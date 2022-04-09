@@ -48,7 +48,12 @@
     ],
     "watchPathIgnorePatterns": [
       "node_modules"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
+    }
   },
   "author": "",
   "license": "MIT",
