@@ -5,6 +5,7 @@ import SelectorKeys from "./key";
 type State = {
   name?: string;
   cards: number[];
+  invitationSignature?: string;
 };
 
 const state = selector<State>({
@@ -12,6 +13,7 @@ const state = selector<State>({
   get: ({ get }) => {
     const state = get(currentGameState);
     const name = state?.name;
+    const invitationSignature = state?.invitationSignature;
     const cards =
       state?.cards
         ?.map((v) => {
@@ -25,7 +27,7 @@ const state = selector<State>({
         ?.filter((v) => !!v)
         ?.map((v): number => v!!) ?? [];
 
-    return { name, cards };
+    return { name, cards, invitationSignature };
   },
 });
 
