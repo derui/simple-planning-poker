@@ -10,6 +10,3 @@ export const gameCreationActionContext = createContext<GameCreationAction>({} as
 export const gameActionContext = createContext<GameAction>({} as GameAction);
 
 export const gameSelectorContext = createContext<GameSelector>({} as GameSelector);
-
-// context for UserActions.
-export const userActionsContext = createContext<UserActions>({} as UserActions);
