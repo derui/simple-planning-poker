@@ -2,17 +2,17 @@ import { Dependencies } from "@/dependencies";
 import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { RecoilRoot } from "recoil";
-import createUseSignIn from "./use-signin";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
 import currentUserState from "../atoms/current-user";
+import createUseSignUp from "./use-signup";
 
 test("do not update state if user is not found", async () => {
   const registrar = createDependencyRegistrar<Dependencies>();
 
   const authenticator = {
-    signIn: jest.fn().mockImplementation(async () => createUserId("id")),
+    signUp: jest.fn().mockImplementation(async () => createUserId("id")),
   };
   const userRepository = {
     findBy: jest.fn().mockImplementation(async () => undefined),
@@ -22,7 +22,7 @@ test("do not update state if user is not found", async () => {
   registrar.register("authenticator", authenticator);
   registrar.register("userRepository", userRepository);
 
-  const useHook = createUseSignIn(registrar);
+  const useHook = createUseSignUp(registrar);
   const callback = jest.fn();
   const V = () => {
     let hook = useHook();
@@ -31,7 +31,7 @@ test("do not update state if user is not found", async () => {
       hook("email", "password", callback);
     });
 
-    return <span />;
+    return <></>;
   };
 
   render(
@@ -44,14 +44,14 @@ test("do not update state if user is not found", async () => {
 
   expect(callback).not.toHaveBeenCalled();
   expect(userRepository.findBy).toHaveBeenCalledTimes(1);
-  expect(authenticator.signIn).toHaveBeenCalledWith("email", "password");
+  expect(authenticator.signUp).toHaveBeenCalledWith("email", "email", "password");
 });
 
 test("update state if user is found", async () => {
   const registrar = createDependencyRegistrar<Dependencies>();
 
   const authenticator = {
-    signIn: jest.fn().mockImplementation(async () => createUserId("id")),
+    signUp: jest.fn().mockImplementation(async () => createUserId("id")),
   };
   const userRepository = {
     findBy: jest.fn().mockImplementation(async () => ({})),
@@ -61,7 +61,7 @@ test("update state if user is found", async () => {
   registrar.register("authenticator", authenticator);
   registrar.register("userRepository", userRepository);
 
-  const useHook = createUseSignIn(registrar);
+  const useHook = createUseSignUp(registrar);
   const V = () => {
     let hook = useHook();
 
@@ -69,7 +69,7 @@ test("update state if user is found", async () => {
       hook("email", "password", () => {});
     });
 
-    return <span />;
+    return <></>;
   };
 
   const onChange = jest.fn();
