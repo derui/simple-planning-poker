@@ -1,7 +1,7 @@
 import { Dependencies } from "@/dependencies";
 import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
-import { MutableSnapshot, RecoilRoot, snapshot_UNSTABLE } from "recoil";
+import { MutableSnapshot, RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";

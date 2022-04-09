@@ -35,9 +35,5 @@
     "src/ts/**/*.ts",
     "src/ts/**/*.tsx",
     "src/ts/index.tsx"
-  ],
-  "exclude": [
-    "src/ts/**/*.test.ts",
-    "src/ts/**/*.test.tsx"
   ]
 }

@@ -13,4 +13,4 @@ repos:
       entry: yarn run eslint
       language: system
       files: "\\.tsx?$"
-      args: ["--fix", "--ext .ts,.tsx"]
+      args: ["--fix", "--ext", ".ts,.tsx"]
