@@ -3,9 +3,7 @@ import { CSSTransition } from "react-transition-group";
 
 interface Props {
   title: string;
-  onSubmit: () => void;
-  onUpdateEmail: (value: string) => void;
-  onUpdatePassword: (value: string) => void;
+  onSubmit: (email: string, password: string) => void;
   showOverlay: boolean;
 }
 
@@ -17,8 +15,10 @@ const Overlay = ({ showOverlay }: { showOverlay: boolean }) => {
   );
 };
 
-export const SignInComponent: React.FunctionComponent<Props> = (props) => {
-  const { onSubmit, onUpdateEmail, onUpdatePassword } = props;
+export const SignInComponent: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { onSubmit } = props;
 
   return (
     <React.Fragment>
@@ -28,7 +28,7 @@ export const SignInComponent: React.FunctionComponent<Props> = (props) => {
         onSubmit={(e) => {
           e.stopPropagation();
           e.preventDefault();
-          onSubmit();
+          onSubmit(email, password);
         }}
       >
         <header className="app__signin-header">{props.title}</header>
@@ -36,7 +36,12 @@ export const SignInComponent: React.FunctionComponent<Props> = (props) => {
           <ul className="app__signin-main__input-container">
             <li className="app__signin-main__input-item">
               <label className="app__signin-main__input-label">email</label>
-              <input type="text" className="app__signin-main__input" onChange={(e) => onUpdateEmail(e.target.value)} />
+              <input
+                type="text"
+                className="app__signin-main__input"
+                defaultValue={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </li>
             <li className="app__signin-main__input-item">
               <label className="app__signin-main__input-label">password</label>
@@ -44,7 +49,8 @@ export const SignInComponent: React.FunctionComponent<Props> = (props) => {
                 type="password"
                 minLength={6}
                 className="app__signin-main__input"
-                onChange={(e) => onUpdatePassword(e.target.value)}
+                defaultValue={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </li>
           </ul>
