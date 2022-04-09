@@ -6,4 +6,6 @@ export interface GameCreationAction {
 }
 
 // context for GameCreationAction.
-export const gameCreationActionContext = createContext<GameCreationAction>({} as GameCreationAction);
+const gameCreationActionContext = createContext<GameCreationAction>({} as GameCreationAction);
+
+export default gameCreationActionContext;
