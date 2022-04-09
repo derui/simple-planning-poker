@@ -24,7 +24,7 @@ export const setUpAtomsUser = (
           return { id: user.id, name: user.name };
         }
       }),
-    effects_UNSTABLE: (userId: UserId) => [
+    effects: (userId: UserId) => [
       ({ setSelf }) => {
         const unsubscribe = userObserver.subscribe(userId, (user) => {
           setSelf({ id: user.id, name: user.name });
