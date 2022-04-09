@@ -8,12 +8,10 @@ import {
   gameCreationActionContext,
   gameActionContext,
   gameSelectorContext,
-  signInActionContext,
   userActionsContext,
 } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
-import { createSigninActions } from "./status/signin";
 import { createGameCreationActions } from "./status/game-creator";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
@@ -38,6 +36,10 @@ import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-lea
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
 import { UserObserverImpl } from "./infrastractures/user-observer";
+import signInActionContext, { SigninActions } from "./contexts/actions/signin-actions";
+import createUseApplyAuthenticated from "./status/signin/actions/use-apply-authenticated";
+import createUseSignIn from "./status/signin/actions/use-signin";
+import createUseSignUp from "./status/signin/actions/use-signup";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -84,7 +86,11 @@ registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher
 
 const gameAction = createGameAction(registrar);
 const gameCreationActions = createGameCreationActions(registrar);
-const signInActions = createSigninActions(registrar);
+const signInActions: SigninActions = {
+  useApplyAuthenticated: createUseApplyAuthenticated(registrar),
+  useSignIn: createUseSignIn(registrar),
+  useSignUp: createUseSignUp(registrar),
+};
 const userActions = createUserActions(registrar);
 const gameSelector = createGameSelectors();
 

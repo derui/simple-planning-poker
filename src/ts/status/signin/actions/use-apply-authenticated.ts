@@ -4,7 +4,7 @@ import { Dependencies } from "@/dependencies";
 import signInState from "../atoms/signing";
 import currentUserState from "../atoms/current-user";
 
-const createUseApplyAuthenticated = (registrar: DependencyRegistrar<Dependencies>) => {
+export default function createUseApplyAuthenticated(registrar: DependencyRegistrar<Dependencies>) {
   const authenticator = registrar.resolve("authenticator");
   const userRepository = registrar.resolve("userRepository");
 
@@ -26,6 +26,4 @@ const createUseApplyAuthenticated = (registrar: DependencyRegistrar<Dependencies
       set(currentUserState, () => ({ id: user.id, name: user.name, joinedGames: [] }));
       callback();
     });
-};
-
-export default createUseApplyAuthenticated;
+}

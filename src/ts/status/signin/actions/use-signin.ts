@@ -1,19 +1,10 @@
-import { UserId } from "@/domains/user";
 import { useRecoilCallback } from "recoil";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import signInState from "../atoms/signing";
 import currentUserState from "../atoms/current-user";
 
-export interface Authenticator {
-  signIn(email: string, password: string): Promise<UserId>;
-
-  signUp(name: string, email: string, password: string): Promise<UserId>;
-
-  currentUserIdIfExists(): Promise<UserId | undefined>;
-}
-
-const createUseSignIn = (registrar: DependencyRegistrar<Dependencies>) => {
+export default function createUseSignIn(registrar: DependencyRegistrar<Dependencies>) {
   const authenticator = registrar.resolve("authenticator");
   const userRepository = registrar.resolve("userRepository");
 
@@ -35,6 +26,4 @@ const createUseSignIn = (registrar: DependencyRegistrar<Dependencies>) => {
         set(signInState, (prev) => ({ ...prev, authenticating: false }));
       }
     });
-};
-
-export default createUseSignIn;
+}

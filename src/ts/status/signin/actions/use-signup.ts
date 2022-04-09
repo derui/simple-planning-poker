@@ -4,7 +4,7 @@ import { Dependencies } from "@/dependencies";
 import signInState from "../atoms/signing";
 import currentUserState from "../atoms/current-user";
 
-const createUseSignUp = (registrar: DependencyRegistrar<Dependencies>) => {
+export default function createUseSignUp(registrar: DependencyRegistrar<Dependencies>) {
   const authenticator = registrar.resolve("authenticator");
   const userRepository = registrar.resolve("userRepository");
 
@@ -26,6 +26,4 @@ const createUseSignUp = (registrar: DependencyRegistrar<Dependencies>) => {
         set(signInState, (prev) => ({ ...prev, authenticating: false }));
       }
     });
-};
-
-export default createUseSignUp;
+}
