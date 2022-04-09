@@ -8,3 +8,9 @@ repos:
       language: system
       files: "\\.tsx?$"
       args: ["-w"]
+    - id: eslint
+      name: eslint
+      entry: yarn run eslint
+      language: system
+      files: "\\.tsx?$"
+      args: ["--fix", "--ext .ts,.tsx"]

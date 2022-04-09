@@ -4,7 +4,6 @@ import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUserId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
-import { createGiveUpCard } from "@/domains/card";
 import { ShowDownUseCase } from "./show-down";
 import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 
