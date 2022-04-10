@@ -3,8 +3,8 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import currentGamePlayerState from "../atoms/current-game-player-state";
 import currentGameState from "../selectors/current-game-state";
-import currentUserState from "@/status/signin/atoms/current-user";
 import currentGameIdState from "../atoms/current-game-id-state";
+import currentUserState from "@/status/user/atoms/current-user-state";
 
 export default function createUseLeaveGame(registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");
@@ -12,7 +12,7 @@ export default function createUseLeaveGame(registrar: DependencyRegistrar<Depend
 
   return () => {
     const currentPlayer = useRecoilValue(currentGamePlayerState);
-    const currentGame = currentGameState();
+    const currentGame = useRecoilValue(currentGameState);
 
     return useRecoilCallback(({ set }) => async () => {
       if (!currentPlayer || !currentGame) {

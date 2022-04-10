@@ -8,7 +8,7 @@ export default function createUseSelectCard(registrar: ApplicationDependencyRegi
 
   return () => {
     const currentPlayer = useRecoilValue(currentGamePlayerState);
-    const currentGame = currentGameState();
+    const currentGame = useRecoilValue(currentGameState);
 
     return useRecoilCallback(() => async (index: number) => {
       if (!currentPlayer || !currentGame) {

@@ -1,5 +1,5 @@
 import signInActionContext from "@/contexts/actions/signin-actions";
-import authenticatingState from "@/status/signin/selectors/authenticating";
+import { useAuthenticatingState } from "@/status/signin/selectors";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { SignInComponent } from "../presentations/signin";
@@ -12,11 +12,11 @@ export const SignUpContainer: React.FunctionComponent<Props> = () => {
   const action = React.useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
-  const authenticating = authenticatingState();
+  const authenticating = useAuthenticatingState();
 
   const { from }: any = location.state || { from: { pathname: "/" } };
   const signInCallback = () => {
-    navigate(from, { replace: true });
+    navigate(from.pathname, { replace: true });
   };
 
   React.useEffect(() => {

@@ -1,7 +1,7 @@
 import { Card, equalCard } from "@/domains/card";
 import { selector, useRecoilValue } from "recoil";
 import currentGamePlayerState from "../atoms/current-game-player-state";
-import currentGameState from "../atoms/current-game-state";
+import currentGameState from "./current-game-state";
 import SelectorKeys from "./key";
 
 type State = {

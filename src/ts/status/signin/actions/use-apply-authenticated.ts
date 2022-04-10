@@ -22,7 +22,7 @@ export default function createUseApplyAuthenticated(registrar: DependencyRegistr
         return;
       }
 
-      set(signInState, (prev) => ({ ...prev, authenticating: false }));
+      set(signInState, (prev) => ({ ...prev, authenticating: false, authenticated: true }));
       set(currentUserState, () => ({ id: user.id, name: user.name, joinedGames: [] }));
       callback();
     });

@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
-import authenticatedState from "./authenticated";
-import authenticatingState from "./authenticating";
+import authenticatedState from "./authenticated-state";
+import authenticatingState from "./authenticating-state";
 
 export const useAuthenticatedState = () => {
   return useRecoilValue(authenticatedState);

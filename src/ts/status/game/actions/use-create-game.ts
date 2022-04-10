@@ -1,9 +1,9 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
 import { GameId } from "@/domains/game";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
-import currentUserState from "@/status/signin/atoms/current-user";
 import currentGamePlayerState from "../atoms/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
+import currentUserState from "@/status/user/atoms/current-user-state";
 
 interface CreationParameter {
   name: string;

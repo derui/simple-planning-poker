@@ -42,6 +42,9 @@ import createUseNewGame from "./status/game/actions/use-new-game";
 import createUseSelectCard from "./status/game/actions/use-select-card";
 import createUseSelectGame from "./status/game/actions/use-select-game";
 import createUseShowDown from "./status/game/actions/use-show-down";
+import { CreateGameUseCase } from "./usecases/create-game";
+import { LeaveGameUseCase } from "./usecases/leave-game";
+import { initializeGameState } from "./status/game/atoms/game-state";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -71,6 +74,8 @@ registrar.register("gameRepository", gameRepository);
 registrar.register("handCardUseCase", new HandCardUseCase(dispatcher, registrar.resolve("gamePlayerRepository")));
 registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, registrar.resolve("gameRepository")));
 registrar.register("newGameUseCase", new NewGameUseCase(dispatcher, registrar.resolve("gameRepository")));
+registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
+registrar.register("leaveGameUseCase", new LeaveGameUseCase(dispatcher, registrar.resolve("userRepository")));
 registrar.register(
   "changeUserModeUseCase",
   new ChangeUserModeUseCase(dispatcher, registrar.resolve("gamePlayerRepository"))
@@ -85,9 +90,11 @@ registrar.register(
 );
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
+registrar.register("gameObserver", new GameObserverImpl(database, registrar.resolve("gameRepository")));
 
 // initialize atoms before launch
 initializeUserState(registrar);
+initializeGameState(registrar);
 
 const gameAction: GameActions = {
   useCreateGame: createUseCreateGame(registrar),

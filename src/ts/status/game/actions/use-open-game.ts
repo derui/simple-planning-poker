@@ -2,9 +2,10 @@ import { useRecoilCallback, useRecoilValue } from "recoil";
 import { GameId } from "@/domains/game";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import currentUserState from "@/status/signin/atoms/current-user";
 import currentGamePlayerState from "../atoms/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
+import currentUserState from "@/status/user/atoms/current-user-state";
+import currentGameIdState from "../atoms/current-game-id-state";
 
 export default function createUseOpenGame(registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");
@@ -30,6 +31,7 @@ export default function createUseOpenGame(registrar: DependencyRegistrar<Depende
       set(currentGamePlayerState, (prev) => {
         return gamePlayer ? gamePlayerToViewModel(gamePlayer, currentUser.name) : undefined || prev;
       });
+      set(currentGameIdState, gameId);
     });
   };
 }

@@ -9,7 +9,7 @@ type State = {
 };
 
 const currentGameInformationState = selector<State>({
-  key: SelectorKeys.currentGameName,
+  key: SelectorKeys.currentGameInformationState,
   get: ({ get }) => {
     const state = get(currentGameState);
     const name = state?.name;

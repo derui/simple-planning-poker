@@ -1,4 +1,4 @@
-import joinedGamesState from "@/status/signin/selectors/joined-games-state";
+import { useJoinedGamesState } from "@/status/user/selectors";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const EmptyComponent = () => {
 };
 
 export const GameSelectorContainerComponent: React.FunctionComponent<Props> = () => {
-  const games = joinedGamesState();
+  const games = useJoinedGamesState();
 
   const gameComponents = games.map((v) => {
     return (
