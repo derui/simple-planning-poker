@@ -2,12 +2,6 @@ import React, { Suspense } from "react";
 import { useLocation } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import GameContainer from "./components/containers/game-container";
-import GameCreatorContainer from "./components/containers/game-creator-container";
-import GameSelectorContainerComponent from "./components/containers/game-selector-container";
-import InvitationContainer from "./components/containers/invitation-container";
-import SignInContainer from "./components/containers/signin-container";
-import SignUpContainer from "./components/containers/signup-container";
 import { useAuthenticatedState } from "./status/signin/selectors";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -22,6 +16,13 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 export const App: React.FunctionComponent<{}> = () => {
+  const LaziedGameContainer = React.lazy(() => import("./components/containers/game-container"));
+  const LaziedGameCreatorContainer = React.lazy(() => import("./components/containers/game-creator-container"));
+  const LaziedGameSelectorContainer = React.lazy(() => import("./components/containers/game-selector-container"));
+  const LaziedInvitationContainer = React.lazy(() => import("./components/containers/invitation-container"));
+  const LaziedSignInContainer = React.lazy(() => import("./components/containers/signin-container"));
+  const LaziedSignUpContainer = React.lazy(() => import("./components/containers/signup-container"));
+
   return (
     <RecoilRoot>
       <Suspense fallback={<div>loading</div>}>
@@ -32,7 +33,7 @@ export const App: React.FunctionComponent<{}> = () => {
                 path="/game/create"
                 element={
                   <PrivateRoute>
-                    <GameCreatorContainer />
+                    <LaziedGameCreatorContainer />
                   </PrivateRoute>
                 }
               ></Route>
@@ -40,7 +41,7 @@ export const App: React.FunctionComponent<{}> = () => {
                 path="/"
                 element={
                   <PrivateRoute>
-                    <GameSelectorContainerComponent />
+                    <LaziedGameSelectorContainer />
                   </PrivateRoute>
                 }
               ></Route>
@@ -48,7 +49,7 @@ export const App: React.FunctionComponent<{}> = () => {
                 path="/game/:gameId"
                 element={
                   <PrivateRoute>
-                    <GameContainer />
+                    <LaziedGameContainer />
                   </PrivateRoute>
                 }
               ></Route>
@@ -56,12 +57,12 @@ export const App: React.FunctionComponent<{}> = () => {
                 path="/invitation/:signature"
                 element={
                   <PrivateRoute>
-                    <InvitationContainer />
+                    <LaziedInvitationContainer />
                   </PrivateRoute>
                 }
               ></Route>
-              <Route path="/signin" element={<SignInContainer />}></Route>
-              <Route path="/signup" element={<SignUpContainer />}></Route>
+              <Route path="/signin" element={<LaziedSignInContainer />}></Route>
+              <Route path="/signup" element={<LaziedSignUpContainer />}></Route>
             </Routes>
           </BrowserRouter>
         </div>
