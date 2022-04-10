@@ -6,7 +6,7 @@ interface Props {}
 
 const DEFAULT_CARDS = "0,1,2,3,5,8,13,21,34,55,89";
 
-export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
+const GameCreatorContainer: React.FunctionComponent<Props> = () => {
   const context = React.useContext(gameActionsContext);
   const createGame = context.useCreateGame();
   const navigate = useNavigate();
@@ -52,3 +52,5 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
     </div>
   );
 };
+
+export default GameCreatorContainer;

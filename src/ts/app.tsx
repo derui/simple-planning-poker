@@ -3,11 +3,11 @@ import { useLocation } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import GameContainer from "./components/containers/game-container";
-import { GameCreatorContainer } from "./components/containers/game-creator-container";
-import { GameSelectorContainerComponent } from "./components/containers/game-selector-container";
-import { InvitationContainer } from "./components/containers/invitation-container";
-import { SignInContainer } from "./components/containers/signin-container";
-import { SignUpContainer } from "./components/containers/signup-container";
+import GameCreatorContainer from "./components/containers/game-creator-container";
+import GameSelectorContainerComponent from "./components/containers/game-selector-container";
+import InvitationContainer from "./components/containers/invitation-container";
+import SignInContainer from "./components/containers/signin-container";
+import SignUpContainer from "./components/containers/signup-container";
 import { useAuthenticatedState } from "./status/signin/selectors";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {

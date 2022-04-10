@@ -6,7 +6,7 @@ import { SignInComponent } from "../presentations/signin";
 
 interface Props {}
 
-export const SignUpContainer: React.FunctionComponent<Props> = () => {
+const SignUpContainer: React.FunctionComponent<Props> = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const action = React.useContext(signInActionContext);
@@ -31,3 +31,5 @@ export const SignUpContainer: React.FunctionComponent<Props> = () => {
     ></SignInComponent>
   );
 };
+
+export default SignUpContainer;

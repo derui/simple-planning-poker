@@ -12,7 +12,7 @@ const EmptyComponent = () => {
   );
 };
 
-export const GameSelectorContainerComponent: React.FunctionComponent<Props> = () => {
+const GameSelectorContainerComponent: React.FunctionComponent<Props> = () => {
   const games = useJoinedGamesState();
 
   const gameComponents = games.map((v) => {
@@ -35,3 +35,5 @@ export const GameSelectorContainerComponent: React.FunctionComponent<Props> = ()
     </div>
   );
 };
+
+export default GameSelectorContainerComponent;

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 
 interface Props {}
 
-export const InvitationContainer: React.FunctionComponent<Props> = () => {
+const InvitationContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ signature: string }>();
   const gameActions = React.useContext(gameActionsContext);
   const joinUser = gameActions.useJoinUser();
@@ -23,3 +23,5 @@ export const InvitationContainer: React.FunctionComponent<Props> = () => {
     </div>
   );
 };
+
+export default InvitationContainer;
