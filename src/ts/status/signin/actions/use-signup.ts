@@ -1,8 +1,8 @@
 import { useRecoilCallback } from "recoil";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import signInState from "../atoms/signing";
-import currentUserState from "../atoms/current-user";
+import currentUserState from "@/status/user/atoms/current-user-state";
+import signInState from "../atoms/signin-state";
 
 export default function createUseSignUp(registrar: DependencyRegistrar<Dependencies>) {
   const authenticator = registrar.resolve("authenticator");
@@ -18,6 +18,7 @@ export default function createUseSignUp(registrar: DependencyRegistrar<Dependenc
           return;
         }
 
+        set(signInState, (prev) => ({ ...prev, authenticated: true }));
         set(currentUserState, () => ({ id: userId, name: email, joinedGames: [] }));
         callback();
       } catch (e) {

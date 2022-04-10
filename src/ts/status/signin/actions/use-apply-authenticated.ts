@@ -1,8 +1,8 @@
 import { useRecoilCallback } from "recoil";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import signInState from "../atoms/signing";
 import currentUserState from "@/status/user/atoms/current-user-state";
+import signInState from "../atoms/signin-state";
 
 export default function createUseApplyAuthenticated(registrar: DependencyRegistrar<Dependencies>) {
   const authenticator = registrar.resolve("authenticator");

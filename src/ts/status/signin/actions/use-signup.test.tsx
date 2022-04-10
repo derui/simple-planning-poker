@@ -5,8 +5,8 @@ import { RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
-import currentUserState from "../atoms/current-user";
 import createUseSignUp from "./use-signup";
+import currentUserState from "@/status/user/atoms/current-user-state";
 
 test("do not update state if user is not found", async () => {
   const registrar = createDependencyRegistrar<Dependencies>();

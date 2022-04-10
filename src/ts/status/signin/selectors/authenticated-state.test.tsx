@@ -1,10 +1,9 @@
-import { createUserId } from "@/domains/user";
 import { MutableSnapshot, RecoilRoot, useRecoilValue } from "recoil";
-import currentUserState from "../atoms/current-user";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers } from "@/lib.test";
 import React from "react";
-import authenticatedState from "./authenticated";
+import authenticatedState from "./authenticated-state";
+import signInState from "../atoms/signin-state";
 
 test("user is not authenticated if state is default", async () => {
   const V = () => {
@@ -26,7 +25,7 @@ test("user is not authenticated if state is default", async () => {
 
 test("user is authenticated if user is setted", async () => {
   const snapshot = ({ set }: MutableSnapshot) => {
-    set(currentUserState, (prev) => ({ ...prev, id: createUserId("1"), name: "name" }));
+    set(signInState, (prev) => ({ ...prev, authenticated: true }));
   };
 
   const V = () => {
