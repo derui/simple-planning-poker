@@ -19,16 +19,16 @@ export const SignInContainer: React.FunctionComponent<Props> = () => {
     navigate(from.pathname, { replace: true });
   };
 
+  const onSubmit = (email: string, password: string) => {
+    signIn(email, password, signInCallback);
+  };
+
   React.useEffect(() => {
     applyAuthenticated(signInCallback);
   }, []);
 
   return (
-    <SignInComponent
-      title="Sign In"
-      onSubmit={(email, password) => signIn(email, password, signInCallback)}
-      showOverlay={authenticating}
-    >
+    <SignInComponent title="Sign In" onSubmit={onSubmit} authenticating={authenticating}>
       <p className="app__signin-main__sign-up-link">
         or <a href="/signup">Sign up</a>
       </p>

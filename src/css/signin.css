@@ -1,10 +1,14 @@
 .app__signin-overlay {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
   position: absolute;
   height: 100%;
   width: 100%;
   left: 0;
   top: 0;
-  background-color: rgba(0 0 0 / 30%);
+  background-color: white;
   z-index: 1;
   visibility: hidden;
 }
@@ -16,7 +20,7 @@
 
 .app__signin-overlay-enter-active {
   opacity: 1;
-  transition: opacity 200ms ease-out;
+  transition: opacity 500ms ease-out;
 }
 
 .app__signin-overlay-exit {
@@ -26,7 +30,7 @@
 
 .app__signin-overlay-exit-active {
   opacity: 0;
-  transition: opacity 200ms ease-out;
+  transition: opacity 500ms ease-out;
 }
 
 .app__signin-overlay-exit-done {
@@ -63,6 +67,10 @@
 .app__signin-main {
   flex: 1 1 auto;
   background-color: white;
+}
+
+.app__signin-main__container {
+    position: relative;
   padding: var(--space-large);
 }
 

@@ -27,7 +27,7 @@ export const SignUpContainer: React.FunctionComponent<Props> = () => {
     <SignInComponent
       title="Sign Up"
       onSubmit={(email, password) => signUp(email, password, signInCallback)}
-      showOverlay={authenticating}
+      authenticating={authenticating}
     ></SignInComponent>
   );
 };

@@ -54,7 +54,7 @@ test("update state if user is found", async () => {
     signUp: jest.fn().mockImplementation(async () => createUserId("id")),
   };
   const userRepository = {
-    findBy: jest.fn().mockImplementation(async () => ({})),
+    findBy: jest.fn().mockImplementation(async () => ({ name: "email" })),
     save: jest.fn(),
   };
 

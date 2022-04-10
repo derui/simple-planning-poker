@@ -19,7 +19,7 @@ export default function createUseSignIn(registrar: DependencyRegistrar<Dependenc
         }
 
         set(signInState, (prev) => ({ ...prev, authenticated: true }));
-        set(currentUserState, () => ({ id: userId, name: email, joinedGames: [] }));
+        set(currentUserState, () => ({ id: userId, name: user.name, joinedGames: [] }));
         callback();
       } catch (e) {
         throw e;

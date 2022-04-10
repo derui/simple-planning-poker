@@ -54,7 +54,7 @@ test("update state if user is found", async () => {
     signIn: jest.fn().mockImplementation(async () => createUserId("id")),
   };
   const userRepository = {
-    findBy: jest.fn().mockImplementation(async () => ({})),
+    findBy: jest.fn().mockImplementation(async () => ({ name: "name" })),
     save: jest.fn(),
   };
 
@@ -83,7 +83,7 @@ test("update state if user is found", async () => {
 
   await flushPromisesAndTimers();
 
-  expect(onChange).toHaveBeenCalledWith({ id: createUserId("id"), name: "email", joinedGames: [] });
+  expect(onChange).toHaveBeenCalledWith({ id: createUserId("id"), name: "name", joinedGames: [] });
 });
 
 beforeEach(() => {
