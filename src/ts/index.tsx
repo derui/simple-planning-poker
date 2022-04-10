@@ -4,14 +4,12 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import { App } from "./app";
-import { gameActionContext } from "./contexts/actions";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameCreatedEventListener } from "./infrastractures/event/game-created-event-listener";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
 import { GameShowedDownEventListener } from "./infrastractures/event/game-showed-down-event-listener";
-import { createGameAction } from "./status/game-action";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { NewGameUseCase } from "./usecases/new-game";
@@ -34,9 +32,16 @@ import createUseSignIn from "./status/signin/actions/use-signin";
 import createUseSignUp from "./status/signin/actions/use-signup";
 import userActionsContext, { UserActions } from "./contexts/actions/user-actions";
 import createUseChangeUserName from "./status/user/actions/use-change-user-name";
-import gameCreationActionContext, { GameCreationAction } from "./contexts/actions/game-creator-actions";
 import createUseCreateGame from "./status/game/actions/use-create-game";
 import { initializeUserState } from "./status/user/atoms/user-state";
+import gameActionsContext, { GameActions } from "./contexts/actions/game-actions";
+import createUseOpenGame from "./status/game/actions/use-open-game";
+import createUseJoinUser from "./status/game/actions/use-join-user";
+import createUseLeaveGame from "./status/game/actions/use-leave-game";
+import createUseNewGame from "./status/game/actions/use-new-game";
+import createUseSelectCard from "./status/game/actions/use-select-card";
+import createUseSelectGame from "./status/game/actions/use-select-game";
+import createUseShowDown from "./status/game/actions/use-show-down";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -84,9 +89,16 @@ registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher
 // initialize atoms before launch
 initializeUserState(registrar);
 
-const gameAction = createGameAction(registrar);
-const gameCreationActions: GameCreationAction = {
+const gameAction: GameActions = {
   useCreateGame: createUseCreateGame(registrar),
+  useOpenGame: createUseOpenGame(registrar),
+  useChangeUserMode: createUseChangeUserName(registrar),
+  useJoinUser: createUseJoinUser(registrar),
+  useLeaveGame: createUseLeaveGame(registrar),
+  useNewGame: createUseNewGame(registrar),
+  useSelectCard: createUseSelectCard(registrar),
+  useSelectGame: createUseSelectGame(),
+  useShowDown: createUseShowDown(registrar),
 };
 const signInActions: SigninActions = {
   useApplyAuthenticated: createUseApplyAuthenticated(registrar),
@@ -99,15 +111,13 @@ const userActions: UserActions = {
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
-    <gameCreationActionContext.Provider value={gameCreationActions}>
-      <gameActionContext.Provider value={gameAction}>
-        <userActionsContext.Provider value={userActions}>
-          <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-            <App />
-          </gameObserverContext.Provider>
-        </userActionsContext.Provider>
-      </gameActionContext.Provider>
-    </gameCreationActionContext.Provider>
+    <gameActionsContext.Provider value={gameAction}>
+      <userActionsContext.Provider value={userActions}>
+        <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+          <App />
+        </gameObserverContext.Provider>
+      </userActionsContext.Provider>
+    </gameActionsContext.Provider>
   </signInActionContext.Provider>,
 
   document.getElementById("root")
