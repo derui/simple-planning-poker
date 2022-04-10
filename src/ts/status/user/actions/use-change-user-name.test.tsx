@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
 import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
 import createUseChangeUserName from "./use-change-user-name";
-import currentUserState from "@/status/signin/atoms/current-user";
+import currentUserState from "../atoms/current-user-state";
 
 test("do not execute use case if not logged in", async () => {
   const registrar = createDependencyRegistrar<Dependencies>();
