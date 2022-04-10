@@ -1,3 +1,2 @@
-**/*.test.tsx
-**/*.test.ts
-setupTests.ts
+**/*.js
+/src/ts/setupTests.ts

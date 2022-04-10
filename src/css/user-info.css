@@ -15,7 +15,7 @@
 .app__game__user-info__icon {
   display: inline-block;
   flex: 0 0 auto;
-  mask: url(/static/svg/user.svg);
+  mask: url("../svg/user.svg");
   mask-size: cover;
   width: 1.5rem;
   height: 1.5rem;
@@ -25,16 +25,18 @@
 
 .app__game__user-info__name {
   display: inline-block;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   width: 128px;
+  overflow: hidden;
   text-overflow: ellipsis;
   color: var(--primary-4);
 }
 
 .app__game__user-info__indicator {
+  margin-left: var(--space-base);
   display: inline-block;
   flex: 0 0 auto;
-  mask: url(/static/svg/arrow-down.svg);
+  mask: url("../svg/arrow-down.svg");
   mask-size: cover;
   width: 1rem;
   height: 1rem;

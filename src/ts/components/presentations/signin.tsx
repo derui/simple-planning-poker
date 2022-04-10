@@ -3,40 +3,45 @@ import { CSSTransition } from "react-transition-group";
 
 interface Props {
   title: string;
-  onSubmit: () => void;
-  onUpdateEmail: (value: string) => void;
-  onUpdatePassword: (value: string) => void;
-  showOverlay: boolean;
+  onSubmit: (email: string, password: string) => void;
+  authenticating: boolean;
 }
 
-const Overlay = ({ showOverlay }: { showOverlay: boolean }) => {
+const Overlay = ({ authenticating }: { authenticating: boolean }) => {
   return (
-    <CSSTransition in={showOverlay} timeout={200} classNames="app__signin-overlay">
-      <div className="app__signin-overlay"></div>
+    <CSSTransition in={authenticating} timeout={500} classNames="app__signin-overlay">
+      <div className="app__signin-overlay">Authenticating...</div>
     </CSSTransition>
   );
 };
 
-export const SignInComponent: React.FunctionComponent<Props> = (props) => {
-  const { onSubmit, onUpdateEmail, onUpdatePassword } = props;
+export const SignInComponent: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { onSubmit } = props;
 
   return (
-    <React.Fragment>
-      <Overlay showOverlay={props.showOverlay} />
-      <form
-        className="app__signin-root"
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          onSubmit();
-        }}
-      >
-        <header className="app__signin-header">{props.title}</header>
-        <main className="app__signin-main">
+    <form
+      className="app__signin-root"
+      onSubmit={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        onSubmit(email, password);
+      }}
+    >
+      <header className="app__signin-header">{props.title}</header>
+      <main className="app__signin-main">
+        <div className="app__signin-main__container">
+          <Overlay authenticating={props.authenticating} />
           <ul className="app__signin-main__input-container">
             <li className="app__signin-main__input-item">
               <label className="app__signin-main__input-label">email</label>
-              <input type="text" className="app__signin-main__input" onChange={(e) => onUpdateEmail(e.target.value)} />
+              <input
+                type="text"
+                className="app__signin-main__input"
+                defaultValue={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </li>
             <li className="app__signin-main__input-item">
               <label className="app__signin-main__input-label">password</label>
@@ -44,16 +49,17 @@ export const SignInComponent: React.FunctionComponent<Props> = (props) => {
                 type="password"
                 minLength={6}
                 className="app__signin-main__input"
-                onChange={(e) => onUpdatePassword(e.target.value)}
+                defaultValue={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </li>
           </ul>
           {props.children}
-        </main>
-        <footer className="app__signin-footer">
-          <input type="submit" className="app__signin__submit" value="Submit" />
-        </footer>
-      </form>
-    </React.Fragment>
+        </div>
+      </main>
+      <footer className="app__signin-footer">
+        <input type="submit" className="app__signin__submit" value="Submit" disabled={props.authenticating} />
+      </footer>
+    </form>
   );
 };

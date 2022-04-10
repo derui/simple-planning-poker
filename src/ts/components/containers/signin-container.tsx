@@ -1,39 +1,39 @@
-import { signInActionContext } from "@/contexts/actions";
-import { signInSelectors } from "@/status/signin";
+import signInActionContext from "@/contexts/actions/signin-actions";
+import { useAuthenticatingState } from "@/status/signin/selectors";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { SignInComponent } from "../presentations/signin";
 
-interface Props extends RouteComponentProps {}
+interface Props {}
 
-export const SignInContainer: React.FunctionComponent<Props> = ({ location, history }) => {
+const SignInContainer: React.FunctionComponent<Props> = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const action = React.useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signIn = action.useSignIn();
-  const setEmail = action.useUpdateEmail();
-  const setPassword = action.useUpdatePassword();
-  const emailState = signInSelectors.useSignInEmail();
-  const passwordState = signInSelectors.useSignInPassword();
-  const authenticating = signInSelectors.useAuthenticating();
+  const authenticating = useAuthenticatingState();
 
   const { from }: any = location.state || { from: { pathname: "/" } };
   const signInCallback = () => {
-    history.replace(from);
+    navigate(from.pathname, { replace: true });
   };
 
-  React.useEffect(() => applyAuthenticated(signInCallback), []);
+  const onSubmit = (email: string, password: string) => {
+    signIn(email, password, signInCallback);
+  };
+
+  React.useEffect(() => {
+    applyAuthenticated(signInCallback);
+  }, []);
 
   return (
-    <SignInComponent
-      title="Sign In"
-      onUpdateEmail={setEmail}
-      onUpdatePassword={setPassword}
-      onSubmit={() => signIn(emailState, passwordState, signInCallback)}
-      showOverlay={authenticating}
-    >
+    <SignInComponent title="Sign In" onSubmit={onSubmit} authenticating={authenticating}>
       <p className="app__signin-main__sign-up-link">
         or <a href="/signup">Sign up</a>
       </p>
     </SignInComponent>
   );
 };
+
+export default SignInContainer;

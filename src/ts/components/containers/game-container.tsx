@@ -1,25 +1,33 @@
 import * as React from "react";
-import { inGameActionContext, inGameSelectorContext, userActionsContext } from "@/contexts/actions";
-import { InGameAction, InGameStatus } from "@/status/in-game-action";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { PlayerHandsComponent } from "../presentations/player-hands";
 import { AveragePointShowcaseComponent } from "../presentations/average-point-showcase";
-import { signInSelectors } from "@/status/signin";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
-import { InGameSelector } from "@/status/in-game-selector";
-import { ShowDownResultViewModel, UserHandViewModel } from "@/status/in-game-atom";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
-import { useHistory, useParams } from "react-router-dom";
 import { GameId } from "@/domains/game";
+import { useNavigate, useParams } from "react-router";
+import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
+import currentPlayerSelectedCardState from "@/status/game/selectors/current-player-selected-card-state";
+import { GameStatus, ShowDownResultViewModel, UserHandViewModel } from "@/status/game/types";
+import {
+  useCurrentGameName,
+  useCurrentGameState,
+  useCurrentGameStatusState,
+  useCurrentPlayerInformationState,
+  useSelectableCardsState,
+  useShowDownResultState,
+  useUserHandsState,
+} from "@/status/game/selectors";
+import userActionsContext from "@/contexts/actions/user-actions";
 
 interface Props {}
 
-const createCardHolderComponent = ({ useSelectCard }: InGameAction, selectors: InGameSelector) => {
+const createCardHolderComponent = ({ useSelectCard }: GameActions) => {
   const selectCard = useSelectCard();
-  const cards = selectors.currentSelectableCards();
-  const selectedIndex = selectors.currentUserSelectedCardIndex();
+  const cards = useSelectableCardsState();
+  const selectedIndex = currentPlayerSelectedCardState()?.index;
 
   const props = {
     displays: cards.map((v) => {
@@ -47,7 +55,7 @@ const createAveragePointShowcase = (showDownResult: ShowDownResultViewModel) => 
   return <AveragePointShowcaseComponent averagePoint={average} cardCounts={showDownResult.cardCounts} />;
 };
 
-const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: InGameAction) => {
+const GameProgressionButton = (status: GameStatus, mode: UserMode, context: GameActions) => {
   const showDown = context.useShowDown();
   const newGame = context.useNewGame();
 
@@ -73,35 +81,34 @@ const GameProgressionButton = (status: InGameStatus, mode: UserMode, context: In
   }
 };
 
-const convertHands = (hands: UserHandViewModel[], currentStatus: InGameStatus) =>
+const convertHands = (hands: UserHandViewModel[], currentStatus: GameStatus) =>
   hands.map((v) => ({
     ...v,
     storyPoint: v.card ? asStoryPoint(v.card)?.value ?? null : null,
     showedDown: currentStatus === "ShowedDown",
   }));
 
-export const GameContainer: React.FunctionComponent<Props> = () => {
+const GameContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ gameId: string }>();
-  const inGameActions = React.useContext(inGameActionContext);
-  const inGameSelector = React.useContext(inGameSelectorContext);
-  const component = createCardHolderComponent(inGameActions, inGameSelector);
-  const currentGameName = inGameSelector.currentGameName();
-  const upperLine = inGameSelector.upperLineUserHands();
-  const lowerLine = inGameSelector.lowerLineUserHands();
-  const currentStatus = inGameSelector.currentGameStatus();
-  const showDownResult = inGameSelector.showDownResult();
-  const currentUser = signInSelectors.useCurrentUser();
+  const gameActions = React.useContext(gameActionsContext);
+  const component = createCardHolderComponent(gameActions);
+  const currentGameName = useCurrentGameName();
+  const { lowerLine, upperLine } = useUserHandsState();
+  const currentStatus = useCurrentGameStatusState();
+  const showDownResult = useShowDownResultState();
   const changeName = React.useContext(userActionsContext).useChangeUserName();
-  const changeMode = inGameActions.useChangeMode();
-  const currentUserMode = inGameSelector.currentUserMode() ?? UserMode.normal;
-  const signature = inGameSelector.invitationSignature();
-  const openGame = inGameActions.useOpenGame();
-  const leaveGame = inGameActions.useLeaveGame();
-  const history = useHistory();
+  const changeMode = gameActions.useChangeUserMode();
+  const currentUserInformation = useCurrentPlayerInformationState();
+  const currentUserName = currentUserInformation.name;
+  const currentUserMode = currentUserInformation.mode ?? UserMode.normal;
+  const signature = useCurrentGameState()?.invitationSignature;
+  const openGame = gameActions.useOpenGame();
+  const leaveGame = gameActions.useLeaveGame();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     openGame(param.gameId as GameId, () => {
-      history.replace("/");
+      navigate("/", { replace: true });
     });
   }, [param.gameId]);
 
@@ -113,18 +120,19 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
       Component = component;
     }
   }
+  const button = GameProgressionButton(currentStatus, currentUserMode, gameActions);
 
   return (
     <div className="app__game">
       <GameHeaderComponent
         gameName={currentGameName}
-        userName={currentUser.name}
+        userName={currentUserName || ""}
         userMode={currentUserMode}
         onChangeName={(name) => changeName(name)}
         onChangeMode={(mode) => changeMode(mode)}
         onLeaveGame={() => {
           leaveGame();
-          history.replace("/");
+          navigate("/", { replace: true });
         }}
         origin={document.location.origin}
         invitationSignature={signature || ""}
@@ -134,9 +142,7 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
           <div className="app__game__main__grid-container">
             <div className="app__game__main__upper-spacer"></div>
             <PlayerHandsComponent position="upper" userHands={convertHands(upperLine, currentStatus)} />
-            <div className="app__game__main__table">
-              {GameProgressionButton(currentStatus, currentUserMode, inGameActions)}
-            </div>
+            <div className="app__game__main__table">{button}</div>
             <PlayerHandsComponent position="lower" userHands={convertHands(lowerLine, currentStatus)} />
             <div className="app__game__main__lower-spacer"></div>
           </div>
@@ -146,3 +152,5 @@ export const GameContainer: React.FunctionComponent<Props> = () => {
     </div>
   );
 };
+
+export default GameContainer;

@@ -1,8 +1,8 @@
 module.exports = {
   plugins: [
     require('postcss-import'),
-    require('autoprefixer'),
     require('postcss-nesting'),
+    require('autoprefixer'),
     require('cssnano'),
   ]
 }

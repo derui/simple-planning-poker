@@ -20,7 +20,7 @@
     content: "";
     display: inline-block;
     flex: 0 0 auto;
-    mask: url(/static/svg/settings.svg);
+    mask: url("../svg/settings.svg");
     mask-size: cover;
     width: 100%;
     height: 100%;

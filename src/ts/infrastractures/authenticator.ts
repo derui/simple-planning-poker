@@ -1,8 +1,8 @@
-import { Authenticator } from "../status/signin";
 import { createUser, createUserId, UserId } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { Database, get, ref } from "firebase/database";
+import { Authenticator } from "@/status/signin/types";
 
 export class FirebaseAuthenticator implements Authenticator {
   constructor(private auth: Auth, private database: Database, private userRepository: UserRepository) {}

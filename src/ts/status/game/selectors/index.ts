@@ -1,0 +1,20 @@
+import { useRecoilValue } from "recoil";
+import currentGameInformationState from "./current-game-information-state";
+import currentGameName from "./current-game-name";
+import currentGameState from "./current-game-state";
+import currentGameStatusState from "./current-game-status-state";
+import currentPlayerInformationState from "./current-player-information-state";
+import gameCreatingState from "./game-creating-state";
+import selectableCardsState from "./selectable-cards-state";
+import showDownResultState from "./show-down-result-state";
+import userHandsState from "./user-hands-state";
+
+export const useCurrentGameState = () => useRecoilValue(currentGameState);
+export const useCurrentGameName = () => useRecoilValue(currentGameName);
+export const useCurrentGameInformationState = () => useRecoilValue(currentGameInformationState);
+export const useCurrentGameStatusState = () => useRecoilValue(currentGameStatusState);
+export const useCurrentPlayerInformationState = () => useRecoilValue(currentPlayerInformationState);
+export const useGameCreatingState = () => useRecoilValue(gameCreatingState);
+export const useSelectableCardsState = () => useRecoilValue(selectableCardsState);
+export const useShowDownResultState = () => useRecoilValue(showDownResultState);
+export const useUserHandsState = () => useRecoilValue(userHandsState);

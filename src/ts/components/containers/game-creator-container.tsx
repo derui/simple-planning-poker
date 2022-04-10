@@ -1,17 +1,23 @@
-import { gameCreationActionContext } from "@/contexts/actions";
-import { GameCreatorSelector } from "@/status/game-creator";
+import gameActionsContext from "@/contexts/actions/game-actions";
 import * as React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 interface Props {}
 
-export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
-  const context = React.useContext(gameCreationActionContext);
-  const setName = context.useSetName();
-  const setCards = context.useSetCards();
+const DEFAULT_CARDS = "0,1,2,3,5,8,13,21,34,55,89";
+
+const GameCreatorContainer: React.FunctionComponent<Props> = () => {
+  const context = React.useContext(gameActionsContext);
   const createGame = context.useCreateGame();
-  const history = useHistory();
-  const defaultCards = GameCreatorSelector.defaultCards();
+  const navigate = useNavigate();
+  const [name, setName] = React.useState("");
+  const [cards, setCards] = React.useState(DEFAULT_CARDS);
+  const callbackToCreateGame = () =>
+    createGame({
+      name,
+      cards: cards.split(",").map((v) => Number(v.trim())),
+      callback: (gameId) => navigate(`/game/${gameId}`, { replace: true }),
+    });
 
   return (
     <div className="app__game-creator">
@@ -20,27 +26,31 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
         <div className="app__game-creator__main__input-container">
           <span className="app__game-creator__main__input-row">
             <label className="app__game-creator__main__input-label">Name</label>
-            <input type="text" className="app__game-creator__main__name" onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              className="app__game-creator__main__name"
+              defaultValue={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </span>
           <span className="app__game-creator__main__input-row">
             <label className="app__game-creator__main__input-label">Cards</label>
             <input
               type="text"
               className="app__game-creator__main__card"
-              defaultValue={defaultCards}
+              defaultValue={cards}
               onChange={(e) => setCards(e.target.value)}
             />
           </span>
         </div>
       </main>
       <footer className="app__game-creator__footer">
-        <button
-          className="app__game-creator__submit"
-          onClick={() => createGame((gameId) => history.replace(`/game/${gameId}`))}
-        >
+        <button className="app__game-creator__submit" onClick={callbackToCreateGame}>
           Submit
         </button>
       </footer>
     </div>
   );
 };
+
+export default GameCreatorContainer;

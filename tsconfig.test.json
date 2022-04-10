@@ -4,8 +4,7 @@
     "lib": [
       "es2015",
       "dom",
-      "dom.iterable",
-      "esnext"
+      "dom.iterable"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -24,7 +23,10 @@
     "outDir": "generated",
     "paths": {
       "@/*": ["src/ts/*"]
-    }
+    },
+    "rootDirs": [
+      "src/ts",
+    ]
   },
   "include": [
     "src/ts/**/*.ts",
