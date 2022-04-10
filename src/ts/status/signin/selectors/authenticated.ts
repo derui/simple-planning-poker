@@ -1,14 +1,12 @@
-import { selector, useRecoilValue } from "recoil";
+import { selector } from "recoil";
 import currentUserState from "../atoms/current-user";
 import SelectorKeys from "./key";
 
-const state = selector<boolean>({
+const authenticatedState = selector<boolean>({
   key: SelectorKeys.authenticated,
   get: ({ get }) => {
     return get(currentUserState).id !== null;
   },
 });
 
-export default function authenticatedState() {
-  return useRecoilValue(state);
-}
+export default authenticatedState;
