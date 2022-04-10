@@ -1,4 +1,4 @@
-import gameCreationActionContext from "@/contexts/actions/game-creator-actions";
+import gameActionsContext from "@/contexts/actions/game-actions";
 import * as React from "react";
 import { useNavigate } from "react-router";
 
@@ -7,11 +7,17 @@ interface Props {}
 const DEFAULT_CARDS = "0,1,2,3,5,8,13,21,34,55,89";
 
 export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
-  const context = React.useContext(gameCreationActionContext);
+  const context = React.useContext(gameActionsContext);
   const createGame = context.useCreateGame();
   const navigate = useNavigate();
   const [name, setName] = React.useState("");
   const [cards, setCards] = React.useState(DEFAULT_CARDS);
+  const callbackToCreateGame = () =>
+    createGame({
+      name,
+      cards: cards.split(",").map((v) => Number(v.trim())),
+      callback: (gameId) => navigate(`/game/${gameId}`, { replace: true }),
+    });
 
   return (
     <div className="app__game-creator">
@@ -39,10 +45,7 @@ export const GameCreatorContainer: React.FunctionComponent<Props> = () => {
         </div>
       </main>
       <footer className="app__game-creator__footer">
-        <button
-          className="app__game-creator__submit"
-          onClick={() => createGame((gameId) => navigate(`/game/${gameId}`, { replace: true }))}
-        >
+        <button className="app__game-creator__submit" onClick={callbackToCreateGame}>
           Submit
         </button>
       </footer>
