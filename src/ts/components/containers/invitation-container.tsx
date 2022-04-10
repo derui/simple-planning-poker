@@ -1,4 +1,4 @@
-import { gameActionContext } from "@/contexts/actions";
+import gameActionsContext from "@/contexts/actions/game-actions";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -6,7 +6,7 @@ interface Props {}
 
 export const InvitationContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ signature: string }>();
-  const gameActions = React.useContext(gameActionContext);
+  const gameActions = React.useContext(gameActionsContext);
   const joinUser = gameActions.useJoinUser();
   const navigate = useNavigate();
 
