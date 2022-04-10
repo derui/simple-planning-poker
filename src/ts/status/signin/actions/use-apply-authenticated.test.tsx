@@ -21,6 +21,7 @@ test("call error callback if user is not found", async () => {
 
   registrar.register("authenticator", authenticator as any);
   registrar.register("userRepository", userRepository);
+  registrar.register("gameRepository", createMockedGameRepository());
 
   const useHook = createUseApplyAuthenticated(registrar);
   const callback = jest.fn();
@@ -52,7 +53,7 @@ test("update state if user is found", async () => {
     currentUserIdIfExists: jest.fn().mockImplementation(async () => createUserId("id")),
   };
   const userRepository = {
-    findBy: jest.fn().mockImplementation(async () => ({ id: createUserId("id"), name: "name" })),
+    findBy: jest.fn().mockImplementation(async () => ({ id: createUserId("id"), name: "name", joinedGames: [] })),
     save: jest.fn(),
   };
   const gameRepository = createMockedGameRepository();
