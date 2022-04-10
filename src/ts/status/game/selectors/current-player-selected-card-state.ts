@@ -32,6 +32,6 @@ const internalState = selector<State | undefined>({
   },
 });
 
-export default function gameCreatingState() {
+export default function currentPlayerSelectedCardState() {
   return useRecoilValue(internalState);
 }

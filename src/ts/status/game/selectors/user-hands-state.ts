@@ -1,7 +1,7 @@
 import { GamePlayerId } from "@/domains/game-player";
-import { selector, useRecoilValue } from "recoil";
-import currentGameState from "../atoms/current-game-state";
+import { selector } from "recoil";
 import { GameViewModel, UserHandViewModel } from "../types";
+import currentGameState from "./current-game-state";
 import SelectorKeys from "./key";
 
 type State = {
@@ -18,7 +18,7 @@ const makeUserHandsInGame = (game: GameViewModel, users: GamePlayerId[]) => {
     .map((v) => v!);
 };
 
-const state = selector<State>({
+const userHandsState = selector<State>({
   key: SelectorKeys.userHandsState,
   get: ({ get }) => {
     const game = get(currentGameState);
@@ -35,6 +35,4 @@ const state = selector<State>({
   },
 });
 
-export default function userHandsState() {
-  return useRecoilValue(state);
-}
+export default userHandsState;

@@ -1,9 +1,10 @@
 import { asStoryPoint } from "@/domains/card";
-import { selector, useRecoilValue } from "recoil";
-import currentGameState from "../atoms/current-game-state";
+import { selector } from "recoil";
 import { ShowDownResultViewModel } from "../types";
+import currentGameState from "./current-game-state";
+import SelectorKeys from "./key";
 
-const state = selector<ShowDownResultViewModel>({
+const showDownResultState = selector<ShowDownResultViewModel>({
   key: SelectorKeys.showDownResultState,
   get: ({ get }) => {
     const game = get(currentGameState);
@@ -27,6 +28,4 @@ const state = selector<ShowDownResultViewModel>({
   },
 });
 
-export default function showDownResultState() {
-  return useRecoilValue(state);
-}
+export default showDownResultState;

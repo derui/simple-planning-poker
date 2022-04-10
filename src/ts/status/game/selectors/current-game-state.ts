@@ -1,10 +1,10 @@
-import { selector, useRecoilValue } from "recoil";
+import { selector } from "recoil";
 import currentGameIdState from "../atoms/current-game-id-state";
 import gameState from "../atoms/game-state";
 import { GameViewModel } from "../types";
 import SelectorKeys from "./key";
 
-const state = selector<GameViewModel | undefined>({
+const currentGameState = selector<GameViewModel | undefined>({
   key: SelectorKeys.currentGameState,
   get: ({ get }) => {
     const gameId = get(currentGameIdState);
@@ -16,6 +16,4 @@ const state = selector<GameViewModel | undefined>({
   },
 });
 
-export default function currentGameState() {
-  return useRecoilValue(state);
-}
+export default currentGameState;

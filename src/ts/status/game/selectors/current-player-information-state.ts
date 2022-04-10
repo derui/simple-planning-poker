@@ -1,5 +1,5 @@
 import { UserMode } from "@/domains/game-player";
-import { selector, useRecoilValue } from "recoil";
+import { selector } from "recoil";
 import currentGamePlayerState from "../atoms/current-game-player-state";
 import SelectorKeys from "./key";
 
@@ -8,7 +8,7 @@ type CurrentPlayerInformation = {
   mode?: UserMode;
 };
 
-const internalState = selector<CurrentPlayerInformation>({
+const currentPlayerInformationState = selector<CurrentPlayerInformation>({
   key: SelectorKeys.currentPlayerInformation,
   get: ({ get }) => {
     const player = get(currentGamePlayerState);
@@ -21,6 +21,4 @@ const internalState = selector<CurrentPlayerInformation>({
   },
 });
 
-export default function gameCreatingState() {
-  return useRecoilValue(internalState);
-}
+export default currentPlayerInformationState;

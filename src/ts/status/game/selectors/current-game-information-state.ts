@@ -1,5 +1,5 @@
-import { selector, useRecoilValue } from "recoil";
-import currentGameState from "../atoms/current-game-state";
+import { selector } from "recoil";
+import currentGameState from "./current-game-state";
 import SelectorKeys from "./key";
 
 type State = {
@@ -8,7 +8,7 @@ type State = {
   invitationSignature?: string;
 };
 
-const state = selector<State>({
+const currentGameInformationState = selector<State>({
   key: SelectorKeys.currentGameName,
   get: ({ get }) => {
     const state = get(currentGameState);
@@ -31,6 +31,4 @@ const state = selector<State>({
   },
 });
 
-export default function currentGameInformationState() {
-  return useRecoilValue(state);
-}
+export default currentGameInformationState;

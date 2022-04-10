@@ -1,14 +1,12 @@
-import { selector, useRecoilValue } from "recoil";
+import { selector } from "recoil";
 import gameCreationState from "../atoms/game-creation-state";
 import SelectorKeys from "./key";
 
-const internalState = selector({
+const gameCreatingState = selector({
   key: SelectorKeys.gameCreatingState,
   get: ({ get }) => {
     return get(gameCreationState).creating;
   },
 });
 
-export default function gameCreatingState() {
-  return useRecoilValue(internalState);
-}
+export default gameCreatingState;
