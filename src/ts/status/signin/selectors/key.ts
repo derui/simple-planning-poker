@@ -1,8 +1,7 @@
-const prefix = "signin";
-
 const SelectorKeys = {
-  authenticated: `${prefix}:authenticated`,
-  authenticating: `${prefix}:authenticating`,
+  authenticated: "signin:authenticated",
+  authenticating: "signin:authenticating",
+  joinedGamesState: "signin:joinedGamesState",
 } as const;
 
 export default SelectorKeys;

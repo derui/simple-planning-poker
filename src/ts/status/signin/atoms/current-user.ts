@@ -1,12 +1,7 @@
 import { atom } from "recoil";
 import { UserId } from "@/domains/user";
 import AtomKeys from "./key";
-
-interface UserJoinedGameViewModel {
-  id: string;
-  name: string;
-  playerId: string;
-}
+import { UserJoinedGameViewModel } from "../types";
 
 type CurrentUserViewModel = {
   id: UserId | null;

@@ -8,7 +8,7 @@ import { createStoryPoint, StoryPoint } from "./story-point";
 
 export type GameId = Id<"Game">;
 
-export const createGameId = () => createId<"Game">();
+export const createGameId = (v?: string) => createId<"Game">(v);
 
 export interface PlayerHand {
   playerId: GamePlayerId;
