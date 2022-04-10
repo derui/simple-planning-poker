@@ -1,5 +1,5 @@
-import currentUserState from "@/status/signin/atoms/current-user";
 import { selector } from "recoil";
+import currentUserState from "../atoms/current-user-state";
 import { UserJoinedGameViewModel } from "../types";
 import SelectorKeys from "./key";
 

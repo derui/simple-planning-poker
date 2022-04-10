@@ -7,9 +7,3 @@ export interface Authenticator {
 
   currentUserIdIfExists(): Promise<UserId | undefined>;
 }
-
-export interface UserJoinedGameViewModel {
-  id: string;
-  name: string;
-  playerId: string;
-}
