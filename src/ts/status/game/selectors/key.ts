@@ -1,13 +1,13 @@
 const SelectorKeys = {
-  gameCreatingState: "game:gameCreatingState",
-  cardsInGameState: "game:cardsInGameState",
-  currentGameName: "game:currentGameName",
-  currentPlayerInformation: "game:currentPlayerInformation",
-  currentPlayerSelectedCardState: "game:currentPlayerSelectedCardState",
-  userHandsState: "game:userHandsState",
-  currentGameStatusState: "game:currentGameStatusState",
-  showDownResultState: "game:showDownResultState",
-  currentGameState: "game:currentGameState",
+  gameCreatingState: "game:selector:gameCreatingState",
+  cardsInGameState: "game:selector:cardsInGameState",
+  currentGameName: "game:selector:currentGameName",
+  currentPlayerInformation: "game:selector:currentPlayerInformation",
+  currentPlayerSelectedCardState: "game:selector:currentPlayerSelectedCardState",
+  userHandsState: "game:selector:userHandsState",
+  currentGameStatusState: "game:selector:currentGameStatusState",
+  showDownResultState: "game:selector:showDownResultState",
+  currentGameState: "game:selector:currentGameState",
 } as const;
 
 export default SelectorKeys;

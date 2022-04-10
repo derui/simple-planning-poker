@@ -1,6 +1,6 @@
 const SelectorKeys = {
-  joinedGamesState: "user:joinedGamesState",
-  currentUserState: "user:currentUserState",
+  joinedGamesState: "user:selector:joinedGamesState",
+  currentUserNameState: "user:selector:currentUserNameState",
 } as const;
 
 export default SelectorKeys;

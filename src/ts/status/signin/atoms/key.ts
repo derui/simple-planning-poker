@@ -1,7 +1,7 @@
 const prefix = "signin";
 
 const AtomKeys = {
-  signIn: `${prefix}:signIn`,
+  signIn: `${prefix}:atom:signIn`,
 } as const;
 
 export default AtomKeys;

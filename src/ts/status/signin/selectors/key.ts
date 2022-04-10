@@ -1,8 +1,8 @@
 const SelectorKeys = {
-  authenticated: "signin:authenticated",
-  authenticating: "signin:authenticating",
-  joinedGamesState: "signin:joinedGamesState",
-  currentUserState: "signin:currentUserState",
+  authenticated: "signin:selector:authenticated",
+  authenticating: "signin:selector:authenticating",
+  joinedGamesState: "signin:selector:joinedGamesState",
+  currentUserState: "signin:selector:currentUserState",
 } as const;
 
 export default SelectorKeys;

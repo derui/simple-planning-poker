@@ -1,6 +1,6 @@
 const AtomKeys = {
-  userState: "user:userState",
-  currentUserState: "user:currentUserState",
+  userState: "user:atom:userState",
+  currentUserState: "user:atom:currentUserState",
 } as const;
 
 export default AtomKeys;
