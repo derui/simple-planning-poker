@@ -11,14 +11,14 @@ export default function createUseLeaveGame(registrar: DependencyRegistrar<Depend
   const leaveGameUseCase = registrar.resolve("leaveGameUseCase");
 
   return () => {
-    const currentPlayer = useRecoilValue(currentGamePlayerState);
+    const currentUser = useRecoilValue(currentUserState);
     const currentGame = useRecoilValue(currentGameState);
 
     return useRecoilCallback(({ set }) => async () => {
-      if (!currentPlayer || !currentGame) {
+      if (!currentUser?.id || !currentGame) {
         return;
       }
-      const user = await userRepository.findBy(currentPlayer.userId);
+      const user = await userRepository.findBy(currentUser.id);
       if (!user) {
         return;
       }

@@ -45,6 +45,7 @@ import createUseShowDown from "./status/game/actions/use-show-down";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { initializeGameState } from "./status/game/atoms/game-state";
+import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -99,7 +100,7 @@ initializeGameState(registrar);
 const gameAction: GameActions = {
   useCreateGame: createUseCreateGame(registrar),
   useOpenGame: createUseOpenGame(registrar),
-  useChangeUserMode: createUseChangeUserName(registrar),
+  useChangeUserMode: createUseChangeUserMode(registrar),
   useJoinUser: createUseJoinUser(registrar),
   useLeaveGame: createUseLeaveGame(registrar),
   useNewGame: createUseNewGame(registrar),

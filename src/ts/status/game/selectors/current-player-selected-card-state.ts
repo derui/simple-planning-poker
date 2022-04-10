@@ -13,12 +13,12 @@ const internalState = selector<State | undefined>({
   key: SelectorKeys.currentPlayerSelectedCardState,
   get: ({ get }) => {
     const game = get(currentGameState);
-    const currentUser = get(currentGamePlayerState);
-    if (!game || !currentUser) {
+    const currentPlayer = get(currentGamePlayerState);
+    if (!game || !currentPlayer) {
       return;
     }
 
-    const userHand = game.hands.find((v) => v.gamePlayerId === currentUser.id);
+    const userHand = game.hands.find((v) => v.gamePlayerId === currentPlayer.id);
     if (!userHand) {
       return;
     }

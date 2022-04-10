@@ -1,7 +1,7 @@
 const AtomKeys = {
   gameCreationState: "game:atom:gameCreationState",
   currentGameStateId: "game:atom:currentGameStateId",
-  currentGamePlayerState: "game:atom:currentGamePlayerState",
+  currentGamePlayerIdState: "game:atom:currentGamePlayerIdState",
   gameState: "game:atom:gameState",
 } as const;
 

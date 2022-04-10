@@ -4,7 +4,7 @@ import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
-import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
+import { createMockedGameRepository, flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
 import createUseApplyAuthenticated from "./use-apply-authenticated";
 import currentUserState from "@/status/user/atoms/current-user-state";
 
@@ -55,9 +55,12 @@ test("update state if user is found", async () => {
     findBy: jest.fn().mockImplementation(async () => ({ id: createUserId("id"), name: "name" })),
     save: jest.fn(),
   };
+  const gameRepository = createMockedGameRepository();
+  gameRepository.findBy.mockImplementation(async () => {});
 
   registrar.register("authenticator", authenticator as any);
   registrar.register("userRepository", userRepository);
+  registrar.register("gameRepository", gameRepository);
 
   const useHook = createUseApplyAuthenticated(registrar);
   const callback = jest.fn();

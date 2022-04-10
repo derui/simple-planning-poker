@@ -1,9 +1,14 @@
 import { atom } from "recoil";
 import AtomKeys from "./key";
-import { GamePlayerViewModel } from "../types";
+import { GamePlayerId, UserMode } from "@/domains/game-player";
 
-const currentGamePlayerState = atom<GamePlayerViewModel | undefined>({
-  key: AtomKeys.currentGamePlayerState,
+type State = {
+  id: GamePlayerId;
+  mode: UserMode;
+};
+
+const currentGamePlayerState = atom<State | undefined>({
+  key: AtomKeys.currentGamePlayerIdState,
   default: undefined,
 });
 

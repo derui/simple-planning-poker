@@ -10,7 +10,7 @@ export default function createUseChangeUserMode(registrar: DependencyRegistrar<D
   return () => {
     const currentPlayer = useRecoilValue(currentGamePlayerState);
 
-    return useRecoilCallback(() => async (mode: UserMode) => {
+    return useRecoilCallback(({ set }) => async (mode: UserMode) => {
       if (!currentPlayer) {
         return;
       }
@@ -18,6 +18,14 @@ export default function createUseChangeUserMode(registrar: DependencyRegistrar<D
       await changeUserModeUseCase.execute({
         gamePlayerId: currentPlayer.id,
         mode,
+      });
+
+      set(currentGamePlayerState, (prev) => {
+        if (!prev) {
+          return prev;
+        }
+
+        return { ...prev, mode };
       });
     });
   };
