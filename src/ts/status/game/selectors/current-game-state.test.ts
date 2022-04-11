@@ -4,16 +4,17 @@ import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUser, createUserId } from "@/domains/user";
+import { flushPromisesAndTimers } from "@/lib.test";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { snapshot_UNSTABLE } from "recoil";
 import currentGameIdState from "../atoms/current-game-id-state";
-import { initializeGameState } from "../atoms/game-state";
+import { initializeGameQuery } from "../atoms/game-query";
 import currentGameState from "./current-game-state";
 
 test("return default values if current game is not found", async () => {
   const snapshot = snapshot_UNSTABLE();
   const value = snapshot.getLoadable(currentGameState).valueOrThrow();
-  expect(value).toBeUndefined();
+  expect(value).toEqual({ kind: "notSelected" });
 });
 
 test("return view model if game id is presented", async () => {
@@ -54,7 +55,7 @@ test("return view model if game id is presented", async () => {
     }),
   } as any);
 
-  initializeGameState(registrar);
+  initializeGameQuery(registrar);
 
   const snapshot = snapshot_UNSTABLE(({ set }) => {
     set(currentGameIdState, createGameId("id"));
@@ -62,19 +63,35 @@ test("return view model if game id is presented", async () => {
   const release = snapshot.retain();
 
   try {
-    const value = await snapshot.getLoadable(currentGameState).promiseOrThrow();
-    expect(value?.average).toBeUndefined();
-    expect(value?.cards).toBe(cards.cards);
-    expect(value?.hands).toContainEqual({
-      card: undefined,
-      name: "name",
-      gamePlayerId: createGamePlayerId("player"),
-      mode: "normal",
-      selected: false,
-    });
-    expect(value?.id).toBe(createGameId("id"));
-    expect(value?.name).toBe("name");
+    await snapshot.getLoadable(currentGameState).toPromise();
+    await flushPromisesAndTimers();
+    const value = snapshot.getLoadable(currentGameState).valueOrThrow();
+    expect(value.kind).toEqual("loaded");
+
+    if (value.kind === "loaded") {
+      expect(value.viewModel.average).toBeUndefined();
+      expect(value.viewModel.cards).toBe(cards.cards);
+      expect(value.viewModel.hands).toContainEqual({
+        card: undefined,
+        name: "name",
+        gamePlayerId: createGamePlayerId("player"),
+        mode: "normal",
+        selected: false,
+      });
+      expect(value.viewModel.id).toBe(createGameId("id"));
+      expect(value.viewModel.name).toBe("name");
+    } else {
+      fail("failed");
+    }
   } finally {
     release();
   }
+});
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.useRealTimers();
 });

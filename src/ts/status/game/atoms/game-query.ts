@@ -48,7 +48,7 @@ const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
   };
 };
 
-const gameState = atomFamily({
+const gameQuery = atomFamily({
   key: AtomKeys.gameState,
   default: async (gameId: GameId) => {
     const game = await gameRepository!!.findBy(gameId);
@@ -72,9 +72,9 @@ const gameState = atomFamily({
   ],
 });
 
-export default gameState;
+export default gameQuery;
 
-export const initializeGameState = (registrar: ApplicationDependencyRegistrar) => {
+export const initializeGameQuery = (registrar: ApplicationDependencyRegistrar) => {
   gameRepository = registrar.resolve("gameRepository");
   gamePlayerRepository = registrar.resolve("gamePlayerRepository");
   userRepository = registrar.resolve("userRepository");
