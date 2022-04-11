@@ -9,7 +9,6 @@ import { asStoryPoint } from "@/domains/card";
 import { GameId } from "@/domains/game";
 import { useNavigate, useParams } from "react-router";
 import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
-import currentPlayerSelectedCardState from "@/status/game/selectors/current-player-selected-card-state";
 import { GameStatus, ShowDownResultViewModel, UserHandViewModel } from "@/status/game/types";
 import {
   useCurrentGameName,

@@ -33,7 +33,6 @@ import createUseSignUp from "./status/signin/actions/use-signup";
 import userActionsContext, { UserActions } from "./contexts/actions/user-actions";
 import createUseChangeUserName from "./status/user/actions/use-change-user-name";
 import createUseCreateGame from "./status/game/actions/use-create-game";
-import { initializeUserState } from "./status/user/atoms/user-state";
 import gameActionsContext, { GameActions } from "./contexts/actions/game-actions";
 import createUseOpenGame from "./status/game/actions/use-open-game";
 import createUseJoinUser from "./status/game/actions/use-join-user";
@@ -44,8 +43,9 @@ import createUseSelectGame from "./status/game/actions/use-select-game";
 import createUseShowDown from "./status/game/actions/use-show-down";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
-import { initializeGameState } from "./status/game/atoms/game-state";
 import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
+import { initializeGameQuery } from "./status/game/atoms/game-query";
+import { initializeUserQuery } from "./status/user/atoms/user-state-query";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -94,8 +94,8 @@ registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher
 registrar.register("gameObserver", new GameObserverImpl(database, registrar.resolve("gameRepository")));
 
 // initialize atoms before launch
-initializeUserState(registrar);
-initializeGameState(registrar);
+initializeGameQuery(registrar);
+initializeUserQuery(registrar);
 
 const gameAction: GameActions = {
   useCreateGame: createUseCreateGame(registrar),

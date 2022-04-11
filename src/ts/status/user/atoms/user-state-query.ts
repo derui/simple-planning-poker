@@ -30,7 +30,7 @@ const userStateQuery = atomFamily({
 
 export default userStateQuery;
 
-export const initializeUserState = (registrar: ApplicationDependencyRegistrar) => {
+export const initializeUserQuery = (registrar: ApplicationDependencyRegistrar) => {
   userRepository = registrar.resolve("userRepository");
   userObserver = registrar.resolve("userObserver");
 };
