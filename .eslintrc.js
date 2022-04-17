@@ -2,6 +2,7 @@ module.exports = {
   plugins: ["@typescript-eslint", "unused-imports", "import", "react"],
   parser: '@typescript-eslint/parser',
   extends:  [
+    "plugin:react/jsx-runtime",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
