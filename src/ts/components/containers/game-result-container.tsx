@@ -48,7 +48,6 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
-  const showDown = gameActions.useShowDown();
   const newGame = gameActions.useNewGame();
 
   React.useEffect(() => {
@@ -56,6 +55,11 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
       navigate("/", { replace: true });
     });
   }, [param.gameId]);
+
+  const onNewGame = () => {
+    navigate(`/game/${param.gameId}`, { replace: true });
+    newGame();
+  };
 
   return (
     <div className="app__game">
@@ -74,8 +78,8 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
       />
       <main className="app__game__main">
         <GameAreaComponent
-          onShowDown={showDown}
-          onNewGame={newGame}
+          onShowDown={() => {}}
+          onNewGame={onNewGame}
           gameStatus={currentStatus}
           lines={userHands}
           userMode={currentUserMode}

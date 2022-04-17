@@ -77,6 +77,11 @@ const GameContainer: React.FunctionComponent<Props> = () => {
     Component = component;
   }
 
+  const onShowDown = () => {
+    showDown();
+    navigate(`/game/${param.gameId}/result`, { replace: true });
+  };
+
   return (
     <div className="app__game">
       <GameHeaderComponent
@@ -94,7 +99,7 @@ const GameContainer: React.FunctionComponent<Props> = () => {
       />
       <main className="app__game__main">
         <GameAreaComponent
-          onShowDown={showDown}
+          onShowDown={onShowDown}
           onNewGame={newGame}
           gameStatus={currentStatus}
           lines={userHands}

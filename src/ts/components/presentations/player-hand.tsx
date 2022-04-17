@@ -29,7 +29,8 @@ const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentProps> = (
   return (
     <div className="app__game__main__user-hand">
       <div className={className}>
-        <span className="app__game__main__user-hand__user-name">{props.name}</span>;{card}
+        <span className="app__game__main__user-hand__user-name">{props.name}</span>
+        {card}
       </div>
     </div>
   );

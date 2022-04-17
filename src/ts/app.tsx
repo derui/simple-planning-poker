@@ -17,6 +17,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 
 export const App: React.FunctionComponent<{}> = () => {
   const LaziedGameContainer = React.lazy(() => import("./components/containers/game-container"));
+  const LaziedGameResultContainer = React.lazy(() => import("./components/containers/game-result-container"));
   const LaziedGameCreatorContainer = React.lazy(() => import("./components/containers/game-creator-container"));
   const LaziedGameSelectorContainer = React.lazy(() => import("./components/containers/game-selector-container"));
   const LaziedInvitationContainer = React.lazy(() => import("./components/containers/invitation-container"));
@@ -50,6 +51,14 @@ export const App: React.FunctionComponent<{}> = () => {
                 element={
                   <PrivateRoute>
                     <LaziedGameContainer />
+                  </PrivateRoute>
+                }
+              ></Route>
+              <Route
+                path="/game/:gameId/result"
+                element={
+                  <PrivateRoute>
+                    <LaziedGameResultContainer />
                   </PrivateRoute>
                 }
               ></Route>

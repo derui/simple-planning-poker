@@ -260,7 +260,7 @@
   align-items: center;
 }
 
-.app__game__main__user-hand__user-card {
+.app__game__main__player-card {
   display: flex;
   flex-direction: column;
   height: var(--card-height);
@@ -273,13 +273,13 @@
   justify-content: center;
   margin: var(--space-base);
 
-  &.app__game__main__user-hand__user-card--handed {
+  &.app__game__main__player-card--handed {
     background-color: var(--primary-3);
     color: var(--secondary-1-1);
   }
 }
 
-.app__game__main__user-hand__user-card--inspector {
+.app__game__main__player-card--inspector {
   display: flex;
   flex-direction: column;
   height: var(--card-height);
@@ -291,7 +291,7 @@
   align-items: center;
 }
 
-.app__game__main__user-hand__user-card__eye {
+.app__game__main__player-card__eye {
   display: block;
   mask: url("../svg/eye.svg") no-repeat center center;
   mask-size: contain;
