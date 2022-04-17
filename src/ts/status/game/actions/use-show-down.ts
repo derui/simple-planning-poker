@@ -9,7 +9,7 @@ export default function createUseShowDown(registrar: DependencyRegistrar<Depende
   return () => {
     const currentGame = useCurrentGameState();
 
-    return useRecoilCallback(({ snapshot }) => async () => {
+    return useRecoilCallback(() => async () => {
       const game = currentGame.valueMaybe()?.viewModel;
       if (!game) {
         return;
