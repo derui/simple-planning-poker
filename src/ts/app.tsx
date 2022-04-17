@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { Grid } from "react-loader-spinner";
 import { useLocation } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
@@ -26,7 +27,13 @@ export const App: React.FunctionComponent<{}> = () => {
 
   return (
     <RecoilRoot>
-      <Suspense fallback={<div>loading</div>}>
+      <Suspense
+        fallback={
+          <div>
+            <Grid height={64} width={64} />
+          </div>
+        }
+      >
         <div className="app__root">
           <BrowserRouter>
             <Routes>
