@@ -37,3 +37,14 @@ export const pendingOf = (): PendingFuture => ({
     return undefined;
   },
 });
+
+export const mapFuture = <T, V>(future: Future<T>, f: (value: T) => V): Future<V> => {
+  switch (future.state) {
+    case "value":
+      return valueOf(f(future.contents));
+    case "error":
+      return errorOf();
+    case "pending":
+      return pendingOf();
+  }
+};

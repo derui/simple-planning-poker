@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import { PlayerHandComponent, PlayerHandComponentProps } from "./player-hand";
+import PlayerHandComponent, { PlayerHandComponentProps } from "./player-hand";
 
 interface Props {
   position: "upper" | "lower";

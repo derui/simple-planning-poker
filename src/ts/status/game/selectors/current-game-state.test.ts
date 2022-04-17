@@ -13,8 +13,8 @@ import currentGameState from "./current-game-state";
 
 test("return default values if current game is not found", async () => {
   const snapshot = snapshot_UNSTABLE();
-  const value = snapshot.getLoadable(currentGameState).valueOrThrow();
-  expect(value).toEqual({ kind: "notSelected" });
+  const value = snapshot.getLoadable(currentGameState).valueOrThrow().valueMaybe();
+  expect(value).toBeUndefined();
 });
 
 test("return view model if game id is presented", async () => {
@@ -65,24 +65,19 @@ test("return view model if game id is presented", async () => {
   try {
     await snapshot.getLoadable(currentGameState).toPromise();
     await flushPromisesAndTimers();
-    const value = snapshot.getLoadable(currentGameState).valueOrThrow();
-    expect(value.kind).toEqual("loaded");
+    const value = snapshot.getLoadable(currentGameState).valueOrThrow().valueMaybe()!;
 
-    if (value.kind === "loaded") {
-      expect(value.viewModel.average).toBeUndefined();
-      expect(value.viewModel.cards).toBe(cards.cards);
-      expect(value.viewModel.hands).toContainEqual({
-        card: undefined,
-        name: "name",
-        gamePlayerId: createGamePlayerId("player"),
-        mode: "normal",
-        selected: false,
-      });
-      expect(value.viewModel.id).toBe(createGameId("id"));
-      expect(value.viewModel.name).toBe("name");
-    } else {
-      fail("failed");
-    }
+    expect(value.viewModel.average).toBeUndefined();
+    expect(value.viewModel.cards).toBe(cards.cards);
+    expect(value.viewModel.hands).toContainEqual({
+      card: undefined,
+      name: "name",
+      gamePlayerId: createGamePlayerId("player"),
+      mode: "normal",
+      selected: false,
+    });
+    expect(value.viewModel.id).toBe(createGameId("id"));
+    expect(value.viewModel.name).toBe("name");
   } finally {
     release();
   }

@@ -22,17 +22,21 @@ const currentGameState = selector<Future<GameState>>({
   get: ({ get }) => {
     const gameId = get(currentGameIdState);
     if (!gameId) {
-      return { kind: "notSelected" };
+      return pendingOf();
     }
 
     const loadable = get(noWait(gameQuery(gameId)));
 
     return {
-      hasValue: () =>
-        valueOf({
-          viewModel: loadable.contents,
-          status: toStatus(loadable.contents),
-        }),
+      hasValue: () => {
+        if (loadable.contents) {
+          return valueOf<GameState>({
+            viewModel: loadable.contents as GameViewModel,
+            status: toStatus(loadable.contents),
+          });
+        }
+        return pendingOf();
+      },
       hasError: () => errorOf(),
       loading: () => pendingOf(),
     }[loadable.state]();

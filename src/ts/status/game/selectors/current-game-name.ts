@@ -5,13 +5,12 @@ import SelectorKeys from "./key";
 const currentGameName = selector({
   key: SelectorKeys.currentGameName,
   get: ({ get }) => {
-    const state = get(currentGameState);
-    switch (state.kind) {
-      case "loaded":
-        return state.viewModel.name;
-      default:
-        return "";
+    const state = get(currentGameState).valueMaybe()?.viewModel;
+    if (!state) {
+      return "";
     }
+
+    return state.name;
   },
 });
 

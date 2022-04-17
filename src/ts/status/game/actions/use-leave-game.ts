@@ -12,7 +12,7 @@ export default function createUseLeaveGame(registrar: DependencyRegistrar<Depend
 
   return () => {
     const currentUser = useRecoilValue(currentUserState);
-    const currentGame = useRecoilValue(currentGameState);
+    const currentGame = useRecoilValue(currentGameState).valueMaybe()?.viewModel;
 
     return useRecoilCallback(({ set }) => async () => {
       if (!currentUser?.id || !currentGame) {
