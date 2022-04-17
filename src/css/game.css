@@ -260,6 +260,10 @@
   align-items: center;
 }
 
+.app__game__main__user-hand-container--flipped {
+  flex-direction: column-reverse;
+}
+
 .app__game__main__player-card {
   display: flex;
   flex-direction: column;

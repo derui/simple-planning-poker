@@ -64,13 +64,18 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
   const showDown = gameActions.useShowDown();
-  const newGame = gameActions.useNewGame();
 
   React.useEffect(() => {
     openGame(param.gameId as GameId, () => {
       navigate("/", { replace: true });
     });
   }, [param.gameId]);
+
+  React.useEffect(() => {
+    if (currentStatus.valueMaybe() === "ShowedDown") {
+      navigate(`/game/${param.gameId}/result`, { replace: true });
+    }
+  }, [currentStatus.valueMaybe()]);
 
   let Component = <EmptyCardHolderComponent />;
   if (currentUserMode === UserMode.normal) {
@@ -79,7 +84,6 @@ const GameContainer: React.FunctionComponent<Props> = () => {
 
   const onShowDown = () => {
     showDown();
-    navigate(`/game/${param.gameId}/result`, { replace: true });
   };
 
   return (
@@ -100,7 +104,6 @@ const GameContainer: React.FunctionComponent<Props> = () => {
       <main className="app__game__main">
         <GameAreaComponent
           onShowDown={onShowDown}
-          onNewGame={newGame}
           gameStatus={currentStatus}
           lines={userHands}
           userMode={currentUserMode}

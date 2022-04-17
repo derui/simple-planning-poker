@@ -13,10 +13,10 @@ import {
   useUserHandsState,
 } from "@/status/game/selectors";
 import userActionsContext from "@/contexts/actions/user-actions";
-import GameAreaComponent from "../presentations/game-area";
 import { Future, mapFuture } from "@/status/util";
 import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
 import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
+import GameAreaResultComponent from "../presentations/game-result-area";
 
 interface Props {}
 
@@ -56,8 +56,13 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
     });
   }, [param.gameId]);
 
+  React.useEffect(() => {
+    if (currentStatus.valueMaybe() !== "ShowedDown") {
+      navigate(`/game/${param.gameId}`, { replace: true });
+    }
+  }, [currentStatus.valueMaybe()]);
+
   const onNewGame = () => {
-    navigate(`/game/${param.gameId}`, { replace: true });
     newGame();
   };
 
@@ -77,13 +82,7 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
         invitationSignature={signature || ""}
       />
       <main className="app__game__main">
-        <GameAreaComponent
-          onShowDown={() => {}}
-          onNewGame={onNewGame}
-          gameStatus={currentStatus}
-          lines={userHands}
-          userMode={currentUserMode}
-        />
+        <GameAreaResultComponent onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
       </main>
       {createAveragePointShowcase(showDownResult)}
     </div>
