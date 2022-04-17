@@ -14,7 +14,7 @@ const createResultDisplay = (index: number, storyPoint: number, count: number) =
   );
 };
 
-export const AveragePointShowcaseComponent: React.FunctionComponent<Props> = (props) => {
+const AveragePointShowcaseComponent: React.FunctionComponent<Props> = (props) => {
   return (
     <div className="app__game__average-point-showcase">
       <div className="app__game__average-point-showcase__results">
@@ -29,3 +29,5 @@ export const AveragePointShowcaseComponent: React.FunctionComponent<Props> = (pr
     </div>
   );
 };
+
+export default AveragePointShowcaseComponent;
