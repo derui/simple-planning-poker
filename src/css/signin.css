@@ -20,7 +20,7 @@
 
 .app__signin-overlay-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-out;
+  transition: opacity 500ms ease;
 }
 
 .app__signin-overlay-exit {
@@ -30,7 +30,7 @@
 
 .app__signin-overlay-exit-active {
   opacity: 0;
-  transition: opacity 500ms ease-out;
+  transition: opacity 500ms ease;
 }
 
 .app__signin-overlay-exit-done {
