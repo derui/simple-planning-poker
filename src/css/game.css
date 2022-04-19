@@ -283,6 +283,18 @@
     color: var(--secondary-1-1);
     transform: rotateY(180deg);
   }
+
+  &.app__game__main__player-card--result {
+    background-color: var(--primary-3);
+    color: var(--secondary-1-1);
+    transform: rotateY(-180deg);
+  }
+
+  &.app__game__main__player-card--transition {
+    background-color: white;
+    color: var(--primary-4);
+    transform: rotateY(0deg);
+  }
 }
 
 .app__game__main__player-card--inspector {
