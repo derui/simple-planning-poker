@@ -8,7 +8,7 @@ import { UserObserver } from "@/contexts/observer";
 let userRepository: UserRepository | null = null;
 let userObserver: UserObserver | null = null;
 
-const userState = atomFamily({
+const userStateQuery = atomFamily({
   key: AtomKeys.userState,
   default: async (id: UserId) => {
     const user = await userRepository!!.findBy(id);
@@ -28,9 +28,9 @@ const userState = atomFamily({
   ],
 });
 
-export default userState;
+export default userStateQuery;
 
-export const initializeUserState = (registrar: ApplicationDependencyRegistrar) => {
+export const initializeUserQuery = (registrar: ApplicationDependencyRegistrar) => {
   userRepository = registrar.resolve("userRepository");
   userObserver = registrar.resolve("userObserver");
 };

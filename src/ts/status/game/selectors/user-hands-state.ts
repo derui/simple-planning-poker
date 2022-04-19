@@ -1,4 +1,5 @@
 import { GamePlayerId } from "@/domains/game-player";
+import { Future, pendingOf, valueOf } from "@/status/util";
 import { selector } from "recoil";
 import { GameViewModel, UserHandViewModel } from "../types";
 import currentGameState from "./current-game-state";
@@ -18,12 +19,12 @@ const makeUserHandsInGame = (game: GameViewModel, users: GamePlayerId[]) => {
     .map((v) => v!);
 };
 
-const userHandsState = selector<State>({
+const userHandsState = selector<Future<State>>({
   key: SelectorKeys.userHandsState,
   get: ({ get }) => {
-    const game = get(currentGameState);
+    const game = get(currentGameState).valueMaybe()?.viewModel;
     if (!game) {
-      return { upperLine: [], lowerLine: [] };
+      return pendingOf();
     }
     const upperUsers = game.hands.filter((_, index) => index % 2 == 0).map((v) => v.gamePlayerId);
     const upperLine = makeUserHandsInGame(game, upperUsers);
@@ -31,7 +32,7 @@ const userHandsState = selector<State>({
 
     const lowerLine = makeUserHandsInGame(game, lowerUsers);
 
-    return { upperLine, lowerLine };
+    return valueOf({ upperLine, lowerLine });
   },
 });
 

@@ -7,7 +7,7 @@ export default function createUseNewGame(registrar: DependencyRegistrar<Dependen
   const newGameUseCase = registrar.resolve("newGameUseCase");
 
   return () => {
-    const currentGame = useRecoilValue(currentGameState);
+    const currentGame = useRecoilValue(currentGameState).valueMaybe()?.viewModel;
 
     return useRecoilCallback(() => async () => {
       if (!currentGame) {

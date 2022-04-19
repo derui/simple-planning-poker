@@ -1,15 +1,16 @@
 import { asStoryPoint } from "@/domains/card";
+import { Future, pendingOf, valueOf } from "@/status/util";
 import { selector } from "recoil";
 import { ShowDownResultViewModel } from "../types";
 import currentGameState from "./current-game-state";
 import SelectorKeys from "./key";
 
-const showDownResultState = selector<ShowDownResultViewModel>({
+const showDownResultState = selector<Future<ShowDownResultViewModel>>({
   key: SelectorKeys.showDownResultState,
   get: ({ get }) => {
-    const game = get(currentGameState);
+    const game = get(currentGameState).valueMaybe()?.viewModel;
     if (!game || !game.showedDown) {
-      return { cardCounts: [], average: 0 };
+      return pendingOf();
     }
 
     const points = game.hands
@@ -24,7 +25,7 @@ const showDownResultState = selector<ShowDownResultViewModel>({
     const cardCounts = Object.entries(points).map(([k, v]) => [Number(k), v] as [number, number]);
     const average = game.average ?? 0;
 
-    return { average, cardCounts };
+    return valueOf({ average, cardCounts });
   },
 });
 

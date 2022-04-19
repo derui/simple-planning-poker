@@ -29,6 +29,11 @@ export interface GameViewModel {
   invitationSignature: string;
 }
 
+export type GameState = {
+  viewModel: GameViewModel;
+  status: GameStatus;
+};
+
 export type GameStatus = "EmptyUserHand" | "CanShowDown" | "ShowedDown";
 
 export interface ShowDownResultViewModel {

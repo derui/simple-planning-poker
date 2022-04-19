@@ -11,12 +11,17 @@ type State = {
 const currentGameInformationState = selector<State>({
   key: SelectorKeys.currentGameInformationState,
   get: ({ get }) => {
-    const state = get(currentGameState);
-    const name = state?.name;
-    const invitationSignature = state?.invitationSignature;
+    const state = get(currentGameState).valueMaybe()?.viewModel;
+
+    if (!state) {
+      return { cards: [] };
+    }
+
+    const name = state.name;
+    const invitationSignature = state.invitationSignature;
     const cards =
-      state?.cards
-        ?.map((v) => {
+      state.cards
+        .map((v) => {
           switch (v.kind) {
             case "storypoint":
               return v.storyPoint.value;
@@ -24,8 +29,8 @@ const currentGameInformationState = selector<State>({
               return null;
           }
         })
-        ?.filter((v) => !!v)
-        ?.map((v): number => v!!) ?? [];
+        .filter((v) => !!v)
+        .map((v): number => v!!) ?? [];
 
     return { name, cards, invitationSignature };
   },

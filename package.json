@@ -73,8 +73,8 @@
     "@types/react-transition-group": "^4.4.4",
     "@types/recoil": "^0.0.9",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.18.0",
-    "@typescript-eslint/parser": "^5.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
     "autoprefixer": "^10.4.4",
     "cpx": "^1.5.0",
     "cssnano": "^5.1.7",
@@ -107,15 +107,17 @@
     "webpack-dev-server": "^4.8.1"
   },
   "dependencies": {
+    "@types/react-loader-spinner": "^4.0.0",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "firebase": "^9.6.10",
     "react": "17",
     "react-dom": "17",
+    "react-loader-spinner": "^6.0.0-0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-transition-group": "^4.4.2",
-    "recoil": "^0.7.0",
+    "recoil": "^0.7.2",
     "uuid": "^8.3.2"
   }
 }

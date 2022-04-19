@@ -8,13 +8,13 @@ export default function createUseSelectCard(registrar: ApplicationDependencyRegi
 
   return () => {
     const currentPlayer = useRecoilValue(currentGamePlayerState);
-    const currentGame = useRecoilValue(currentGameState);
+    const currentGame = useRecoilValue(currentGameState).valueMaybe();
 
     return useRecoilCallback(() => async (index: number) => {
       if (!currentPlayer || !currentGame) {
         return;
       }
-      const card = currentGame.cards[index];
+      const card = currentGame.viewModel.cards[index];
 
       await handCardUseCase.execute({
         playerId: currentPlayer.id,

@@ -1,57 +1,42 @@
 import * as React from "react";
-import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
-import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
 import { useNavigate, useParams } from "react-router";
-import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
+import gameActionsContext from "@/contexts/actions/game-actions";
+import { ShowDownResultViewModel } from "@/status/game/types";
 import {
   useCurrentGameName,
   useCurrentGameState,
   useCurrentPlayerInformationState,
-  useCurrentPlayerSelectedCardState,
-  useSelectableCardsState,
+  useShowDownResultState,
   useUserHandsState,
 } from "@/status/game/selectors";
 import userActionsContext from "@/contexts/actions/user-actions";
-import GameAreaComponent from "../presentations/game-area";
-import { mapFuture } from "@/status/util";
+import { Future, mapFuture } from "@/status/util";
+import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
+import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
+import GameAreaResultComponent from "../presentations/game-result-area";
 
 interface Props {}
 
-const createCardHolderComponent = ({ useSelectCard }: GameActions) => {
-  const selectCard = useSelectCard();
-  const cards = useSelectableCardsState().valueMaybe() ?? [];
-  const selectedIndex = useCurrentPlayerSelectedCardState()?.valueMaybe()?.index;
+const createAveragePointShowcase = (showDownResult: Future<ShowDownResultViewModel>) => {
+  const value = showDownResult.valueMaybe();
 
-  const props = {
-    displays: cards.map((v) => {
-      switch (v.kind) {
-        case "giveup":
-          return "?";
-        case "storypoint":
-          return v.storyPoint.value.toString();
-      }
-    }),
-    selectedIndex: selectedIndex ?? null,
-  };
+  if (!value) {
+    return <AveragePointShowcaseWithSpinnerComponent />;
+  }
 
-  return (
-    <CardHolderComponent
-      displays={props.displays}
-      selectedIndex={props.selectedIndex}
-      onClickCard={(index) => selectCard(index)}
-    />
-  );
+  const average = value.average.toFixed(1).toString();
+  return <AveragePointShowcaseComponent averagePoint={average} cardCounts={value.cardCounts} />;
 };
 
-const GameContainer: React.FunctionComponent<Props> = () => {
+const GameResultContainer: React.FunctionComponent<Props> = () => {
   const param = useParams<{ gameId: string }>();
   const gameActions = React.useContext(gameActionsContext);
-  const component = createCardHolderComponent(gameActions);
   const currentGameName = useCurrentGameName();
   const userHands = useUserHandsState();
+  const showDownResult = useShowDownResultState();
   const changeName = React.useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
   const currentUserInformation = useCurrentPlayerInformationState();
@@ -63,7 +48,7 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
-  const showDown = gameActions.useShowDown();
+  const newGame = gameActions.useNewGame();
 
   React.useEffect(() => {
     openGame(param.gameId as GameId, () => {
@@ -72,18 +57,13 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   }, [param.gameId]);
 
   React.useEffect(() => {
-    if (currentStatus.valueMaybe() === "ShowedDown") {
-      navigate(`/game/${param.gameId}/result`, { replace: true });
+    if (currentStatus.valueMaybe() !== "ShowedDown") {
+      navigate(`/game/${param.gameId}`, { replace: true });
     }
   }, [currentStatus.valueMaybe()]);
 
-  let Component = <EmptyCardHolderComponent />;
-  if (currentUserMode === UserMode.normal) {
-    Component = component;
-  }
-
-  const onShowDown = () => {
-    showDown();
+  const onNewGame = () => {
+    newGame();
   };
 
   return (
@@ -102,16 +82,11 @@ const GameContainer: React.FunctionComponent<Props> = () => {
         invitationSignature={signature || ""}
       />
       <main className="app__game__main">
-        <GameAreaComponent
-          onShowDown={onShowDown}
-          gameStatus={currentStatus}
-          lines={userHands}
-          userMode={currentUserMode}
-        />
+        <GameAreaResultComponent onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
       </main>
-      {Component}
+      {createAveragePointShowcase(showDownResult)}
     </div>
   );
 };
 
-export default GameContainer;
+export default GameResultContainer;

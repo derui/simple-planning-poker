@@ -2,7 +2,9 @@ import React, { Suspense } from "react";
 import { useLocation } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import TransitionFallback from "./components/presentations/transition-fallback";
 import { useAuthenticatedState } from "./status/signin/selectors";
+import lazyImport from "./utils/lazy-import";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const state = useAuthenticatedState();
@@ -16,16 +18,25 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 export const App: React.FunctionComponent<{}> = () => {
-  const LaziedGameContainer = React.lazy(() => import("./components/containers/game-container"));
-  const LaziedGameCreatorContainer = React.lazy(() => import("./components/containers/game-creator-container"));
-  const LaziedGameSelectorContainer = React.lazy(() => import("./components/containers/game-selector-container"));
-  const LaziedInvitationContainer = React.lazy(() => import("./components/containers/invitation-container"));
-  const LaziedSignInContainer = React.lazy(() => import("./components/containers/signin-container"));
-  const LaziedSignUpContainer = React.lazy(() => import("./components/containers/signup-container"));
+  const LaziedGameContainer = React.lazy(() => lazyImport(import("./components/containers/game-container")));
+  const LaziedGameResultContainer = React.lazy(() =>
+    lazyImport(import("./components/containers/game-result-container"))
+  );
+  const LaziedGameCreatorContainer = React.lazy(() =>
+    lazyImport(import("./components/containers/game-creator-container"))
+  );
+  const LaziedGameSelectorContainer = React.lazy(() =>
+    lazyImport(import("./components/containers/game-selector-container"))
+  );
+  const LaziedInvitationContainer = React.lazy(() =>
+    lazyImport(import("./components/containers/invitation-container"))
+  );
+  const LaziedSignInContainer = React.lazy(() => lazyImport(import("./components/containers/signin-container")));
+  const LaziedSignUpContainer = React.lazy(() => lazyImport(import("./components/containers/signup-container")));
 
   return (
     <RecoilRoot>
-      <Suspense fallback={<div>loading</div>}>
+      <Suspense fallback={<TransitionFallback />}>
         <div className="app__root">
           <BrowserRouter>
             <Routes>
@@ -50,6 +61,14 @@ export const App: React.FunctionComponent<{}> = () => {
                 element={
                   <PrivateRoute>
                     <LaziedGameContainer />
+                  </PrivateRoute>
+                }
+              ></Route>
+              <Route
+                path="/game/:gameId/result"
+                element={
+                  <PrivateRoute>
+                    <LaziedGameResultContainer />
                   </PrivateRoute>
                 }
               ></Route>

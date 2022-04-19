@@ -4,7 +4,14 @@ import SelectorKeys from "./key";
 
 const currentGameName = selector({
   key: SelectorKeys.currentGameName,
-  get: ({ get }) => get(currentGameState)?.name ?? "",
+  get: ({ get }) => {
+    const state = get(currentGameState).valueMaybe()?.viewModel;
+    if (!state) {
+      return "";
+    }
+
+    return state.name;
+  },
 });
 
 export default currentGameName;
