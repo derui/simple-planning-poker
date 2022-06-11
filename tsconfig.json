@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "esnext",
     "lib": [
-      "es2015",
+      "esnext",
       "dom",
       "dom.iterable"
     ],
@@ -18,22 +18,26 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "incremental": true,
     "baseUrl": "./",
     "outDir": "generated",
+    "types": ["vite/client"],
     "paths": {
       "@/*": [
         "src/ts/*"
       ]
-    },
-    "rootDirs": [
-      "src/ts",
-    ]
+    }
   },
   "include": [
     "src/ts/**/*.ts",
     "src/ts/**/*.tsx",
     "src/ts/index.tsx"
-  ]
+  ],
+  "exclude": [
+    "src/ts/**/*.test.ts",
+    "src/ts/**/*.test.tsx"
+  ],
+  "noEmit": true
 }

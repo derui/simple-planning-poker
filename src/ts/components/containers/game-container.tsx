@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
-import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
+import { EmptyCardHolder } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
 import { useNavigate, useParams } from "react-router";
@@ -77,7 +77,7 @@ const GameContainer: React.FunctionComponent<Props> = () => {
     }
   }, [currentStatus.valueMaybe()]);
 
-  let Component = <EmptyCardHolderComponent />;
+  let Component = <EmptyCardHolder />;
   if (currentUserMode === UserMode.normal) {
     Component = component;
   }

@@ -1,5 +1,7 @@
-import * as React from "react";
+import { Component } from "solid-js";
 
-export const EmptyCardHolderComponent: React.FunctionComponent = () => {
-  return <div className="app__game__card-holder" />;
+const EmptyCardHolder: Component = () => {
+  return <div role="contentinfo" class="app__game__card-holder" />;
 };
+
+export default EmptyCardHolder;

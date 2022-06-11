@@ -1,13 +1,14 @@
 {
-  "name": "planning-poker-react",
+  "name": "planning-poker",
   "version": "3.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start:webpack": "webpack serve --config webpack.config.js --port 5000 --static public --history-api-fallback",
+    "start:tsc": "tsc --watch",
     "start:vite": "vite",
     "start:css": "postcss --watch -o public/static/css/app.css src/css/root.css",
-    "start": "npm-run-all -p start:vite start:css emulators",
+    "start": "npm-run-all -p start:tsc start:vite start:css emulators",
     "emulators": "firebase emulators:start",
     "build:bundle": "NODE_ENV=production vite build --config webpack.config.js",
     "build:css": "postcss -o public/static/css/app.css src/css/root.css",
@@ -20,8 +21,8 @@
     "lint:css": "stylelint --config stylelint.config.js 'src/css/**/*.css'",
     "lint:ts": "eslint --fix --ext .ts,.tsx src/ts/",
     "lint": "npm-run-all -s lint:ts lint:css",
-    "test": "firebase emulators:exec 'yarn run jest'",
-    "test:watch": "firebase emulators:exec 'yarn run jest --watch'"
+    "test": "firebase emulators:exec 'npx jest'",
+    "test:watch": "firebase emulators:exec 'npx jest --watch'"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -33,14 +34,13 @@
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
     ],
     "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(ts|tsx)$": "@swc/jest"
-    },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/ts/$1"
+      "^@/(.*)$": "<rootDir>/src/ts/$1",
+      "solid-js/web": "<rootDir>/node_modules/solid-js/web/dist/web.cjs",
+      "solid-js": "<rootDir>/node_modules/solid-js/dist/solid.cjs"
     },
     "moduleFileExtensions": [
       "js",
@@ -50,41 +50,42 @@
     "watchPathIgnorePatterns": [
       "node_modules"
     ],
+    "setupFilesAfterEnv": [ "<rootDir>/src/ts/setupTests.ts" ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.test.json"
+        "tsConfig": "tsconfig.test.json",
+        "babelConfig": {
+          "presets": [
+            "babel-preset-solid",
+            "@babel/preset-env"
+          ]
+        }
       }
     }
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
     "@firebase/rules-unit-testing": "^2.0.2",
-    "@swc/core": "^1.2.164",
-    "@swc/jest": "^0.2.20",
-    "@testing-library/react": "12",
-    "@types/classnames": "^2.3.1",
+    "@testing-library/jest-dom": "^5.16.4",
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^27.4.1",
-    "@types/react": "17",
-    "@types/react-dom": "17",
-    "@types/react-router": "^5.1.18",
-    "@types/react-router-dom": "^5.3.3",
-    "@types/react-transition-group": "^4.4.4",
-    "@types/recoil": "^0.0.9",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "autoprefixer": "^10.4.4",
+    "babel-preset-solid": "^1.4.4",
     "cpx": "^1.5.0",
     "cssnano": "^5.1.7",
+    "esbuild": "^0.14.43",
+    "esbuild-jest": "^0.5.0",
     "eslint": "^8.13.0",
-    "eslint_d": "^12.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint_d": "^12.0.0",
     "firebase-tools": "^10.6.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.5.1",
@@ -95,6 +96,7 @@
     "postcss-import": "^14.1.0",
     "postcss-nesting": "^10.1.4",
     "prettier": "^2.6.2",
+    "solid-testing-library": "^0.3.0",
     "stylelint": "^14.6.1",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^25.0.0",
@@ -104,22 +106,15 @@
     "typescript": "^4.6.3",
     "vite": "^2.9.12",
     "vite-plugin-solid": "^2.2.6",
+    "vite-tsconfig-paths": "^3.5.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.8.1"
   },
   "dependencies": {
-    "@types/react-loader-spinner": "^4.0.0",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "firebase": "^9.6.10",
-    "react": "17",
-    "react-dom": "17",
-    "react-loader-spinner": "^6.0.0-0",
-    "react-router": "^6.3.0",
-    "react-router-dom": "^6.3.0",
-    "react-transition-group": "^4.4.2",
-    "recoil": "^0.7.2",
     "solid-js": "^1.4.4",
     "uuid": "^8.3.2"
   }
