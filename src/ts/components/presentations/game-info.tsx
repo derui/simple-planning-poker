@@ -1,20 +1,22 @@
-import React from "react";
+import { Component } from "solid-js";
 
 interface Props {
   gameName: string;
   onLeaveGame: () => void;
 }
 
-export const GameInfoComponent: React.FunctionComponent<Props> = ({ gameName, onLeaveGame }) => {
+const GameInfo: Component<Props> = (props) => {
   return (
-    <main className="app__game__header__game-info">
-      <div className="app__game__header__game-info__name-container">
-        <span className="app__game__header__game-info__name-label">Now voting</span>
-        <span className="app__game__header__game-info__name"> {gameName}</span>
+    <main class="app__game__header__game-info">
+      <div class="app__game__header__game-info__name-container">
+        <span class="app__game__header__game-info__name-label">Now voting</span>
+        <span class="app__game__header__game-info__name"> {props.gameName}</span>
       </div>
-      <div className="app__game__header__game-info__actions">
-        <button className="app__game__header__game-info__actions__leave" onClick={() => onLeaveGame()}></button>
+      <div class="app__game__header__game-info__actions">
+        <button class="app__game__header__game-info__actions__leave" onClick={() => props.onLeaveGame()}></button>
       </div>
     </main>
   );
 };
+
+export default GameInfo;

@@ -1,20 +1,14 @@
-import React from "react";
-import classnames from "classnames";
-import { Grid } from "react-loader-spinner";
+import { Component } from "solid-js";
+import Grid from "./grid";
 
 interface Props {}
 
-const PlayerHandsWithSpinnerComponent: React.FunctionComponent<Props> = () => {
-  const className = classnames({
-    app__game__main__users: true,
-    "app__game__main__users--spinner": true,
-  });
-
+const PlayerHandsWithSpinner: Component<Props> = () => {
   return (
-    <div className={className}>
+    <div class="app__game__main__users">
       <Grid height={32} width={32} />
     </div>
   );
 };
 
-export default PlayerHandsWithSpinnerComponent;
+export default PlayerHandsWithSpinner;

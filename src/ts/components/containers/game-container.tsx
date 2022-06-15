@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CardHolderComponent } from "../presentations/card-holder";
+import { CardHolder } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { EmptyCardHolder } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
@@ -38,7 +38,7 @@ const createCardHolderComponent = ({ useSelectCard }: GameActions) => {
   };
 
   return (
-    <CardHolderComponent
+    <CardHolder
       displays={props.displays}
       selectedIndex={props.selectedIndex}
       onClickCard={(index) => selectCard(index)}

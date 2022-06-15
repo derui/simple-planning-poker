@@ -1,25 +1,20 @@
-import React from "react";
-import classnames from "classnames";
-import PlayerHandComponent, { PlayerHandComponentProps } from "./player-hand";
+import { Component, For } from "solid-js";
+import PlayerHand, { PlayerHandProps } from "./player-hand";
 
 interface Props {
   position: "upper" | "lower";
-  userHands: Omit<PlayerHandComponentProps, "namePosition">[];
+  userHands: Omit<PlayerHandProps, "namePosition">[];
 }
 
-export const PlayerHandsComponent: React.FunctionComponent<Props> = (props) => {
-  const className = classnames({
+export const PlayerHands: Component<Props> = (props) => {
+  const className = {
     "app__game__main__users-in-upper": props.position === "upper",
     "app__game__main__users-in-lower": props.position === "lower",
-  });
-
-  const createUserHand = (props: PlayerHandComponentProps, index: number) => {
-    return <PlayerHandComponent key={index} {...props} />;
   };
 
   return (
-    <div className={className}>
-      {props.userHands.map((v, index) => createUserHand({ ...v, namePosition: props.position }, index))}
+    <div classList={className}>
+      <For each={props.userHands}>{(v, index) => <PlayerHand key={index} {...v} />}</For>
     </div>
   );
 };

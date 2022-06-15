@@ -1,9 +1,8 @@
-import React from "react";
-import classnames from "classnames";
 import { UserMode } from "@/domains/game-player";
-import PlayerCardComponent from "./player-card";
+import PlayerCard from "./player-card";
+import { Component } from "solid-js";
 
-export interface PlayerHandComponentProps {
+export interface PlayerHandProps {
   namePosition: "upper" | "lower";
   name: string;
   mode: UserMode;
@@ -12,28 +11,25 @@ export interface PlayerHandComponentProps {
   showedDown: boolean;
 }
 
-const PlayerHandComponent: React.FunctionComponent<PlayerHandComponentProps> = (props) => {
-  const card = (
-    <PlayerCardComponent
-      mode={props.mode}
-      storyPoint={props.storyPoint}
-      selected={props.selected}
-      showedDown={props.showedDown}
-    />
-  );
-  const className = classnames({
+const PlayerHand: Component<PlayerHandProps> = (props) => {
+  const className = {
     "app__game__main__user-hand-container": true,
     "app__game__main__user-hand-container--flipped": props.namePosition === "lower",
-  });
+  };
 
   return (
-    <div className="app__game__main__user-hand">
-      <div className={className}>
-        <span className="app__game__main__user-hand__user-name">{props.name}</span>
-        {card}
+    <div class="app__game__main__user-hand">
+      <div classList={className}>
+        <span class="app__game__main__user-hand__user-name">{props.name}</span>
+        <PlayerCard
+          mode={props.mode}
+          storyPoint={props.storyPoint}
+          selected={props.selected}
+          showedDown={props.showedDown}
+        />
       </div>
     </div>
   );
 };
 
-export default PlayerHandComponent;
+export default PlayerHand;

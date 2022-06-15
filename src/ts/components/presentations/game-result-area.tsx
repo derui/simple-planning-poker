@@ -1,10 +1,10 @@
 import * as React from "react";
-import { PlayerHandsComponent } from "../presentations/player-hands";
+import { PlayerHands } from "../presentations/player-hands";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { UserHandViewModel } from "@/status/game/types";
 import { Future } from "@/status/util";
-import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
+import PlayerHandsWithSpinner from "./player-hands-with-spinner";
 
 interface Props {
   onNewGame: () => void;
@@ -34,10 +34,10 @@ const convertHands = (hands: UserHandViewModel[]) =>
 
 const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undefined) => {
   if (hands) {
-    return <PlayerHandsComponent position={position} userHands={convertHands(hands)} />;
+    return <PlayerHands position={position} userHands={convertHands(hands)} />;
   }
 
-  return <PlayerHandsWithSpinnerComponent />;
+  return <PlayerHandsWithSpinner />;
 };
 
 const GameAreaResultComponent: React.FunctionComponent<Props> = (props) => {

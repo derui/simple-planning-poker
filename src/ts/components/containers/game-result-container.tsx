@@ -14,8 +14,8 @@ import {
 } from "@/status/game/selectors";
 import userActionsContext from "@/contexts/actions/user-actions";
 import { Future, mapFuture } from "@/status/util";
-import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
-import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
+import AveragePointShowcaseWithSpinner from "../presentations/average-point-showcase-with-spinner";
+import AveragePointShowcase from "../presentations/average-point-showcase";
 import GameAreaResultComponent from "../presentations/game-result-area";
 
 interface Props {}
@@ -24,11 +24,11 @@ const createAveragePointShowcase = (showDownResult: Future<ShowDownResultViewMod
   const value = showDownResult.valueMaybe();
 
   if (!value) {
-    return <AveragePointShowcaseWithSpinnerComponent />;
+    return <AveragePointShowcaseWithSpinner />;
   }
 
   const average = value.average.toFixed(1).toString();
-  return <AveragePointShowcaseComponent averagePoint={average} cardCounts={value.cardCounts} />;
+  return <AveragePointShowcase averagePoint={average} cardCounts={value.cardCounts} />;
 };
 
 const GameResultContainer: React.FunctionComponent<Props> = () => {

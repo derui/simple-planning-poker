@@ -1,7 +1,6 @@
-import React from "react";
-import classnames from "classnames";
-import { UserInfoUpdaterComponent } from "./user-info-updater";
+import { UserInfoUpdater } from "./user-info-updater";
 import { UserMode } from "@/domains/game-player";
+import { Component, createSignal, Show } from "solid-js";
 
 interface Props {
   name: string;
@@ -10,20 +9,20 @@ interface Props {
   onChangeMode: (mode: UserMode) => void;
 }
 
-export const UserInfoComponent: React.FunctionComponent<Props> = (props) => {
-  const [showUpdater, setShowUpdater] = React.useState(false);
-  const indicatorClassName = classnames({
+const UserInfoComponent: Component<Props> = (props) => {
+  const [showUpdater, setShowUpdater] = createSignal(false);
+  const indicatorClassName = {
     "app__game__user-info__indicator": true,
-    "app__game__user-info__indicator--opened": showUpdater,
-  });
+    "app__game__user-info__indicator--opened": showUpdater(),
+  };
 
   return (
-    <div className="app__game__user-info" onClick={() => setShowUpdater(!showUpdater)}>
-      <span className="app__game__user-info__icon"></span>
-      <span className="app__game__user-info__name">{props.name}</span>
-      <span className={indicatorClassName}></span>
-      {showUpdater ? (
-        <UserInfoUpdaterComponent
+    <div class="app__game__user-info" onClick={() => setShowUpdater(!showUpdater())}>
+      <span class="app__game__user-info__icon"></span>
+      <span class="app__game__user-info__name">{props.name}</span>
+      <span classList={indicatorClassName}></span>
+      <Show when={showUpdater()}>
+        <UserInfoUpdater
           name={props.name}
           mode={props.mode}
           onChangeName={(name) => {
@@ -35,7 +34,9 @@ export const UserInfoComponent: React.FunctionComponent<Props> = (props) => {
             props.onChangeMode(mode);
           }}
         />
-      ) : null}
+      </Show>
     </div>
   );
 };
+
+export default UserInfoComponent;

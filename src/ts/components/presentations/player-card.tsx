@@ -1,46 +1,40 @@
-import React, { useState } from "react";
-import classnames from "classnames";
 import { UserMode } from "@/domains/game-player";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 
-interface PlayerCardComponentProps {
+interface PlayerCardProps {
   mode: UserMode;
   storyPoint: number | null;
   selected: boolean;
   showedDown: boolean;
 }
 
-const PlayerCardComponent: React.FunctionComponent<PlayerCardComponentProps> = (props) => {
-  const [transition, setTransition] = useState(false);
+const PlayerCard: Component<PlayerCardProps> = (props) => {
+  const [transition, setTransition] = createSignal(false);
 
-  React.useEffect(() => {
+  createEffect(() => {
     if (props.showedDown) {
       const t = setTimeout(() => setTransition(true));
       return () => clearTimeout(t);
     }
-  }, []);
-
-  if (props.mode === UserMode.inspector) {
-    return (
-      <span className="app__game__main__player-card--inspector">
-        <span className="app__game__main__player-card__eye"></span>
-      </span>
-    );
-  } else if (props.showedDown && props.storyPoint !== null) {
-    const className = classnames({
-      "app__game__main__player-card": true,
-      "app__game__main__player-card--result": true,
-      "app__game__main__player-card--transition": transition,
-    });
-    return <span className={className}>{props.storyPoint}</span>;
-  } else if (props.showedDown && props.storyPoint === null) {
-    return <span className="app__game__main__player-card">?</span>;
-  }
-
-  const className = classnames({
-    "app__game__main__player-card": true,
-    "app__game__main__player-card--handed": props.selected,
   });
-  return <span className={className}></span>;
+
+  const isInspector = () => props.mode == UserMode.inspector;
+  const isPointPrintedOut = () => props.showedDown && props.storyPoint !== null;
+  const isUnknown = () => props.showedDown && props.storyPoint === null;
+
+  const classList = {
+    "app__game__main__player-card": true,
+    "app__game__main__player-card--inspector": isInspector(),
+    "app__game__main__player-card--result": isPointPrintedOut() && transition(),
+    "app__game__main__player-card--transition": isPointPrintedOut() && transition(),
+    "app__game__main__player-card--handed": props.selected,
+  };
+  return (
+    <span classList={classList}>
+      <Show when={isPointPrintedOut()}>{props.storyPoint}</Show>
+      <Show when={isUnknown()}>?</Show>
+    </span>
+  );
 };
 
-export default PlayerCardComponent;
+export default PlayerCard;

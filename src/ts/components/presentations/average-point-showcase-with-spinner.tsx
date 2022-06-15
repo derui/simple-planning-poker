@@ -1,14 +1,14 @@
-import React from "react";
-import { Grid } from "react-loader-spinner";
+import { Component } from "solid-js";
+import Grid from "./grid";
 
 interface Props {}
 
-const AveragePointShowcaseWithSpinnerComponent: React.FunctionComponent<Props> = () => {
+const AveragePointShowcaseWithSpinner: Component<Props> = () => {
   return (
-    <div className="app__game__average-point-showcase">
+    <div class="app__game__average-point-showcase">
       <Grid height={64} width={64} />
     </div>
   );
 };
 
-export default AveragePointShowcaseWithSpinnerComponent;
+export default AveragePointShowcaseWithSpinner;
