@@ -1,12 +1,6 @@
-import { selector } from "recoil";
-import signInState from "../atoms/signin-state";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { signInState } from "../atoms/signin-state";
 
-const authenticatingState = selector<boolean>({
-  key: SelectorKeys.authenticating,
-  get: ({ get }) => {
-    return get(signInState).authenticating;
-  },
-});
+const authenticatingState = createMemo(() => signInState().authenticating);
 
-export default authenticatingState;
+export { authenticatingState };

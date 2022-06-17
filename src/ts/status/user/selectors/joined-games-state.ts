@@ -1,13 +1,6 @@
-import { selector } from "recoil";
-import currentUserState from "../atoms/current-user-state";
-import { UserJoinedGameViewModel } from "../types";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { currentUserState } from "../atoms/current-user-state";
 
-const joinedGamesState = selector<UserJoinedGameViewModel[]>({
-  key: SelectorKeys.joinedGamesState,
-  get: ({ get }) => {
-    return get(currentUserState).joinedGames;
-  },
-});
+const joinedGamesState = createMemo(() => currentUserState().joinedGames);
 
-export default joinedGamesState;
+export { joinedGamesState };

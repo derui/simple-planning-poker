@@ -1,12 +1,8 @@
-import { atom } from "recoil";
-import AtomKeys from "./key";
+import { createSignal } from "solid-js";
 
-const signInState = atom<{ authenticating: boolean; authenticated: boolean }>({
-  key: AtomKeys.signIn,
-  default: {
-    authenticating: false,
-    authenticated: false,
-  },
+const [signInState, setSignInState] = createSignal<{ authenticating: boolean; authenticated: boolean }>({
+  authenticating: false,
+  authenticated: false,
 });
 
-export default signInState;
+export { signInState, setSignInState };

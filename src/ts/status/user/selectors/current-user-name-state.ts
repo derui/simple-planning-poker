@@ -1,12 +1,6 @@
-import { selector } from "recoil";
-import currentUserState from "../atoms/current-user-state";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { currentUserState } from "../atoms/current-user-state";
 
-const currentUserNameState = selector<string>({
-  key: SelectorKeys.currentUserNameState,
-  get: ({ get }) => {
-    return get(currentUserState).name;
-  },
-});
+const currentUserNameState = createMemo(() => currentUserState().name);
 
-export default currentUserNameState;
+export { currentUserNameState };

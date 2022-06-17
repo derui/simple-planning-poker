@@ -1,16 +1,16 @@
 import { Dependencies } from "@/dependencies";
 import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
-import { createMockedGameRepository } from "@/lib.test";
-import createUseApplyAuthenticated from "./use-apply-authenticated";
+import { createUseSignUp } from "./use-signup";
+import { currentUserState } from "@/status/user/atoms/current-user-state";
 import { createRoot } from "solid-js";
 
-test("call error callback if user is not found", async () =>
+test("do not update state if user is not found", async () =>
   createRoot(async (dispose) => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
     const authenticator = {
-      currentUserIdIfExists: jest.fn().mockImplementation(async () => undefined),
+      signUp: jest.fn().mockImplementation(async () => createUserId("id")),
     };
     const userRepository = {
       findBy: jest.fn().mockImplementation(async () => undefined),
@@ -19,15 +19,16 @@ test("call error callback if user is not found", async () =>
 
     registrar.register("authenticator", authenticator as any);
     registrar.register("userRepository", userRepository);
-    registrar.register("gameRepository", createMockedGameRepository());
 
-    const useHook = createUseApplyAuthenticated(registrar);
+    const useHook = createUseSignUp(registrar);
     const callback = jest.fn();
-
     let hook = useHook();
-    await hook(() => {}, callback);
 
-    expect(callback).toHaveBeenCalledTimes(1);
+    await hook("email", "password", callback);
+
+    expect(callback).not.toHaveBeenCalled();
+    expect(userRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(authenticator.signUp).toHaveBeenCalledWith("email", "email", "password");
     dispose();
   }));
 
@@ -36,27 +37,24 @@ test("update state if user is found", async () =>
     const registrar = createDependencyRegistrar<Dependencies>();
 
     const authenticator = {
-      currentUserIdIfExists: jest.fn().mockImplementation(async () => createUserId("id")),
+      signUp: jest.fn().mockImplementation(async () => createUserId("id")),
     };
     const userRepository = {
-      findBy: jest.fn().mockImplementation(async () => ({ id: createUserId("id"), name: "name", joinedGames: [] })),
+      findBy: jest.fn().mockImplementation(async () => ({ name: "email" })),
       save: jest.fn(),
     };
-    const gameRepository = createMockedGameRepository();
-    gameRepository.findBy.mockImplementation(async () => {});
 
     registrar.register("authenticator", authenticator as any);
     registrar.register("userRepository", userRepository);
-    registrar.register("gameRepository", gameRepository);
 
-    const useHook = createUseApplyAuthenticated(registrar);
-    const callback = jest.fn();
+    const useHook = createUseSignUp(registrar);
     let hook = useHook();
 
-    await hook(callback, () => {});
+    await hook("email", "password", () => {});
 
-    expect(callback).toHaveBeenCalledTimes(1);
-    dispose();
+    const value = currentUserState();
+    expect(value).toEqual({ id: createUserId("id"), name: "email", joinedGames: [] });
+    dispose;
   }));
 
 beforeEach(() => {

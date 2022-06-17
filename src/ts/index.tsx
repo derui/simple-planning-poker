@@ -1,8 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import React from "react";
-import * as ReactDOM from "react-dom";
 import { App } from "./app";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
@@ -45,7 +43,6 @@ import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
 import { initializeGameQuery } from "./status/game/atoms/game-query";
-import { initializeUserQuery } from "./status/user/atoms/user-state-query";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -95,7 +92,6 @@ registrar.register("gameObserver", new GameObserverImpl(database, registrar.reso
 
 // initialize atoms before launch
 initializeGameQuery(registrar);
-initializeUserQuery(registrar);
 
 const gameAction: GameActions = {
   useCreateGame: createUseCreateGame(registrar),

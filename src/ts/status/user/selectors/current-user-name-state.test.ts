@@ -1,21 +1,20 @@
-import { snapshot_UNSTABLE } from "recoil";
-import currentUserState from "../atoms/current-user-state";
-import currentUserNameState from "./current-user-name-state";
+import { createRoot } from "solid-js";
+import { setCurrentUserState } from "../atoms/current-user-state";
+import { currentUserNameState } from "./current-user-name-state";
 
-test("return empty string if user is not logged in", () => {
-  const snapshot = snapshot_UNSTABLE();
-  const value = snapshot.getLoadable(currentUserNameState).valueOrThrow();
+test("return empty string if user is not logged in", () =>
+  createRoot((dispose) => {
+    const value = currentUserNameState();
+    expect(value).toBe("");
+    dispose();
+  }));
 
-  expect(value).toBe("");
-});
+test("return user name if user is logged in", () =>
+  createRoot((dispose) => {
+    setCurrentUserState((prev) => ({ ...prev, name: "foobar" }));
 
-test("return user name if user is logged in", () => {
-  const snapshot = snapshot_UNSTABLE(({ set }) => {
-    set(currentUserState, (prev) => {
-      return { ...prev, name: "foobar" };
-    });
-  });
-  const value = snapshot.getLoadable(currentUserNameState).valueOrThrow();
+    const value = currentUserNameState();
 
-  expect(value).toBe("foobar");
-});
+    expect(value).toBe("foobar");
+    dispose();
+  }));

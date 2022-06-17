@@ -1,14 +1,10 @@
-import { atom } from "recoil";
-import AtomKeys from "./key";
 import { CurrentUserViewModel } from "../types";
+import { createSignal } from "solid-js";
 
-const currentUserState = atom<CurrentUserViewModel>({
-  key: AtomKeys.currentUserState,
-  default: {
-    id: null,
-    name: "",
-    joinedGames: [],
-  },
+const [currentUserState, setCurrentUserState] = createSignal<CurrentUserViewModel>({
+  id: null,
+  name: "",
+  joinedGames: [],
 });
 
-export default currentUserState;
+export { currentUserState, setCurrentUserState };

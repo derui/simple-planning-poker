@@ -1,19 +1,19 @@
-import { snapshot_UNSTABLE } from "recoil";
-import authenticatingState from "./authenticating-state";
-import signInState from "../atoms/signin-state";
+import { authenticatingState } from "./authenticating-state";
+import { setSigninState } from "../atoms/signin-state";
+import { createRoot } from "solid-js";
 
-test("user is not authenticating if state is default", async () => {
-  const snapshot = snapshot_UNSTABLE();
+test("user is not authenticating if state is default", async () =>
+  createRoot((dispose) => {
+    const value = authenticatingState();
+    expect(value).toBe(false);
+    dispose();
+  }));
 
-  const value = snapshot.getLoadable(authenticatingState).valueOrThrow();
-  expect(value).toBe(false);
-});
+test("get authenticating", async () =>
+  createRoot((dispose) => {
+    setSigninState((prev) => ({ ...prev, authenticating: true }));
 
-test("get authenticating", async () => {
-  const snapshot = snapshot_UNSTABLE(({ set }) => {
-    set(signInState, (prev) => ({ ...prev, authenticating: true }));
-  });
-
-  const value = snapshot.getLoadable(authenticatingState).valueOrThrow();
-  expect(value).toBe(true);
-});
+    const value = authenticatingState();
+    expect(value).toBe(true);
+    dispose();
+  }));

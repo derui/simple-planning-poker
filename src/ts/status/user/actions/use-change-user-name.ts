@@ -1,15 +1,14 @@
 import { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
-import { useRecoilCallback, useRecoilValue } from "recoil";
-import currentUserState from "../atoms/current-user-state";
+import { currentUserState, setCurrentUserState } from "../atoms/current-user-state";
 
-export default function createUseChangeUserName(registrar: DependencyRegistrar<Dependencies>) {
+export const createUseChangeUserName = function createUseChangeUserName(registrar: DependencyRegistrar<Dependencies>) {
   const changeUserNameUseCase = registrar.resolve("changeUserNameUseCase");
 
   return () => {
-    const currentUser = useRecoilValue(currentUserState);
+    return async (name: string) => {
+      const currentUser = currentUserState();
 
-    return useRecoilCallback(({ set }) => async (name: string) => {
       if (!currentUser.id) {
         return;
       }
@@ -19,7 +18,7 @@ export default function createUseChangeUserName(registrar: DependencyRegistrar<D
         name,
       });
 
-      set(currentUserState, () => ({ ...currentUser, name }));
-    });
+      setCurrentUserState({ ...currentUser, name });
+    };
   };
-}
+};

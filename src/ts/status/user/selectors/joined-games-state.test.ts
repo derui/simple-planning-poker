@@ -1,21 +1,24 @@
-import { snapshot_UNSTABLE } from "recoil";
-import joinedGamesState from "./joined-games-state";
-import currentUserState from "../atoms/current-user-state";
+import { joinedGamesState } from "./joined-games-state";
+import { setCurrentUserState } from "../atoms/current-user-state";
+import { createRoot } from "solid-js";
 
-test("return empty list if default state", () => {
-  const snapshot = snapshot_UNSTABLE();
-  const value = snapshot.getLoadable(joinedGamesState).valueOrThrow();
+test("return empty list if default state", () =>
+  createRoot((dispose) => {
+    const value = joinedGamesState();
 
-  expect(value).toHaveLength(0);
-});
+    expect(value).toHaveLength(0);
+    dispose();
+  }));
 
-test("return joined games if user joined", () => {
-  const snapshot = snapshot_UNSTABLE(({ set }) => {
-    set(currentUserState, (prev) => {
+test("return joined games if user joined", () =>
+  createRoot((dispose) => {
+    setCurrentUserState((prev) => {
       return { ...prev, joinedGames: [{} as any] };
     });
-  });
-  const value = snapshot.getLoadable(joinedGamesState).valueOrThrow();
 
-  expect(value).toHaveLength(1);
-});
+    const value = joinedGamesState();
+
+    expect(value).toHaveLength(1);
+
+    dispose();
+  }));
