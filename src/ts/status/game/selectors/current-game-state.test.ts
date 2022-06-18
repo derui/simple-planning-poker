@@ -4,68 +4,66 @@ import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUser, createUserId } from "@/domains/user";
-import { flushPromisesAndTimers } from "@/lib.test";
+import { flushPromises } from "@/lib.test";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
-import { snapshot_UNSTABLE } from "recoil";
-import currentGameIdState from "../atoms/current-game-id-state";
+import { createRoot } from "solid-js";
+import { setCurrentGameIdState } from "../atoms/current-game-id-state";
 import { initializeGameQuery } from "../atoms/game-query";
-import currentGameState from "./current-game-state";
+import { currentGameState } from "./current-game-state";
 
-test("return default values if current game is not found", async () => {
-  const snapshot = snapshot_UNSTABLE();
-  const value = snapshot.getLoadable(currentGameState).valueOrThrow().valueMaybe();
-  expect(value).toBeUndefined();
-});
+test("return default values if current game is not found", () =>
+  createRoot((dispose) => {
+    const value = currentGameState().valueMaybe();
+    expect(value).toBeUndefined();
+    dispose();
+  }));
 
-test("return view model if game id is presented", async () => {
-  const cards = createSelectableCards([createStoryPoint(1)]);
-  const registrar = createDependencyRegistrar<Dependencies>();
-  registrar.register("gameRepository", {
-    findBy: jest.fn().mockImplementation(() => {
-      return createGame({
-        id: createGameId("id"),
-        name: "name",
-        players: [createGamePlayerId("player")],
-        cards,
-      });
-    }),
-  } as any);
-  registrar.register("gamePlayerRepository", {
-    findBy: jest.fn().mockImplementation(() => {
-      return createGamePlayer({
-        id: createGamePlayerId("player"),
-        gameId: createGameId("id"),
-        userId: createUserId("user"),
-        cards,
-      });
-    }),
-  } as any);
-  registrar.register("userRepository", {
-    findBy: jest.fn().mockImplementation(() => {
-      return createUser({
-        id: createUserId("user"),
-        name: "name",
-        joinedGames: [],
-      });
-    }),
-  } as any);
-  registrar.register("gameObserver", {
-    subscribe: jest.fn().mockImplementation(() => {
-      return () => {};
-    }),
-  } as any);
+test("return view model if game id is presented", () =>
+  createRoot(async (dispose) => {
+    const cards = createSelectableCards([createStoryPoint(1)]);
+    const registrar = createDependencyRegistrar<Dependencies>();
+    registrar.register("gameRepository", {
+      findBy: jest.fn().mockImplementation(() => {
+        return createGame({
+          id: createGameId("id"),
+          name: "name",
+          players: [createGamePlayerId("player")],
+          cards,
+        });
+      }),
+    } as any);
+    registrar.register("gamePlayerRepository", {
+      findBy: jest.fn().mockImplementation(() => {
+        return createGamePlayer({
+          id: createGamePlayerId("player"),
+          gameId: createGameId("id"),
+          userId: createUserId("user"),
+          cards,
+        });
+      }),
+    } as any);
+    registrar.register("userRepository", {
+      findBy: jest.fn().mockImplementation(() => {
+        return createUser({
+          id: createUserId("user"),
+          name: "name",
+          joinedGames: [],
+        });
+      }),
+    } as any);
+    registrar.register("gameObserver", {
+      subscribe: jest.fn().mockImplementation(() => {
+        return () => {};
+      }),
+      unsubscribe: jest.fn(),
+    });
 
-  initializeGameQuery(registrar);
+    initializeGameQuery(registrar);
 
-  const snapshot = snapshot_UNSTABLE(({ set }) => {
-    set(currentGameIdState, createGameId("id"));
-  });
-  const release = snapshot.retain();
+    setCurrentGameIdState(createGameId("id"));
 
-  try {
-    await snapshot.getLoadable(currentGameState).toPromise();
-    await flushPromisesAndTimers();
-    const value = snapshot.getLoadable(currentGameState).valueOrThrow().valueMaybe()!;
+    await flushPromises();
+    const value = currentGameState().valueMaybe()!;
 
     expect(value.viewModel.average).toBeUndefined();
     expect(value.viewModel.cards).toBe(cards.cards);
@@ -78,15 +76,5 @@ test("return view model if game id is presented", async () => {
     });
     expect(value.viewModel.id).toBe(createGameId("id"));
     expect(value.viewModel.name).toBe("name");
-  } finally {
-    release();
-  }
-});
-
-beforeEach(() => {
-  jest.useFakeTimers();
-});
-
-afterEach(() => {
-  jest.useRealTimers();
-});
+    dispose();
+  }));

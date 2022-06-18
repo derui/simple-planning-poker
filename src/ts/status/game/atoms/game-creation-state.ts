@@ -1,11 +1,5 @@
-import { atom } from "recoil";
-import AtomKeys from "./key";
+import { createSignal } from "solid-js";
 
-const gameCreationState = atom<{ creating: boolean }>({
-  key: AtomKeys.gameCreationState,
-  default: {
-    creating: false,
-  },
-});
+const [gameCreationState, setGameCreationState] = createSignal<{ creating: boolean }>({ creating: false });
 
-export default gameCreationState;
+export { gameCreationState, setGameCreationState };

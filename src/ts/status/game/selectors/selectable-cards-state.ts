@@ -1,20 +1,16 @@
 import { Card } from "@/domains/card";
 import { Future, pendingOf, valueOf } from "@/status/util";
-import { selector } from "recoil";
-import currentGameState from "./current-game-state";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { currentGameState } from "./current-game-state";
 
-const selectableCardsState = selector<Future<Card[]>>({
-  key: SelectorKeys.cardsInGameState,
-  get: ({ get }) => {
-    const game = get(currentGameState).valueMaybe()?.viewModel;
+const selectableCardsState = createMemo<Future<Card[]>>(() => {
+  const game = currentGameState().valueMaybe()?.viewModel;
 
-    if (!game) {
-      return pendingOf();
-    }
+  if (!game) {
+    return pendingOf();
+  }
 
-    return valueOf(game.cards);
-  },
+  return valueOf(game.cards);
 });
 
-export default selectableCardsState;
+export { selectableCardsState };

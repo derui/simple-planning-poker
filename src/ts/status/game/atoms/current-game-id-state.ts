@@ -1,10 +1,6 @@
-import { atom } from "recoil";
-import AtomKeys from "./key";
 import { GameId } from "@/domains/game";
+import { createSignal } from "solid-js";
 
-const currentGameIdState = atom<GameId | undefined>({
-  key: AtomKeys.currentGameStateId,
-  default: undefined,
-});
+const [currentGameIdState, setCurrentGameIdState] = createSignal<GameId | undefined>(undefined);
 
-export default currentGameIdState;
+export { currentGameIdState, setCurrentGameIdState };

@@ -1,13 +1,13 @@
-import { atomFamily } from "recoil";
-import AtomKeys from "./key";
 import { GameViewModel } from "../types";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { UserRepository } from "@/domains/user-repository";
-import { Game, GameId } from "@/domains/game";
+import { Game } from "@/domains/game";
 import { User } from "@/domains/user";
 import { GameRepository } from "@/domains/game-repository";
 import { GameObserver } from "@/contexts/observer";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
+import { createEffect, createResource } from "solid-js";
+import { currentGameIdState } from "./current-game-id-state";
 
 let gameRepository: GameRepository | null = null;
 let gamePlayerRepository: GamePlayerRepository | null = null;
@@ -48,35 +48,35 @@ const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
   };
 };
 
-const gameQuery = atomFamily({
-  key: AtomKeys.gameState,
-  default: async (gameId: GameId) => {
-    const game = await gameRepository!!.findBy(gameId);
-    if (!game) {
-      return;
-    }
+const [gameQuery, { mutate: mutateGame }] = createResource(currentGameIdState, async (gameId) => {
+  const game = await gameRepository!!.findBy(gameId);
+  if (!game) {
+    return;
+  }
 
-    return gameToViewModel(game);
-  },
-
-  effects: (gameId: GameId) => [
-    ({ setSelf }) => {
-      const unsubscribe = gameObserver!!.subscribe(gameId, async (game) => {
-        const gameModel = await gameToViewModel(game);
-
-        setSelf(gameModel);
-      });
-
-      return unsubscribe;
-    },
-  ],
+  return gameToViewModel(game);
 });
 
-export default gameQuery;
+createEffect(() => {
+  const gameId = currentGameIdState();
+  if (!gameId) {
+    return;
+  }
 
-export const initializeGameQuery = (registrar: ApplicationDependencyRegistrar) => {
+  gameObserver!!.unsubscribe();
+
+  gameObserver!!.subscribe(gameId, async (game) => {
+    const gameModel = await gameToViewModel(game);
+
+    mutateGame(gameModel);
+  });
+});
+
+const initializeGameQuery = (registrar: ApplicationDependencyRegistrar) => {
   gameRepository = registrar.resolve("gameRepository");
   gamePlayerRepository = registrar.resolve("gamePlayerRepository");
   userRepository = registrar.resolve("userRepository");
   gameObserver = registrar.resolve("gameObserver");
 };
+
+export { gameQuery, initializeGameQuery };

@@ -1,26 +1,22 @@
 import { UserMode } from "@/domains/game-player";
-import currentUserState from "@/status/user/atoms/current-user-state";
-import { selector } from "recoil";
-import currentGamePlayerState from "../atoms/current-game-player-state";
-import SelectorKeys from "./key";
+import { currentUserState } from "@/status/user/atoms/current-user-state";
+import { createMemo } from "solid-js";
+import { currentGamePlayerState } from "../atoms/current-game-player-state";
 
 type CurrentPlayerInformation = {
   name?: string;
   mode?: UserMode;
 };
 
-const currentPlayerInformationState = selector<CurrentPlayerInformation>({
-  key: SelectorKeys.currentPlayerInformation,
-  get: ({ get }) => {
-    const player = get(currentGamePlayerState);
-    const user = get(currentUserState);
+const currentPlayerInformationState = createMemo<CurrentPlayerInformation>(() => {
+  const player = currentGamePlayerState();
+  const user = currentUserState();
 
-    if (!player || !user) {
-      return {};
-    }
+  if (!player || !user) {
+    return {};
+  }
 
-    return { name: user.name, mode: player.mode };
-  },
+  return { name: user.name, mode: player.mode };
 });
 
-export default currentPlayerInformationState;
+export { currentPlayerInformationState };

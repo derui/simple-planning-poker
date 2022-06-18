@@ -1,9 +1,8 @@
-import { useRecoilCallback, useRecoilValue } from "recoil";
 import { GameId } from "@/domains/game";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
-import currentGamePlayerState from "../atoms/current-game-player-state";
+import { setCurrentGamePlayerState } from "../atoms/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
-import currentUserState from "@/status/user/atoms/current-user-state";
+import { currentUserState } from "@/status/user/atoms/current-user-state";
 
 interface CreationParameter {
   name: string;
@@ -11,38 +10,32 @@ interface CreationParameter {
   callback: (gameId: GameId) => void;
 }
 
-export default function createUseCreateGame(registrar: ApplicationDependencyRegistrar) {
+export const createUseCreateGame = function (registrar: ApplicationDependencyRegistrar) {
   const gamePlayerRepository = registrar.resolve("gamePlayerRepository");
   const useCase = registrar.resolve("createGameUseCase");
 
-  return () => {
-    const currentUser = useRecoilValue(currentUserState);
+  return () =>
+    async ({ name, cards, callback }: CreationParameter) => {
+      const currentUser = currentUserState();
+      const currentUserId = currentUser.id;
+      if (name === "" || cards.length === 0 || !currentUserId) {
+        return;
+      }
 
-    return useRecoilCallback(
-      ({ set }) =>
-        async ({ name, cards, callback }: CreationParameter) => {
-          const currentUserId = currentUser.id;
-          if (name === "" || cards.length === 0 || !currentUserId) {
-            return;
-          }
+      const input = {
+        name,
+        points: cards,
+        createdBy: currentUserId,
+      };
 
-          const input = {
-            name,
-            points: cards,
-            createdBy: currentUserId,
-          };
+      const ret = useCase.execute(input);
+      if (ret.kind === "success") {
+        const player = await gamePlayerRepository.findByUserAndGame(currentUserId, ret.gameId);
 
-          const ret = useCase.execute(input);
-          if (ret.kind === "success") {
-            const player = await gamePlayerRepository.findByUserAndGame(currentUserId, ret.gameId);
-
-            set(currentGamePlayerState, (prev) => {
-              return player ? gamePlayerToViewModel(player, currentUser.name) : prev;
-            });
-            callback(ret.gameId);
-          }
-        },
-      [currentUser]
-    );
-  };
-}
+        setCurrentGamePlayerState((prev) => {
+          return player ? gamePlayerToViewModel(player, currentUser.name) : prev;
+        });
+        callback(ret.gameId);
+      }
+    };
+};

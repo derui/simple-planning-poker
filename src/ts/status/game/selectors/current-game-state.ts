@@ -1,9 +1,7 @@
 import { errorOf, Future, pendingOf, valueOf } from "@/status/util";
-import { noWait, selector } from "recoil";
-import currentGameIdState from "../atoms/current-game-id-state";
-import gameQuery from "../atoms/game-query";
+import { createMemo } from "solid-js";
+import { gameQuery } from "../atoms/game-query";
 import { GameState, GameViewModel } from "../types";
-import SelectorKeys from "./key";
 
 const toStatus = (game: GameViewModel) => {
   if (game.showedDown) {
@@ -17,30 +15,22 @@ const toStatus = (game: GameViewModel) => {
   return "EmptyUserHand";
 };
 
-const currentGameState = selector<Future<GameState>>({
-  key: SelectorKeys.currentGameState,
-  get: ({ get }) => {
-    const gameId = get(currentGameIdState);
-    if (!gameId) {
-      return pendingOf();
+const currentGameState = createMemo<Future<GameState>>(() => {
+  const loadable = gameQuery();
+
+  if (gameQuery.loading) {
+    return pendingOf();
+  } else if (gameQuery.error) {
+    return errorOf();
+  } else {
+    if (loadable) {
+      return valueOf<GameState>({
+        viewModel: loadable,
+        status: toStatus(loadable),
+      });
     }
-
-    const loadable = get(noWait(gameQuery(gameId)));
-
-    return {
-      hasValue: () => {
-        if (loadable.contents) {
-          return valueOf<GameState>({
-            viewModel: loadable.contents as GameViewModel,
-            status: toStatus(loadable.contents),
-          });
-        }
-        return pendingOf();
-      },
-      hasError: () => errorOf(),
-      loading: () => pendingOf(),
-    }[loadable.state]();
-  },
+    return pendingOf();
+  }
 });
 
-export default currentGameState;
+export { currentGameState };

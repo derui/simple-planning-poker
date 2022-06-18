@@ -1,6 +1,5 @@
-import { selector } from "recoil";
-import currentGameState from "./current-game-state";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { currentGameState } from "./current-game-state";
 
 type State = {
   name?: string;
@@ -8,32 +7,29 @@ type State = {
   invitationSignature?: string;
 };
 
-const currentGameInformationState = selector<State>({
-  key: SelectorKeys.currentGameInformationState,
-  get: ({ get }) => {
-    const state = get(currentGameState).valueMaybe()?.viewModel;
+const currentGameInformationState = createMemo<State>(() => {
+  const state = currentGameState().valueMaybe()?.viewModel;
 
-    if (!state) {
-      return { cards: [] };
-    }
+  if (!state) {
+    return { cards: [] };
+  }
 
-    const name = state.name;
-    const invitationSignature = state.invitationSignature;
-    const cards =
-      state.cards
-        .map((v) => {
-          switch (v.kind) {
-            case "storypoint":
-              return v.storyPoint.value;
-            default:
-              return null;
-          }
-        })
-        .filter((v) => !!v)
-        .map((v): number => v!!) ?? [];
+  const name = state.name;
+  const invitationSignature = state.invitationSignature;
+  const cards =
+    state.cards
+      .map((v) => {
+        switch (v.kind) {
+          case "storypoint":
+            return v.storyPoint.value;
+          default:
+            return null;
+        }
+      })
+      .filter((v) => !!v)
+      .map((v): number => v!!) ?? [];
 
-    return { name, cards, invitationSignature };
-  },
+  return { name, cards, invitationSignature };
 });
 
-export default currentGameInformationState;
+export { currentGameInformationState };

@@ -1,23 +1,19 @@
-import { useRecoilCallback } from "recoil";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import { useCurrentGameState } from "../selectors";
 
-export default function createUseShowDown(registrar: DependencyRegistrar<Dependencies>) {
+export const createUseShowDown = function (registrar: DependencyRegistrar<Dependencies>) {
   const showDownUseCase = registrar.resolve("showDownUseCase");
 
-  return () => {
+  return () => async () => {
     const currentGame = useCurrentGameState();
+    const game = currentGame.valueMaybe()?.viewModel;
+    if (!game) {
+      return;
+    }
 
-    return useRecoilCallback(() => async () => {
-      const game = currentGame.valueMaybe()?.viewModel;
-      if (!game) {
-        return;
-      }
-
-      await showDownUseCase.execute({
-        gameId: game.id,
-      });
+    await showDownUseCase.execute({
+      gameId: game.id,
     });
   };
-}
+};

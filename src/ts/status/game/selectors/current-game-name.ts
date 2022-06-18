@@ -1,17 +1,13 @@
-import { selector } from "recoil";
-import currentGameState from "./current-game-state";
-import SelectorKeys from "./key";
+import { createMemo } from "solid-js";
+import { currentGameState } from "./current-game-state";
 
-const currentGameName = selector({
-  key: SelectorKeys.currentGameName,
-  get: ({ get }) => {
-    const state = get(currentGameState).valueMaybe()?.viewModel;
-    if (!state) {
-      return "";
-    }
+const currentGameName = createMemo(() => {
+  const state = currentGameState().valueMaybe()?.viewModel;
+  if (!state) {
+    return "";
+  }
 
-    return state.name;
-  },
+  return state.name;
 });
 
-export default currentGameName;
+export { currentGameName };
