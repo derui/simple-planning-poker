@@ -1,22 +1,22 @@
 import { signInActionContext } from "@/contexts/actions/signin-actions";
-import { useAuthenticatingState } from "@/status/signin/selectors";
+import { useSignInSelectors } from "@/contexts/selectors/signin-selectors";
 import { useLocation, useNavigate } from "solid-app-router";
-import { Component, createEffect, ParentProps, useContext } from "solid-js";
+import { Component, createEffect, createMemo, ParentProps, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
 interface Props {}
 
 export const SignUpContainer: Component<ParentProps<Props>> = () => {
-  const location = useLocation();
+  const { authenticating } = useSignInSelectors();
+  const location = useLocation<{ from: string }>();
   const navigate = useNavigate();
   const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
-  const authenticating = useAuthenticatingState();
+  const state = createMemo(() => location.state?.from ?? "/");
 
-  const { from }: any = location.state || { from: { pathname: "/" } };
   const signInCallback = () => {
-    navigate(from.pathname, { replace: true });
+    navigate(state(), { replace: true });
   };
 
   createEffect(() => {
@@ -27,7 +27,7 @@ export const SignUpContainer: Component<ParentProps<Props>> = () => {
     <SignInComponent
       title="Sign Up"
       onSubmit={(email, password) => signUp(email, password, signInCallback)}
-      authenticating={authenticating}
+      authenticating={authenticating()}
     ></SignInComponent>
   );
 };

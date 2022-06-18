@@ -1,4 +1,4 @@
-import { Component, For } from "solid-js";
+import { Component, For, mergeProps } from "solid-js";
 import { PlayerHand, PlayerHandProps } from "./player-hand";
 
 interface Props {
@@ -14,7 +14,12 @@ export const PlayerHands: Component<Props> = (props) => {
 
   return (
     <div classList={className}>
-      <For each={props.userHands}>{(v) => <PlayerHand namePosition={props.position} {...v} />}</For>
+      <For each={props.userHands}>
+        {(v) => {
+          const childProps = mergeProps(v, { namePosition: props.position });
+          return <PlayerHand {...childProps} />;
+        }}
+      </For>
     </div>
   );
 };

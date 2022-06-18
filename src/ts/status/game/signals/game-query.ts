@@ -3,13 +3,12 @@ import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { UserRepository } from "@/domains/user-repository";
 import { Game } from "@/domains/game";
 import { User } from "@/domains/user";
-import { GameRepository } from "@/domains/game-repository";
 import { GameObserver } from "@/contexts/observer";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
-import { createEffect, createResource } from "solid-js";
+import { createEffect } from "solid-js";
 import { currentGameIdState } from "./current-game-id-state";
+import { createStore, produce } from "solid-js/store";
 
-let gameRepository: GameRepository | null = null;
 let gamePlayerRepository: GamePlayerRepository | null = null;
 let userRepository: UserRepository | null = null;
 let gameObserver: GameObserver | null = null;
@@ -48,13 +47,8 @@ const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
   };
 };
 
-const [gameQuery, { mutate: mutateGame }] = createResource(currentGameIdState, async (gameId) => {
-  const game = await gameRepository!!.findBy(gameId);
-  if (!game) {
-    return;
-  }
-
-  return gameToViewModel(game);
+const [gameStore, setGameStore] = createStore<{ viewModel?: GameViewModel; state: "loading" | "value" }>({
+  state: "loading",
 });
 
 createEffect(() => {
@@ -66,17 +60,25 @@ createEffect(() => {
   gameObserver!!.unsubscribe();
 
   gameObserver!!.subscribe(gameId, async (game) => {
-    const gameModel = await gameToViewModel(game);
+    setGameStore(
+      produce((s) => {
+        s.state = "loading";
+      })
+    );
 
-    mutateGame(gameModel);
+    const viewModel = await gameToViewModel(game);
+
+    setGameStore({
+      viewModel,
+      state: "value",
+    });
   });
 });
 
 const initializeGameQuery = (registrar: ApplicationDependencyRegistrar) => {
-  gameRepository = registrar.resolve("gameRepository");
   gamePlayerRepository = registrar.resolve("gamePlayerRepository");
   userRepository = registrar.resolve("userRepository");
   gameObserver = registrar.resolve("gameObserver");
 };
 
-export { gameQuery, initializeGameQuery };
+export { gameStore, initializeGameQuery };

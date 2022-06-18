@@ -3,6 +3,7 @@ import { ApplicationDependencyRegistrar } from "@/dependencies";
 import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
 import { currentUserState } from "@/status/user/signals/current-user-state";
+import { setCurrentGameIdState } from "../signals/current-game-id-state";
 
 interface CreationParameter {
   name: string;
@@ -35,6 +36,7 @@ export const createUseCreateGame = function (registrar: ApplicationDependencyReg
         setCurrentGamePlayerState((prev) => {
           return player ? gamePlayerToViewModel(player, currentUser.name) : prev;
         });
+        setCurrentGameIdState(ret.gameId);
         callback(ret.gameId);
       }
     };

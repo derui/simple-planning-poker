@@ -1,13 +1,12 @@
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { useCurrentGameState } from "../selectors";
+import { gameStore } from "../signals/game-query";
 
 export const createUseShowDown = function (registrar: DependencyRegistrar<Dependencies>) {
   const showDownUseCase = registrar.resolve("showDownUseCase");
 
   return () => async () => {
-    const currentGame = useCurrentGameState();
-    const game = currentGame.valueMaybe()?.viewModel;
+    const game = gameStore.viewModel;
     if (!game) {
       return;
     }

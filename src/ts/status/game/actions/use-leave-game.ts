@@ -1,9 +1,9 @@
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
-import { currentGameState } from "../selectors/current-game-state";
 import { setCurrentGameIdState } from "../signals/current-game-id-state";
 import { currentUserState, setCurrentUserState } from "@/status/user/signals/current-user-state";
+import { gameStore } from "../signals/game-query";
 
 export const createUseLeaveGame = function (registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");
@@ -11,7 +11,7 @@ export const createUseLeaveGame = function (registrar: DependencyRegistrar<Depen
 
   return () => async () => {
     const currentUser = currentUserState();
-    const currentGame = currentGameState().valueMaybe()?.viewModel;
+    const currentGame = gameStore.viewModel;
     if (!currentUser?.id || !currentGame) {
       return;
     }

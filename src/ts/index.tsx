@@ -45,6 +45,9 @@ import { createUseChangeUserMode } from "./status/game/actions/use-change-user-m
 import { initializeGameQuery } from "./status/game/signals/game-query";
 import { render } from "solid-js/web";
 import { Router } from "solid-app-router";
+import { GameSelectorsContext, initGameSelectorsContext } from "./contexts/selectors/game-selectors";
+import { initUserSelectorsContext, UserSelectorsContext } from "./contexts/selectors/user-selectors";
+import { initSignInSelectorsContext, SignInSelectorsContext } from "./contexts/selectors/signin-selectors";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -117,17 +120,23 @@ const userActions: UserActions = {
 
 render(
   () => (
-    <Router>
-      <signInActionContext.Provider value={signInActions}>
-        <gameActionsContext.Provider value={gameAction}>
-          <userActionsContext.Provider value={userActions}>
-            <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-              <App />
-            </gameObserverContext.Provider>
-          </userActionsContext.Provider>
-        </gameActionsContext.Provider>
-      </signInActionContext.Provider>
-    </Router>
+    <GameSelectorsContext.Provider value={initGameSelectorsContext()}>
+      <UserSelectorsContext.Provider value={initUserSelectorsContext()}>
+        <SignInSelectorsContext.Provider value={initSignInSelectorsContext()}>
+          <signInActionContext.Provider value={signInActions}>
+            <gameActionsContext.Provider value={gameAction}>
+              <userActionsContext.Provider value={userActions}>
+                <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+                  <Router>
+                    <App />
+                  </Router>
+                </gameObserverContext.Provider>
+              </userActionsContext.Provider>
+            </gameActionsContext.Provider>
+          </signInActionContext.Provider>
+        </SignInSelectorsContext.Provider>
+      </UserSelectorsContext.Provider>
+    </GameSelectorsContext.Provider>
   ),
 
   document.getElementById("root")!!

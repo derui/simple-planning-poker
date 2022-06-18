@@ -5,15 +5,15 @@ import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUser, createUserId } from "@/domains/user";
 import { flushPromises } from "@/lib.test";
+import { setCurrentGameIdState } from "@/status/game/signals/current-game-id-state";
+import { initializeGameQuery } from "@/status/game/signals/game-query";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { createRoot } from "solid-js";
-import { setCurrentGameIdState } from "../signals/current-game-id-state";
-import { initializeGameQuery } from "../signals/game-query";
 import { currentGameState } from "./current-game-state";
 
 test("return default values if current game is not found", () =>
   createRoot((dispose) => {
-    const value = currentGameState().valueMaybe();
+    const value = currentGameState()().valueMaybe();
     expect(value).toBeUndefined();
     dispose();
   }));
@@ -63,7 +63,7 @@ test("return view model if game id is presented", () =>
     setCurrentGameIdState(createGameId("id"));
 
     await flushPromises();
-    const value = currentGameState().valueMaybe()!;
+    const value = currentGameState()().valueMaybe()!;
 
     expect(value.viewModel.average).toBeUndefined();
     expect(value.viewModel.cards).toBe(cards.cards);

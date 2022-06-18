@@ -1,6 +1,6 @@
 import { authenticatingState } from "./authenticating-state";
-import { setSignInState } from "../signals/signin-state";
 import { createRoot } from "solid-js";
+import { setSignInState } from "@/status/signin/signals/signin-state";
 
 test("user is not authenticating if state is default", async () =>
   createRoot((dispose) => {

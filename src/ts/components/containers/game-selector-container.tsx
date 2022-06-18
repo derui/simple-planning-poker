@@ -1,4 +1,4 @@
-import { useJoinedGamesState } from "@/status/user/selectors";
+import { useUserSelectors } from "@/contexts/selectors/user-selectors";
 import { Link } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
 
@@ -13,14 +13,14 @@ const EmptyComponent = () => {
 };
 
 export const GameSelectorContainer: Component<Props> = () => {
-  const games = useJoinedGamesState();
+  const { joinedGames } = useUserSelectors();
 
   return (
     <div class="app__game-selector">
       <header class="app__game-selector__header">Select game you already joined</header>
       <main class="app__game-selector__main">
-        <Show when={games.length > 0}>
-          <For each={games}>
+        <Show when={joinedGames().length > 0}>
+          <For each={joinedGames()}>
             {(v) => (
               <Link class="app__game-selector__main__selection-container" href={`/game/${v.id}`}>
                 <span class="app__game-selector__main__game-selector">{v.name}</span>
@@ -28,7 +28,7 @@ export const GameSelectorContainer: Component<Props> = () => {
             )}
           </For>
         </Show>
-        <Show when={games.length === 0}>
+        <Show when={joinedGames().length === 0}>
           <EmptyComponent />
         </Show>
       </main>
