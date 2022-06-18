@@ -5,7 +5,7 @@ interface Props {
   height?: number;
 }
 
-const Grid: Component<Props> = (props) => {
+export const Grid: Component<Props> = (props) => {
   const width = () => `${props.width || 32}px`;
   const height = () => `${props.height || 32}px`;
 
@@ -26,5 +26,3 @@ const Grid: Component<Props> = (props) => {
     </div>
   );
 };
-
-export default Grid;

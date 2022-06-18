@@ -1,15 +1,15 @@
-import signInActionContext from "@/contexts/actions/signin-actions";
+import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useAuthenticatingState } from "@/status/signin/selectors";
-import * as React from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "solid-app-router";
+import { Component, createEffect, ParentProps, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
 interface Props {}
 
-const SignUpContainer: React.FunctionComponent<Props> = () => {
+export const SignUpContainer: Component<ParentProps<Props>> = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const action = React.useContext(signInActionContext);
+  const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
   const authenticating = useAuthenticatingState();
@@ -19,9 +19,9 @@ const SignUpContainer: React.FunctionComponent<Props> = () => {
     navigate(from.pathname, { replace: true });
   };
 
-  React.useEffect(() => {
+  createEffect(() => {
     applyAuthenticated(signInCallback);
-  }, []);
+  });
 
   return (
     <SignInComponent
@@ -31,5 +31,3 @@ const SignUpContainer: React.FunctionComponent<Props> = () => {
     ></SignInComponent>
   );
 };
-
-export default SignUpContainer;

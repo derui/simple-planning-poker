@@ -1,5 +1,5 @@
 import { cleanup, render, screen } from "solid-testing-library";
-import EmptyCardHolder from "./empty-card-holder";
+import { EmptyCardHolder } from "./empty-card-holder";
 
 describe("Counter", () => {
   afterEach(cleanup);

@@ -9,7 +9,7 @@ interface Props {
   onChangeMode: (mode: UserMode) => void;
 }
 
-const UserInfoComponent: Component<Props> = (props) => {
+export const UserInfo: Component<Props> = (props) => {
   const [showUpdater, setShowUpdater] = createSignal(false);
   const indicatorClassName = {
     "app__game__user-info__indicator": true,
@@ -38,5 +38,3 @@ const UserInfoComponent: Component<Props> = (props) => {
     </div>
   );
 };
-
-export default UserInfoComponent;

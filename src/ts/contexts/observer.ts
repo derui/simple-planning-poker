@@ -1,6 +1,6 @@
 import { Game, GameId } from "@/domains/game";
 import { User, UserId } from "@/domains/user";
-import { createContext } from "react";
+import { createContext } from "solid-js";
 
 export interface GameObserver {
   subscribe(gameId: GameId, subscriber: (game: Game) => void): void;

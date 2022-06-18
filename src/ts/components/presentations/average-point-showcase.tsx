@@ -5,7 +5,7 @@ interface Props {
   averagePoint: string;
 }
 
-const AveragePointShowcase: Component<Props> = (props) => {
+export const AveragePointShowcase: Component<Props> = (props) => {
   return (
     <div class="app__game__average-point-showcase">
       <div class="app__game__average-point-showcase__results">
@@ -27,5 +27,3 @@ const AveragePointShowcase: Component<Props> = (props) => {
     </div>
   );
 };
-
-export default AveragePointShowcase;

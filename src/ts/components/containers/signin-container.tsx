@@ -1,15 +1,13 @@
-import signInActionContext from "@/contexts/actions/signin-actions";
+import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useAuthenticatingState } from "@/status/signin/selectors";
-import * as React from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "solid-app-router";
+import { Component, createEffect, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
-interface Props {}
-
-const SignInContainer: React.FunctionComponent<Props> = () => {
+export const SignInContainer: Component = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const action = React.useContext(signInActionContext);
+  const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signIn = action.useSignIn();
   const authenticating = useAuthenticatingState();
@@ -23,17 +21,15 @@ const SignInContainer: React.FunctionComponent<Props> = () => {
     signIn(email, password, signInCallback);
   };
 
-  React.useEffect(() => {
+  createEffect(() => {
     applyAuthenticated(signInCallback);
-  }, []);
+  });
 
   return (
     <SignInComponent title="Sign In" onSubmit={onSubmit} authenticating={authenticating}>
-      <p className="app__signin-main__sign-up-link">
+      <p class="app__signin-main__sign-up-link">
         or <a href="/signup">Sign up</a>
       </p>
     </SignInComponent>
   );
 };
-
-export default SignInContainer;

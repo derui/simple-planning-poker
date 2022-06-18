@@ -1,39 +1,42 @@
 import { useJoinedGamesState } from "@/status/user/selectors";
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "solid-app-router";
+import { Component, For, Show } from "solid-js";
 
 interface Props {}
 
 const EmptyComponent = () => {
   return (
-    <div className="app__game-selector__empty">
-      <span className="app__game-selector__empty__text">You do not have games that you are invited before.</span>
+    <div class="app__game-selector__empty">
+      <span class="app__game-selector__empty__text">You do not have games that you are invited before.</span>
     </div>
   );
 };
 
-const GameSelectorContainerComponent: React.FunctionComponent<Props> = () => {
+export const GameSelectorContainer: Component<Props> = () => {
   const games = useJoinedGamesState();
 
-  const gameComponents = games.map((v) => {
-    return (
-      <Link key={v.id} className="app__game-selector__main__selection-container" to={`/game/${v.id}`}>
-        <span className="app__game-selector__main__game-selector">{v.name}</span>
-      </Link>
-    );
-  });
-
   return (
-    <div className="app__game-selector">
-      <header className="app__game-selector__header">Select game you already joined</header>
-      <main className="app__game-selector__main">{games.length > 0 ? gameComponents : <EmptyComponent />}</main>
-      <footer className="app__game-selector__footer">
-        <Link className="app__game-selector__creator-opener" to="/game/create">
+    <div class="app__game-selector">
+      <header class="app__game-selector__header">Select game you already joined</header>
+      <main class="app__game-selector__main">
+        <Show when={games.length > 0}>
+          <For each={games}>
+            {(v) => (
+              <Link class="app__game-selector__main__selection-container" href={`/game/${v.id}`}>
+                <span class="app__game-selector__main__game-selector">{v.name}</span>
+              </Link>
+            )}
+          </For>
+        </Show>
+        <Show when={games.length === 0}>
+          <EmptyComponent />
+        </Show>
+      </main>
+      <footer class="app__game-selector__footer">
+        <Link class="app__game-selector__creator-opener" href="/game/create">
           Create Game
         </Link>
       </footer>
     </div>
   );
 };
-
-export default GameSelectorContainerComponent;

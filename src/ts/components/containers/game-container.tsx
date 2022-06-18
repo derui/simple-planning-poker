@@ -1,11 +1,9 @@
-import * as React from "react";
 import { CardHolder } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { EmptyCardHolder } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
-import { useNavigate, useParams } from "react-router";
-import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
+import { gameActionsContext, GameActions } from "@/contexts/actions/game-actions";
 import {
   useCurrentGameName,
   useCurrentGameState,
@@ -14,9 +12,11 @@ import {
   useSelectableCardsState,
   useUserHandsState,
 } from "@/status/game/selectors";
-import userActionsContext from "@/contexts/actions/user-actions";
-import GameAreaComponent from "../presentations/game-area";
+import { userActionsContext } from "@/contexts/actions/user-actions";
+import { GameArea } from "../presentations/game-area";
 import { mapFuture } from "@/status/util";
+import { Component, createEffect, useContext } from "solid-js";
+import { useNavigate, useParams } from "solid-app-router";
 
 interface Props {}
 
@@ -46,13 +46,13 @@ const createCardHolderComponent = ({ useSelectCard }: GameActions) => {
   );
 };
 
-const GameContainer: React.FunctionComponent<Props> = () => {
+export const GameContainer: Component<Props> = () => {
   const param = useParams<{ gameId: string }>();
-  const gameActions = React.useContext(gameActionsContext);
+  const gameActions = useContext(gameActionsContext);
   const component = createCardHolderComponent(gameActions);
   const currentGameName = useCurrentGameName();
   const userHands = useUserHandsState();
-  const changeName = React.useContext(userActionsContext).useChangeUserName();
+  const changeName = useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
   const currentUserInformation = useCurrentPlayerInformationState();
   const currentUserName = currentUserInformation.name;
@@ -65,13 +65,13 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   const navigate = useNavigate();
   const showDown = gameActions.useShowDown();
 
-  React.useEffect(() => {
+  createEffect(() => {
     openGame(param.gameId as GameId, () => {
       navigate("/", { replace: true });
     });
   }, [param.gameId]);
 
-  React.useEffect(() => {
+  createEffect(() => {
     if (currentStatus.valueMaybe() === "ShowedDown") {
       navigate(`/game/${param.gameId}/result`, { replace: true });
     }
@@ -87,7 +87,7 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   };
 
   return (
-    <div className="app__game">
+    <div class="app__game">
       <GameHeaderComponent
         gameName={currentGameName}
         userName={currentUserName || ""}
@@ -101,17 +101,10 @@ const GameContainer: React.FunctionComponent<Props> = () => {
         origin={document.location.origin}
         invitationSignature={signature || ""}
       />
-      <main className="app__game__main">
-        <GameAreaComponent
-          onShowDown={onShowDown}
-          gameStatus={currentStatus}
-          lines={userHands}
-          userMode={currentUserMode}
-        />
+      <main class="app__game__main">
+        <GameArea onShowDown={onShowDown} gameStatus={currentStatus} lines={userHands} userMode={currentUserMode} />
       </main>
       {Component}
     </div>
   );
 };
-
-export default GameContainer;

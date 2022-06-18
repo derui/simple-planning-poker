@@ -24,25 +24,27 @@ import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-lea
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
 import { UserObserverImpl } from "./infrastractures/user-observer";
-import signInActionContext, { SigninActions } from "./contexts/actions/signin-actions";
-import createUseApplyAuthenticated from "./status/signin/actions/use-apply-authenticated";
-import createUseSignIn from "./status/signin/actions/use-signin";
-import createUseSignUp from "./status/signin/actions/use-signup";
-import userActionsContext, { UserActions } from "./contexts/actions/user-actions";
-import createUseChangeUserName from "./status/user/actions/use-change-user-name";
-import createUseCreateGame from "./status/game/actions/use-create-game";
-import gameActionsContext, { GameActions } from "./contexts/actions/game-actions";
-import createUseOpenGame from "./status/game/actions/use-open-game";
-import createUseJoinUser from "./status/game/actions/use-join-user";
-import createUseLeaveGame from "./status/game/actions/use-leave-game";
-import createUseNewGame from "./status/game/actions/use-new-game";
-import createUseSelectCard from "./status/game/actions/use-select-card";
-import createUseSelectGame from "./status/game/actions/use-select-game";
-import createUseShowDown from "./status/game/actions/use-show-down";
+import { signInActionContext, SigninActions } from "./contexts/actions/signin-actions";
+import { createUseApplyAuthenticated } from "./status/signin/actions/use-apply-authenticated";
+import { createUseSignIn } from "./status/signin/actions/use-signin";
+import { createUseSignUp } from "./status/signin/actions/use-signup";
+import { userActionsContext, UserActions } from "./contexts/actions/user-actions";
+import { createUseChangeUserName } from "./status/user/actions/use-change-user-name";
+import { createUseCreateGame } from "./status/game/actions/use-create-game";
+import { gameActionsContext, GameActions } from "./contexts/actions/game-actions";
+import { createUseOpenGame } from "./status/game/actions/use-open-game";
+import { createUseJoinUser } from "./status/game/actions/use-join-user";
+import { createUseLeaveGame } from "./status/game/actions/use-leave-game";
+import { createUseNewGame } from "./status/game/actions/use-new-game";
+import { createUseSelectCard } from "./status/game/actions/use-select-card";
+import { createUseSelectGame } from "./status/game/actions/use-select-game";
+import { createUseShowDown } from "./status/game/actions/use-show-down";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
-import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
+import { createUseChangeUserMode } from "./status/game/actions/use-change-user-mode";
 import { initializeGameQuery } from "./status/game/signals/game-query";
+import { render } from "solid-js/web";
+import { Router } from "solid-app-router";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -113,16 +115,20 @@ const userActions: UserActions = {
   useChangeUserName: createUseChangeUserName(registrar),
 };
 
-ReactDOM.render(
-  <signInActionContext.Provider value={signInActions}>
-    <gameActionsContext.Provider value={gameAction}>
-      <userActionsContext.Provider value={userActions}>
-        <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-          <App />
-        </gameObserverContext.Provider>
-      </userActionsContext.Provider>
-    </gameActionsContext.Provider>
-  </signInActionContext.Provider>,
+render(
+  () => (
+    <Router>
+      <signInActionContext.Provider value={signInActions}>
+        <gameActionsContext.Provider value={gameAction}>
+          <userActionsContext.Provider value={userActions}>
+            <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+              <App />
+            </gameObserverContext.Provider>
+          </userActionsContext.Provider>
+        </gameActionsContext.Provider>
+      </signInActionContext.Provider>
+    </Router>
+  ),
 
-  document.getElementById("root")
+  document.getElementById("root")!!
 );

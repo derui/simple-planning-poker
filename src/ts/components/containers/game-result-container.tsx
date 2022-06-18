@@ -1,9 +1,7 @@
-import * as React from "react";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
-import { useNavigate, useParams } from "react-router";
-import gameActionsContext from "@/contexts/actions/game-actions";
+import { gameActionsContext } from "@/contexts/actions/game-actions";
 import { ShowDownResultViewModel } from "@/status/game/types";
 import {
   useCurrentGameName,
@@ -12,11 +10,13 @@ import {
   useShowDownResultState,
   useUserHandsState,
 } from "@/status/game/selectors";
-import userActionsContext from "@/contexts/actions/user-actions";
+import { userActionsContext } from "@/contexts/actions/user-actions";
 import { Future, mapFuture } from "@/status/util";
-import AveragePointShowcaseWithSpinner from "../presentations/average-point-showcase-with-spinner";
-import AveragePointShowcase from "../presentations/average-point-showcase";
-import GameAreaResultComponent from "../presentations/game-result-area";
+import { AveragePointShowcaseWithSpinner } from "../presentations/average-point-showcase-with-spinner";
+import { AveragePointShowcase } from "../presentations/average-point-showcase";
+import { GameResultArea } from "../presentations/game-result-area";
+import { Component, createEffect, useContext } from "solid-js";
+import { useNavigate, useParams } from "solid-app-router";
 
 interface Props {}
 
@@ -31,13 +31,13 @@ const createAveragePointShowcase = (showDownResult: Future<ShowDownResultViewMod
   return <AveragePointShowcase averagePoint={average} cardCounts={value.cardCounts} />;
 };
 
-const GameResultContainer: React.FunctionComponent<Props> = () => {
+export const GameResultContainer: Component<Props> = () => {
   const param = useParams<{ gameId: string }>();
-  const gameActions = React.useContext(gameActionsContext);
+  const gameActions = useContext(gameActionsContext);
   const currentGameName = useCurrentGameName();
   const userHands = useUserHandsState();
   const showDownResult = useShowDownResultState();
-  const changeName = React.useContext(userActionsContext).useChangeUserName();
+  const changeName = useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
   const currentUserInformation = useCurrentPlayerInformationState();
   const currentUserName = currentUserInformation.name;
@@ -50,24 +50,24 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
   const navigate = useNavigate();
   const newGame = gameActions.useNewGame();
 
-  React.useEffect(() => {
+  createEffect(() => {
     openGame(param.gameId as GameId, () => {
       navigate("/", { replace: true });
     });
-  }, [param.gameId]);
+  });
 
-  React.useEffect(() => {
+  createEffect(() => {
     if (currentStatus.valueMaybe() !== "ShowedDown") {
       navigate(`/game/${param.gameId}`, { replace: true });
     }
-  }, [currentStatus.valueMaybe()]);
+  });
 
   const onNewGame = () => {
     newGame();
   };
 
   return (
-    <div className="app__game">
+    <div class="app__game">
       <GameHeaderComponent
         gameName={currentGameName}
         userName={currentUserName || ""}
@@ -81,12 +81,10 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
         origin={document.location.origin}
         invitationSignature={signature || ""}
       />
-      <main className="app__game__main">
-        <GameAreaResultComponent onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
+      <main class="app__game__main">
+        <GameResultArea onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
       </main>
       {createAveragePointShowcase(showDownResult)}
     </div>
   );
 };
-
-export default GameResultContainer;

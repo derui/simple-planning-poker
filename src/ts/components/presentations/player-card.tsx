@@ -8,7 +8,7 @@ interface PlayerCardProps {
   showedDown: boolean;
 }
 
-const PlayerCard: Component<PlayerCardProps> = (props) => {
+export const PlayerCard: Component<PlayerCardProps> = (props) => {
   const [transition, setTransition] = createSignal(false);
 
   createEffect(() => {
@@ -36,5 +36,3 @@ const PlayerCard: Component<PlayerCardProps> = (props) => {
     </span>
   );
 };
-
-export default PlayerCard;

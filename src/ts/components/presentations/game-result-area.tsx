@@ -1,10 +1,10 @@
-import * as React from "react";
 import { PlayerHands } from "../presentations/player-hands";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { UserHandViewModel } from "@/status/game/types";
 import { Future } from "@/status/util";
-import PlayerHandsWithSpinner from "./player-hands-with-spinner";
+import { PlayerHandsWithSpinner } from "./player-hands-with-spinner";
+import { Component } from "solid-js";
 
 interface Props {
   onNewGame: () => void;
@@ -16,10 +16,10 @@ const GameProgressionButton = (props: Props) => {
   const { userMode, onNewGame } = props;
 
   if (userMode === UserMode.inspector) {
-    return <span className="app__game__main__game-management-button--waiting">Inspecting...</span>;
+    return <span class="app__game__main__game-management-button--waiting">Inspecting...</span>;
   }
   return (
-    <button className="app__game__main__game-management-button--next-game" onClick={() => onNewGame()}>
+    <button class="app__game__main__game-management-button--next-game" onClick={() => onNewGame()}>
       Start next game
     </button>
   );
@@ -40,22 +40,20 @@ const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undef
   return <PlayerHandsWithSpinner />;
 };
 
-const GameAreaResultComponent: React.FunctionComponent<Props> = (props) => {
+export const GameResultArea: Component<Props> = (props) => {
   const button = GameProgressionButton(props);
   const upper = toHands("upper", props.lines.valueMaybe()?.upperLine);
   const lower = toHands("lower", props.lines.valueMaybe()?.lowerLine);
 
   return (
-    <div className="app__game__main__game-area">
-      <div className="app__game__main__grid-container">
-        <div className="app__game__main__upper-spacer"></div>
+    <div class="app__game__main__game-area">
+      <div class="app__game__main__grid-container">
+        <div class="app__game__main__upper-spacer"></div>
         {upper}
-        <div className="app__game__main__table">{button}</div>
+        <div class="app__game__main__table">{button}</div>
         {lower}
-        <div className="app__game__main__lower-spacer"></div>
+        <div class="app__game__main__lower-spacer"></div>
       </div>
     </div>
   );
 };
-
-export default GameAreaResultComponent;

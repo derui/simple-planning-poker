@@ -5,7 +5,7 @@ interface Props {
   onLeaveGame: () => void;
 }
 
-const GameInfo: Component<Props> = (props) => {
+export const GameInfo: Component<Props> = (props) => {
   return (
     <main class="app__game__header__game-info">
       <div class="app__game__header__game-info__name-container">
@@ -18,5 +18,3 @@ const GameInfo: Component<Props> = (props) => {
     </main>
   );
 };
-
-export default GameInfo;

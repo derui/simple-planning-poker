@@ -12,7 +12,11 @@ export const CardHolder: Component<Props> = (props) => {
     <div class="app__game__card-holder">
       <For each={props.displays}>
         {(display, index) => (
-          <SelectableCard display={display} selected={index() === props.selectedIndex} onClick={props.onClickCard} />
+          <SelectableCard
+            display={display}
+            selected={index() === props.selectedIndex}
+            onClick={() => props.onClickCard(index())}
+          />
         )}
       </For>
     </div>

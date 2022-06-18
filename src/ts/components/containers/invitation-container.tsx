@@ -1,27 +1,25 @@
-import gameActionsContext from "@/contexts/actions/game-actions";
-import * as React from "react";
-import { useNavigate, useParams } from "react-router";
+import { gameActionsContext } from "@/contexts/actions/game-actions";
+import { useNavigate, useParams } from "solid-app-router";
+import { Component, createEffect, useContext } from "solid-js";
 
 interface Props {}
 
-const InvitationContainer: React.FunctionComponent<Props> = () => {
+export const InvitationContainer: Component<Props> = () => {
   const param = useParams<{ signature: string }>();
-  const gameActions = React.useContext(gameActionsContext);
+  const gameActions = useContext(gameActionsContext);
   const joinUser = gameActions.useJoinUser();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  createEffect(() => {
     joinUser(param.signature!!, (gameId) => navigate(`/game/${gameId}`, { replace: true }));
-  }, [param.signature]);
+  });
 
   return (
-    <div className="app__invitation">
-      <div className="app__invitation__overlay"></div>
-      <div className="app__invitation__dialog">
+    <div class="app__invitation">
+      <div class="app__invitation__overlay"></div>
+      <div class="app__invitation__dialog">
         <h3>Joining to the game...</h3>
       </div>
     </div>
   );
 };
-
-export default InvitationContainer;

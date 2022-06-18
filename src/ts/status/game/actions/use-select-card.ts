@@ -2,7 +2,7 @@ import { ApplicationDependencyRegistrar } from "@/dependencies";
 import { currentGamePlayerState } from "../signals/current-game-player-state";
 import { currentGameState } from "../selectors/current-game-state";
 
-export default function createUseSelectCard(registrar: ApplicationDependencyRegistrar) {
+export const createUseSelectCard = function (registrar: ApplicationDependencyRegistrar) {
   const handCardUseCase = registrar.resolve("handCardUseCase");
 
   return () => async (index: number) => {
@@ -18,4 +18,4 @@ export default function createUseSelectCard(registrar: ApplicationDependencyRegi
       card,
     });
   };
-}
+};

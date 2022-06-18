@@ -1,5 +1,5 @@
 import { Component, For } from "solid-js";
-import PlayerHand, { PlayerHandProps } from "./player-hand";
+import { PlayerHand, PlayerHandProps } from "./player-hand";
 
 interface Props {
   position: "upper" | "lower";
@@ -14,7 +14,7 @@ export const PlayerHands: Component<Props> = (props) => {
 
   return (
     <div classList={className}>
-      <For each={props.userHands}>{(v, index) => <PlayerHand key={index} {...v} />}</For>
+      <For each={props.userHands}>{(v) => <PlayerHand namePosition={props.position} {...v} />}</For>
     </div>
   );
 };

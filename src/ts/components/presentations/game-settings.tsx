@@ -5,7 +5,7 @@ interface Props {
   invitationSignature: string;
 }
 
-const GameSettings: Component<Props> = (props) => {
+export const GameSettings: Component<Props> = (props) => {
   const url = `${props.origin}/invitation/${props.invitationSignature}`;
   const [open, setOpen] = createSignal(false);
   const containerClassName = {
@@ -29,5 +29,3 @@ const GameSettings: Component<Props> = (props) => {
     </div>
   );
 };
-
-export default GameSettings;

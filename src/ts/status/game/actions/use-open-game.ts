@@ -6,7 +6,7 @@ import { gamePlayerToViewModel } from "../dxo";
 import { currentUserState } from "@/status/user/signals/current-user-state";
 import { setCurrentGameIdState } from "../signals/current-game-id-state";
 
-export default function createUseOpenGame(registrar: DependencyRegistrar<Dependencies>) {
+export const createUseOpenGame = function (registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");
   const gamePlayerRepository = registrar.resolve("gamePlayerRepository");
 
@@ -30,4 +30,4 @@ export default function createUseOpenGame(registrar: DependencyRegistrar<Depende
     });
     setCurrentGameIdState(gameId);
   };
-}
+};

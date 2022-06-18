@@ -1,5 +1,5 @@
 import { UserMode } from "@/domains/game-player";
-import PlayerCard from "./player-card";
+import { PlayerCard } from "./player-card";
 import { Component } from "solid-js";
 
 export interface PlayerHandProps {
@@ -11,7 +11,7 @@ export interface PlayerHandProps {
   showedDown: boolean;
 }
 
-const PlayerHand: Component<PlayerHandProps> = (props) => {
+export const PlayerHand: Component<PlayerHandProps> = (props) => {
   const className = {
     "app__game__main__user-hand-container": true,
     "app__game__main__user-hand-container--flipped": props.namePosition === "lower",
@@ -31,5 +31,3 @@ const PlayerHand: Component<PlayerHandProps> = (props) => {
     </div>
   );
 };
-
-export default PlayerHand;
