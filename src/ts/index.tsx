@@ -42,7 +42,7 @@ import createUseShowDown from "./status/game/actions/use-show-down";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
-import { initializeGameQuery } from "./status/game/atoms/game-query";
+import { initializeGameQuery } from "./status/game/signals/game-query";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -90,7 +90,7 @@ registrar.register("authenticator", new FirebaseAuthenticator(auth, database, re
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 registrar.register("gameObserver", new GameObserverImpl(database, registrar.resolve("gameRepository")));
 
-// initialize atoms before launch
+// initialize signals before launch
 initializeGameQuery(registrar);
 
 const gameAction: GameActions = {

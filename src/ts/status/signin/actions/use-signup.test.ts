@@ -2,7 +2,7 @@ import { Dependencies } from "@/dependencies";
 import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { createUseSignUp } from "./use-signup";
-import { currentUserState } from "@/status/user/atoms/current-user-state";
+import { currentUserState } from "@/status/user/signals/current-user-state";
 import { createRoot } from "solid-js";
 
 test("do not update state if user is not found", async () =>

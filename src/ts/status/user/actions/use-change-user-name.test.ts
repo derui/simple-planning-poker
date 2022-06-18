@@ -3,7 +3,7 @@ import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { flushPromisesAndTimers } from "@/lib.test";
 import { createUseChangeUserName } from "./use-change-user-name";
-import { setCurrentUserState } from "../atoms/current-user-state";
+import { setCurrentUserState } from "../signals/current-user-state";
 import { createRoot } from "solid-js";
 
 test("do not execute use case if not logged in", async () =>

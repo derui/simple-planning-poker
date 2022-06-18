@@ -2,9 +2,9 @@ import { GameId } from "@/domains/game";
 import { InvitationSignature } from "@/domains/invitation";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { setCurrentGamePlayerState } from "../atoms/current-game-player-state";
+import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
-import { currentUserState } from "@/status/user/atoms/current-user-state";
+import { currentUserState } from "@/status/user/signals/current-user-state";
 
 export const createUseJoinUser = function (registrar: DependencyRegistrar<Dependencies>) {
   const gameRepository = registrar.resolve("gameRepository");

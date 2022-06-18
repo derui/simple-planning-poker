@@ -1,5 +1,5 @@
 import { authenticatedState } from "./authenticated-state";
-import { setSigninState } from "../atoms/signin-state";
+import { setSignInState } from "../signals/signin-state";
 import { createRoot } from "solid-js";
 
 test("user is not authenticated if state is default", async () =>
@@ -11,7 +11,7 @@ test("user is not authenticated if state is default", async () =>
 
 test("user is authenticated if user is setted", async () =>
   createRoot((dispose) => {
-    setSigninState((prev) => ({ ...prev, authenticated: true }));
+    setSignInState((prev) => ({ ...prev, authenticated: true }));
 
     const value = authenticatedState();
     expect(value).toBe(true);

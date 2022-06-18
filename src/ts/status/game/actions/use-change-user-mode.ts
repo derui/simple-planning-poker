@@ -1,7 +1,7 @@
 import { UserMode } from "@/domains/game-player";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { currentGamePlayerState, setCurrentGamePlayerState } from "../atoms/current-game-player-state";
+import { currentGamePlayerState, setCurrentGamePlayerState } from "../signals/current-game-player-state";
 
 export const createUseChangeUserMode = function (registrar: DependencyRegistrar<Dependencies>) {
   const changeUserModeUseCase = registrar.resolve("changeUserModeUseCase");

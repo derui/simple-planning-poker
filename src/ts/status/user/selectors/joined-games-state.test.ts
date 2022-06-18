@@ -1,5 +1,5 @@
 import { joinedGamesState } from "./joined-games-state";
-import { setCurrentUserState } from "../atoms/current-user-state";
+import { setCurrentUserState } from "../signals/current-user-state";
 import { createRoot } from "solid-js";
 
 test("return empty list if default state", () =>

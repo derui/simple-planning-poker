@@ -1,6 +1,6 @@
 import { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
-import { currentUserState, setCurrentUserState } from "../atoms/current-user-state";
+import { currentUserState, setCurrentUserState } from "../signals/current-user-state";
 
 export const createUseChangeUserName = function createUseChangeUserName(registrar: DependencyRegistrar<Dependencies>) {
   const changeUserNameUseCase = registrar.resolve("changeUserNameUseCase");

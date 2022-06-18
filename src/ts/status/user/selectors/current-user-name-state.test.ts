@@ -1,5 +1,5 @@
 import { createRoot } from "solid-js";
-import { setCurrentUserState } from "../atoms/current-user-state";
+import { setCurrentUserState } from "../signals/current-user-state";
 import { currentUserNameState } from "./current-user-name-state";
 
 test("return empty string if user is not logged in", () =>

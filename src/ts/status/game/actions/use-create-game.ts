@@ -1,8 +1,8 @@
 import { GameId } from "@/domains/game";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
-import { setCurrentGamePlayerState } from "../atoms/current-game-player-state";
+import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
-import { currentUserState } from "@/status/user/atoms/current-user-state";
+import { currentUserState } from "@/status/user/signals/current-user-state";
 
 interface CreationParameter {
   name: string;

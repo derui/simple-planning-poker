@@ -1,7 +1,7 @@
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { setCurrentUserState } from "@/status/user/atoms/current-user-state";
-import { setSignInState } from "../atoms/signin-state";
+import { setCurrentUserState } from "@/status/user/signals/current-user-state";
+import { setSignInState } from "../signals/signin-state";
 import { filterUndefined } from "@/utils/array";
 
 export const createUseApplyAuthenticated = function (registrar: DependencyRegistrar<Dependencies>) {

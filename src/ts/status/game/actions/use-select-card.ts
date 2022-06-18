@@ -1,5 +1,5 @@
 import { ApplicationDependencyRegistrar } from "@/dependencies";
-import { currentGamePlayerState } from "../atoms/current-game-player-state";
+import { currentGamePlayerState } from "../signals/current-game-player-state";
 import { currentGameState } from "../selectors/current-game-state";
 
 export default function createUseSelectCard(registrar: ApplicationDependencyRegistrar) {

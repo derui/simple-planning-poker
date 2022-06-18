@@ -1,7 +1,7 @@
 import { UserMode } from "@/domains/game-player";
-import { currentUserState } from "@/status/user/atoms/current-user-state";
+import { currentUserState } from "@/status/user/signals/current-user-state";
 import { createMemo } from "solid-js";
-import { currentGamePlayerState } from "../atoms/current-game-player-state";
+import { currentGamePlayerState } from "../signals/current-game-player-state";
 
 type CurrentPlayerInformation = {
   name?: string;

@@ -1,7 +1,7 @@
 import { Card, equalCard } from "@/domains/card";
 import { Future, pendingOf, valueOf } from "@/status/util";
 import { createMemo } from "solid-js";
-import { currentGamePlayerState } from "../atoms/current-game-player-state";
+import { currentGamePlayerState } from "../signals/current-game-player-state";
 import { currentGameState } from "./current-game-state";
 
 type State = {

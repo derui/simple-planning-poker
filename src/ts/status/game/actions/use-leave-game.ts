@@ -1,9 +1,9 @@
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { setCurrentGamePlayerState } from "../atoms/current-game-player-state";
+import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
 import { currentGameState } from "../selectors/current-game-state";
-import { setCurrentGameIdState } from "../atoms/current-game-id-state";
-import { currentUserState, setCurrentUserState } from "@/status/user/atoms/current-user-state";
+import { setCurrentGameIdState } from "../signals/current-game-id-state";
+import { currentUserState, setCurrentUserState } from "@/status/user/signals/current-user-state";
 
 export const createUseLeaveGame = function (registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");

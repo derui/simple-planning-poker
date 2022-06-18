@@ -1,10 +1,10 @@
 import { GameId } from "@/domains/game";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
-import { setCurrentGamePlayerState } from "../atoms/current-game-player-state";
+import { setCurrentGamePlayerState } from "../signals/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
-import { currentUserState } from "@/status/user/atoms/current-user-state";
-import { setCurrentGameIdState } from "../atoms/current-game-id-state";
+import { currentUserState } from "@/status/user/signals/current-user-state";
+import { setCurrentGameIdState } from "../signals/current-game-id-state";
 
 export default function createUseOpenGame(registrar: DependencyRegistrar<Dependencies>) {
   const userRepository = registrar.resolve("userRepository");

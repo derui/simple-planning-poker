@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { signInState } from "../atoms/signin-state";
+import { signInState } from "../signals/signin-state";
 
 const authenticatingState = createMemo(() => signInState().authenticating);
 

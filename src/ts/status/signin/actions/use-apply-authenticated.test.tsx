@@ -2,10 +2,10 @@ import { Dependencies } from "@/dependencies";
 import { createUserId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { createMockedGameRepository } from "@/lib.test";
-import createUseApplyAuthenticated from "./use-apply-authenticated";
+import { createUseApplyAuthenticated } from "./use-apply-authenticated";
 import { createRoot } from "solid-js";
 
-test("call error callback if user is not found", async () =>
+test("call error callback if user is not found", () =>
   createRoot(async (dispose) => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
@@ -31,7 +31,7 @@ test("call error callback if user is not found", async () =>
     dispose();
   }));
 
-test("update state if user is found", async () =>
+test("update state if user is found", () =>
   createRoot(async (dispose) => {
     const registrar = createDependencyRegistrar<Dependencies>();
 

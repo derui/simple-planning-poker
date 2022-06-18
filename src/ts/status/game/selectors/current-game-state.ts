@@ -1,6 +1,6 @@
 import { errorOf, Future, pendingOf, valueOf } from "@/status/util";
 import { createMemo } from "solid-js";
-import { gameQuery } from "../atoms/game-query";
+import { gameQuery } from "../signals/game-query";
 import { GameState, GameViewModel } from "../types";
 
 const toStatus = (game: GameViewModel) => {

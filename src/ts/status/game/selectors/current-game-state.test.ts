@@ -7,8 +7,8 @@ import { createUser, createUserId } from "@/domains/user";
 import { flushPromises } from "@/lib.test";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { createRoot } from "solid-js";
-import { setCurrentGameIdState } from "../atoms/current-game-id-state";
-import { initializeGameQuery } from "../atoms/game-query";
+import { setCurrentGameIdState } from "../signals/current-game-id-state";
+import { initializeGameQuery } from "../signals/game-query";
 import { currentGameState } from "./current-game-state";
 
 test("return default values if current game is not found", () =>
