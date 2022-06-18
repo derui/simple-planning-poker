@@ -13,8 +13,10 @@ export const PlayerCard: Component<PlayerCardProps> = (props) => {
 
   createEffect(() => {
     if (props.showedDown) {
-      const t = setTimeout(() => setTransition(true));
-      return () => clearTimeout(t);
+      const t = setTimeout(() => {
+        setTransition(true);
+        clearTimeout(t);
+      });
     }
   });
 

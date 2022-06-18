@@ -1,7 +1,7 @@
 import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useSignInSelectors } from "@/contexts/selectors/signin-selectors";
 import { useLocation, useNavigate } from "solid-app-router";
-import { Component, createMemo, createRenderEffect, useContext } from "solid-js";
+import { Component, createRenderEffect, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
 export const SignInContainer: Component = () => {
@@ -11,7 +11,7 @@ export const SignInContainer: Component = () => {
   const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signIn = action.useSignIn();
-  const state = createMemo(() => location.state?.from ?? "/");
+  const state = () => location.state?.from ?? "/";
 
   const signInCallback = () => {
     navigate(state(), { replace: true });

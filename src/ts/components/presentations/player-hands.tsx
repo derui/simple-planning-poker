@@ -7,9 +7,11 @@ interface Props {
 }
 
 export const PlayerHands: Component<Props> = (props) => {
+  const isUpper = () => props.position === "upper";
+  const isLower = () => props.position === "lower";
   const className = {
-    "app__game__main__users-in-upper": props.position === "upper",
-    "app__game__main__users-in-lower": props.position === "lower",
+    "app__game__main__users-in-upper": isUpper(),
+    "app__game__main__users-in-lower": isLower(),
   };
 
   return (

@@ -68,9 +68,9 @@ const UpdateApplyer = (allowApplying: boolean, submit: () => void) => {
   );
 };
 
-export const UserInfoUpdater: Component<UserInfoProps> = ({ name, mode, onChangeMode, onChangeName }) => {
-  const [currentName, setCurrentName] = createSignal(name);
-  const [currentMode, setMode] = createSignal<UserMode>(mode);
+export const UserInfoUpdater: Component<UserInfoProps> = (props) => {
+  const [currentName, setCurrentName] = createSignal(props.name);
+  const [currentMode, setMode] = createSignal<UserMode>(props.mode);
 
   return (
     <div
@@ -83,8 +83,8 @@ export const UserInfoUpdater: Component<UserInfoProps> = ({ name, mode, onChange
       {NameEditor(currentName(), setCurrentName)}
       {ModeChanger(currentMode(), setMode)}
       {UpdateApplyer(currentName() !== "", () => {
-        onChangeName(currentName());
-        onChangeMode(currentMode());
+        props.onChangeName(currentName());
+        props.onChangeMode(currentMode());
       })}
     </div>
   );

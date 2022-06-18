@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const GameSettings: Component<Props> = (props) => {
-  const url = `${props.origin}/invitation/${props.invitationSignature}`;
+  const url = () => `${props.origin}/invitation/${props.invitationSignature}`;
   const [open, setOpen] = createSignal(false);
   const containerClassName = {
     "app__game__game-settings__container": true,
@@ -23,7 +23,7 @@ export const GameSettings: Component<Props> = (props) => {
       <div classList={containerClassName}>
         <div class="app__game__game-settings__item">
           <span class="app__game__game-settings__label">Invitation Link</span>
-          <input type="text" class="app__game__game-settings__url" readOnly value={url} />
+          <input type="text" class="app__game__game-settings__url" readOnly value={url()} />
         </div>
       </div>
     </div>

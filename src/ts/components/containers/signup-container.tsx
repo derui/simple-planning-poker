@@ -1,7 +1,7 @@
 import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useSignInSelectors } from "@/contexts/selectors/signin-selectors";
 import { useLocation, useNavigate } from "solid-app-router";
-import { Component, createEffect, createMemo, ParentProps, useContext } from "solid-js";
+import { Component, createEffect, ParentProps, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
 interface Props {}
@@ -13,7 +13,7 @@ export const SignUpContainer: Component<ParentProps<Props>> = () => {
   const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
-  const state = createMemo(() => location.state?.from ?? "/");
+  const state = () => location.state?.from ?? "/";
 
   const signInCallback = () => {
     navigate(state(), { replace: true });

@@ -3,7 +3,7 @@ import { GameHeaderComponent } from "../presentations/game-header";
 import { EmptyCardHolder } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
-import { gameActionsContext, GameActions } from "@/contexts/actions/game-actions";
+import { gameActionsContext } from "@/contexts/actions/game-actions";
 import { userActionsContext } from "@/contexts/actions/user-actions";
 import { GameArea } from "../presentations/game-area";
 import { mapFuture } from "@/status/util";
@@ -13,52 +13,48 @@ import { useGameSelectors } from "@/contexts/selectors/game-selectors";
 
 interface Props {}
 
-const createCardHolderComponent = ({ useSelectCard }: GameActions) => {
+const CardHolderComponent = () => {
+  const { useSelectCard } = useContext(gameActionsContext);
   const selectCard = useSelectCard();
   const { selectableCards, currentPlayerSelectedCard } = useGameSelectors();
-  const cards = selectableCards().valueMaybe() ?? [];
-  const selectedIndex = currentPlayerSelectedCard()?.valueMaybe()?.index;
-
-  const props = {
-    displays: cards.map((v) => {
+  const displays = () => {
+    const cards = selectableCards().valueMaybe() ?? [];
+    return cards.map((v) => {
       switch (v.kind) {
         case "giveup":
           return "?";
         case "storypoint":
           return v.storyPoint.value.toString();
       }
-    }),
-    selectedIndex: selectedIndex ?? null,
+    });
   };
+  const selectedIndex = () => currentPlayerSelectedCard()?.valueMaybe()?.index ?? null;
 
   return (
-    <CardHolder
-      displays={props.displays}
-      selectedIndex={props.selectedIndex}
-      onClickCard={(index) => selectCard(index)}
-    />
+    <CardHolder displays={displays()} selectedIndex={selectedIndex()} onClickCard={(index) => selectCard(index)} />
   );
 };
 
 export const GameContainer: Component<Props> = () => {
   const param = useParams<{ gameId: string }>();
   const gameActions = useContext(gameActionsContext);
-  const component = createCardHolderComponent(gameActions);
-  const selectors = useGameSelectors();
-  const currentGameName = selectors.currentGameName();
-  const userHands = selectors.userHands();
+  const { currentGameName, userHands, currentPlayerInformation, currentGame } = useGameSelectors();
   const changeName = useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
-  const currentUserInformation = selectors.currentPlayerInformation();
-  const currentUserName = currentUserInformation.name;
-  const currentUserMode = currentUserInformation.mode ?? UserMode.normal;
-  const currentGameState = selectors.currentGame();
-  const signature = currentGameState.valueMaybe()?.viewModel?.invitationSignature;
-  const currentStatus = mapFuture(currentGameState, (v) => v.status);
+  const signature = currentGame().valueMaybe()?.viewModel?.invitationSignature;
+  const currentStatus = () => mapFuture(currentGame(), (v) => v.status);
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
   const showDown = gameActions.useShowDown();
+
+  const currentUserMode = () => {
+    return currentPlayerInformation().mode ?? UserMode.normal;
+  };
+
+  const currentUserName = () => {
+    return currentPlayerInformation().name ?? "";
+  };
 
   createEffect(() => {
     openGame(param.gameId as GameId, () => {
@@ -67,7 +63,7 @@ export const GameContainer: Component<Props> = () => {
   });
 
   createEffect(() => {
-    if (currentStatus.valueMaybe() === "ShowedDown") {
+    if (currentStatus().valueMaybe() === "ShowedDown") {
       navigate(`/game/${param.gameId}/result`, { replace: true });
     }
   });
@@ -75,9 +71,9 @@ export const GameContainer: Component<Props> = () => {
   return (
     <div class="app__game">
       <GameHeaderComponent
-        gameName={currentGameName}
-        userName={currentUserName || ""}
-        userMode={currentUserMode}
+        gameName={currentGameName()}
+        userName={currentUserName()}
+        userMode={currentUserMode()}
         onChangeName={(name) => changeName(name)}
         onChangeMode={(mode) => changeMode(mode)}
         onLeaveGame={() => {
@@ -88,11 +84,13 @@ export const GameContainer: Component<Props> = () => {
         invitationSignature={signature || ""}
       />
       <main class="app__game__main">
-        <GameArea onShowDown={showDown} gameStatus={currentStatus} lines={userHands} userMode={currentUserMode} />
+        <GameArea onShowDown={showDown} gameStatus={currentStatus()} lines={userHands()} userMode={currentUserMode()} />
       </main>
       <Switch>
-        <Match when={currentUserMode === UserMode.normal}>{component}</Match>
-        <Match when={currentUserMode !== UserMode.normal}>
+        <Match when={currentUserMode() === UserMode.normal}>
+          <CardHolderComponent />
+        </Match>
+        <Match when={currentUserMode() !== UserMode.normal}>
           <EmptyCardHolder />
         </Match>
       </Switch>

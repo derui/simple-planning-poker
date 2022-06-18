@@ -4,7 +4,7 @@ import { asStoryPoint } from "@/domains/card";
 import { UserHandViewModel } from "@/status/game/types";
 import { Future } from "@/status/util";
 import { PlayerHandsWithSpinner } from "./player-hands-with-spinner";
-import { Component } from "solid-js";
+import { Component, Match, Switch } from "solid-js";
 
 interface Props {
   onNewGame: () => void;
@@ -13,13 +13,11 @@ interface Props {
 }
 
 const GameProgressionButton = (props: Props) => {
-  const { userMode, onNewGame } = props;
-
-  if (userMode === UserMode.inspector) {
+  if (props.userMode === UserMode.inspector) {
     return <span class="app__game__main__game-management-button--waiting">Inspecting...</span>;
   }
   return (
-    <button class="app__game__main__game-management-button--next-game" onClick={() => onNewGame()}>
+    <button class="app__game__main__game-management-button--next-game" onClick={() => props.onNewGame()}>
       Start next game
     </button>
   );
@@ -32,26 +30,30 @@ const convertHands = (hands: UserHandViewModel[]) =>
     showedDown: true,
   }));
 
-const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undefined) => {
-  if (hands) {
-    return <PlayerHands position={position} userHands={convertHands(hands)} />;
-  }
-
-  return <PlayerHandsWithSpinner />;
+const Hand: Component<{ position: "upper" | "lower"; hands: UserHandViewModel[] | undefined }> = (props) => {
+  const hands = () => props.hands || [];
+  return (
+    <Switch>
+      <Match when={hands()}>
+        <PlayerHands position={props.position} userHands={convertHands(hands())} />
+      </Match>
+      <Match when={!hands()}>
+        <PlayerHandsWithSpinner />
+      </Match>
+    </Switch>
+  );
 };
 
 export const GameResultArea: Component<Props> = (props) => {
   const button = GameProgressionButton(props);
-  const upper = toHands("upper", props.lines.valueMaybe()?.upperLine);
-  const lower = toHands("lower", props.lines.valueMaybe()?.lowerLine);
 
   return (
     <div class="app__game__main__game-area">
       <div class="app__game__main__grid-container">
         <div class="app__game__main__upper-spacer"></div>
-        {upper}
+        <Hand position="upper" hands={props.lines.valueMaybe()?.upperLine} />
         <div class="app__game__main__table">{button}</div>
-        {lower}
+        <Hand position="lower" hands={props.lines.valueMaybe()?.lowerLine} />
         <div class="app__game__main__lower-spacer"></div>
       </div>
     </div>
