@@ -13,8 +13,8 @@ import { currentGameState } from "./current-game-state";
 
 test("return default values if current game is not found", () =>
   createRoot((dispose) => {
-    const value = currentGameState()().valueMaybe();
-    expect(value).toBeUndefined();
+    const value = currentGameState();
+    expect(value()).toBeUndefined();
     dispose();
   }));
 
@@ -63,18 +63,18 @@ test("return view model if game id is presented", () =>
     setCurrentGameIdState(createGameId("id"));
 
     await flushPromises();
-    const value = currentGameState()().valueMaybe()!;
+    const value = currentGameState();
 
-    expect(value.viewModel.average).toBeUndefined();
-    expect(value.viewModel.cards).toBe(cards.cards);
-    expect(value.viewModel.hands).toContainEqual({
+    expect(value()!.viewModel.average).toBeUndefined();
+    expect(value()!.viewModel.cards).toBe(cards.cards);
+    expect(value()!.viewModel.hands).toContainEqual({
       card: undefined,
       name: "name",
       gamePlayerId: createGamePlayerId("player"),
       mode: "normal",
       selected: false,
     });
-    expect(value.viewModel.id).toBe(createGameId("id"));
-    expect(value.viewModel.name).toBe("name");
+    expect(value()!.viewModel.id).toBe(createGameId("id"));
+    expect(value()!.viewModel.name).toBe("name");
     dispose();
   }));

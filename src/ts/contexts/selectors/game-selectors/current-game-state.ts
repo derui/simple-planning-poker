@@ -1,6 +1,5 @@
 import { gameStore } from "@/status/game/signals/game-query";
 import { GameState, GameViewModel } from "@/status/game/types";
-import { Future, pendingOf, valueOf } from "@/status/util";
 import { createMemo } from "solid-js";
 
 const toStatus = (game: GameViewModel) => {
@@ -16,21 +15,21 @@ const toStatus = (game: GameViewModel) => {
 };
 
 const currentGameState = () =>
-  createMemo<Future<GameState>>(() => {
+  createMemo<GameState | null>(() => {
     const loadable = gameStore.viewModel;
 
     if (gameStore.state === "loading") {
-      return pendingOf();
+      return null;
       // } else if (gameStore.state ) {
       //   return errorOf();
     } else {
       if (loadable) {
-        return valueOf<GameState>({
+        return {
           viewModel: loadable,
           status: toStatus(loadable),
-        });
+        };
       }
-      return pendingOf();
+      return null;
     }
   });
 
