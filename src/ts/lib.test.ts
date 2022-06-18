@@ -37,5 +37,11 @@ export const flushPromisesAndTimers = (): Promise<void> => {
   });
 };
 
+export const flushPromises = (): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 100);
+  });
+};
+
 // Avoid error
 test("dummy", () => {});
