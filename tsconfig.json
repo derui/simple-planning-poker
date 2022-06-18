@@ -23,7 +23,7 @@
     "incremental": true,
     "baseUrl": "./",
     "outDir": "generated",
-    "types": ["vite/client"],
+    "types": ["vite/client", "jest"],
     "paths": {
       "@/*": [
         "src/ts/*"
@@ -35,9 +35,6 @@
     "src/ts/**/*.tsx",
     "src/ts/index.tsx"
   ],
-  "exclude": [
-    "src/ts/**/*.test.ts",
-    "src/ts/**/*.test.tsx"
-  ],
+  "exclude": [],
   "noEmit": true
 }

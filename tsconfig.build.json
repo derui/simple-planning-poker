@@ -5,5 +5,9 @@
     "src/ts/**/*.tsx",
     "src/ts/index.tsx"
   ],
-  "types": ["jest"]
+  "exclude": [
+    "src/ts/**/*.test.ts",
+    "src/ts/**/*.test.tsx",
+  ],
+  "types": ["vite/client"]
 }
