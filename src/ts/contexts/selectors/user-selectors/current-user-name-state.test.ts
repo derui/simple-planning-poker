@@ -5,7 +5,7 @@ import { currentUserNameState } from "./current-user-name-state";
 test("return empty string if user is not logged in", () =>
   createRoot((dispose) => {
     const value = currentUserNameState();
-    expect(value).toBe("");
+    expect(value()).toBe("");
     dispose();
   }));
 
@@ -15,6 +15,6 @@ test("return user name if user is logged in", () =>
 
     const value = currentUserNameState();
 
-    expect(value).toBe("foobar");
+    expect(value()).toBe("foobar");
     dispose();
   }));

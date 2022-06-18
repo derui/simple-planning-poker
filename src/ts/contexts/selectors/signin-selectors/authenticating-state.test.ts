@@ -5,7 +5,7 @@ import { setSignInState } from "@/status/signin/signals/signin-state";
 test("user is not authenticating if state is default", async () =>
   createRoot((dispose) => {
     const value = authenticatingState();
-    expect(value).toBe(false);
+    expect(value()).toBe(false);
     dispose();
   }));
 
@@ -14,6 +14,6 @@ test("get authenticating", async () =>
     setSignInState((prev) => ({ ...prev, authenticating: true }));
 
     const value = authenticatingState();
-    expect(value).toBe(true);
+    expect(value()).toBe(true);
     dispose();
   }));

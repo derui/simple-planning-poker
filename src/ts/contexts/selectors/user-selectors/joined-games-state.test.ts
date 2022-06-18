@@ -6,7 +6,7 @@ test("return empty list if default state", () =>
   createRoot((dispose) => {
     const value = joinedGamesState();
 
-    expect(value).toHaveLength(0);
+    expect(value()).toHaveLength(0);
     dispose();
   }));
 
@@ -18,7 +18,7 @@ test("return joined games if user joined", () =>
 
     const value = joinedGamesState();
 
-    expect(value).toHaveLength(1);
+    expect(value()).toHaveLength(1);
 
     dispose();
   }));
