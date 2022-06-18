@@ -25,7 +25,7 @@ specifiers:
   eslint-plugin-unused-imports: ^2.0.0
   eslint_d: ^12.0.0
   firebase: ^9.6.10
-  firebase-tools: ^10.6.0
+  firebase-tools: ^10.9.2
   html-webpack-plugin: ^5.5.0
   jest: ^27.5.1
   npm-run-all: ^4.1.5
@@ -35,6 +35,7 @@ specifiers:
   postcss-import: ^14.1.0
   postcss-nesting: ^10.1.4
   prettier: ^2.6.2
+  solid-app-router: ^0.4.0
   solid-js: ^1.4.4
   solid-testing-library: ^0.3.0
   stylelint: ^14.6.1
@@ -56,6 +57,7 @@ dependencies:
   classnames: 2.3.1
   crypto-js: 4.1.1
   firebase: 9.8.3
+  solid-app-router: 0.4.0_solid-js@1.4.4
   solid-js: 1.4.4
   uuid: 8.3.2
 
@@ -2233,17 +2235,18 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@npmcli/fs/1.1.1:
-    resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
+  /@npmcli/fs/2.1.0:
+    resolution: {integrity: sha512-DmfBvNXGaetMxj9LTp8NAN9vEidXURrf5ZTslQzEAi/6GbW+4yjaLFQc6Tue5cpZ9Frlk4OBo/Snf1Bh/S7qTQ==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       '@gar/promisify': 1.1.3
       semver: 7.3.7
     dev: true
     optional: true
 
-  /@npmcli/move-file/1.1.2:
-    resolution: {integrity: sha512-1SUf/Cg2GzGDyaf15aR9St9TWlb+XvbZXWpDx8YKs7MLzMH/BCeopv+y9vzrzgkfykCGuWOlSu3mZhj2+FQcrg==}
-    engines: {node: '>=10'}
+  /@npmcli/move-file/2.0.0:
+    resolution: {integrity: sha512-UR6D5f4KEGWJV6BGPH3Qb2EtgH+t+1XQ1Tt85c7qicN6cezzuHPdZwwAxqZr4JLtnQu0LZsTza/5gmNmSl8XLg==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       mkdirp: 1.0.4
       rimraf: 3.0.2
@@ -2350,6 +2353,12 @@ packages:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
     dev: true
+
+  /@tootallnate/once/2.0.0:
+    resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
+    engines: {node: '>= 10'}
+    dev: true
+    optional: true
 
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -3685,6 +3694,13 @@ packages:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
+  /brace-expansion/2.0.1:
+    resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
+    dependencies:
+      balanced-match: 1.0.2
+    dev: true
+    optional: true
+
   /braces/1.8.5:
     resolution: {integrity: sha512-xU7bpz2ytJl1bH9cgIurjpg/n8Gohy9GTw81heDYLJQ4RU60dlyJsa+atVF2pI0yMMvKxI9HkKwjePCj5XI1hw==}
     engines: {node: '>=0.10.0'}
@@ -3787,17 +3803,17 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /cacache/15.3.0:
-    resolution: {integrity: sha512-VVdYzXEn+cnbXpFgWs5hTT7OScegHVmLhJIR8Ufqk3iFD6A6j5iSX1KuBTfNEv4tdJWE2PzA6IVFtcLC7fN9wQ==}
-    engines: {node: '>= 10'}
+  /cacache/16.1.1:
+    resolution: {integrity: sha512-VDKN+LHyCQXaaYZ7rA/qtkURU+/yYhviUdvqEv2LT6QPZU8jpyzEkEVAcKlKLt5dJ5BRp11ym8lo3NKLluEPLg==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
-      '@npmcli/fs': 1.1.1
-      '@npmcli/move-file': 1.1.2
+      '@npmcli/fs': 2.1.0
+      '@npmcli/move-file': 2.0.0
       chownr: 2.0.0
       fs-minipass: 2.1.0
-      glob: 7.2.3
+      glob: 8.0.3
       infer-owner: 1.0.4
-      lru-cache: 6.0.0
+      lru-cache: 7.10.1
       minipass: 3.1.6
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
@@ -3806,7 +3822,7 @@ packages:
       p-map: 4.0.0
       promise-inflight: 1.0.1
       rimraf: 3.0.2
-      ssri: 8.0.1
+      ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
     transitivePeerDependencies:
@@ -6563,6 +6579,18 @@ packages:
       once: 1.4.0
       path-is-absolute: 1.0.1
 
+  /glob/8.0.3:
+    resolution: {integrity: sha512-ull455NHSHI/Y1FqGaaYFaLGkNMMJbavMrEGFXG/PGrg6y7sutWHUHrz6gy6WEBH6akM1M414dWKCNs+IhKdiQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      fs.realpath: 1.0.0
+      inflight: 1.0.6
+      inherits: 2.0.4
+      minimatch: 5.1.0
+      once: 1.4.0
+    dev: true
+    optional: true
+
   /glob2base/0.0.12:
     resolution: {integrity: sha512-ZyqlgowMbfj2NPjxaZZ/EtsXlOch28FRXgMd64vqZWk1bT9+wvSRLYD1om9M7QfQru51zJPAT17qXm4/zd+9QA==}
     engines: {node: '>= 0.10'}
@@ -6972,6 +7000,18 @@ packages:
       - supports-color
     dev: true
 
+  /http-proxy-agent/5.0.0:
+    resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
+    engines: {node: '>= 6'}
+    dependencies:
+      '@tootallnate/once': 2.0.0
+      agent-base: 6.0.2
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+    optional: true
+
   /http-proxy-middleware/2.0.6_@types+express@4.17.13:
     resolution: {integrity: sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==}
     engines: {node: '>=12.0.0'}
@@ -7152,8 +7192,8 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /install-artifact-from-github/1.3.0:
-    resolution: {integrity: sha512-iT8v1GwOAX0pPXifF/5ihnMhHOCo3OeK7z3TQa4CtSNCIg8k0UxqBEk9jRwz8OP68hHXvJ2gxRa89KYHtBkqGA==}
+  /install-artifact-from-github/1.3.1:
+    resolution: {integrity: sha512-3l3Bymg2eKDsN5wQuMfgGEj2x6l5MCAv0zPL6rxHESufFVlEAKW/6oY9F1aGgvY/EgWm5+eWGRjINveL4X7Hgg==}
     hasBin: true
     dev: true
     optional: true
@@ -8676,6 +8716,12 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /lru-cache/7.10.1:
+    resolution: {integrity: sha512-BQuhQxPuRl79J5zSXRP+uNzPOyZw2oFI9JLRQ80XswSvg21KMKNtQza9eF42rfI/3Z40RvzBdXgziEkudzjo8A==}
+    engines: {node: '>=12'}
+    dev: true
+    optional: true
+
   /lru-queue/0.1.0:
     resolution: {integrity: sha512-BpdYkt9EvGl8OfWHDQPISVpcl5xZthb+XPsbELj5AQXxIC8IriDZIQYjBJPEm5rS420sjZ0TLEzRcq5KdBhYrQ==}
     dependencies:
@@ -8698,26 +8744,26 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
 
-  /make-fetch-happen/9.1.0:
-    resolution: {integrity: sha512-+zopwDy7DNknmwPQplem5lAZX/eCOzSvSNNcSKm5eVwTkOBzoktEfXsa9L23J/GIRhxRsaxzkPEhrJEpE2F4Gg==}
-    engines: {node: '>= 10'}
+  /make-fetch-happen/10.1.7:
+    resolution: {integrity: sha512-J/2xa2+7zlIUKqfyXDCXFpH3ypxO4k3rgkZHPSZkyUYcBT/hM80M3oyKLM/9dVriZFiGeGGS2Ei+0v2zfhqj3Q==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       agentkeepalive: 4.2.1
-      cacache: 15.3.0
+      cacache: 16.1.1
       http-cache-semantics: 4.1.0
-      http-proxy-agent: 4.0.1
+      http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-lambda: 1.0.1
-      lru-cache: 6.0.0
+      lru-cache: 7.10.1
       minipass: 3.1.6
       minipass-collect: 1.0.2
-      minipass-fetch: 1.4.1
+      minipass-fetch: 2.1.0
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
       negotiator: 0.6.3
       promise-retry: 2.0.1
-      socks-proxy-agent: 6.2.1
-      ssri: 8.0.1
+      socks-proxy-agent: 7.0.0
+      ssri: 9.0.1
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -8954,6 +9000,14 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
 
+  /minimatch/5.1.0:
+    resolution: {integrity: sha512-9TPBGGak4nHfGZsPBohm9AWg6NoT7QTCehS3BIJABslyZbzxfV78QM2Y6+i741OPZIafFAaiiEMh5OyIrJPgtg==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
+    optional: true
+
   /minimist-options/4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}
     engines: {node: '>= 6'}
@@ -8975,9 +9029,9 @@ packages:
     dev: true
     optional: true
 
-  /minipass-fetch/1.4.1:
-    resolution: {integrity: sha512-CGH1eblLq26Y15+Azk7ey4xh0J/XfJfrCox5LDJiKqI2Q2iwOLOKrlmIaODiSQS8d18jalF6y2K2ePUm0CmShw==}
-    engines: {node: '>=8'}
+  /minipass-fetch/2.1.0:
+    resolution: {integrity: sha512-H9U4UVBGXEyyWJnqYDCLp1PwD8XIkJ4akNHp1aGVI+2Ym7wQMlxDKi4IB4JbmyU+pl9pEs/cVrK6cOuvmbK4Sg==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       minipass: 3.1.6
       minipass-sized: 1.0.3
@@ -9174,15 +9228,15 @@ packages:
     engines: {node: '>= 6.13.0'}
     dev: true
 
-  /node-gyp/8.4.1:
-    resolution: {integrity: sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w==}
-    engines: {node: '>= 10.12.0'}
+  /node-gyp/9.0.0:
+    resolution: {integrity: sha512-Ma6p4s+XCTPxCuAMrOA/IJRmVy16R8Sdhtwl4PrCr7IBlj4cPawF0vg/l7nOT1jPbuNS7lIRJpBSvVsXwEZuzw==}
+    engines: {node: ^12.22 || ^14.13 || >=16}
     hasBin: true
     dependencies:
       env-paths: 2.2.1
       glob: 7.2.3
       graceful-fs: 4.2.10
-      make-fetch-happen: 9.1.0
+      make-fetch-happen: 10.1.7
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
@@ -10446,13 +10500,13 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
-  /re2/1.17.4:
-    resolution: {integrity: sha512-xyZ4h5PqE8I9tAxTh3G0UttcK5ufrcUxReFjGzfX61vtanNbS1XZHjnwRSyPcLgChI4KLxVgOT/ioZXnUAdoTA==}
+  /re2/1.17.7:
+    resolution: {integrity: sha512-X8GSuiBoVWwcjuppqSjsIkRxNUKDdjhkO9SBekQbZ2ksqWUReCy7DQPWOVpoTnpdtdz5PIpTTxTFzvJv5UMfjA==}
     requiresBuild: true
     dependencies:
-      install-artifact-from-github: 1.3.0
+      install-artifact-from-github: 1.3.1
       nan: 2.16.0
-      node-gyp: 8.4.1
+      node-gyp: 9.0.0
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -11209,8 +11263,8 @@ packages:
       - supports-color
     dev: true
 
-  /socks-proxy-agent/6.2.1:
-    resolution: {integrity: sha512-a6KW9G+6B3nWZ1yB8G7pJwL3ggLy1uTzKAgCb7ttblwqdz9fMGJUuTy3uFzEP48FAs9FLILlmzDlE2JJhVQaXQ==}
+  /socks-proxy-agent/7.0.0:
+    resolution: {integrity: sha512-Fgl0YPZ902wEsAyiQ+idGd1A7rSFx/ayC1CQVMw5P+EQx2V0SgpGtf6OKFhVjPflPUl9YMmEOnmfjCdMUsygww==}
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
@@ -11228,6 +11282,14 @@ packages:
       ip: 1.1.8
       smart-buffer: 4.2.0
     dev: true
+
+  /solid-app-router/0.4.0_solid-js@1.4.4:
+    resolution: {integrity: sha512-v9alJo6XQ1z5e7GMmj6LQrYyqReacsi2PH0/eQf0OUZE0wrcnfnQrocTZEC2j/0Hr5kFN8EBck4u/++yIBS7xg==}
+    peerDependencies:
+      solid-js: ^1.3.5
+    dependencies:
+      solid-js: 1.4.4
+    dev: false
 
   /solid-js/1.4.4:
     resolution: {integrity: sha512-nf/cbRzMuhb5UjbRDNfSJPqHKzUxNb9YgCQwijPUbdA3koQ/hWrz/lj0ter3lvThgxinvGPtXofDGy9bsKrXqA==}
@@ -11379,9 +11441,9 @@ packages:
       tweetnacl: 0.14.5
     dev: true
 
-  /ssri/8.0.1:
-    resolution: {integrity: sha512-97qShzy1AiyxvPNIkLWoGua7xoQzzPjQ0HAH4B0rWKo7SZ6USuPcrUiAFrws0UH8RrbWmgq3LMTObhPIHbbBeQ==}
-    engines: {node: '>= 8'}
+  /ssri/9.0.1:
+    resolution: {integrity: sha512-o57Wcn66jMQvfHG1FlYbWeZWW/dHZhJXjpIcTfXldXEk5nz5lStPo3mK0OJQfGR3RbZUlbISexbljkJzuEj/8Q==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       minipass: 3.1.6
     dev: true
@@ -11683,7 +11745,7 @@ packages:
       string-length: 1.0.1
       update-notifier: 4.1.3
     optionalDependencies:
-      re2: 1.17.4
+      re2: 1.17.7
     transitivePeerDependencies:
       - bluebird
       - supports-color
