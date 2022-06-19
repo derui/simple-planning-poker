@@ -27,7 +27,7 @@ const CardHolderComponent = () => {
       }
     });
   };
-  const selectedIndex = () => currentPlayerSelectedCard()?.valueMaybe()?.index ?? null;
+  const selectedIndex = () => currentPlayerSelectedCard()?.index ?? null;
 
   return (
     <CardHolder displays={displays()} selectedIndex={selectedIndex()} onClickCard={(index) => selectCard(index)} />

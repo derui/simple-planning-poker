@@ -15,13 +15,11 @@ const toStatus = (game: GameViewModel) => {
 };
 
 const currentGameState = () =>
-  createMemo<GameState | null>(() => {
+  createMemo<GameState | null>((prev) => {
     const loadable = gameStore.viewModel;
 
     if (gameStore.state === "loading") {
-      return null;
-      // } else if (gameStore.state ) {
-      //   return errorOf();
+      return prev;
     } else {
       if (loadable) {
         return {
@@ -31,6 +29,6 @@ const currentGameState = () =>
       }
       return null;
     }
-  });
+  }, null);
 
 export { currentGameState };

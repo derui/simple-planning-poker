@@ -21,6 +21,7 @@ const userHandsState = () =>
   createMemo<State>(() => {
     const gameState = currentGameState();
     const game = gameState()?.viewModel;
+    console.log(game);
     if (!game) {
       return { upperLine: [], lowerLine: [] };
     }

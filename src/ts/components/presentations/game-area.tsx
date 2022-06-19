@@ -15,7 +15,9 @@ interface Props {
 
 const GameProgressionButton = (props: Omit<Props, "lines"> & { loading: boolean }) => {
   const isInspector = () => props.userMode === UserMode.inspector;
-  const status = () => props.gameStatus;
+  const isShowedDown = () => !props.loading && props.gameStatus === "ShowedDown";
+  const isEmptyUserHand = () => !props.loading && props.gameStatus === "EmptyUserHand";
+  const canShowDown = () => !props.loading && props.gameStatus === "CanShowDown";
 
   return (
     <Switch>
@@ -27,15 +29,15 @@ const GameProgressionButton = (props: Omit<Props, "lines"> & { loading: boolean 
       <Match when={isInspector()}>
         <span class="app__game__main__game-management-button--waiting">Inspecting...</span>
       </Match>
-      <Match when={!status() || status() === "ShowedDown"}>
+      <Match when={isShowedDown()}>
         <span class="app__game__main__game-management-button--waiting">
           <Grid />
         </span>
       </Match>
-      <Match when={status() === "EmptyUserHand"}>
+      <Match when={isEmptyUserHand()}>
         <span class="app__game__main__game-management-button--waiting">Waiting to select card...</span>
       </Match>
-      <Match when={status() === "CanShowDown"}>
+      <Match when={canShowDown()}>
         <button class="app__game__main__game-management-button--show-down" onClick={() => props.onShowDown()}>
           Show down!
         </button>
@@ -90,7 +92,7 @@ export const GameArea: Component<Props> = (props) => {
             loading={transition()}
             userMode={props.userMode}
             gameStatus={props.gameStatus}
-            onShowDown={props.onShowDown}
+            onShowDown={() => props.onShowDown()}
           />
         </div>
         <Hand loading={transition()} position="lower" hands={props.lines.lowerLine} />
