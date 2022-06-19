@@ -1,4 +1,4 @@
-import { Component, For } from "solid-js";
+import { Component, Index } from "solid-js";
 import { SelectableCard } from "./selectable-card";
 
 interface Props {
@@ -8,17 +8,15 @@ interface Props {
 }
 
 export const CardHolder: Component<Props> = (props) => {
+  const isSelected = (index: number) => index === props.selectedIndex;
+
   return (
     <div class="app__game__card-holder">
-      <For each={props.displays}>
+      <Index each={props.displays}>
         {(display, index) => (
-          <SelectableCard
-            display={display}
-            selected={index() === props.selectedIndex}
-            onClick={() => props.onClickCard(index())}
-          />
+          <SelectableCard display={display()} selected={isSelected(index)} onClick={() => props.onClickCard(index)} />
         )}
-      </For>
+      </Index>
     </div>
   );
 };

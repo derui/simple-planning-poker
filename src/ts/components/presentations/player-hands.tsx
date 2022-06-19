@@ -9,13 +9,13 @@ interface Props {
 export const PlayerHands: Component<Props> = (props) => {
   const isUpper = () => props.position === "upper";
   const isLower = () => props.position === "lower";
-  const className = {
+  const className = () => ({
     "app__game__main__users-in-upper": isUpper(),
     "app__game__main__users-in-lower": isLower(),
-  };
+  });
 
   return (
-    <div classList={className}>
+    <div classList={className()}>
       <For each={props.userHands}>
         {(v) => {
           const childProps = mergeProps(v, { namePosition: props.position });

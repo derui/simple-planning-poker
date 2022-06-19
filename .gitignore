@@ -5,6 +5,8 @@ yarn-error.log
 .firebase/
 .firebaserc
 
+generated/
+
 database-debug.log
 ui-debug.log
 firebase-debug.log

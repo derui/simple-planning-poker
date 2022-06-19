@@ -8,32 +8,37 @@ export interface UserInfoProps {
   onChangeMode: (mode: UserMode) => void;
 }
 
-const NameEditor = (name: string, setName: (name: string) => void) => {
+const NameEditor: Component<{ name: string; setName: (name: string) => void }> = (props) => {
   return (
     <div class="app__game__user-info-updater__name-editor">
       <label class="app__game__user-info-updater__name-editor__label">Name</label>
       <input
         class="app__game__user-info-updater__name-editor__input"
         type="text"
-        value={name}
-        onInput={(e) => setName(e.currentTarget.value)}
+        value={props.name}
+        onInput={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          props.setName(e.currentTarget.value);
+        }}
       />
     </div>
   );
 };
 
-const ModeChanger = (mode: UserMode, setMode: (name: UserMode) => void) => {
+const ModeChanger: Component<{ mode: UserMode; setMode: (name: UserMode) => void }> = (props) => {
   let ref: HTMLInputElement | undefined;
-  const checked = mode === UserMode.inspector;
-  const railClass = {
-    "app__game__user-info-updater__mode-changer__switch__rail": true,
-    "app__game__user-info-updater__mode-changer__switch__rail--checked": checked,
-  };
 
-  const boxClass = {
+  const checked = () => props.mode === UserMode.inspector;
+  const railClass = () => ({
+    "app__game__user-info-updater__mode-changer__switch__rail": true,
+    "app__game__user-info-updater__mode-changer__switch__rail--checked": checked(),
+  });
+
+  const boxClass = () => ({
     "app__game__user-info-updater__mode-changer__switch__box": true,
-    "app__game__user-info-updater__mode-changer__switch__box--checked": checked,
-  };
+    "app__game__user-info-updater__mode-changer__switch__box--checked": checked(),
+  });
 
   return (
     <div class="app__game__user-info-updater__mode-changer">
@@ -41,15 +46,16 @@ const ModeChanger = (mode: UserMode, setMode: (name: UserMode) => void) => {
       <div class="app__game__user-info-updater__mode-changer__switch-container">
         <span class="app__game__user-info-updater__mode-changer__switch-label">Off</span>
         <span class="app__game__user-info-updater__mode-changer__switch">
-          <span classList={railClass} onClick={() => ref?.click()}>
-            <span classList={boxClass}></span>
+          <span classList={railClass()} onClick={() => ref?.click()}>
+            <span classList={boxClass()}></span>
           </span>
           <input
             ref={ref}
             class="app__game__user-info-updater__mode-changer__switch__input"
             type="checkbox"
-            checked={checked}
-            onChange={(e) => (e.currentTarget.checked ? setMode(UserMode.inspector) : setMode(UserMode.normal))}
+            onclick={() => {
+              checked() ? props.setMode(UserMode.normal) : props.setMode(UserMode.inspector);
+            }}
           />
         </span>
         <span class="app__game__user-info-updater__mode-changer__switch-label">On</span>
@@ -58,10 +64,14 @@ const ModeChanger = (mode: UserMode, setMode: (name: UserMode) => void) => {
   );
 };
 
-const UpdateApplyer = (allowApplying: boolean, submit: () => void) => {
+const UpdateApplyer: Component<{ allowApplying: boolean; submit: () => void }> = (props) => {
   return (
     <div class="app__game__user-info-updater__applyer">
-      <button disabled={!allowApplying} class="app__game__user-info-updater__name-editor__submit" onClick={submit}>
+      <button
+        disabled={!props.allowApplying}
+        class="app__game__user-info-updater__name-editor__submit"
+        onClick={() => props.submit()}
+      >
         update
       </button>
     </div>
@@ -80,12 +90,15 @@ export const UserInfoUpdater: Component<UserInfoProps> = (props) => {
         e.preventDefault();
       }}
     >
-      {NameEditor(currentName(), setCurrentName)}
-      {ModeChanger(currentMode(), setMode)}
-      {UpdateApplyer(currentName() !== "", () => {
-        props.onChangeName(currentName());
-        props.onChangeMode(currentMode());
-      })}
+      <NameEditor name={currentName()} setName={setCurrentName} />
+      <ModeChanger mode={currentMode()} setMode={setMode} />
+      <UpdateApplyer
+        allowApplying={currentName() !== ""}
+        submit={() => {
+          props.onChangeName(currentName());
+          props.onChangeMode(currentMode());
+        }}
+      />
     </div>
   );
 };

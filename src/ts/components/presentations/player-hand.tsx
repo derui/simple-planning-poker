@@ -12,14 +12,14 @@ export interface PlayerHandProps {
 }
 
 export const PlayerHand: Component<PlayerHandProps> = (props) => {
-  const className = {
+  const className = () => ({
     "app__game__main__user-hand-container": true,
     "app__game__main__user-hand-container--flipped": props.namePosition === "lower",
-  };
+  });
 
   return (
     <div class="app__game__main__user-hand">
-      <div classList={className}>
+      <div classList={className()}>
         <span class="app__game__main__user-hand__user-name">{props.name}</span>
         <PlayerCard
           mode={props.mode}

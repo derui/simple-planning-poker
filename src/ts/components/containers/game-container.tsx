@@ -17,7 +17,7 @@ const CardHolderComponent = () => {
   const selectCard = useSelectCard();
   const { selectableCards, currentPlayerSelectedCard } = useGameSelectors();
   const displays = () => {
-    const cards = selectableCards().valueMaybe() ?? [];
+    const cards = selectableCards();
     return cards.map((v) => {
       switch (v.kind) {
         case "giveup":
@@ -40,7 +40,7 @@ export const GameContainer: Component<Props> = () => {
   const { currentGameName, userHands, currentPlayerInformation, currentGame } = useGameSelectors();
   const changeName = useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
-  const signature = currentGame()?.viewModel?.invitationSignature;
+  const signature = () => currentGame()?.viewModel?.invitationSignature || "";
   const currentStatus = () => currentGame()?.status;
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
@@ -80,7 +80,7 @@ export const GameContainer: Component<Props> = () => {
           navigate("/", { replace: true });
         }}
         origin={document.location.origin}
-        invitationSignature={signature || ""}
+        invitationSignature={signature()}
       />
       <main class="app__game__main">
         <GameArea onShowDown={showDown} gameStatus={currentStatus()} lines={userHands()} userMode={currentUserMode()} />

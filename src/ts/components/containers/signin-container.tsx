@@ -1,6 +1,6 @@
 import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useSignInSelectors } from "@/contexts/selectors/signin-selectors";
-import { useNavigate } from "solid-app-router";
+import { Link, useNavigate } from "solid-app-router";
 import { Component, createRenderEffect, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
@@ -26,7 +26,7 @@ export const SignInContainer: Component = () => {
   return (
     <SignInComponent title="Sign In" onSubmit={onSubmit} authenticating={authenticating()}>
       <p class="app__signin-main__sign-up-link">
-        or <a href="/signup">Sign up</a>
+        or <Link href="/signup">Sign up</Link>
       </p>
     </SignInComponent>
   );

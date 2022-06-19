@@ -11,16 +11,17 @@ interface Props {
 
 export const UserInfo: Component<Props> = (props) => {
   const [showUpdater, setShowUpdater] = createSignal(false);
-  const indicatorClassName = {
+
+  const indicatorClassName = () => ({
     "app__game__user-info__indicator": true,
     "app__game__user-info__indicator--opened": showUpdater(),
-  };
+  });
 
   return (
     <div class="app__game__user-info" onClick={() => setShowUpdater(!showUpdater())}>
       <span class="app__game__user-info__icon"></span>
       <span class="app__game__user-info__name">{props.name}</span>
-      <span classList={indicatorClassName}></span>
+      <span classList={indicatorClassName()}></span>
       <Show when={showUpdater()}>
         <UserInfoUpdater
           name={props.name}
