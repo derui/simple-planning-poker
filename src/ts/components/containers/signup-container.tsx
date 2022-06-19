@@ -7,14 +7,14 @@ import { SignInComponent } from "../presentations/signin";
 interface Props {}
 
 export const SignUpContainer: Component<ParentProps<Props>> = () => {
-  const { authenticating, locationToNavigate } = useSignInSelectors();
+  const { authenticating } = useSignInSelectors();
   const navigate = useNavigate();
   const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signUp = action.useSignUp();
 
   const signInCallback = () => {
-    navigate(locationToNavigate(), { replace: true });
+    navigate("/", { replace: true });
   };
 
   createEffect(() => {

@@ -1,5 +1,5 @@
-import { Component } from "solid-js";
-import { Outlet, useLocation, useNavigate, useRoutes } from "solid-app-router";
+import { Component, Show } from "solid-js";
+import { Navigate, Outlet, Location, useNavigate, useRoutes } from "solid-app-router";
 import { GameContainer } from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
 import { GameResultContainer } from "./components/containers/game-result-container";
@@ -7,20 +7,25 @@ import { InvitationContainer } from "./components/containers/invitation-containe
 import { SignInContainer } from "./components/containers/signin-container";
 import { SignUpContainer } from "./components/containers/signup-container";
 import { useSignInSelectors } from "./contexts/selectors/signin-selectors";
-import { setSignInState } from "./status/signin/signals/signin-state";
 import { GameSelectorContainer } from "./components/containers/game-selector-container";
 
 const PrivateRoute: Component = () => {
   const { authenticated } = useSignInSelectors();
-  const location = useLocation<{ from: string }>();
-  const navigate = useNavigate();
 
-  if (!authenticated()) {
-    setSignInState((prev) => ({ ...prev, locationToNavigate: location.pathname }));
-    navigate("/signin", { replace: true });
-  }
+  const navigateToSignin = (args: { location: Location }) => {
+    return `/signin?from=${args.location.pathname}`;
+  };
 
-  return <Outlet />;
+  return (
+    <>
+      <Show when={!authenticated()}>
+        <Navigate href={navigateToSignin} />
+      </Show>
+      <Show when={authenticated()}>
+        <Outlet />
+      </Show>
+    </>
+  );
 };
 
 const Redirector = () => {
