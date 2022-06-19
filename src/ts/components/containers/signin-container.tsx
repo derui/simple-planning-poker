@@ -15,7 +15,7 @@ export const SignInContainer: Component = () => {
     navigate(locationToNavigate(), { replace: true });
   };
 
-  const onSubmit = (email: string, password: string) => {
+  const onSubmit = () => (email: string, password: string) => {
     signIn(email, password, signInCallback());
   };
 
@@ -24,7 +24,7 @@ export const SignInContainer: Component = () => {
   });
 
   return (
-    <SignInComponent title="Sign In" onSubmit={onSubmit} authenticating={authenticating()}>
+    <SignInComponent title="Sign In" onSubmit={onSubmit()} authenticating={authenticating()}>
       <p class="app__signin-main__sign-up-link">
         or <Link href="/signup">Sign up</Link>
       </p>

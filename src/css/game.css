@@ -156,6 +156,12 @@
   justify-content: center;
 }
 
+.app__game__main__game-management-button-grid {
+  flex: 1 1 auto;
+    width: 80px;
+    height: 80px;
+}
+
 .app__game__main__game-management-button--waiting {
   flex: 0 1 auto;
 }

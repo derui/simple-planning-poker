@@ -37,7 +37,7 @@ const Hand: Component<{ position: "upper" | "lower"; hands: UserHandViewModel[] 
         <PlayerHands position={props.position} userHands={convertHands(hands())} />
       </Match>
       <Match when={!hands()}>
-        <PlayerHandsWithSpinner />
+        <PlayerHandsWithSpinner position={props.position} />
       </Match>
     </Switch>
   );
