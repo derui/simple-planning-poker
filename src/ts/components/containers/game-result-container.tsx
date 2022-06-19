@@ -3,7 +3,6 @@ import { UserMode } from "@/domains/game-player";
 import { GameId } from "@/domains/game";
 import { gameActionsContext } from "@/contexts/actions/game-actions";
 import { userActionsContext } from "@/contexts/actions/user-actions";
-import { mapFuture } from "@/status/util";
 import { AveragePointShowcaseWithSpinner } from "../presentations/average-point-showcase-with-spinner";
 import { AveragePointShowcase } from "../presentations/average-point-showcase";
 import { GameResultArea } from "../presentations/game-result-area";
@@ -43,8 +42,8 @@ export const GameResultContainer: Component<Props> = () => {
   const changeMode = gameActions.useChangeUserMode();
   const currentUserName = () => currentPlayerInformation().name || "";
   const currentUserMode = () => currentPlayerInformation().mode ?? UserMode.normal;
-  const signature = () => currentGame().valueMaybe()?.viewModel?.invitationSignature || "";
-  const currentStatus = () => mapFuture(currentGame(), (v) => v.status);
+  const signature = () => currentGame()?.viewModel?.invitationSignature || "";
+  const currentStatus = () => currentGame()?.status;
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
@@ -57,8 +56,8 @@ export const GameResultContainer: Component<Props> = () => {
   });
 
   createEffect(() => {
-    if (currentStatus().valueMaybe() !== "ShowedDown") {
-      navigate(`/game/${param.gameId}`, { replace: true });
+    if (currentStatus() !== "ShowedDown") {
+      navigate(`/game/play/${param.gameId}`, { replace: true });
     }
   });
 

@@ -7,7 +7,7 @@ import { currentGameState } from "./current-game-state";
 const showDownResultState = () =>
   createMemo<Future<ShowDownResultViewModel>>(() => {
     const gameState = currentGameState();
-    const game = gameState().valueMaybe()?.viewModel;
+    const game = gameState()?.viewModel;
     if (!game || !game.showedDown) {
       return pendingOf();
     }

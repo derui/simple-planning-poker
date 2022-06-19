@@ -1,8 +1,15 @@
 import { createSignal } from "solid-js";
 
-const [signInState, setSignInState] = createSignal<{ authenticating: boolean; authenticated: boolean }>({
+interface Signal {
+  authenticating: boolean;
+  authenticated: boolean;
+  locationToNavigate: string;
+}
+
+const [signInState, setSignInState] = createSignal<Signal>({
   authenticating: false,
   authenticated: false,
+  locationToNavigate: "/",
 });
 
 export { signInState, setSignInState };

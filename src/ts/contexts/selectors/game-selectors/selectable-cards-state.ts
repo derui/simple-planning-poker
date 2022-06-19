@@ -6,7 +6,7 @@ import { currentGameState } from "./current-game-state";
 const selectableCardsState = () =>
   createMemo<Future<Card[]>>(() => {
     const gameState = currentGameState();
-    const game = gameState().valueMaybe()?.viewModel;
+    const game = gameState()?.viewModel;
 
     if (!game) {
       return pendingOf();

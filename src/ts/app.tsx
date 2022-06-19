@@ -1,68 +1,66 @@
-import { children, Component, ParentProps } from "solid-js";
-import { useLocation, useNavigate, useRoutes } from "solid-app-router";
+import { Component } from "solid-js";
+import { Outlet, useLocation, useNavigate, useRoutes } from "solid-app-router";
 import { GameContainer } from "./components/containers/game-container";
 import { GameCreatorContainer } from "./components/containers/game-creator-container";
-import { GameSelectorContainer } from "./components/containers/game-selector-container";
 import { GameResultContainer } from "./components/containers/game-result-container";
 import { InvitationContainer } from "./components/containers/invitation-container";
 import { SignInContainer } from "./components/containers/signin-container";
 import { SignUpContainer } from "./components/containers/signup-container";
 import { useSignInSelectors } from "./contexts/selectors/signin-selectors";
+import { setSignInState } from "./status/signin/signals/signin-state";
+import { GameSelectorContainer } from "./components/containers/game-selector-container";
 
-const PrivateRoute: Component<ParentProps> = (props) => {
+const PrivateRoute: Component = () => {
   const { authenticated } = useSignInSelectors();
   const location = useLocation<{ from: string }>();
   const navigate = useNavigate();
-  const childRoute = children(() => props.children);
 
   if (!authenticated()) {
-    console.log(location.pathname);
-    navigate("/signin", { replace: true, state: { from: location.pathname } });
+    setSignInState((prev) => ({ ...prev, locationToNavigate: location.pathname }));
+    navigate("/signin", { replace: true });
   }
 
-  return childRoute;
+  return <Outlet />;
+};
+
+const Redirector = () => {
+  const navigate = useNavigate();
+
+  navigate("/game", { replace: true });
+
+  return null;
 };
 
 const routes = [
   {
-    path: "/game/create",
-    component: () => (
-      <PrivateRoute>
-        <GameCreatorContainer />
-      </PrivateRoute>
-    ),
-  },
-  {
     path: "/",
-    component: () => (
-      <PrivateRoute>
-        <GameSelectorContainer />
-      </PrivateRoute>
-    ),
+    component: () => <Redirector />,
   },
   {
-    path: "/game/:gameId",
-    component: () => (
-      <PrivateRoute>
-        <GameContainer />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/game/:gameId/result",
-    component: () => (
-      <PrivateRoute>
-        <GameResultContainer />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/invitation/:signature",
-    component: () => (
-      <PrivateRoute>
-        <InvitationContainer />
-      </PrivateRoute>
-    ),
+    path: "/game",
+    component: () => <PrivateRoute />,
+    children: [
+      {
+        path: "/create",
+        component: () => <GameCreatorContainer />,
+      },
+      {
+        path: "/",
+        component: () => <GameSelectorContainer />,
+      },
+      {
+        path: "/play/:gameId",
+        component: () => <GameContainer />,
+      },
+      {
+        path: "/result/:gameId",
+        component: () => <GameResultContainer />,
+      },
+      {
+        path: "/invitation/:signature",
+        component: () => <InvitationContainer />,
+      },
+    ],
   },
   {
     path: "/signin",

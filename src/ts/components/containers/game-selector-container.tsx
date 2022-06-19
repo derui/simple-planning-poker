@@ -22,7 +22,7 @@ export const GameSelectorContainer: Component<Props> = () => {
         <Show when={joinedGames().length > 0}>
           <For each={joinedGames()}>
             {(v) => (
-              <Link class="app__game-selector__main__selection-container" href={`/game/${v.id}`}>
+              <Link class="app__game-selector__main__selection-container" href={`/game/play/${v.id}`}>
                 <span class="app__game-selector__main__game-selector">{v.name}</span>
               </Link>
             )}

@@ -6,7 +6,6 @@ import { GameId } from "@/domains/game";
 import { gameActionsContext } from "@/contexts/actions/game-actions";
 import { userActionsContext } from "@/contexts/actions/user-actions";
 import { GameArea } from "../presentations/game-area";
-import { mapFuture } from "@/status/util";
 import { Component, createEffect, Match, Switch, useContext } from "solid-js";
 import { useNavigate, useParams } from "solid-app-router";
 import { useGameSelectors } from "@/contexts/selectors/game-selectors";
@@ -41,8 +40,8 @@ export const GameContainer: Component<Props> = () => {
   const { currentGameName, userHands, currentPlayerInformation, currentGame } = useGameSelectors();
   const changeName = useContext(userActionsContext).useChangeUserName();
   const changeMode = gameActions.useChangeUserMode();
-  const signature = currentGame().valueMaybe()?.viewModel?.invitationSignature;
-  const currentStatus = () => mapFuture(currentGame(), (v) => v.status);
+  const signature = currentGame()?.viewModel?.invitationSignature;
+  const currentStatus = () => currentGame()?.status;
   const openGame = gameActions.useOpenGame();
   const leaveGame = gameActions.useLeaveGame();
   const navigate = useNavigate();
@@ -63,8 +62,8 @@ export const GameContainer: Component<Props> = () => {
   });
 
   createEffect(() => {
-    if (currentStatus().valueMaybe() === "ShowedDown") {
-      navigate(`/game/${param.gameId}/result`, { replace: true });
+    if (currentStatus() === "ShowedDown") {
+      navigate(`/game/result/${param.gameId}`, { replace: true });
     }
   });
 

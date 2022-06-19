@@ -1,28 +1,26 @@
 import { signInActionContext } from "@/contexts/actions/signin-actions";
 import { useSignInSelectors } from "@/contexts/selectors/signin-selectors";
-import { useLocation, useNavigate } from "solid-app-router";
+import { useNavigate } from "solid-app-router";
 import { Component, createRenderEffect, useContext } from "solid-js";
 import { SignInComponent } from "../presentations/signin";
 
 export const SignInContainer: Component = () => {
-  const { authenticating } = useSignInSelectors();
-  const location = useLocation<{ from: string }>();
+  const { authenticating, locationToNavigate } = useSignInSelectors();
   const navigate = useNavigate();
   const action = useContext(signInActionContext);
   const applyAuthenticated = action.useApplyAuthenticated();
   const signIn = action.useSignIn();
-  const state = () => location.state?.from ?? "/";
 
-  const signInCallback = () => {
-    navigate(state(), { replace: true });
+  const signInCallback = () => () => {
+    navigate(locationToNavigate(), { replace: true });
   };
 
   const onSubmit = (email: string, password: string) => {
-    signIn(email, password, signInCallback);
+    signIn(email, password, signInCallback());
   };
 
   createRenderEffect(() => {
-    applyAuthenticated(signInCallback);
+    applyAuthenticated(signInCallback());
   });
 
   return (

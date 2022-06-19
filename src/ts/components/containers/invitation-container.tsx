@@ -11,7 +11,7 @@ export const InvitationContainer: Component<Props> = () => {
   const navigate = useNavigate();
 
   createEffect(() => {
-    joinUser(param.signature!!, (gameId) => navigate(`/game/${gameId}`, { replace: true }));
+    joinUser(param.signature!!, (gameId) => navigate(`/game/play/${gameId}`, { replace: true }));
   });
 
   return (

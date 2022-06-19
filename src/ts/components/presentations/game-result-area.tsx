@@ -2,14 +2,13 @@ import { PlayerHands } from "../presentations/player-hands";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { UserHandViewModel } from "@/status/game/types";
-import { Future } from "@/status/util";
 import { PlayerHandsWithSpinner } from "./player-hands-with-spinner";
 import { Component, Match, Switch } from "solid-js";
 
 interface Props {
   onNewGame: () => void;
   userMode: UserMode;
-  lines: Future<{ upperLine: UserHandViewModel[]; lowerLine: UserHandViewModel[] }>;
+  lines: { upperLine: UserHandViewModel[]; lowerLine: UserHandViewModel[] };
 }
 
 const GameProgressionButton = (props: Props) => {
@@ -51,9 +50,9 @@ export const GameResultArea: Component<Props> = (props) => {
     <div class="app__game__main__game-area">
       <div class="app__game__main__grid-container">
         <div class="app__game__main__upper-spacer"></div>
-        <Hand position="upper" hands={props.lines.valueMaybe()?.upperLine} />
+        <Hand position="upper" hands={props.lines.upperLine} />
         <div class="app__game__main__table">{button}</div>
-        <Hand position="lower" hands={props.lines.valueMaybe()?.lowerLine} />
+        <Hand position="lower" hands={props.lines.lowerLine} />
         <div class="app__game__main__lower-spacer"></div>
       </div>
     </div>

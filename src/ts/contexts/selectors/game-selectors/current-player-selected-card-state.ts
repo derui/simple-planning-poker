@@ -13,10 +13,10 @@ const currentPlayerSelectedCardState = () =>
   createMemo<Future<State | undefined>>(() => {
     const game = currentGameState()();
     const currentPlayer = currentGamePlayerState();
-    if (game.state !== "value" || !currentPlayer) {
+    if (!game || !currentPlayer) {
       return pendingOf();
     }
-    const viewModel = game.contents.viewModel;
+    const viewModel = game.viewModel;
 
     const userHand = viewModel.hands.find((v) => v.gamePlayerId === currentPlayer.id);
     if (!userHand) {

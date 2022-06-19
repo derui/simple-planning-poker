@@ -16,7 +16,7 @@ export const GameCreatorContainer: Component = () => {
       cards: cards()
         .split(",")
         .map((v) => Number(v.trim())),
-      callback: (gameId) => navigate(`/game/${gameId}`, { replace: true }),
+      callback: (gameId) => navigate(`/game/play/${gameId}`, { replace: true }),
     });
 
   return (
