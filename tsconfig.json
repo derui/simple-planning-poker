@@ -28,12 +28,12 @@
       ]
     },
     "rootDirs": [
-      "src/ts",
+      "src/ts"
     ]
   },
   "include": [
-    "src/ts/**/*.ts",
-    "src/ts/**/*.tsx",
-    "src/ts/index.tsx"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/index.tsx"
   ]
 }
