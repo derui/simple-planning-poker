@@ -38,7 +38,7 @@ class DependencyRegistrarImpl<S> implements DependencyRegistrar<S> {
     const bean = this.beans.find((v) => v.name === name)?.bean;
 
     if (!bean) {
-      throw Error(`Not found bean that is name of ${name}`);
+      throw Error(`Not found bean that is name of ${name.toString()}`);
     }
 
     return bean as S[K];
