@@ -1,35 +1,32 @@
+import { test, expect } from "vitest";
 import { createStoryPoint } from "./story-point";
 
-describe("domains", () => {
-  describe("story-point", () => {
-    test("create story point with positive number", () => {
-      // Arrange
+test("create story point with positive number", () => {
+  // Arrange
 
-      // Act
-      const ret = createStoryPoint(1);
+  // Act
+  const ret = createStoryPoint(1);
 
-      // Assert
-      expect(ret.value).toEqual(1);
-    });
+  // Assert
+  expect(ret.value).toEqual(1);
+});
 
-    test("throw error if point is less than 0", () => {
-      // Arrange
+test("throw error if point is less than 0", () => {
+  // Arrange
 
-      // Act
+  // Act
 
-      // Assert
-      expect(() => createStoryPoint(0)).not.toThrowError();
-      expect(() => createStoryPoint(-2)).toThrowError();
-      expect(() => createStoryPoint(-1)).toThrowError();
-    });
+  // Assert
+  expect(() => createStoryPoint(0)).not.toThrowError();
+  expect(() => createStoryPoint(-2)).toThrowError();
+  expect(() => createStoryPoint(-1)).toThrowError();
+});
 
-    test("throw error if point is NaN", () => {
-      // Arrange
+test("throw error if point is NaN", () => {
+  // Arrange
 
-      // Act
+  // Act
 
-      // Assert
-      expect(() => createStoryPoint(NaN)).toThrowError();
-    });
-  });
+  // Assert
+  expect(() => createStoryPoint(NaN)).toThrowError();
 });
