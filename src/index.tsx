@@ -46,6 +46,8 @@ import { LeaveGameUseCase } from "./usecases/leave-game";
 import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
 import { initializeGameQuery } from "./status/game/atoms/game-query";
 import { initializeUserQuery } from "./status/user/atoms/user-state-query";
+import config from './twind.config.cjs';
+import{install} from '@twind/core';
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -116,6 +118,8 @@ const signInActions: SigninActions = {
 const userActions: UserActions = {
   useChangeUserName: createUseChangeUserName(registrar),
 };
+
+install(config);
 
 ReactDOM.render(
   <signInActionContext.Provider value={signInActions}>
