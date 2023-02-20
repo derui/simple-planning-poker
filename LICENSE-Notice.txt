@@ -1,0 +1,3 @@
+Tablar icons
+Copyright (c) 2020-2023 Paweł Kuna
+https://github.com/tabler/tabler-icons/blob/master/LICENSE
