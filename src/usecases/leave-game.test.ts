@@ -1,8 +1,9 @@
 import { test, expect } from "vitest";
+import sinon from "sinon";
 import { createGameId } from "@/domains/game";
 import { createGamePlayerId } from "@/domains/game-player";
 import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { LeaveGameUseCase } from "./leave-game";
 
 test("should return error if user not found", async () => {
@@ -32,8 +33,9 @@ test("should return error if user did not join to a game", async () => {
   };
 
   const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  userRepository.findBy.mockImplementation(() => user);
+  const userRepository = createMockedUserRepository({
+    findBy: sinon.fake.resolves(user),
+  });
   const useCase = new LeaveGameUseCase(dispatcher, userRepository);
 
   // Act
@@ -54,8 +56,9 @@ test("should return success if user leaved from a game", async () => {
   };
 
   const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  userRepository.findBy.mockImplementation(() => user);
+  const userRepository = createMockedUserRepository({
+    findBy: sinon.fake.resolves(user),
+  });
   const useCase = new LeaveGameUseCase(dispatcher, userRepository);
 
   // Act
@@ -75,14 +78,17 @@ test("should dispatch event to be joined by user", async () => {
     userId: user.id,
   };
 
-  const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  userRepository.findBy.mockImplementation(() => user);
+  const dispatch = sinon.fake();
+  const dispatcher = createMockedDispatcher({ dispatch });
+  const userRepository = createMockedUserRepository({
+    findBy: sinon.fake.resolves(user),
+  });
+
   const useCase = new LeaveGameUseCase(dispatcher, userRepository);
 
   // Act
   await useCase.execute(input);
 
   // Assert
-  expect(dispatcher.dispatch).toBeCalledTimes(1);
+  expect(dispatch.callCount).toBe(1);
 });

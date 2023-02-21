@@ -2,6 +2,7 @@ import { test, expect } from "vitest";
 import { createUser, createUserId } from "@/domains/user";
 import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { ChangeUserNameUseCase } from "./change-user-name";
+import * as sinon from "sinon";
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -28,9 +29,10 @@ test("should return error if can not change name of the user", async () => {
     name: "",
   };
   const dispatcher = createMockedDispatcher();
-  const repository = createMockedUserRepository();
+  const repository = createMockedUserRepository({
+    findBy: sinon.fake.returns(Promise.resolve(createUser({ id: userId, name: "foo", joinedGames: [] }))),
+  });
   const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-  repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo", joinedGames: [] }));
 
   // Act
   const ret = await useCase.execute(input);
@@ -47,15 +49,18 @@ test("should dispatch event", async () => {
     name: "name",
   };
   const dispatcher = createMockedDispatcher();
-  const repository = createMockedUserRepository();
+  const save = sinon.fake();
+  const repository = createMockedUserRepository({
+    save,
+    findBy: sinon.fake.returns(Promise.resolve(createUser({ id: userId, name: "foo", joinedGames: [] }))),
+  });
   const useCase = new ChangeUserNameUseCase(dispatcher, repository);
-  repository.findBy.mockImplementation(() => createUser({ id: userId, name: "foo", joinedGames: [] }));
 
   // Act
   const ret = await useCase.execute(input);
 
   // Assert
   expect(ret.kind).toBe("success");
-  expect(repository.save).toBeCalledTimes(1);
-  expect(repository.save.mock.calls[0][0]?.name).toEqual("name");
+  expect(save).toBeCalledTimes(1);
+  expect(save.callArgWith(0)).toEqual("name");
 });

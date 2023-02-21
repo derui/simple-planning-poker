@@ -1,32 +1,36 @@
 // library for test. DO NOT USE ANY CLASS/FUNCTION IN THIS MODULE FROM PRODUCTION CODE!!
 import * as sinon from "sinon";
+import { GamePlayerRepository } from "./domains/game-player-repository";
+import { GameRepository } from "./domains/game-repository";
+import { UserRepository } from "./domains/user-repository";
+import { EventDispatcher } from "./usecases/base";
 
-export const createMockedDispatcher = () => {
+export const createMockedDispatcher = (mock: Partial<EventDispatcher> = {}) => {
   return {
-    dispatch: sinon.fake(),
+    dispatch: mock.dispatch ?? sinon.fake(),
   };
 };
 
-export const createMockedGameRepository = () => {
+export const createMockedGameRepository = (mock: Partial<GameRepository> = {}) => {
   return {
-    save: sinon.fake(),
-    findBy: sinon.fake(),
-    findByInvitationSignature: sinon.fake(),
+    save: mock.save ?? sinon.fake(),
+    findBy: mock.findBy ?? sinon.fake(),
+    findByInvitationSignature: mock.findByInvitationSignature ?? sinon.fake(),
   };
 };
 
-export const createMockedUserRepository = () => {
+export const createMockedUserRepository = (mock: Partial<UserRepository> = {}) => {
   return {
-    save: sinon.fake(),
-    findBy: sinon.fake(),
+    save: mock.save ?? sinon.fake(),
+    findBy: mock.findBy ?? sinon.fake(),
   };
 };
 
-export const createMockedGamePlayerRepository = () => {
+export const createMockedGamePlayerRepository = (mock: Partial<GamePlayerRepository> = {}) => {
   return {
-    save: sinon.fake(),
-    findBy: sinon.fake(),
-    findByUserAndGame: sinon.fake(),
-    delete: sinon.fake(),
+    save: mock.save ?? sinon.fake(),
+    findBy: mock.findBy ?? sinon.fake(),
+    findByUserAndGame: mock.findByUserAndGame ?? sinon.fake(),
+    delete: mock.delete ?? sinon.fake(),
   };
 };

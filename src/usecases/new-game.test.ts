@@ -1,11 +1,11 @@
 import { test, expect } from "vitest";
-import { NewGameStarted } from "@/domains/event";
 import { createGame, createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import { NewGameUseCase } from "./new-game";
 import { createGamePlayerId } from "@/domains/game-player";
+import * as sinon from "sinon";
 
 test("should return error if game is not found", async () => {
   // Arrange
@@ -36,9 +36,10 @@ test("should save game showed down", async () => {
   const input = {
     gameId: game.id,
   };
-  const repository = createMockedGameRepository();
+  const repository = createMockedGameRepository({
+    findBy: sinon.fake.resolves(game),
+  });
   const dispatcher = createMockedDispatcher();
-  repository.findBy.mockImplementation(() => game);
 
   const useCase = new NewGameUseCase(dispatcher, repository);
 
@@ -61,9 +62,12 @@ test("should dispatch NewGame event", async () => {
   const input = {
     gameId: game.id,
   };
-  const repository = createMockedGameRepository();
-  const dispatcher = createMockedDispatcher();
-  repository.findBy.mockImplementation(() => game);
+
+  const dispatch = sinon.fake();
+  const repository = createMockedGameRepository({
+    findBy: sinon.fake.resolves(game),
+  });
+  const dispatcher = createMockedDispatcher({ dispatch });
 
   const useCase = new NewGameUseCase(dispatcher, repository);
 
@@ -71,6 +75,5 @@ test("should dispatch NewGame event", async () => {
   await useCase.execute(input);
 
   // Assert
-  const called = dispatcher.dispatch.mock.calls[0][0] as NewGameStarted;
-  expect(called.kind).toEqual("NewGameStarted");
+  expect(dispatch.lastCall.firstArg.kind).toEqual("NewGameStarted");
 });

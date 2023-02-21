@@ -1,4 +1,5 @@
 import { test, expect } from "vitest";
+import * as sinon from "sinon";
 import { EventFactory } from "@/domains/event";
 import { createGameId } from "@/domains/game";
 import { createGamePlayerId } from "@/domains/game-player";
@@ -15,7 +16,7 @@ test("should return error if user not found", async () => {
   const dispatcher = createMockedDispatcher();
   const userRepository = createMockedUserRepository();
   const joinService = {
-    join: () => {},
+    join: () => Promise.resolve(undefined),
   };
   const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
@@ -36,10 +37,11 @@ test("should save game that user joined in", async () => {
   };
 
   const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  userRepository.findBy.mockImplementation(() => user);
+  const userRepository = createMockedUserRepository({
+    findBy: sinon.fake.returns(Promise.resolve(user)),
+  });
   const joinService = {
-    join: () => EventFactory.userInvited(createGamePlayerId(), gameId, user.id),
+    join: async () => EventFactory.userInvited(createGamePlayerId(), gameId, user.id),
   };
   const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
@@ -59,11 +61,13 @@ test("should dispatch event to be joined by user", async () => {
     userId: user.id,
   };
 
-  const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  userRepository.findBy.mockImplementation(() => user);
+  const dispatch = sinon.fake();
+  const dispatcher = createMockedDispatcher({ dispatch });
+  const userRepository = createMockedUserRepository({
+    findBy: sinon.fake.resolves(user),
+  });
   const joinService = {
-    join: () => EventFactory.userInvited(createGamePlayerId(), gameId, user.id),
+    join: async () => EventFactory.userInvited(createGamePlayerId(), gameId, user.id),
   };
   const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
@@ -71,5 +75,5 @@ test("should dispatch event to be joined by user", async () => {
   await useCase.execute(input);
 
   // Assert
-  expect(dispatcher.dispatch).toBeCalledTimes(1);
+  expect(dispatch.callCount).toBe(1);
 });

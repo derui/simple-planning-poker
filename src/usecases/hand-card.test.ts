@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { GamePlayerCardSelected } from "@/domains/event";
+import * as sinon from "sinon";
 import { createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
@@ -41,9 +41,11 @@ test("should save player with card selected by user", async () => {
     playerId: player.id,
     card: createGiveUpCard(),
   };
-  const repository = createMockedGamePlayerRepository();
+  const findBy = sinon.fake.returns(Promise.resolve(player));
+  const repository = createMockedGamePlayerRepository({
+    findBy,
+  });
   const dispatcher = createMockedDispatcher();
-  repository.findBy.mockImplementation(() => player);
 
   const useCase = new HandCardUseCase(dispatcher, repository);
 
@@ -67,9 +69,12 @@ test("should dispatch UserHanded event", async () => {
     playerId: player.id,
     card: createGiveUpCard(),
   };
-  const repository = createMockedGamePlayerRepository();
-  const dispatcher = createMockedDispatcher();
-  repository.findBy.mockImplementation(() => player);
+  const findBy = sinon.fake.returns(Promise.resolve(player));
+  const repository = createMockedGamePlayerRepository({
+    findBy,
+  });
+  const dispatch = sinon.fake();
+  const dispatcher = createMockedDispatcher({ dispatch });
 
   const useCase = new HandCardUseCase(dispatcher, repository);
 
@@ -77,8 +82,6 @@ test("should dispatch UserHanded event", async () => {
   await useCase.execute(input);
 
   // Assert
-  const called = dispatcher.dispatch.mock.calls[0][0] as GamePlayerCardSelected;
-
-  expect(called.card).toEqual(input.card);
-  expect(called.gamePlayerId).toEqual(player.id);
+  expect(dispatch.lastCall.firstArg.card).toEqual(input.card);
+  expect(dispatch.lastCall.firstArg.gamePlayerId).toEqual(player.id);
 });
