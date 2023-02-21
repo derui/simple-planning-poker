@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { ChangeUserNameUseCase } from "./change-user-name";
 
 test("should return error if user not found", async () => {

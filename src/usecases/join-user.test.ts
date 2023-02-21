@@ -3,7 +3,7 @@ import { EventFactory } from "@/domains/event";
 import { createGameId } from "@/domains/game";
 import { createGamePlayerId } from "@/domains/game-player";
 import { createUser, createUserId } from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { JoinUserUseCase } from "./join-user";
 
 test("should return error if user not found", async () => {

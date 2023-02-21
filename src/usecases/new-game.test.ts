@@ -3,7 +3,7 @@ import { NewGameStarted } from "@/domains/event";
 import { createGame, createGameId } from "@/domains/game";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
-import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import { NewGameUseCase } from "./new-game";
 import { createGamePlayerId } from "@/domains/game-player";
 

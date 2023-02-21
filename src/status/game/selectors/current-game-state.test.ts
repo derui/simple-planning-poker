@@ -4,7 +4,7 @@ import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
 import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUser, createUserId } from "@/domains/user";
-import { flushPromisesAndTimers } from "@/lib.test";
+import { flushPromisesAndTimers } from "@/test-lib";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { snapshot_UNSTABLE } from "recoil";
 import currentGameIdState from "../atoms/current-game-id-state";

@@ -5,7 +5,7 @@ import { createSelectableCards } from "@/domains/selectable-cards";
 import { createStoryPoint } from "@/domains/story-point";
 import { createUserId } from "@/domains/user";
 import { CreateGameUseCase } from "./create-game";
-import { createMockedDispatcher, createMockedGameRepository } from "@/lib.test";
+import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 
 test("should return error if numbers is invalid", () => {
   // Arrange

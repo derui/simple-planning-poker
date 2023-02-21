@@ -4,7 +4,7 @@ import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
-import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
+import { flushPromisesAndTimers, RecoilObserver } from "@/test-lib";
 import createUseSignUp from "./use-signup";
 import currentUserState from "@/status/user/atoms/current-user-state";
 

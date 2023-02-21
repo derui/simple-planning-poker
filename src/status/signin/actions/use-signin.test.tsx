@@ -5,7 +5,7 @@ import { RecoilRoot } from "recoil";
 import createUseSignIn from "./use-signin";
 import React, { useEffect } from "react";
 import { render } from "@testing-library/react";
-import { flushPromisesAndTimers, RecoilObserver } from "@/lib.test";
+import { flushPromisesAndTimers, RecoilObserver } from "@/test-lib";
 import currentUserState from "@/status/user/atoms/current-user-state";
 
 test("do not update state if user is not found", async () => {
