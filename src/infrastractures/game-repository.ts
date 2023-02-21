@@ -10,6 +10,7 @@ import { createGameRefResolver } from "./game-ref-resolver";
 
 export class GameRepositoryImpl implements GameRepository {
   private resolver = createGameRefResolver();
+
   constructor(private database: Database) {}
 
   async save(game: Game): Promise<void> {
