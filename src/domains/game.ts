@@ -1,4 +1,4 @@
-import { createId, Id } from "./base";
+import { create, Id } from "./base";
 import { Card } from "./card";
 import { EventFactory, GameShowedDown, NewGameStarted } from "./event";
 import { GamePlayerId } from "./game-player";
@@ -8,7 +8,7 @@ import { createStoryPoint, StoryPoint } from "./story-point";
 
 export type GameId = Id<"Game">;
 
-export const createGameId = (v?: string) => createId<"Game">(v);
+export const createGameId = (v?: string) => create<"Game">(v);
 
 export interface PlayerHand {
   playerId: GamePlayerId;

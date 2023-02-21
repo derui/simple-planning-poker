@@ -1,5 +1,5 @@
 import { unique } from "@/utils/array";
-import { createId, Id } from "./base";
+import { create, Id } from "./base";
 import { EventFactory, UserLeavedFromGame, UserNameChanged } from "./event";
 import { GameId } from "./game";
 import { GamePlayerId } from "./game-player";
@@ -10,7 +10,7 @@ export const createUserId = (value?: string): UserId => {
   if (value) {
     return value as UserId;
   } else {
-    return createId<"User">();
+    return create<"User">();
   }
 };
 

@@ -101,7 +101,7 @@ test("should save a new player", async () => {
   await service.join(user, createGameId());
 
   // Assert
-  expect(save).toBeCalledTimes(1);
+  expect(save.callCount).toBe(1);
 });
 
 test("should not create new player if user is already joined a game", async () => {
@@ -134,5 +134,5 @@ test("should not create new player if user is already joined a game", async () =
 
   // Assert
   expect(ret!.kind).toEqual(DOMAIN_EVENTS.UserInvited);
-  expect(save).not.toBeCalled();
+  expect(save.called).toBeFalsy();
 });

@@ -1,4 +1,4 @@
-import { createId, Id } from "./base";
+import { create, Id } from "./base";
 import { Card } from "./card";
 import { EventFactory, GamePlayerCardSelected, GamePlayerModeChanged } from "./event";
 import { GameId } from "./game";
@@ -11,7 +11,7 @@ export const createGamePlayerId = (value?: string): GamePlayerId => {
   if (value) {
     return value as GamePlayerId;
   } else {
-    return createId<"GamePlayer">();
+    return create<"GamePlayer">();
   }
 };
 
@@ -19,7 +19,7 @@ export const UserMode = {
   normal: "normal",
   inspector: "inspector",
 } as const;
-export type UserMode = typeof UserMode[keyof typeof UserMode];
+export type UserMode = (typeof UserMode)[keyof typeof UserMode];
 
 export interface GamePlayer {
   get id(): GamePlayerId;

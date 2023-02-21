@@ -1,4 +1,4 @@
-import { createId, Id } from "./base";
+import { create, Id } from "./base";
 import { Card } from "./card";
 import { GameId } from "./game";
 import { GamePlayerId, UserMode } from "./game-player";
@@ -14,7 +14,7 @@ export interface Event<Kind extends string> {
 }
 
 // create event id
-export const createEventId = (): EventId => createId<"Event">();
+export const createEventId = (): EventId => create<"Event">();
 
 // define event kinds
 
@@ -29,7 +29,7 @@ export const DOMAIN_EVENTS = {
   UserLeavedFromGame: "UserLeavedFromGame",
 } as const;
 
-export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: typeof DOMAIN_EVENTS[key] };
+export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: (typeof DOMAIN_EVENTS)[key] };
 
 export type DefinedDomainEvents =
   | GameCreated
