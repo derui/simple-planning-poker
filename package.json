@@ -48,6 +48,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint_d": "^12.2.1",
     "firebase-tools": "^11.23.1",
+    "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
     "redux-observable": "^2.0.0",
     "sinon": "^15.0.1",

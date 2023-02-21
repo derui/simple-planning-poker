@@ -24,11 +24,11 @@
     "outDir": "generated",
     "paths": {
       "@/*": [
-        "src/ts/*"
+        "src/*"
       ]
     },
     "rootDirs": [
-      "src/ts"
+      "src/"
     ]
   },
   "include": [
