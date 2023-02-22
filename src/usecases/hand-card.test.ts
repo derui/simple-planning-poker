@@ -1,20 +1,20 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
-import { createGameId } from "@/domains/game";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
+import { createId } from "@/domains/game";
+import { create } from "@/domains/selectable-cards";
+import { create } from "@/domains/story-point";
+import { createId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGamePlayerRepository } from "@/test-lib";
 import { createGiveUpCard } from "@/domains/card";
 import { HandCardUseCase } from "./hand-card";
-import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
+import { createGamePlayer, createId } from "@/domains/game-player";
 
-const CARDS = createSelectableCards([createStoryPoint(1)]);
+const CARDS = create([create(1)]);
 
 test("should return error if player is not found", async () => {
   // Arrange
   const input = {
-    playerId: createGamePlayerId(),
+    playerId: createId(),
     card: createGiveUpCard(),
   };
   const repository = createMockedGamePlayerRepository();
@@ -32,9 +32,9 @@ test("should return error if player is not found", async () => {
 test("should save player with card selected by user", async () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    userId: createUserId(),
-    gameId: createGameId(),
+    id: createId(),
+    userId: createId(),
+    gameId: createId(),
     cards: CARDS,
   });
   const input = {
@@ -60,9 +60,9 @@ test("should save player with card selected by user", async () => {
 test("should dispatch UserHanded event", async () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    userId: createUserId(),
-    gameId: createGameId(),
+    id: createId(),
+    userId: createId(),
+    gameId: createId(),
     cards: CARDS,
   });
   const input = {

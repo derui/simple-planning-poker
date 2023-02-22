@@ -1,29 +1,29 @@
-import { Card } from "@/domains/card";
+import { T } from "@/domains/card";
 import { GameId } from "@/domains/game";
-import { GamePlayerId, UserMode } from "@/domains/game-player";
-import { UserId } from "@/domains/user";
+import { Id, UserMode } from "@/domains/game-player";
+import { Id } from "@/domains/user";
 
 export interface UserHandViewModel {
-  gamePlayerId: GamePlayerId;
+  gamePlayerId: Id;
   name: string;
   mode: UserMode;
-  card?: Card;
+  card?: T;
   selected: boolean;
 }
 
 export interface GamePlayerViewModel {
-  id: GamePlayerId;
-  userId: UserId;
+  id: Id;
+  userId: Id;
   name: string;
   mode: UserMode;
-  hand?: Card;
+  hand?: T;
 }
 
 export interface GameViewModel {
   id: GameId;
   name: string;
   hands: UserHandViewModel[];
-  cards: Card[];
+  cards: T[];
   showedDown: boolean;
   average: number | undefined;
   invitationSignature: string;

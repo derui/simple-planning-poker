@@ -1,43 +1,36 @@
 import { unique } from "@/utils/array";
-import { Card, createGiveUpCard, createStoryPointCard, equalCard } from "./card";
-import { compareStoryPoint, equalStoryPoint, StoryPoint } from "./story-point";
+import * as Card from "./card";
+import * as StoryPoint from "./story-point";
+import { Branded } from "./type";
 
-export interface SelectableCards {
-  get cards(): Card[];
-  at(index: number): Card;
-  get giveUp(): Card;
-
-  contains(card: Card): boolean;
-}
+const Tag = Symbol("SelectableCards");
+export type T = Branded<Card.T[], typeof Tag>;
 
 /**
    create selectable cards with numbers
  */
-export const createSelectableCards = (numbers: StoryPoint[]): SelectableCards => {
+export const create = function createSelectableCards(numbers: StoryPoint.T[]): T {
   if (!isValidStoryPoints(numbers)) {
     throw new Error("Length must be greater than 0");
   }
 
-  const cards: Card[] = unique(numbers, equalStoryPoint).sort(compareStoryPoint).map(createStoryPointCard);
-  cards.push(createGiveUpCard());
+  const cards = unique(numbers, StoryPoint.equals).sort(StoryPoint.compare).map(Card.create);
 
-  return {
-    get cards() {
-      return cards;
-    },
-    at(index: number) {
-      return cards[index];
-    },
-    get giveUp() {
-      return cards[cards.length - 1];
-    },
-    contains(card: Card) {
-      return cards.some((v) => equalCard(v, card));
-    },
-  };
+  return Object.freeze(Array.from(cards)) as T;
 };
 
-export const isValidStoryPoints = (numbers: StoryPoint[]): boolean => {
-  const uniqued = unique(numbers, equalStoryPoint);
+/**
+ * clone the cards;
+ */
+export const clone = function clone(cards: T) {
+  return Object.freeze(Array.from(cards)) as T;
+};
+
+export const contains = function contains(cards: T, card: Card.T) {
+  return cards.some((v) => Card.equals(v, card));
+};
+
+export const isValidStoryPoints = (numbers: StoryPoint.T[]): boolean => {
+  const uniqued = unique(numbers, StoryPoint.equals);
   return uniqued.length > 0;
 };

@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { createGiveUpCard, createStoryPointCard } from "@/domains/card";
-import { createStoryPoint } from "@/domains/story-point";
+import { createGiveUpCard, create } from "@/domains/card";
+import { create } from "@/domains/story-point";
 import { deserializeCard, serializeCard } from "./card-converter";
 
 test("serialize and deserialize give up card", () => {
@@ -16,7 +16,7 @@ test("serialize and deserialize give up card", () => {
 
 test("serialize and deserialize give up card", () => {
   // Arrange
-  const card = createStoryPointCard(createStoryPoint(3));
+  const card = create(create(3));
 
   // Act
   const ret = deserializeCard(serializeCard(card));

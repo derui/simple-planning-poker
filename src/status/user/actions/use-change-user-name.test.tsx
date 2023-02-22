@@ -1,5 +1,5 @@
 import { Dependencies } from "@/dependencies";
-import { createUserId } from "@/domains/user";
+import { createId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { MutableSnapshot, RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
@@ -59,7 +59,7 @@ test("execute use case and update state", async () => {
     return <></>;
   };
 
-  const currentUser = { id: createUserId("id"), name: "", joinedGames: [] };
+  const currentUser = { id: createId("id"), name: "", joinedGames: [] };
   const initialize = (s: MutableSnapshot) => {
     s.set(currentUserState, currentUser);
   };
@@ -75,7 +75,7 @@ test("execute use case and update state", async () => {
   await flushPromisesAndTimers();
 
   expect(useCase.execute).toHaveBeenCalledTimes(1);
-  expect(useCase.execute).toHaveBeenCalledWith({ userId: createUserId("id"), name: "name" });
+  expect(useCase.execute).toHaveBeenCalledWith({ userId: createId("id"), name: "name" });
   expect(onChange).toHaveBeenCalledWith({ ...currentUser, name: "name" });
 });
 

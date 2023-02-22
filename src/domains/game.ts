@@ -1,62 +1,40 @@
-import { create, Id } from "./base";
-import { Card } from "./card";
-import { EventFactory, GameShowedDown, NewGameStarted } from "./event";
-import { GamePlayerId } from "./game-player";
-import { createInvitation, Invitation } from "./invitation";
-import { SelectableCards } from "./selectable-cards";
-import { createStoryPoint, StoryPoint } from "./story-point";
+import { isSuperset } from "@/utils/set";
+import produce from "immer";
+import * as Base from "./base";
+import { DomainEvent } from "./event";
+import * as EventFactory from "./event-factory";
+import * as GamePlayer from "./game-player";
+import * as Invitation from "./invitation";
+import * as SelectableCards from "./selectable-cards";
+import * as StoryPoint from "./story-point";
+import { Branded } from "./type";
+import * as Hand from "./user-hand";
 
-export type GameId = Id<"Game">;
+export type GameId = Base.Id<"Game">;
 
-export const createGameId = (v?: string) => create<"Game">(v);
+export const createId = function createGameId(v?: string) {
+  return Base.create<"Game">(v);
+};
 
 export interface PlayerHand {
-  playerId: GamePlayerId;
-  card: Card;
+  readonly playerId: GamePlayer.Id;
+  readonly hand: Hand.T;
 }
+
+const tag = Symbol();
+type CalculatedStoryPoint = Branded<number, typeof tag>;
 
 // Game is value object
 export interface Game {
-  get id(): GameId;
-  get name(): string;
-  get showedDown(): boolean;
-  get players(): GamePlayerId[];
-  get cards(): SelectableCards;
-
-  makeInvitation(): Invitation;
-
-  changeName(name: string): void;
-
-  canChangeName(name: string): boolean;
-
-  canShowDown(): boolean;
-
-  // show down all cards betted by user
-  showDown(): GameShowedDown | undefined;
-
-  // calulate average story point in this game.
-  calculateAverage(): StoryPoint | undefined;
-
-  // start new game
-  newGame(): NewGameStarted;
+  readonly id: GameId;
+  readonly name: string;
+  readonly showedDown: boolean;
+  readonly players: GamePlayer.Id[];
+  readonly cards: SelectableCards.T;
+  readonly hands: PlayerHand[];
 }
 
-type InternalGame = Game & {
-  _showedDown: boolean;
-  _name: string;
-  _cards: SelectableCards;
-};
-
-const isSuperset = function <T>(baseSet: Set<T>, subset: Set<T>) {
-  for (let elem of subset) {
-    if (!baseSet.has(elem)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-export const createGame = ({
+export const create = ({
   id,
   name,
   players,
@@ -65,8 +43,8 @@ export const createGame = ({
 }: {
   id: GameId;
   name: string;
-  players: GamePlayerId[];
-  cards: SelectableCards;
+  players: GamePlayer.Id[];
+  cards: SelectableCards.T;
   hands?: PlayerHand[];
 }): Game => {
   if (players.length === 0) {
@@ -79,88 +57,76 @@ export const createGame = ({
     throw new Error("Found unknown player not in this game");
   }
 
-  const obj = {
-    _name: name,
-    _showedDown: false,
-    _cards: cards,
+  return {
+    id,
+    name,
+    showedDown: false,
+    cards,
+    players: Array.from(players),
+    hands: Array.from(hands),
+  };
+};
 
-    get id() {
-      return id;
-    },
+export const makeInvitation = function makeInvitation(game: Game) {
+  return Invitation.create(game.id);
+};
 
-    get name() {
-      return obj._name;
-    },
+export const canShowDown = function canShowDown(game: Game) {
+  return game.hands.length > 0;
+};
 
-    get showedDown() {
-      return obj._showedDown;
-    },
+export const showDown = function showDown(game: Game): [Game, DomainEvent?] {
+  if (!canShowDown(game)) {
+    return [game];
+  }
 
-    get players() {
-      return players;
-    },
+  return [
+    produce(game, (draft) => {
+      draft.showedDown = true;
+    }),
+    EventFactory.gameShowedDown(game.id),
+  ];
+};
 
-    get cards() {
-      return obj._cards;
-    },
+export const calculateAverage = function calculateAverage(game: Game) {
+  if (!game.showedDown) {
+    return undefined;
+  }
 
-    makeInvitation() {
-      return createInvitation(obj.id);
-    },
+  const cards = game.hands
+    .map((v) => v.hand)
+    .filter(Hand.isHanded)
+    .map((v) => v.card);
 
-    canShowDown(): boolean {
-      return hands.length > 0;
-    },
+  if (cards.length === 0) {
+    return StoryPoint.create(0);
+  }
 
-    showDown(): GameShowedDown | undefined {
-      if (obj.canShowDown()) {
-        obj._showedDown = true;
-        return EventFactory.gamdShowedDown(obj.id);
-      }
+  const average =
+    cards.reduce((point, v) => {
+      return point + v;
+    }, 0) / cards.length;
 
-      return undefined;
-    },
+  return average as CalculatedStoryPoint;
+};
+export const canChangeName = function canChangeName(name: string) {
+  return name !== "";
+};
 
-    calculateAverage(): StoryPoint | undefined {
-      if (!obj.showedDown) {
-        return undefined;
-      }
+export const changeName = function changeName(game: Game, name: string) {
+  if (!canChangeName(name)) {
+    throw new Error("can not change name");
+  }
 
-      const cards = hands.map((v) => v.card).filter((v) => v && v.kind === "storypoint");
-      if (cards.length === 0) {
-        return createStoryPoint(0);
-      }
+  return produce(game, (draft) => {
+    draft.name = name;
+  });
+};
 
-      const average =
-        cards.reduce((point, v) => {
-          switch (v.kind) {
-            case "storypoint":
-              return point + v.storyPoint.value;
-            case "giveup":
-              return point;
-          }
-        }, 0) / cards.length;
+export const newGame = function newGame(game: Game): [Game, DomainEvent] {
+  const newObj = produce(game, (draft) => {
+    draft.showedDown = false;
+  });
 
-      return createStoryPoint(average);
-    },
-
-    changeName(name: string) {
-      if (!obj.canChangeName(name)) {
-        throw new Error("can not change name");
-      }
-      obj._name = name;
-    },
-
-    canChangeName(name: string) {
-      return name !== "";
-    },
-
-    newGame() {
-      obj._showedDown = false;
-
-      return EventFactory.newGameStarted(obj.id);
-    },
-  } as InternalGame;
-
-  return obj;
+  return [newObj, EventFactory.newGameStarted(game.id)];
 };

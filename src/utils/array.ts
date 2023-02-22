@@ -16,7 +16,3 @@ export const unique = <T>(array: T[], compare: (v1: T, v2: T) => boolean = physi
     return accum;
   }, accum);
 };
-
-export const filterUndefined = <T>(array: (T | undefined | null)[]): T[] => {
-  return array.filter((v) => v !== undefined && v !== null) as T[];
-};

@@ -1,17 +1,21 @@
-import { create, Id } from "./base";
-import { Card } from "./card";
-import { EventFactory, GamePlayerCardSelected, GamePlayerModeChanged } from "./event";
-import { GameId } from "./game";
-import { SelectableCards } from "./selectable-cards";
-import { UserId } from "./user";
+import produce from "immer";
+import * as Base from "./base";
+import { DomainEvent } from "./event";
+import * as EventFactory from "./event-factory";
+import * as Game from "./game";
+import * as User from "./user";
+import * as Card from "./card";
+import * as UserHand from "./user-hand";
+import * as SelectableCards from "./selectable-cards";
+import { Branded } from "./type";
 
-export type GamePlayerId = Id<"GamePlayer">;
+export type Id = Base.Id<"GamePlayer">;
 
-export const createGamePlayerId = (value?: string): GamePlayerId => {
+export const createId = (value?: string): Id => {
   if (value) {
-    return value as GamePlayerId;
+    return value as Id;
   } else {
-    return create<"GamePlayer">();
+    return Base.create<"GamePlayer">();
   }
 };
 
@@ -21,16 +25,17 @@ export const UserMode = {
 } as const;
 export type UserMode = (typeof UserMode)[keyof typeof UserMode];
 
-export interface GamePlayer {
-  get id(): GamePlayerId;
-  get user(): UserId;
-  get game(): GameId;
-  get mode(): UserMode;
-  get hand(): Card | undefined;
-
-  changeUserMode(newMode: UserMode): GamePlayerModeChanged;
-  takeHand(card: Card): GamePlayerCardSelected | undefined;
-}
+const Tag = Symbol("GamePlayer");
+export type T = Branded<
+  {
+    readonly id: Id;
+    readonly user: User.Id;
+    readonly game: Game.GameId;
+    readonly mode: UserMode;
+    readonly hand: UserHand.T;
+  },
+  typeof Tag
+>;
 
 /**
    create user from id and name
@@ -39,57 +44,48 @@ export const createGamePlayer = ({
   id,
   gameId,
   userId,
-  cards,
-  hand,
+  hand = UserHand.unselected(),
   mode = UserMode.normal,
 }: {
-  id: GamePlayerId;
-  userId: UserId;
-  gameId: GameId;
-  hand?: Card;
-  cards: SelectableCards;
+  id: Id;
+  userId: User.Id;
+  gameId: Game.GameId;
+  hand?: UserHand.T;
   mode?: UserMode;
-}): GamePlayer => {
-  const obj = {
-    userMode: mode,
-    userHand: hand,
+}): T => {
+  return {
+    id,
+    user: userId,
+    mode: mode,
+    hand: hand,
+    game: gameId,
+  } as T;
+};
 
-    get id() {
-      return id;
-    },
+export const changeUserMode = (player: T, newMode: UserMode): [T, DomainEvent] => {
+  const newObj = produce(player, (draft) => {
+    draft.mode = newMode;
+  });
 
-    get user() {
-      return userId;
-    },
+  return [newObj, EventFactory.gamePlayerModeChanged(player.id, newMode)];
+};
 
-    get mode() {
-      return obj.userMode;
-    },
+export const giveUp = function giveUp(player: T): [T, DomainEvent?] {
+  const newObj = produce(player, (draft) => {
+    draft.hand = UserHand.giveUp();
+  });
 
-    get hand() {
-      return obj.userHand;
-    },
+  return [newObj, EventFactory.gamePlayerGiveUp(player.id)];
+};
 
-    get game() {
-      return gameId;
-    },
+export const takeHand = (player: T, card: Card.T, cards: SelectableCards.T): [T, DomainEvent?] => {
+  if (!SelectableCards.contains(cards, card)) {
+    throw new Error("can not take the card because this card is not selectable in this game");
+  }
 
-    changeUserMode(newMode: UserMode) {
-      obj.userMode = newMode;
+  const newObj = produce(player, (draft) => {
+    draft.hand = UserHand.handed(card);
+  });
 
-      return EventFactory.gamePlayerModeChanged(obj.id, newMode);
-    },
-
-    takeHand(card: Card) {
-      if (!cards.contains(card)) {
-        return undefined;
-      }
-
-      obj.userHand = card;
-
-      return EventFactory.gamePlayerCardSelected(obj.id, card);
-    },
-  } as GamePlayer & { userMode: UserMode; userHand: Card | undefined };
-
-  return obj;
+  return [newObj, EventFactory.gamePlayerCardSelected(player.id, card)];
 };

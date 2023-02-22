@@ -1,20 +1,20 @@
 import { EventFactory } from "@/domains/event";
-import { createGame, createGameId, GameId } from "@/domains/game";
-import { createGamePlayerId, GamePlayerId } from "@/domains/game-player";
+import { create, createId, GameId } from "@/domains/game";
+import { createId, Id } from "@/domains/game-player";
 import { GameRepository } from "@/domains/game-repository";
-import { createSelectableCards, isValidStoryPoints } from "@/domains/selectable-cards";
-import { createStoryPoint, isValidStoryPoint } from "@/domains/story-point";
-import { UserId } from "@/domains/user";
+import { create, isValidStoryPoints } from "@/domains/selectable-cards";
+import { create, isValid } from "@/domains/story-point";
+import { Id } from "@/domains/user";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface CreateGameUseCaseInput {
   name: string;
   points: number[];
-  createdBy: UserId;
+  createdBy: Id;
 }
 
 export type CreateGameUseCaseOutput =
-  | { kind: "success"; gameId: GameId; createdGamePlayerId: GamePlayerId }
+  | { kind: "success"; gameId: GameId; createdGamePlayerId: Id }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" };
 
@@ -22,21 +22,21 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Create
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
   execute(input: CreateGameUseCaseInput): CreateGameUseCaseOutput {
-    if (!input.points.every(isValidStoryPoint)) {
+    if (!input.points.every(isValid)) {
       return { kind: "invalidStoryPoint" };
     }
 
-    const storyPoints = input.points.map(createStoryPoint);
+    const storyPoints = input.points.map(create);
 
     if (!isValidStoryPoints(storyPoints)) {
       return { kind: "invalidStoryPoints" };
     }
 
-    const selectableCards = createSelectableCards(storyPoints);
+    const selectableCards = create(storyPoints);
 
-    const gameId = createGameId();
-    const playerId = createGamePlayerId();
-    const game = createGame({
+    const gameId = createId();
+    const playerId = createId();
+    const game = create({
       id: gameId,
       name: input.name,
       players: [playerId],

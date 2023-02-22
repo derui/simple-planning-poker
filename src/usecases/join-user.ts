@@ -1,17 +1,17 @@
-import { GamePlayerId } from "@/domains/game-player";
+import { Id } from "@/domains/game-player";
 import { InvitationSignature } from "@/domains/invitation";
 import { JoinService } from "@/domains/join-service";
-import { UserId } from "@/domains/user";
+import { Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
   signature: InvitationSignature;
-  userId: UserId;
+  userId: Id;
 }
 
 export type JoinUserUseCaseOutput =
-  | { kind: "success"; gamePlayerId: GamePlayerId }
+  | { kind: "success"; gamePlayerId: Id }
   | { kind: "notFoundUser" }
   | { kind: "joinFailed" };
 

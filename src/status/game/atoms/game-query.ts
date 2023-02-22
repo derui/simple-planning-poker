@@ -4,7 +4,7 @@ import { GameViewModel } from "../types";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { UserRepository } from "@/domains/user-repository";
 import { Game, GameId } from "@/domains/game";
-import { User } from "@/domains/user";
+import { T } from "@/domains/user";
 import { GameRepository } from "@/domains/game-repository";
 import { GameObserver } from "@/contexts/observer";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
@@ -18,7 +18,7 @@ const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
   const hands = await Promise.all(
     game.players.map(async (v) => {
       const player = await gamePlayerRepository!!.findBy(v);
-      let user: User | undefined;
+      let user: T | undefined;
       if (player) {
         user = await userRepository!!.findBy(player.user);
       }

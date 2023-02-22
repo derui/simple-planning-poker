@@ -1,4 +1,4 @@
-import { createUser, createUserId, UserId } from "../domains/user";
+import { createUser, createId, Id } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { Database, get, ref } from "firebase/database";
@@ -6,14 +6,14 @@ import { Authenticator } from "@/status/signin/types";
 
 export class FirebaseAuthenticator implements Authenticator {
   constructor(private auth: Auth, private database: Database, private userRepository: UserRepository) {}
-  async signIn(email: string, password: string): Promise<UserId> {
+  async signIn(email: string, password: string): Promise<Id> {
     await this.checkToAllowSigningUserWith(email);
 
     try {
       const auth = await signInWithEmailAndPassword(this.auth, email, password);
       const uid = auth.user.uid;
 
-      const userId = createUserId(uid);
+      const userId = createId(uid);
       const user = await this.userRepository.findBy(userId);
       if (!user) {
         throw Error("Not found user");
@@ -26,14 +26,14 @@ export class FirebaseAuthenticator implements Authenticator {
     }
   }
 
-  async signUp(name: string, email: string, password: string): Promise<UserId> {
+  async signUp(name: string, email: string, password: string): Promise<Id> {
     await this.checkToAllowSigningUserWith(email);
 
     try {
       const auth = await createUserWithEmailAndPassword(this.auth, email, password);
       const uid = auth.user.uid;
 
-      const userId = createUserId(uid);
+      const userId = createId(uid);
       const user = createUser({ id: userId, name, joinedGames: [] });
       this.userRepository.save(user);
 
@@ -54,12 +54,12 @@ export class FirebaseAuthenticator implements Authenticator {
     }
   }
 
-  async currentUserIdIfExists(): Promise<UserId | undefined> {
+  async currentUserIdIfExists(): Promise<Id | undefined> {
     return new Promise((resolve) => {
       onAuthStateChanged(this.auth, (user) => {
         if (user) {
           const uid = user.uid;
-          resolve(createUserId(uid));
+          resolve(createId(uid));
         } else {
           resolve(undefined);
         }

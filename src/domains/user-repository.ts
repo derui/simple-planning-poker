@@ -1,9 +1,9 @@
-import { User, UserId } from "./user";
+import { T, Id } from "./user";
 
 export interface UserRepository {
   // save user
-  save(user: User): void;
+  save(user: T): void;
 
   // find user by id
-  findBy(id: UserId): Promise<User | undefined>;
+  findBy(id: Id): Promise<T | undefined>;
 }

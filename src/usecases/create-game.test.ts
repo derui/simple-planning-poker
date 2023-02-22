@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
+import { create } from "@/domains/selectable-cards";
+import { create } from "@/domains/story-point";
+import { createId } from "@/domains/user";
 import { CreateGameUseCase } from "./create-game";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import * as sinon from "sinon";
@@ -11,7 +11,7 @@ test("should return error if numbers is invalid", () => {
   const input = {
     name: "foo",
     points: [],
-    createdBy: createUserId(),
+    createdBy: createId(),
   };
   const dispatcher = createMockedDispatcher();
   const repository = createMockedGameRepository();
@@ -29,7 +29,7 @@ test("should return error if numbers contains invalid story point", () => {
   const input = {
     name: "foo",
     points: [-1],
-    createdBy: createUserId(),
+    createdBy: createId(),
   };
   const dispatcher = createMockedDispatcher();
   const repository = createMockedGameRepository();
@@ -47,7 +47,7 @@ test("should save new game into repository", () => {
   const input = {
     name: "foo",
     points: [1],
-    createdBy: createUserId(),
+    createdBy: createId(),
   };
   const dispatcher = createMockedDispatcher();
   const save = sinon.fake();
@@ -69,7 +69,7 @@ test("should dispatch game created event", () => {
   const input = {
     name: "foo",
     points: [1],
-    createdBy: createUserId(),
+    createdBy: createId(),
   };
   const dispatch = sinon.fake();
   const dispatcher = createMockedDispatcher({
@@ -86,5 +86,5 @@ test("should dispatch game created event", () => {
   expect(dispatch.callCount).toBe(1);
   expect(dispatch.lastCall.firstArg.name).toBe("foo");
   expect(dispatch.lastCall.firstArg.createdBy.userId).toEqual(input.createdBy);
-  expect(dispatch.lastCall.firstArg.selectableCards.cards).toEqual(createSelectableCards([createStoryPoint(1)]).cards);
+  expect(dispatch.lastCall.firstArg.selectableCards.cards).toEqual(create([create(1)]).cards);
 });

@@ -1,54 +1,18 @@
-import { equalStoryPoint, StoryPoint } from "./story-point";
+import * as StoryPoint from "./story-point";
+import { Branded } from "./type";
 
-type GiveUpCard = {
-  kind: "giveup";
-};
-
-type StoryPointCard = {
-  kind: "storypoint";
-  storyPoint: StoryPoint;
-};
-
-export type Card = GiveUpCard | StoryPointCard;
-
-/**
-   factory function for GiveUpCard
- */
-export const createGiveUpCard = (): GiveUpCard => {
-  return {
-    kind: "giveup",
-  };
-};
+const tag = Symbol("card");
+export type T = Branded<number, typeof tag>;
 
 /**
    factory function for StoryPointCard
  */
-export const createStoryPointCard = (storyPoint: StoryPoint): StoryPointCard => {
-  return {
-    kind: "storypoint",
-    storyPoint,
-  };
+export const create = (storyPoint: StoryPoint.T): T => {
+  return StoryPoint.value(storyPoint) as T;
 };
 
-export const equalCard = (v1: Card, v2: Card) => {
-  if (v1.kind !== v2.kind) {
-    return false;
-  }
-
-  if (v1.kind === "giveup" && v2.kind === "giveup") {
-    return true;
-  } else if (v1.kind === "storypoint" && v2.kind === "storypoint") {
-    return equalStoryPoint(v1.storyPoint, v2.storyPoint);
-  }
-
-  return false;
+export const equals = (v1: T, v2: T) => {
+  return v1 === v2;
 };
 
-export const asStoryPoint = (card: Card): StoryPoint | null => {
-  switch (card.kind) {
-    case "giveup":
-      return null;
-    case "storypoint":
-      return card.storyPoint;
-  }
-};
+export const asStoryPoint = (card: T): StoryPoint.T => StoryPoint.create(card);

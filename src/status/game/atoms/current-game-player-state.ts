@@ -1,9 +1,9 @@
 import { atom } from "recoil";
 import AtomKeys from "./key";
-import { GamePlayerId, UserMode } from "@/domains/game-player";
+import { Id, UserMode } from "@/domains/game-player";
 
 type State = {
-  id: GamePlayerId;
+  id: Id;
   mode: UserMode;
 };
 

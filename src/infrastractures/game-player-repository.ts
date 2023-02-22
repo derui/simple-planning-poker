@@ -1,19 +1,19 @@
-import { createStoryPoint } from "@/domains/story-point";
-import { UserId } from "@/domains/user";
+import { create } from "@/domains/story-point";
+import { Id } from "@/domains/user";
 import { deserializeCard, serializeCard, SerializedCard } from "./card-converter";
-import { createSelectableCards } from "@/domains/selectable-cards";
+import { create } from "@/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
-import { createGamePlayer, GamePlayer, GamePlayerId, UserMode } from "@/domains/game-player";
+import { createGamePlayer, T, Id, UserMode } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { GameId } from "@/domains/game";
 
 export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}
 
-  async findByUserAndGame(userId: UserId, gameId: GameId): Promise<GamePlayer | undefined> {
+  async findByUserAndGame(userId: Id, gameId: GameId): Promise<T | undefined> {
     const snapshot = await get(ref(this.database, `/users/${userId}/joinedGames/${gameId}`));
 
-    const val: GamePlayerId | undefined = snapshot.val()?.playerId;
+    const val: Id | undefined = snapshot.val()?.playerId;
     if (!val) {
       return undefined;
     }
@@ -21,7 +21,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     return this.findBy(val);
   }
 
-  async delete(player: GamePlayer) {
+  async delete(player: T) {
     const updates: { [key: string]: any } = {};
 
     updates[`/games/${player.game}/users/${player.id}`] = null;
@@ -32,7 +32,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     await update(ref(this.database), updates);
   }
 
-  async save(gamePlayer: GamePlayer): Promise<void> {
+  async save(gamePlayer: T): Promise<void> {
     const updates: { [key: string]: any } = {};
     const hand = gamePlayer.hand;
 
@@ -48,7 +48,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     await update(ref(this.database), updates);
   }
 
-  async findBy(id: GamePlayerId): Promise<GamePlayer | undefined> {
+  async findBy(id: Id): Promise<T | undefined> {
     if (id === "") {
       return;
     }
@@ -59,7 +59,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
       return undefined;
     }
     const gameId = val["game"] as GameId;
-    const userId = val["user"] as UserId;
+    const userId = val["user"] as Id;
 
     const gameSnapshot = await get(child(ref(this.database, "games"), gameId));
 
@@ -72,7 +72,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     const hand: SerializedCard | undefined = hands ? hands[id] : undefined;
     const cards = gameVal["cards"] as number[];
 
-    const selectableCards = createSelectableCards(cards.map(createStoryPoint));
+    const selectableCards = create(cards.map(create));
 
     return createGamePlayer({
       id,

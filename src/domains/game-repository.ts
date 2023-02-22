@@ -1,13 +1,13 @@
-import { Game, GameId } from "./game";
+import * as Game from "./game";
 import { InvitationSignature } from "./invitation";
 
 export interface GameRepository {
   // save game entity into repository
-  save(game: Game): Promise<void>;
+  save(game: Game.Game): Promise<void>;
 
   // find game by id
-  findBy(id: GameId): Promise<Game | undefined>;
+  findBy(id: Game.GameId): Promise<Game.Game | undefined>;
 
   // find game by invitation signature
-  findByInvitationSignature(signature: InvitationSignature): Promise<Game | undefined>;
+  findByInvitationSignature(signature: InvitationSignature): Promise<Game.Game | undefined>;
 }

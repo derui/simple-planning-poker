@@ -1,5 +1,5 @@
 import { Dependencies } from "@/dependencies";
-import { createUserId } from "@/domains/user";
+import { createId } from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { RecoilRoot } from "recoil";
 import React, { useEffect } from "react";
@@ -50,10 +50,10 @@ test("update state if user is found", async () => {
   const registrar = createDependencyRegistrar<Dependencies>();
 
   const authenticator = {
-    currentUserIdIfExists: jest.fn().mockImplementation(async () => createUserId("id")),
+    currentUserIdIfExists: jest.fn().mockImplementation(async () => createId("id")),
   };
   const userRepository = {
-    findBy: jest.fn().mockImplementation(async () => ({ id: createUserId("id"), name: "name", joinedGames: [] })),
+    findBy: jest.fn().mockImplementation(async () => ({ id: createId("id"), name: "name", joinedGames: [] })),
     save: jest.fn(),
   };
   const gameRepository = createMockedGameRepository();
@@ -87,7 +87,7 @@ test("update state if user is found", async () => {
   await flushPromisesAndTimers();
 
   expect(callback).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith({ id: createUserId("id"), name: "name", joinedGames: [] });
+  expect(onChange).toHaveBeenCalledWith({ id: createId("id"), name: "name", joinedGames: [] });
 });
 
 beforeEach(() => {

@@ -1,4 +1,4 @@
-import { Card, equalCard } from "@/domains/card";
+import { T, equals } from "@/domains/card";
 import { Future, pendingOf, valueOf } from "@/status/util";
 import { selector } from "recoil";
 import currentGamePlayerState from "../atoms/current-game-player-state";
@@ -7,7 +7,7 @@ import SelectorKeys from "./key";
 
 type State = {
   index: number | undefined;
-  card: Card | undefined;
+  card: T | undefined;
 };
 
 const currentPlayerSelectedCardState = selector<Future<State | undefined>>({
@@ -25,7 +25,7 @@ const currentPlayerSelectedCardState = selector<Future<State | undefined>>({
       return valueOf(undefined);
     }
 
-    const index = viewModel.cards.findIndex((v) => (userHand.card ? equalCard(v, userHand.card) : false));
+    const index = viewModel.cards.findIndex((v) => (userHand.card ? equals(v, userHand.card) : false));
 
     return valueOf({
       index,

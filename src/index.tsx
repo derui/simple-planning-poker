@@ -21,7 +21,7 @@ import { NewGameStartedEventListener } from "./infrastractures/event/new-game-st
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { GamePlayerRepositoryImpl } from "./infrastractures/game-player-repository";
-import { createJoinService } from "./domains/join-service";
+import * as JoinService from "./domains/join-service";
 import { UserLeaveFromGameEventListener } from "./infrastractures/event/user-leave-from-game-event-listener";
 import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
@@ -46,8 +46,8 @@ import { LeaveGameUseCase } from "./usecases/leave-game";
 import createUseChangeUserMode from "./status/game/actions/use-change-user-mode";
 import { initializeGameQuery } from "./status/game/atoms/game-query";
 import { initializeUserQuery } from "./status/user/atoms/user-state-query";
-import config from './twind.config.cjs';
-import{install} from '@twind/core';
+import config from "./twind.config.cjs";
+import { install } from "@twind/core";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -88,7 +88,7 @@ registrar.register(
   new JoinUserUseCase(
     dispatcher,
     registrar.resolve("userRepository"),
-    createJoinService(registrar.resolve("gameRepository"), registrar.resolve("gamePlayerRepository"))
+    JoinService.create(registrar.resolve("gameRepository"), registrar.resolve("gamePlayerRepository"))
   )
 );
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));

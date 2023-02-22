@@ -1,8 +1,8 @@
 import { test, expect } from "vitest";
 import { DOMAIN_EVENTS } from "./event";
-import { createGameId } from "./game";
-import { createGamePlayerId } from "./game-player";
-import { createUser, createUserId } from "./user";
+import { createId } from "./game";
+import * as GamePlayer from "./game-player";
+import { createUser, createId, changeName, canChangeName, isJoined, leaveFrom } from "./user";
 
 test("create user with id", () => {
   // Arrange
@@ -10,7 +10,7 @@ test("create user with id", () => {
 
   // Act
   const ret = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
@@ -25,7 +25,7 @@ test("join user into a game", () => {
 
   // Act
   const ret = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
@@ -38,16 +38,16 @@ test("change name", () => {
   // Arrange
   const name = "name";
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
 
   // Act
-  user.changeName("changed name");
+  const [ret] = changeName(user, "changed name");
 
   // Assert
-  expect(user.name).toEqual("changed name");
+  expect(ret.name).toEqual("changed name");
 });
 
 test("throw error if user name is empty", () => {
@@ -58,7 +58,7 @@ test("throw error if user name is empty", () => {
   // Assert
   expect(() =>
     createUser({
-      id: createUserId(),
+      id: createId(),
       name: "",
       joinedGames: [],
     })
@@ -69,7 +69,7 @@ test("throw error when change to empty name", () => {
   // Arrange
   const name = "name";
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
@@ -77,36 +77,30 @@ test("throw error when change to empty name", () => {
   // Act
 
   // Assert
-  expect(() => user.changeName("")).toThrowError();
+  expect(() => changeName(user, "")).toThrowError();
 });
 
 test("validate name", () => {
   // Arrange
-  const name = "name";
-  const user = createUser({
-    id: createUserId(),
-    name,
-    joinedGames: [],
-  });
 
   // Act
 
   // Assert
-  expect(user.canChangeName("")).toBeFalsy;
-  expect(user.canChangeName("foo")).toBeTruthy;
+  expect(canChangeName("")).toBeFalsy;
+  expect(canChangeName("foo")).toBeTruthy;
 });
 
 test("should return event to notify user name changed", () => {
   // Arrange
   const name = "name";
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
 
   // Act
-  const event = user.changeName("foobar");
+  const [, event] = changeName(user, "foobar");
 
   // Assert
   expect(event.kind).toEqual(DOMAIN_EVENTS.UserNameChanged);
@@ -116,13 +110,13 @@ test("should return event to notify user name changed", () => {
 
 test("should be able to get joined games", () => {
   // Arrange
-  const gameId = createGameId();
+  const gameId = createId();
   const name = "name";
-  const playerId = createGamePlayerId();
+  const playerId = GamePlayer.createId();
 
   // Act
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [
       { gameId, playerId },
@@ -136,35 +130,35 @@ test("should be able to get joined games", () => {
 
 test("should be able to check a user is joined to a game", () => {
   // Arrange
-  const gameId = createGameId();
+  const gameId = createId();
   const name = "name";
-  const playerId = createGamePlayerId();
+  const playerId = GamePlayer.createId();
 
   // Act
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [{ gameId, playerId }],
   });
 
   // Assert
-  expect(user.isJoined(gameId)).toBeTruthy();
+  expect(isJoined(user, gameId)).toBeTruthy();
 });
 
 test("should be able to leave from the game user already joined", () => {
   // Arrange
-  const gameId = createGameId();
+  const gameId = createId();
   const name = "name";
-  const playerId = createGamePlayerId();
+  const playerId = GamePlayer.createId();
 
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [{ gameId, playerId }],
   });
 
   // Act
-  const ret = user.leaveFrom(gameId);
+  const [, ret] = leaveFrom(user, gameId);
 
   // Assert
   expect(ret).not.toBeUndefined();
@@ -173,17 +167,17 @@ test("should be able to leave from the game user already joined", () => {
 
 test("should not be able to leave from the game user did not join", () => {
   // Arrange
-  const gameId = createGameId();
+  const gameId = createId();
   const name = "name";
 
   const user = createUser({
-    id: createUserId(),
+    id: createId(),
     name,
     joinedGames: [],
   });
 
   // Act
-  const ret = user.leaveFrom(gameId);
+  const [, ret] = leaveFrom(user, gameId);
 
   // Assert
   expect(ret).toBeUndefined();

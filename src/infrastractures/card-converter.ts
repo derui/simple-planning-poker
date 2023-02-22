@@ -1,5 +1,5 @@
-import { Card, createGiveUpCard, createStoryPointCard } from "@/domains/card";
-import { createStoryPoint } from "@/domains/story-point";
+import { T, createGiveUpCard, create } from "@/domains/card";
+import { create } from "@/domains/story-point";
 
 export type SerializedCard =
   | {
@@ -7,7 +7,7 @@ export type SerializedCard =
     }
   | { kind: "storypoint"; storypoint: number };
 
-export const serializeCard = (card: Card): SerializedCard => {
+export const serializeCard = (card: T): SerializedCard => {
   switch (card.kind) {
     case "giveup":
       return { kind: "giveup" };
@@ -16,11 +16,11 @@ export const serializeCard = (card: Card): SerializedCard => {
   }
 };
 
-export const deserializeCard = (card: SerializedCard): Card => {
+export const deserializeCard = (card: SerializedCard): T => {
   switch (card.kind) {
     case "giveup":
       return createGiveUpCard();
     case "storypoint":
-      return createStoryPointCard(createStoryPoint(card.storypoint));
+      return create(create(card.storypoint));
   }
 };

@@ -1,17 +1,19 @@
 import { create, Id } from "./base";
-import { Card } from "./card";
+import * as Card from "./card";
 import { GameId } from "./game";
-import { GamePlayerId, UserMode } from "./game-player";
-import { SelectableCards } from "./selectable-cards";
-import { UserId } from "./user";
+import * as GamePlayer from "./game-player";
+import * as SelectableCards from "./selectable-cards";
+import * as User from "./user";
 
 export type EventId = Id<"Event">;
 
 // A base event interface
-export interface Event<Kind extends string> {
+export interface DomainEvent {
   id: EventId;
-  kind: Kind;
+  kind: string;
 }
+
+type Eventize<Kind extends string> = DomainEvent & { kind: Kind };
 
 // create event id
 export const createEventId = (): EventId => create<"Event">();
@@ -27,6 +29,7 @@ export const DOMAIN_EVENTS = {
   GameShowedDown: "GameShowedDown",
   GamePlayerCardSelected: "GamePlayerCardSelected",
   UserLeavedFromGame: "UserLeavedFromGame",
+  GamePlayerGiveUp: "GamePlayerGiveUp",
 } as const;
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: (typeof DOMAIN_EVENTS)[key] };
@@ -39,136 +42,56 @@ export type DefinedDomainEvents =
   | GameShowedDown
   | UserInvited
   | GamePlayerCardSelected
-  | UserLeavedFromGame;
+  | UserLeavedFromGame
+  | GamePlayerGiveUp;
 
 // define domain events
 
-export interface GameCreated extends Event<DomainEvents["GameCreated"]> {
+export interface GameCreated extends Eventize<DomainEvents["GameCreated"]> {
   gameId: GameId;
   name: string;
   createdBy: {
-    userId: UserId;
-    gamePlayerId: GamePlayerId;
+    userId: User.Id;
+    gamePlayerId: GamePlayer.Id;
   };
-  selectableCards: SelectableCards;
+  selectableCards: SelectableCards.T;
 }
 
-export interface NewGameStarted extends Event<DomainEvents["NewGameStarted"]> {
+export interface NewGameStarted extends Eventize<DomainEvents["NewGameStarted"]> {
   gameId: GameId;
 }
 
-export interface GamePlayerModeChanged extends Event<DomainEvents["GamePlayerModeChanged"]> {
-  gamePlayerId: GamePlayerId;
-  mode: UserMode;
+export interface GamePlayerModeChanged extends Eventize<DomainEvents["GamePlayerModeChanged"]> {
+  gamePlayerId: GamePlayer.Id;
+  mode: GamePlayer.UserMode;
 }
 
-export interface UserNameChanged extends Event<DomainEvents["UserNameChanged"]> {
-  userId: UserId;
+export interface UserNameChanged extends Eventize<DomainEvents["UserNameChanged"]> {
+  userId: User.Id;
   name: string;
 }
 
-export interface UserInvited extends Event<DomainEvents["UserInvited"]> {
+export interface UserInvited extends Eventize<DomainEvents["UserInvited"]> {
   gameId: GameId;
-  userId: UserId;
-  gamePlayerId: GamePlayerId;
+  userId: User.Id;
+  gamePlayerId: GamePlayer.Id;
 }
 
-export interface GameShowedDown extends Event<DomainEvents["GameShowedDown"]> {
-  gameId: GameId;
-}
-
-export interface GamePlayerCardSelected extends Event<DomainEvents["GamePlayerCardSelected"]> {
-  gamePlayerId: GamePlayerId;
-  card: Card;
-}
-
-export interface UserLeavedFromGame extends Event<DomainEvents["UserLeavedFromGame"]> {
-  userId: UserId;
-  gamePlayerId: GamePlayerId;
+export interface GameShowedDown extends Eventize<DomainEvents["GameShowedDown"]> {
   gameId: GameId;
 }
 
-export const EventFactory = {
-  newGameStarted(gameId: GameId): NewGameStarted {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.NewGameStarted,
-      gameId,
-    };
-  },
+export interface GamePlayerCardSelected extends Eventize<DomainEvents["GamePlayerCardSelected"]> {
+  gamePlayerId: GamePlayer.Id;
+  card: Card.T;
+}
 
-  userNameChanged(userId: UserId, name: string): UserNameChanged {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.UserNameChanged,
-      userId,
-      name,
-    };
-  },
+export interface GamePlayerGiveUp extends Eventize<DomainEvents["GamePlayerGiveUp"]> {
+  gamePlayerId: GamePlayer.Id;
+}
 
-  userInvited(gamePlayerId: GamePlayerId, gameId: GameId, userId: UserId): UserInvited {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.UserInvited,
-      gameId,
-      userId,
-      gamePlayerId,
-    };
-  },
-
-  gamdShowedDown(gameId: GameId): GameShowedDown {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.GameShowedDown,
-      gameId,
-    };
-  },
-
-  gamePlayerCardSelected(gamePlayerId: GamePlayerId, card: Card): GamePlayerCardSelected {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.GamePlayerCardSelected,
-      gamePlayerId,
-      card,
-    };
-  },
-
-  gameCreated(
-    gameId: GameId,
-    name: string,
-    userId: UserId,
-    playerId: GamePlayerId,
-    selectableCards: SelectableCards
-  ): GameCreated {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.GameCreated,
-      gameId,
-      createdBy: {
-        userId,
-        gamePlayerId: playerId,
-      },
-      name,
-      selectableCards,
-    };
-  },
-
-  gamePlayerModeChanged(gamePlayerId: GamePlayerId, mode: UserMode): GamePlayerModeChanged {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.GamePlayerModeChanged,
-      gamePlayerId,
-      mode,
-    };
-  },
-
-  userLeaveFromGame(userId: UserId, gamePlayerId: GamePlayerId, gameId: GameId): UserLeavedFromGame {
-    return {
-      id: createEventId(),
-      kind: DOMAIN_EVENTS.UserLeavedFromGame,
-      gamePlayerId,
-      userId,
-      gameId,
-    };
-  },
-};
+export interface UserLeavedFromGame extends Eventize<DomainEvents["UserLeavedFromGame"]> {
+  userId: User.Id;
+  gamePlayerId: GamePlayer.Id;
+  gameId: GameId;
+}

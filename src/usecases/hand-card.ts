@@ -1,11 +1,11 @@
-import { Card } from "@/domains/card";
-import { GamePlayerId } from "@/domains/game-player";
+import { T } from "@/domains/card";
+import { Id } from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface HandCardUseCaseInput {
-  playerId: GamePlayerId;
-  card: Card;
+  playerId: Id;
+  card: T;
 }
 
 export type HandCardUseCaseOutput = { kind: "success" } | { kind: "notFoundGamePlayer" };

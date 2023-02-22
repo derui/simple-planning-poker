@@ -1,4 +1,4 @@
-import { GamePlayerId } from "@/domains/game-player";
+import { Id } from "@/domains/game-player";
 import { Future, pendingOf, valueOf } from "@/status/util";
 import { selector } from "recoil";
 import { GameViewModel, UserHandViewModel } from "../types";
@@ -10,7 +10,7 @@ type State = {
   lowerLine: UserHandViewModel[];
 };
 
-const makeUserHandsInGame = (game: GameViewModel, users: GamePlayerId[]) => {
+const makeUserHandsInGame = (game: GameViewModel, users: Id[]) => {
   return users
     .map((user) => {
       return game.hands.find((v) => v.gamePlayerId === user);

@@ -1,9 +1,9 @@
-import { UserId } from "@/domains/user";
+import { Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserNameInput {
-  userId: UserId;
+  userId: Id;
   name: string;
 }
 

@@ -1,17 +1,19 @@
 import { GameId } from "./game";
 import sha256 from "crypto-js/sha256";
+import { Branded } from "./type";
 
-export type InvitationSignature = string;
+const tag = Symbol("InvitationSignature");
+export type InvitationSignature = Branded<string, typeof tag>;
 
-export interface Invitation {
-  gameId: GameId;
-  signature: InvitationSignature;
+export interface T {
+  readonly gameId: GameId;
+  readonly signature: InvitationSignature;
 }
 
-export const createInvitation = (gameId: GameId): Invitation => {
+export const create = (gameId: GameId): T => {
   const hash = sha256(gameId);
   return {
     gameId,
-    signature: hash.toString(),
+    signature: hash.toString() as InvitationSignature,
   };
 };

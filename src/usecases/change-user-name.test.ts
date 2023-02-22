@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { createUser, createUserId } from "@/domains/user";
+import { createUser, createId } from "@/domains/user";
 import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { ChangeUserNameUseCase } from "./change-user-name";
 import * as sinon from "sinon";
@@ -7,7 +7,7 @@ import * as sinon from "sinon";
 test("should return error if user not found", async () => {
   // Arrange
   const input = {
-    userId: createUserId(),
+    userId: createId(),
     name: "foo",
   };
   const dispatcher = createMockedDispatcher();
@@ -23,7 +23,7 @@ test("should return error if user not found", async () => {
 
 test("should return error if can not change name of the user", async () => {
   // Arrange
-  const userId = createUserId();
+  const userId = createId();
   const input = {
     userId,
     name: "",
@@ -43,7 +43,7 @@ test("should return error if can not change name of the user", async () => {
 
 test("should dispatch event", async () => {
   // Arrange
-  const userId = createUserId();
+  const userId = createId();
   const input = {
     userId,
     name: "name",
@@ -61,6 +61,6 @@ test("should dispatch event", async () => {
 
   // Assert
   expect(ret.kind).toBe("success");
-  expect(save).toBeCalledTimes(1);
-  expect(save.callArgWith(0)).toEqual("name");
+  expect(save.callCount).toBe(1);
+  expect(save.lastCall.firstArg.name).toEqual("name");
 });

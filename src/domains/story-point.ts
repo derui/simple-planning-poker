@@ -1,28 +1,27 @@
-export type StoryPoint = {
-  get value(): number;
-};
+import { Branded } from "./type";
 
-export const createStoryPoint = (v: number): StoryPoint => {
-  if (!isValidStoryPoint(v)) {
+const tag = Symbol("StoryPoint");
+export type T = Branded<number, typeof tag>;
+
+export const create = (v: number): T => {
+  if (!isValid(v)) {
     throw new Error("Can not create story point");
   }
 
-  return {
-    get value() {
-      return v;
-    },
-  };
+  return v as T;
 };
 
-export const isValidStoryPoint = (v: number): boolean => {
+export const value = (v: T) => v as number;
+
+export const isValid = (v: number) => {
   return v >= 0 && !isNaN(v);
 };
 
-export const equalStoryPoint = (v1: StoryPoint, v2: StoryPoint): boolean => v1.value === v2.value;
-export const compareStoryPoint = (v1: StoryPoint, v2: StoryPoint): number => {
-  if (equalStoryPoint(v1, v2)) {
+export const equals = (v1: T, v2: T) => v1 === v2;
+export const compare = (v1: T, v2: T): number => {
+  if (equals(v1, v2)) {
     return 0;
-  } else if (v1.value > v2.value) {
+  } else if (v1 > v2) {
     return 1;
   } else {
     return -1;

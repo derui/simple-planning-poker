@@ -1,14 +1,14 @@
 import { test, expect } from "vitest";
-import { createStoryPoint } from "./story-point";
+import { create, value } from "./story-point";
 
 test("create story point with positive number", () => {
   // Arrange
 
   // Act
-  const ret = createStoryPoint(1);
+  const ret = create(1);
 
   // Assert
-  expect(ret.value).toEqual(1);
+  expect(ret).toEqual(1);
 });
 
 test("throw error if point is less than 0", () => {
@@ -17,9 +17,9 @@ test("throw error if point is less than 0", () => {
   // Act
 
   // Assert
-  expect(() => createStoryPoint(0)).not.toThrowError();
-  expect(() => createStoryPoint(-2)).toThrowError();
-  expect(() => createStoryPoint(-1)).toThrowError();
+  expect(() => create(0)).not.toThrowError();
+  expect(() => create(-2)).toThrowError();
+  expect(() => create(-1)).toThrowError();
 });
 
 test("throw error if point is NaN", () => {
@@ -28,5 +28,11 @@ test("throw error if point is NaN", () => {
   // Act
 
   // Assert
-  expect(() => createStoryPoint(NaN)).toThrowError();
+  expect(() => create(NaN)).toThrowError();
+});
+
+test("get value", () => {
+  const point = create(10);
+
+  expect(value(point)).toBe(10);
 });

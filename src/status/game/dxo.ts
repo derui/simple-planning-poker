@@ -1,7 +1,7 @@
-import { GamePlayer } from "@/domains/game-player";
+import { T } from "@/domains/game-player";
 import { GamePlayerViewModel } from "./types";
 
-export const gamePlayerToViewModel = (gamePlayer: GamePlayer, userName: string): GamePlayerViewModel => {
+export const gamePlayerToViewModel = (gamePlayer: T, userName: string): GamePlayerViewModel => {
   return {
     id: gamePlayer.id,
     userId: gamePlayer.user,

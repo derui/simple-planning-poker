@@ -1,4 +1,4 @@
-import { UserId } from "@/domains/user";
+import { Id } from "@/domains/user";
 
 export interface UserViewModel {
   id: string;
@@ -12,7 +12,7 @@ export interface UserJoinedGameViewModel {
 }
 
 export type CurrentUserViewModel = {
-  id: UserId | null;
+  id: Id | null;
   name: string;
   joinedGames: UserJoinedGameViewModel[];
 };

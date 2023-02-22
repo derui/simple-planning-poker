@@ -1,11 +1,11 @@
 import { GameId } from "@/domains/game";
-import { UserId } from "@/domains/user";
+import { Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {
   gameId: GameId;
-  userId: UserId;
+  userId: Id;
 }
 
 export type LeaveGameUseCaseOutput = { kind: "success" } | { kind: "notFoundUser" } | { kind: "leaveFailed" };

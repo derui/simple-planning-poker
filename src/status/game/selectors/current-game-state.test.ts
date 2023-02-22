@@ -1,9 +1,9 @@
 import { Dependencies } from "@/dependencies";
-import { createGame, createGameId } from "@/domains/game";
-import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUser, createUserId } from "@/domains/user";
+import { create, createId } from "@/domains/game";
+import { createGamePlayer, createId } from "@/domains/game-player";
+import { create } from "@/domains/selectable-cards";
+import { create } from "@/domains/story-point";
+import { createUser, createId } from "@/domains/user";
 import { flushPromisesAndTimers } from "@/test-lib";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { snapshot_UNSTABLE } from "recoil";
@@ -18,14 +18,14 @@ test("return default values if current game is not found", async () => {
 });
 
 test("return view model if game id is presented", async () => {
-  const cards = createSelectableCards([createStoryPoint(1)]);
+  const cards = create([create(1)]);
   const registrar = createDependencyRegistrar<Dependencies>();
   registrar.register("gameRepository", {
     findBy: jest.fn().mockImplementation(() => {
-      return createGame({
-        id: createGameId("id"),
+      return create({
+        id: createId("id"),
         name: "name",
-        players: [createGamePlayerId("player")],
+        players: [createId("player")],
         cards,
       });
     }),
@@ -33,9 +33,9 @@ test("return view model if game id is presented", async () => {
   registrar.register("gamePlayerRepository", {
     findBy: jest.fn().mockImplementation(() => {
       return createGamePlayer({
-        id: createGamePlayerId("player"),
-        gameId: createGameId("id"),
-        userId: createUserId("user"),
+        id: createId("player"),
+        gameId: createId("id"),
+        userId: createId("user"),
         cards,
       });
     }),
@@ -43,7 +43,7 @@ test("return view model if game id is presented", async () => {
   registrar.register("userRepository", {
     findBy: jest.fn().mockImplementation(() => {
       return createUser({
-        id: createUserId("user"),
+        id: createId("user"),
         name: "name",
         joinedGames: [],
       });
@@ -58,7 +58,7 @@ test("return view model if game id is presented", async () => {
   initializeGameQuery(registrar);
 
   const snapshot = snapshot_UNSTABLE(({ set }) => {
-    set(currentGameIdState, createGameId("id"));
+    set(currentGameIdState, createId("id"));
   });
   const release = snapshot.retain();
 
@@ -72,11 +72,11 @@ test("return view model if game id is presented", async () => {
     expect(value.viewModel.hands).toContainEqual({
       card: undefined,
       name: "name",
-      gamePlayerId: createGamePlayerId("player"),
+      gamePlayerId: createId("player"),
       mode: "normal",
       selected: false,
     });
-    expect(value.viewModel.id).toBe(createGameId("id"));
+    expect(value.viewModel.id).toBe(createId("id"));
     expect(value.viewModel.name).toBe("name");
   } finally {
     release();

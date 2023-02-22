@@ -1,25 +1,25 @@
 import { test, expect } from "vitest";
-import { createStoryPointCard } from "./card";
-import { DOMAIN_EVENTS } from "./event";
-import { createGameId } from "./game";
-import { createGamePlayer, createGamePlayerId, UserMode } from "./game-player";
-import { createSelectableCards } from "./selectable-cards";
-import { createStoryPoint } from "./story-point";
-import { createUserId } from "./user";
+import * as Card from "./card";
+import { DOMAIN_EVENTS, GamePlayerModeChanged } from "./event";
+import * as Game from "./game";
+import { changeUserMode, createGamePlayer, createId, takeHand, UserMode } from "./game-player";
+import * as StoryPoint from "./story-point";
+import * as User from "./user";
+import * as UserHand from "./user-hand";
+import * as SelectableCards from "./selectable-cards";
 
-const cards = createSelectableCards([1, 2, 3, 4].map(createStoryPoint));
+const cards = SelectableCards.create([1, 2, 3, 4].map(StoryPoint.create));
 
 test("create user with id", () => {
   // Arrange
-  const userId = createUserId();
+  const userId = User.createId();
 
   // Act
   const ret = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
+    id: createId(),
+    gameId: Game.createId(),
     mode: UserMode.normal,
     userId: userId,
-    cards,
   });
 
   // Assert
@@ -29,81 +29,75 @@ test("create user with id", () => {
 test("change mode", () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
-    userId: createUserId(),
-    cards,
+    id: createId(),
+    gameId: Game.createId(),
+    userId: User.createId(),
   });
 
   // Act
-  player.changeUserMode(UserMode.inspector);
+  const [ret] = changeUserMode(player, UserMode.inspector);
 
   // Assert
-  expect(player.mode).toEqual(UserMode.inspector);
+  expect(ret.mode).toEqual(UserMode.inspector);
 });
 
 test("should return event to notify user name changed", () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
-    userId: createUserId(),
-    cards,
+    id: createId(),
+    gameId: Game.createId(),
+    userId: User.createId(),
   });
 
   // Act
-  const event = player.changeUserMode(UserMode.inspector);
+  const [, event] = changeUserMode(player, UserMode.inspector);
 
   // Assert
   expect(event.kind).toEqual(DOMAIN_EVENTS.GamePlayerModeChanged);
-  expect(event.mode).toEqual(UserMode.inspector);
-  expect(event.gamePlayerId).toBe(player.id);
+  expect((event as GamePlayerModeChanged).mode).toEqual(UserMode.inspector);
+  expect((event as GamePlayerModeChanged).gamePlayerId).toBe(player.id);
 });
 
 test("should be able to take hand from selectable cards", () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
-    userId: createUserId(),
-    cards,
+    id: createId(),
+    gameId: Game.createId(),
+    userId: User.createId(),
   });
 
   // Act
-  player.takeHand(cards.cards[0]);
+  const [ret] = takeHand(player, cards[0], cards);
 
   // Assert
-  expect(player.hand).toBe(cards.cards[0]);
+  expect(ret.hand).toEqual(UserHand.handed(cards[0]));
 });
 
-test("should be undefined that hand is if player not take hand", () => {
+test("throw error if the card is not contains cards", () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
-    userId: createUserId(),
-    cards,
+    id: createId(),
+    gameId: createId(),
+    userId: User.createId(),
   });
 
   // Act
 
   // Assert
-  expect(player.hand).toBeUndefined;
+
+  expect(() => takeHand(player, Card.create(StoryPoint.create(10)), cards)).toThrowError();
 });
 
-test("should not take card that cards do not contain", () => {
+test("should be unselected that hand is if player not take hand", () => {
   // Arrange
   const player = createGamePlayer({
-    id: createGamePlayerId(),
-    gameId: createGameId(),
-    userId: createUserId(),
-    cards,
+    id: createId(),
+    gameId: Game.createId(),
+    userId: User.createId(),
   });
 
   // Act
-  const ret = player.takeHand(createStoryPointCard(createStoryPoint(5)));
 
   // Assert
-  expect(player.hand).toBeUndefined;
-  expect(ret).toBeUndefined;
+  expect(player.hand).toEqual(UserHand.unselected());
 });

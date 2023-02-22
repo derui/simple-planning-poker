@@ -1,16 +1,16 @@
 import { test, expect } from "vitest";
 import sinon from "sinon";
-import { createGameId } from "@/domains/game";
-import { createGamePlayerId } from "@/domains/game-player";
-import { createUser, createUserId } from "@/domains/user";
+import { createId } from "@/domains/game";
+import { createId } from "@/domains/game-player";
+import { createUser, createId } from "@/domains/user";
 import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { LeaveGameUseCase } from "./leave-game";
 
 test("should return error if user not found", async () => {
   // Arrange
   const input = {
-    userId: createUserId(),
-    gameId: createGameId(),
+    userId: createId(),
+    gameId: createId(),
   };
   const dispatcher = createMockedDispatcher();
   const userRepository = createMockedUserRepository();
@@ -25,8 +25,8 @@ test("should return error if user not found", async () => {
 
 test("should return error if user did not join to a game", async () => {
   // Arrange
-  const gameId = createGameId();
-  const user = createUser({ id: createUserId(), name: "test", joinedGames: [] });
+  const gameId = createId();
+  const user = createUser({ id: createId(), name: "test", joinedGames: [] });
   const input = {
     gameId,
     userId: user.id,
@@ -47,9 +47,9 @@ test("should return error if user did not join to a game", async () => {
 
 test("should return success if user leaved from a game", async () => {
   // Arrange
-  const gameId = createGameId();
-  const playerId = createGamePlayerId();
-  const user = createUser({ id: createUserId(), name: "test", joinedGames: [{ gameId, playerId }] });
+  const gameId = createId();
+  const playerId = createId();
+  const user = createUser({ id: createId(), name: "test", joinedGames: [{ gameId, playerId }] });
   const input = {
     gameId,
     userId: user.id,
@@ -70,9 +70,9 @@ test("should return success if user leaved from a game", async () => {
 
 test("should dispatch event to be joined by user", async () => {
   // Arrange
-  const gameId = createGameId();
-  const playerId = createGamePlayerId();
-  const user = createUser({ id: createUserId(), name: "test", joinedGames: [{ gameId, playerId }] });
+  const gameId = createId();
+  const playerId = createId();
+  const user = createUser({ id: createId(), name: "test", joinedGames: [{ gameId, playerId }] });
   const input = {
     gameId,
     userId: user.id,

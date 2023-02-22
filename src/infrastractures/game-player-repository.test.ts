@@ -1,9 +1,9 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
-import { createGame, createGameId } from "@/domains/game";
-import { createGamePlayer, createGamePlayerId } from "@/domains/game-player";
-import { createSelectableCards } from "@/domains/selectable-cards";
-import { createStoryPoint } from "@/domains/story-point";
-import { createUserId } from "@/domains/user";
+import { create, createId } from "@/domains/game";
+import { createGamePlayer, createId } from "@/domains/game-player";
+import { create } from "@/domains/selectable-cards";
+import { create } from "@/domains/story-point";
+import { createId } from "@/domains/user";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { GamePlayerRepositoryImpl } from "./game-player-repository";
 import { GameRepositoryImpl } from "./game-repository";
@@ -29,16 +29,16 @@ afterEach(async () => {
 
 test("should be able to save and find a game player", async () => {
   // Arrange
-  const game = createGame({
-    id: createGameId(),
+  const game = create({
+    id: createId(),
     name: "test",
-    players: [createGamePlayerId()],
-    cards: createSelectableCards([1, 2].map(createStoryPoint)),
+    players: [createId()],
+    cards: create([1, 2].map(create)),
   });
 
   const player = createGamePlayer({
     id: game.players[0],
-    userId: createUserId(),
+    userId: createId(),
     gameId: game.id,
     cards: game.cards,
   });
@@ -63,7 +63,7 @@ test("should not be able find a game if it did not save before", async () => {
   const repository = new GamePlayerRepositoryImpl(database);
 
   // Act
-  const instance = await repository.findBy(createGamePlayerId());
+  const instance = await repository.findBy(createId());
 
   // Assert
   expect(instance).toBeUndefined();
@@ -71,16 +71,16 @@ test("should not be able find a game if it did not save before", async () => {
 
 test("should be able to delete a player", async () => {
   // Arrange
-  const game = createGame({
-    id: createGameId(),
+  const game = create({
+    id: createId(),
     name: "test",
-    players: [createGamePlayerId()],
-    cards: createSelectableCards([1, 2].map(createStoryPoint)),
+    players: [createId()],
+    cards: create([1, 2].map(create)),
   });
 
   const player = createGamePlayer({
     id: game.players[0],
-    userId: createUserId(),
+    userId: createId(),
     gameId: game.id,
     cards: game.cards,
   });
