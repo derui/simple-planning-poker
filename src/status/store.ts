@@ -4,10 +4,13 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 
 // INJECT REDUCER IMPORT HERE
+import * as user from "./slices/user";
 
 // INJECT EPIC IMPORT HERE
 
 const reducers = {
+  user: user.reducer,
+
   // do not format this structure.
 } as const;
 
