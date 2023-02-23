@@ -1,9 +1,9 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
-import { create, createId } from "@/domains/game";
-import { createGamePlayer, createId } from "@/domains/game-player";
-import { create } from "@/domains/selectable-cards";
-import { create } from "@/domains/story-point";
-import { createId } from "@/domains/user";
+import * as Game from "@/domains/game";
+import * as GamePlayer from "@/domains/game-player";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as User from "@/domains/user";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { GamePlayerRepositoryImpl } from "./game-player-repository";
 import { GameRepositoryImpl } from "./game-repository";
@@ -29,18 +29,17 @@ afterEach(async () => {
 
 test("should be able to save and find a game player", async () => {
   // Arrange
-  const game = create({
-    id: createId(),
+  const game = Game.create({
+    id: Game.createId(),
     name: "test",
-    players: [createId()],
-    cards: create([1, 2].map(create)),
+    players: [GamePlayer.createId()],
+    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = createGamePlayer({
+  const player = GamePlayer.createGamePlayer({
     id: game.players[0],
-    userId: createId(),
+    userId: User.createId(),
     gameId: game.id,
-    cards: game.cards,
   });
 
   const gameRepository = new GameRepositoryImpl(database);
@@ -63,7 +62,7 @@ test("should not be able find a game if it did not save before", async () => {
   const repository = new GamePlayerRepositoryImpl(database);
 
   // Act
-  const instance = await repository.findBy(createId());
+  const instance = await repository.findBy(GamePlayer.createId());
 
   // Assert
   expect(instance).toBeUndefined();
@@ -71,18 +70,17 @@ test("should not be able find a game if it did not save before", async () => {
 
 test("should be able to delete a player", async () => {
   // Arrange
-  const game = create({
-    id: createId(),
+  const game = Game.create({
+    id: Game.createId(),
     name: "test",
-    players: [createId()],
-    cards: create([1, 2].map(create)),
+    players: [GamePlayer.createId()],
+    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = createGamePlayer({
+  const player = GamePlayer.createGamePlayer({
     id: game.players[0],
-    userId: createId(),
+    userId: User.createId(),
     gameId: game.id,
-    cards: game.cards,
   });
 
   const gameRepository = new GameRepositoryImpl(database);

@@ -12,7 +12,6 @@ export class GameCreatedEventListener implements DomainEventListener {
         id: event.createdBy.gamePlayerId,
         userId: event.createdBy.userId,
         gameId: event.gameId,
-        cards: event.selectableCards,
       });
       this.gamePlayerRepository.save(createdPlayer);
     }

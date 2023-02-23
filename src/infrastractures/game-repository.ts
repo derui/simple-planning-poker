@@ -1,10 +1,10 @@
-import { create, Game, GameId, PlayerHand } from "@/domains/game";
+import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
-import { create } from "@/domains/story-point";
-import { create } from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as SelectableCards from "@/domains/selectable-cards";
 import { child, Database, get, ref, update } from "firebase/database";
 import { createId } from "@/domains/game-player";
-import { deserializeCard, SerializedCard } from "./card-converter";
+import { deserialize, Serialized } from "./user-hand-converter";
 import { InvitationSignature } from "@/domains/invitation";
 import { createGameRefResolver } from "./game-ref-resolver";
 
@@ -13,27 +13,25 @@ export class GameRepositoryImpl implements GameRepository {
 
   constructor(private database: Database) {}
 
-  async save(game: Game): Promise<void> {
+  async save(game: Game.Game): Promise<void> {
     const updates: { [key: string]: any } = {};
     updates[this.resolver.name(game.id)] = game.name;
     updates[this.resolver.showedDown(game.id)] = game.showedDown;
-    updates[this.resolver.cards(game.id)] = game.cards.cards
-      .filter((v) => v.kind === "storypoint")
-      .map((v) => (v.kind === "storypoint" ? v.storyPoint.value : null));
+    updates[this.resolver.cards(game.id)] = game.cards;
 
-    const invitation = game.makeInvitation();
+    const invitation = Game.makeInvitation(game);
     updates[`/invitations/${invitation.signature}`] = game.id;
 
     await update(ref(this.database), updates);
   }
 
-  async findByInvitationSignature(signature: InvitationSignature): Promise<Game | undefined> {
+  async findByInvitationSignature(signature: InvitationSignature): Promise<Game.Game | undefined> {
     if (signature === "") {
       return;
     }
     const snapshot = await get(child(ref(this.database, "invitations"), signature));
 
-    const gameId = snapshot.val() as GameId | undefined;
+    const gameId = snapshot.val() as Game.GameId | undefined;
     if (!gameId) {
       return undefined;
     }
@@ -41,7 +39,7 @@ export class GameRepositoryImpl implements GameRepository {
     return this.findBy(gameId);
   }
 
-  async findBy(id: GameId): Promise<Game | undefined> {
+  async findBy(id: Game.GameId): Promise<Game.Game | undefined> {
     if (id === "") {
       return;
     }
@@ -56,23 +54,23 @@ export class GameRepositoryImpl implements GameRepository {
     const cards = val.cards as number[];
     const players = val.users as { [key: string]: any } | undefined;
     const showedDown = val.showedDown as boolean;
-    const hands = val.userHands as { [k: string]: SerializedCard | undefined } | undefined;
+    const hands = val.userHands as { [k: string]: Serialized | undefined } | undefined;
 
-    const selectableCards = create(cards.map(create));
-    const game = create({
+    const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
+    let game = Game.create({
       id,
       name,
       players: Object.keys(players || {}).map((v) => createId(v)),
       cards: selectableCards,
       hands: hands
         ? Object.entries(hands)
-            .map(([k, card]): PlayerHand | null => {
-              if (!card) {
+            .map(([k, hand]): Game.PlayerHand | null => {
+              if (!hand) {
                 return null;
               }
               return {
                 playerId: createId(k),
-                card: deserializeCard(card),
+                hand: deserialize(hand),
               };
             })
             .filter((v) => !!v)
@@ -81,7 +79,7 @@ export class GameRepositoryImpl implements GameRepository {
     });
 
     if (showedDown) {
-      game.showDown();
+      [game] = Game.showDown(game);
     }
 
     return game;

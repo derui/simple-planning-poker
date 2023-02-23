@@ -1,17 +1,17 @@
-import { GameId } from "./game";
-import { T, Id } from "./game-player";
-import { Id } from "./user";
+import * as Game from "./game";
+import * as GamePlayer from "./game-player";
+import * as User from "./user";
 
 export interface GamePlayerRepository {
   // save game entity into repository
-  save(gamePlayer: T): Promise<void>;
+  save(gamePlayer: GamePlayer.T): Promise<void>;
 
   // find game by id
-  findBy(id: Id): Promise<T | undefined>;
+  findBy(id: GamePlayer.Id): Promise<GamePlayer.T | undefined>;
 
   // find player from user id and game
-  findByUserAndGame(userId: Id, gameId: GameId): Promise<T | undefined>;
+  findByUserAndGame(userId: User.Id, gameId: Game.GameId): Promise<GamePlayer.T | undefined>;
 
   // delete a player
-  delete(player: T): Promise<void>;
+  delete(player: GamePlayer.T): Promise<void>;
 }
