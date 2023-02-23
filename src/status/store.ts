@@ -4,6 +4,8 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 
 // INJECT REDUCER IMPORT HERE
+import * as gamePlayer from "./slices/game-player";
+
 import * as auth from "./slices/auth";
 
 import * as user from "./slices/user";
@@ -11,6 +13,8 @@ import * as user from "./slices/user";
 // INJECT EPIC IMPORT HERE
 
 const reducers = {
+  gamePlayer: gamePlayer.reducer,
+
   auth: auth.reducer,
 
   user: user.reducer,
