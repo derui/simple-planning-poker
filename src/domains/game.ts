@@ -10,7 +10,7 @@ import * as StoryPoint from "./story-point";
 import { Branded } from "./type";
 import * as Hand from "./user-hand";
 
-export type GameId = Base.Id<"Game">;
+export type Id = Base.Id<"Game">;
 
 export const createId = function createGameId(v?: string) {
   return Base.create<"Game">(v);
@@ -25,8 +25,8 @@ const tag = Symbol();
 type CalculatedStoryPoint = Branded<number, typeof tag>;
 
 // Game is value object
-export interface Game {
-  readonly id: GameId;
+export interface T {
+  readonly id: Id;
   readonly name: string;
   readonly showedDown: boolean;
   readonly players: GamePlayer.Id[];
@@ -41,12 +41,12 @@ export const create = ({
   cards,
   hands = [],
 }: {
-  id: GameId;
+  id: Id;
   name: string;
   players: GamePlayer.Id[];
   cards: SelectableCards.T;
   hands?: PlayerHand[];
-}): Game => {
+}): T => {
   if (players.length === 0) {
     throw new Error("Least one player need in game");
   }
@@ -67,15 +67,15 @@ export const create = ({
   };
 };
 
-export const makeInvitation = function makeInvitation(game: Game) {
+export const makeInvitation = function makeInvitation(game: T) {
   return Invitation.create(game.id);
 };
 
-export const canShowDown = function canShowDown(game: Game) {
+export const canShowDown = function canShowDown(game: T) {
   return game.hands.length > 0;
 };
 
-export const showDown = function showDown(game: Game): [Game, DomainEvent?] {
+export const showDown = function showDown(game: T): [T, DomainEvent?] {
   if (!canShowDown(game)) {
     return [game];
   }
@@ -88,7 +88,7 @@ export const showDown = function showDown(game: Game): [Game, DomainEvent?] {
   ];
 };
 
-export const calculateAverage = function calculateAverage(game: Game) {
+export const calculateAverage = function calculateAverage(game: T) {
   if (!game.showedDown) {
     return undefined;
   }
@@ -113,7 +113,7 @@ export const canChangeName = function canChangeName(name: string) {
   return name !== "";
 };
 
-export const changeName = function changeName(game: Game, name: string) {
+export const changeName = function changeName(game: T, name: string) {
   if (!canChangeName(name)) {
     throw new Error("can not change name");
   }
@@ -123,7 +123,7 @@ export const changeName = function changeName(game: Game, name: string) {
   });
 };
 
-export const newGame = function newGame(game: Game): [Game, DomainEvent] {
+export const newGame = function newGame(game: T): [T, DomainEvent] {
   const newObj = produce(game, (draft) => {
     draft.showedDown = false;
   });

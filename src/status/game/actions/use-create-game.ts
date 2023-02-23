@@ -1,5 +1,5 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { ApplicationDependencyRegistrar } from "@/dependencies";
 import currentGamePlayerState from "../atoms/current-game-player-state";
 import { gamePlayerToViewModel } from "../dxo";
@@ -8,7 +8,7 @@ import currentUserState from "@/status/user/atoms/current-user-state";
 interface CreationParameter {
   name: string;
   cards: number[];
-  callback: (gameId: GameId) => void;
+  callback: (gameId: Id) => void;
 }
 
 export default function createUseCreateGame(registrar: ApplicationDependencyRegistrar) {

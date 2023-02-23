@@ -4,7 +4,7 @@ import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {
-  gameId: Game.GameId;
+  gameId: Game.Id;
   userId: User.Id;
 }
 

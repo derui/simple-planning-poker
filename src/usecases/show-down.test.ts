@@ -32,7 +32,7 @@ test("should return error if game is not found", async () => {
 test("should save game showed down", async () => {
   // Arrange
   const gameId = Game.createId();
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     gameId,
     userId: User.createId(),
@@ -66,7 +66,7 @@ test("should save game showed down", async () => {
 test("should dispatch ShowedDown event", async () => {
   // Arrange
   const gameId = Game.createId();
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     gameId,
     userId: User.createId(),

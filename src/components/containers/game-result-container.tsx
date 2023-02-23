@@ -1,7 +1,7 @@
 import * as React from "react";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { UserMode } from "@/domains/game-player";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { useNavigate, useParams } from "react-router";
 import gameActionsContext from "@/contexts/actions/game-actions";
 import { ShowDownResultViewModel } from "@/status/game/types";
@@ -51,7 +51,7 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
   const newGame = gameActions.useNewGame();
 
   React.useEffect(() => {
-    openGame(param.gameId as GameId, () => {
+    openGame(param.gameId as Id, () => {
       navigate("/", { replace: true });
     });
   }, [param.gameId]);

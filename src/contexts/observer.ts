@@ -1,9 +1,9 @@
-import { Game, GameId } from "@/domains/game";
+import { T, Id } from "@/domains/game";
 import { T, Id } from "@/domains/user";
 import { createContext } from "react";
 
 export interface GameObserver {
-  subscribe(gameId: GameId, subscriber: (game: Game) => void): void;
+  subscribe(gameId: Id, subscriber: (game: T) => void): void;
 
   unsubscribe(): void;
 }

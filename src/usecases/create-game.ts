@@ -14,7 +14,7 @@ export interface CreateGameUseCaseInput {
 }
 
 export type CreateGameUseCaseOutput =
-  | { kind: "success"; gameId: Game.GameId; createdGamePlayerId: GamePlayer.Id }
+  | { kind: "success"; gameId: Game.Id; createdGamePlayerId: GamePlayer.Id }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" };
 

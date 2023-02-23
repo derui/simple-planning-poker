@@ -1,4 +1,4 @@
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { Id } from "@/domains/game-player";
 import { createUser, JoinedGame, T, Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
@@ -29,7 +29,7 @@ export class UserRepositoryImpl implements UserRepository {
     const name = val["name"] as string;
     const rawJoinedGames = (val.joinedGames as { [k: string]: { playerId: string } } | undefined) ?? {};
     const joinedGames: JoinedGame[] = Object.entries(rawJoinedGames).map(([gameId, gameInfo]) => {
-      return { gameId: gameId as GameId, playerId: gameInfo.playerId as Id };
+      return { gameId: gameId as Id, playerId: gameInfo.playerId as Id };
     });
 
     return createUser({ id, name, joinedGames });

@@ -1,5 +1,5 @@
 import { T } from "@/domains/card";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { Id, UserMode } from "@/domains/game-player";
 import { Id } from "@/domains/user";
 
@@ -20,7 +20,7 @@ export interface GamePlayerViewModel {
 }
 
 export interface GameViewModel {
-  id: GameId;
+  id: Id;
   name: string;
   hands: UserHandViewModel[];
   cards: T[];

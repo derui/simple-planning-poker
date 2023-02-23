@@ -11,13 +11,13 @@ import {
   UserLeavedFromGame,
   UserNameChanged,
 } from "./event";
-import { GameId } from "./game";
+import { Id } from "./game";
 import * as User from "./user";
 import * as GamePlayer from "./game-player";
 import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
 
-export const newGameStarted = function newGameStarted(gameId: GameId): NewGameStarted {
+export const newGameStarted = function newGameStarted(gameId: Id): NewGameStarted {
   return {
     id: createEventId(),
     kind: DOMAIN_EVENTS.NewGameStarted,
@@ -34,11 +34,7 @@ export const userNameChanged = function userNameChanged(userId: User.Id, name: s
   };
 };
 
-export const userInvited = function userInvited(
-  gamePlayerId: GamePlayer.Id,
-  gameId: GameId,
-  userId: User.Id
-): UserInvited {
+export const userInvited = function userInvited(gamePlayerId: GamePlayer.Id, gameId: Id, userId: User.Id): UserInvited {
   return {
     id: createEventId(),
     kind: DOMAIN_EVENTS.UserInvited,
@@ -48,7 +44,7 @@ export const userInvited = function userInvited(
   };
 };
 
-export const gameShowedDown = function gameShowedDown(gameId: GameId): GameShowedDown {
+export const gameShowedDown = function gameShowedDown(gameId: Id): GameShowedDown {
   return {
     id: createEventId(),
     kind: DOMAIN_EVENTS.GameShowedDown,
@@ -77,7 +73,7 @@ export const gamePlayerGiveUp = function gamePlayerGiveUp(gamePlayerId: GamePlay
 };
 
 export const gameCreated = function gameCreated(
-  gameId: GameId,
+  gameId: Id,
   name: string,
   userId: User.Id,
   playerId: GamePlayer.Id,
@@ -111,7 +107,7 @@ export const gamePlayerModeChanged = function gamePlayerModeChanged(
 export const userLeaveFromGame = function userLeaveFromGame(
   userId: User.Id,
   gamePlayerId: GamePlayer.Id,
-  gameId: GameId
+  gameId: Id
 ): UserLeavedFromGame {
   return {
     id: createEventId(),

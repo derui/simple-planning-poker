@@ -1,6 +1,6 @@
 import { create, Id } from "./base";
 import * as Card from "./card";
-import { GameId } from "./game";
+import { Id } from "./game";
 import * as GamePlayer from "./game-player";
 import * as SelectableCards from "./selectable-cards";
 import * as User from "./user";
@@ -48,7 +48,7 @@ export type DefinedDomainEvents =
 // define domain events
 
 export interface GameCreated extends Eventize<DomainEvents["GameCreated"]> {
-  gameId: GameId;
+  gameId: Id;
   name: string;
   createdBy: {
     userId: User.Id;
@@ -58,7 +58,7 @@ export interface GameCreated extends Eventize<DomainEvents["GameCreated"]> {
 }
 
 export interface NewGameStarted extends Eventize<DomainEvents["NewGameStarted"]> {
-  gameId: GameId;
+  gameId: Id;
 }
 
 export interface GamePlayerModeChanged extends Eventize<DomainEvents["GamePlayerModeChanged"]> {
@@ -72,13 +72,13 @@ export interface UserNameChanged extends Eventize<DomainEvents["UserNameChanged"
 }
 
 export interface UserInvited extends Eventize<DomainEvents["UserInvited"]> {
-  gameId: GameId;
+  gameId: Id;
   userId: User.Id;
   gamePlayerId: GamePlayer.Id;
 }
 
 export interface GameShowedDown extends Eventize<DomainEvents["GameShowedDown"]> {
-  gameId: GameId;
+  gameId: Id;
 }
 
 export interface GamePlayerCardSelected extends Eventize<DomainEvents["GamePlayerCardSelected"]> {
@@ -93,5 +93,5 @@ export interface GamePlayerGiveUp extends Eventize<DomainEvents["GamePlayerGiveU
 export interface UserLeavedFromGame extends Eventize<DomainEvents["UserLeavedFromGame"]> {
   userId: User.Id;
   gamePlayerId: GamePlayer.Id;
-  gameId: GameId;
+  gameId: Id;
 }

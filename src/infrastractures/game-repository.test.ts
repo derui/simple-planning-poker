@@ -37,7 +37,7 @@ test("should be able to save and find a game", async () => {
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: game.players[0],
     userId: User.createId(),
     gameId: game.id,
@@ -78,7 +78,7 @@ test("should save invitation in key", async () => {
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: game.players[0],
     userId: User.createId(),
     gameId: game.id,

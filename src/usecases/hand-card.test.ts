@@ -33,7 +33,7 @@ test("should return error if player is not found", async () => {
 
 test("should save player with card selected by user", async () => {
   // Arrange
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: Game.createId(),
@@ -60,7 +60,7 @@ test("should save player with card selected by user", async () => {
 
 test("should dispatch UserHanded event", async () => {
   // Arrange
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: Game.createId(),

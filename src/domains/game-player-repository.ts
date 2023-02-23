@@ -10,7 +10,7 @@ export interface GamePlayerRepository {
   findBy(id: GamePlayer.Id): Promise<GamePlayer.T | undefined>;
 
   // find player from user id and game
-  findByUserAndGame(userId: User.Id, gameId: Game.GameId): Promise<GamePlayer.T | undefined>;
+  findByUserAndGame(userId: User.Id, gameId: Game.Id): Promise<GamePlayer.T | undefined>;
 
   // delete a player
   delete(player: GamePlayer.T): Promise<void>;

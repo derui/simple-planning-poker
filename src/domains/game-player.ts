@@ -30,7 +30,7 @@ export type T = Branded<
   {
     readonly id: Id;
     readonly user: User.Id;
-    readonly game: Game.GameId;
+    readonly game: Game.Id;
     readonly mode: UserMode;
     readonly hand: UserHand.T;
   },
@@ -40,7 +40,7 @@ export type T = Branded<
 /**
    create user from id and name
  */
-export const createGamePlayer = ({
+export const create = ({
   id,
   gameId,
   userId,
@@ -49,7 +49,7 @@ export const createGamePlayer = ({
 }: {
   id: Id;
   userId: User.Id;
-  gameId: Game.GameId;
+  gameId: Game.Id;
   hand?: UserHand.T;
   mode?: UserMode;
 }): T => {

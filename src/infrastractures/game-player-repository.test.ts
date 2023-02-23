@@ -36,7 +36,7 @@ test("should be able to save and find a game player", async () => {
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: game.players[0],
     userId: User.createId(),
     gameId: game.id,
@@ -77,7 +77,7 @@ test("should be able to delete a player", async () => {
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   });
 
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: game.players[0],
     userId: User.createId(),
     gameId: game.id,

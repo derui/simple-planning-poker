@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import AtomKeys from "./key";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 
-const currentGameIdState = atom<GameId | undefined>({
+const currentGameIdState = atom<Id | undefined>({
   key: AtomKeys.currentGameStateId,
   default: undefined,
 });

@@ -2,7 +2,7 @@ import { test, expect } from "vitest";
 import * as Card from "./card";
 import { DOMAIN_EVENTS, GamePlayerModeChanged } from "./event";
 import * as Game from "./game";
-import { changeUserMode, createGamePlayer, createId, takeHand, UserMode } from "./game-player";
+import { changeUserMode, create, createId, takeHand, UserMode } from "./game-player";
 import * as StoryPoint from "./story-point";
 import * as User from "./user";
 import * as UserHand from "./user-hand";
@@ -15,7 +15,7 @@ test("create user with id", () => {
   const userId = User.createId();
 
   // Act
-  const ret = createGamePlayer({
+  const ret = create({
     id: createId(),
     gameId: Game.createId(),
     mode: UserMode.normal,
@@ -28,7 +28,7 @@ test("create user with id", () => {
 
 test("change mode", () => {
   // Arrange
-  const player = createGamePlayer({
+  const player = create({
     id: createId(),
     gameId: Game.createId(),
     userId: User.createId(),
@@ -43,7 +43,7 @@ test("change mode", () => {
 
 test("should return event to notify user name changed", () => {
   // Arrange
-  const player = createGamePlayer({
+  const player = create({
     id: createId(),
     gameId: Game.createId(),
     userId: User.createId(),
@@ -60,7 +60,7 @@ test("should return event to notify user name changed", () => {
 
 test("should be able to take hand from selectable cards", () => {
   // Arrange
-  const player = createGamePlayer({
+  const player = create({
     id: createId(),
     gameId: Game.createId(),
     userId: User.createId(),
@@ -75,7 +75,7 @@ test("should be able to take hand from selectable cards", () => {
 
 test("throw error if the card is not contains cards", () => {
   // Arrange
-  const player = createGamePlayer({
+  const player = create({
     id: createId(),
     gameId: createId(),
     userId: User.createId(),
@@ -90,7 +90,7 @@ test("throw error if the card is not contains cards", () => {
 
 test("should be unselected that hand is if player not take hand", () => {
   // Arrange
-  const player = createGamePlayer({
+  const player = create({
     id: createId(),
     gameId: Game.createId(),
     userId: User.createId(),

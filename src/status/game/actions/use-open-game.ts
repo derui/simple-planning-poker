@@ -1,5 +1,5 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import currentGamePlayerState from "../atoms/current-game-player-state";
@@ -14,7 +14,7 @@ export default function createUseOpenGame(registrar: DependencyRegistrar<Depende
   return () => {
     const currentUser = useRecoilValue(currentUserState);
 
-    return useRecoilCallback(({ set }) => async (gameId: GameId, error: () => void) => {
+    return useRecoilCallback(({ set }) => async (gameId: Id, error: () => void) => {
       if (!currentUser.id) {
         error();
         return;

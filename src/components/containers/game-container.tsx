@@ -3,7 +3,7 @@ import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
 import { UserMode } from "@/domains/game-player";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { useNavigate, useParams } from "react-router";
 import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
 import {
@@ -66,7 +66,7 @@ const GameContainer: React.FunctionComponent<Props> = () => {
   const showDown = gameActions.useShowDown();
 
   React.useEffect(() => {
-    openGame(param.gameId as GameId, () => {
+    openGame(param.gameId as Id, () => {
       navigate("/", { replace: true });
     });
   }, [param.gameId]);

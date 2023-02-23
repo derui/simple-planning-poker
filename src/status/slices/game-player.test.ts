@@ -33,7 +33,7 @@ test("give up action does not affect state if current player not set-upped ", ()
   const state = reducer(
     getInitialState(),
     giveUpSuccess(
-      GamePlayer.createGamePlayer({
+      GamePlayer.create({
         id: GamePlayer.createId(),
         userId: User.createId(),
         gameId: Game.createId(),
@@ -45,7 +45,7 @@ test("give up action does not affect state if current player not set-upped ", ()
 });
 
 test("give up action affect state", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: GAME.id,
@@ -64,7 +64,7 @@ test("give up action affect state", () => {
 });
 
 test("hand card action affect state", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: GAME.id,
@@ -83,7 +83,7 @@ test("hand card action affect state", () => {
 });
 
 test("change to inspector action affect state", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: GAME.id,
@@ -102,7 +102,7 @@ test("change to inspector action affect state", () => {
 });
 
 test("change to normal player action affect state", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: GAME.id,
@@ -122,7 +122,7 @@ test("change to normal player action affect state", () => {
 });
 
 test("leave game", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: User.createId(),
     gameId: GAME.id,
@@ -142,12 +142,12 @@ test("leave game", () => {
 });
 
 test("select game", () => {
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId("0"),
     userId: User.createId("id1"),
     gameId: GAME.id,
   });
-  const otherPlayer = GamePlayer.createGamePlayer({
+  const otherPlayer = GamePlayer.create({
     id: GamePlayer.createId("1"),
     userId: User.createId("id2"),
     gameId: GAME.id,

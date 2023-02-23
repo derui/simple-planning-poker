@@ -24,7 +24,7 @@ export const create = (gameRepository: GameRepository, gamePlayerRepository: Gam
         return EventFactory.userInvited(joinedGame.playerId, joinedGame.gameId, user.id);
       }
 
-      const player = GamePlayer.createGamePlayer({
+      const player = GamePlayer.create({
         id: GamePlayer.createId(),
         userId: user.id,
         gameId: game.id,

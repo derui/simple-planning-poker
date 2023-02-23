@@ -3,7 +3,7 @@ import { GameRepository } from "@/domains/game-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ShowDownUseCaseInput {
-  gameId: Game.GameId;
+  gameId: Game.Id;
 }
 
 export type ShowDownUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };

@@ -1,5 +1,5 @@
 import { useRecoilCallback, useRecoilValue } from "recoil";
-import { GameId } from "@/domains/game";
+import { Id } from "@/domains/game";
 import { InvitationSignature } from "@/domains/invitation";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
@@ -15,7 +15,7 @@ export default function createUseJoinUser(registrar: DependencyRegistrar<Depende
   return () => {
     const currentUser = useRecoilValue(currentUserState);
 
-    return useRecoilCallback(({ set }) => async (signature: InvitationSignature, callback: (id: GameId) => void) => {
+    return useRecoilCallback(({ set }) => async (signature: InvitationSignature, callback: (id: Id) => void) => {
       if (!currentUser.id) {
         return;
       }

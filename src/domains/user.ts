@@ -3,7 +3,7 @@ import produce from "immer";
 import * as Base from "./base";
 import { DomainEvent } from "./event";
 import * as EventFactory from "./event-factory";
-import { GameId } from "./game";
+import * as Game from "./game";
 import * as GamePlayer from "./game-player";
 
 export type Id = Base.Id<"User">;
@@ -17,7 +17,7 @@ export const createId = (value?: string): Id => {
 };
 
 export interface JoinedGame {
-  gameId: GameId;
+  gameId: Game.Id;
   playerId: GamePlayer.Id;
 }
 
@@ -66,15 +66,15 @@ export const changeName = (user: T, name: string): [T, DomainEvent] => {
   ];
 };
 
-export const findJoinedGame = (user: T, gameId: GameId) => {
+export const findJoinedGame = (user: T, gameId: Game.Id) => {
   return user.joinedGames.find((v) => v.gameId === gameId);
 };
 
-export const isJoined = (user: T, gameId: GameId) => {
+export const isJoined = (user: T, gameId: Game.Id) => {
   return !!findJoinedGame(user, gameId);
 };
 
-export const leaveFrom = (user: T, gameId: GameId): [T, DomainEvent?] => {
+export const leaveFrom = (user: T, gameId: Game.Id): [T, DomainEvent?] => {
   const leavedGame = findJoinedGame(user, gameId);
   if (!leavedGame) {
     return [user];

@@ -13,7 +13,7 @@ export class GameRepositoryImpl implements GameRepository {
 
   constructor(private database: Database) {}
 
-  async save(game: Game.Game): Promise<void> {
+  async save(game: Game.T): Promise<void> {
     const updates: { [key: string]: any } = {};
     updates[this.resolver.name(game.id)] = game.name;
     updates[this.resolver.showedDown(game.id)] = game.showedDown;
@@ -25,13 +25,13 @@ export class GameRepositoryImpl implements GameRepository {
     await update(ref(this.database), updates);
   }
 
-  async findByInvitationSignature(signature: InvitationSignature): Promise<Game.Game | undefined> {
+  async findByInvitationSignature(signature: InvitationSignature): Promise<Game.T | undefined> {
     if (signature === "") {
       return;
     }
     const snapshot = await get(child(ref(this.database, "invitations"), signature));
 
-    const gameId = snapshot.val() as Game.GameId | undefined;
+    const gameId = snapshot.val() as Game.Id | undefined;
     if (!gameId) {
       return undefined;
     }
@@ -39,7 +39,7 @@ export class GameRepositoryImpl implements GameRepository {
     return this.findBy(gameId);
   }
 
-  async findBy(id: Game.GameId): Promise<Game.Game | undefined> {
+  async findBy(id: Game.Id): Promise<Game.T | undefined> {
     if (id === "") {
       return;
     }

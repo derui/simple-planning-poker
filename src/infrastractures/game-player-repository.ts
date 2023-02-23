@@ -8,7 +8,7 @@ import * as Game from "@/domains/game";
 export class GamePlayerRepositoryImpl implements GamePlayerRepository {
   constructor(private database: Database) {}
 
-  async findByUserAndGame(userId: User.Id, gameId: Game.GameId): Promise<GamePlayer.T | undefined> {
+  async findByUserAndGame(userId: User.Id, gameId: Game.Id): Promise<GamePlayer.T | undefined> {
     const snapshot = await get(ref(this.database, `/users/${userId}/joinedGames/${gameId}`));
 
     const val: GamePlayer.Id | undefined = snapshot.val()?.playerId;
@@ -56,7 +56,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     if (!val) {
       return undefined;
     }
-    const gameId = val["game"] as Game.GameId;
+    const gameId = val["game"] as Game.Id;
     const userId = val["user"] as User.Id;
 
     const gameSnapshot = await get(child(ref(this.database, "games"), gameId));
@@ -69,7 +69,7 @@ export class GamePlayerRepositoryImpl implements GamePlayerRepository {
     const mode = gameVal.users[id] as GamePlayer.UserMode;
     const hand: Serialized | undefined = hands ? hands[id] : undefined;
 
-    return GamePlayer.createGamePlayer({
+    return GamePlayer.create({
       id,
       userId,
       gameId,

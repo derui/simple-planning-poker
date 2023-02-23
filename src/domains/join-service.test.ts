@@ -40,7 +40,7 @@ test("should return no events if game is not found", async () => {
 test("should return domain event to notify player joined", async () => {
   // Arrange
   const user = User.createUser({ id: User.createId(), name: "foo", joinedGames: [] });
-  const player = GamePlayer.createGamePlayer({
+  const player = GamePlayer.create({
     id: GamePlayer.createId(),
     userId: user.id,
     gameId: Game.createId(),

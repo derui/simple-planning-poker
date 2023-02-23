@@ -1,6 +1,6 @@
 import { Dependencies } from "@/dependencies";
 import { create, createId } from "@/domains/game";
-import { createGamePlayer, createId } from "@/domains/game-player";
+import { create, createId } from "@/domains/game-player";
 import { create } from "@/domains/selectable-cards";
 import { create } from "@/domains/story-point";
 import { createUser, createId } from "@/domains/user";
@@ -32,7 +32,7 @@ test("return view model if game id is presented", async () => {
   } as any);
   registrar.register("gamePlayerRepository", {
     findBy: jest.fn().mockImplementation(() => {
-      return createGamePlayer({
+      return create({
         id: createId("player"),
         gameId: createId("id"),
         userId: createId("user"),

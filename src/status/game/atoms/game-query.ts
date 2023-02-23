@@ -3,7 +3,7 @@ import AtomKeys from "./key";
 import { GameViewModel } from "../types";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { UserRepository } from "@/domains/user-repository";
-import { Game, GameId } from "@/domains/game";
+import { T, Id } from "@/domains/game";
 import { T } from "@/domains/user";
 import { GameRepository } from "@/domains/game-repository";
 import { GameObserver } from "@/contexts/observer";
@@ -14,7 +14,7 @@ let gamePlayerRepository: GamePlayerRepository | null = null;
 let userRepository: UserRepository | null = null;
 let gameObserver: GameObserver | null = null;
 
-const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
+const gameToViewModel = async (game: T): Promise<GameViewModel> => {
   const hands = await Promise.all(
     game.players.map(async (v) => {
       const player = await gamePlayerRepository!!.findBy(v);
@@ -50,7 +50,7 @@ const gameToViewModel = async (game: Game): Promise<GameViewModel> => {
 
 const gameQuery = atomFamily({
   key: AtomKeys.gameState,
-  default: async (gameId: GameId) => {
+  default: async (gameId: Id) => {
     const game = await gameRepository!!.findBy(gameId);
     if (!game) {
       return;
@@ -59,7 +59,7 @@ const gameQuery = atomFamily({
     return gameToViewModel(game);
   },
 
-  effects: (gameId: GameId) => [
+  effects: (gameId: Id) => [
     ({ setSelf }) => {
       const unsubscribe = gameObserver!!.subscribe(gameId, async (game) => {
         const gameModel = await gameToViewModel(game);
