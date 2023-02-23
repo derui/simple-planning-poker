@@ -1,17 +1,19 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
-import { EventFactory } from "@/domains/event";
-import { createId } from "@/domains/game";
-import { createId } from "@/domains/game-player";
-import { createUser, createId } from "@/domains/user";
+import * as EventFactory from "@/domains/event-factory";
+import * as Game from "@/domains/game";
+import * as GamePlayer from "@/domains/game-player";
+import * as User from "@/domains/user";
+import * as Invitation from "@/domains/invitation";
 import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
 import { JoinUserUseCase } from "./join-user";
 
 test("should return error if user not found", async () => {
   // Arrange
+  const signature = Invitation.create(Game.createId()).signature;
   const input = {
-    userId: createId(),
-    signature: "a",
+    userId: User.createId(),
+    signature: signature,
   };
   const dispatcher = createMockedDispatcher();
   const userRepository = createMockedUserRepository();
@@ -29,10 +31,11 @@ test("should return error if user not found", async () => {
 
 test("should save game that user joined in", async () => {
   // Arrange
-  const gameId = createId();
-  const user = createUser({ id: createId(), name: "test", joinedGames: [] });
+  const gameId = Game.createId();
+  const signature = Invitation.create(gameId).signature;
+  const user = User.createUser({ id: User.createId(), name: "test", joinedGames: [] });
   const input = {
-    signature: "a",
+    signature: signature,
     userId: user.id,
   };
 
@@ -41,7 +44,7 @@ test("should save game that user joined in", async () => {
     findBy: sinon.fake.returns(Promise.resolve(user)),
   });
   const joinService = {
-    join: async () => EventFactory.userInvited(createId(), gameId, user.id),
+    join: async () => EventFactory.userInvited(GamePlayer.createId(), gameId, user.id),
   };
   const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 
@@ -54,10 +57,11 @@ test("should save game that user joined in", async () => {
 
 test("should dispatch event to be joined by user", async () => {
   // Arrange
-  const gameId = createId();
-  const user = createUser({ id: createId(), name: "test", joinedGames: [] });
+  const gameId = Game.createId();
+  const signature = Invitation.create(gameId).signature;
+  const user = User.createUser({ id: User.createId(), name: "test", joinedGames: [] });
   const input = {
-    signature: "a",
+    signature: signature,
     userId: user.id,
   };
 
@@ -67,7 +71,7 @@ test("should dispatch event to be joined by user", async () => {
     findBy: sinon.fake.resolves(user),
   });
   const joinService = {
-    join: async () => EventFactory.userInvited(createId(), gameId, user.id),
+    join: async () => EventFactory.userInvited(GamePlayer.createId(), gameId, user.id),
   };
   const useCase = new JoinUserUseCase(dispatcher, userRepository, joinService);
 

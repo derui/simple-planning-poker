@@ -1,20 +1,21 @@
 import { test, expect } from "vitest";
 import sinon from "sinon";
+import * as Game from "@/domains/game";
+import * as User from "@/domains/user";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as GamePlayer from "@/domains/game-player";
+import * as UserHand from "@/domains/user-hand";
 
-import { create, createId } from "@/domains/game";
-import { create } from "@/domains/selectable-cards";
-import { create } from "@/domains/story-point";
-import { createId } from "@/domains/user";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import { ShowDownUseCase } from "./show-down";
-import { createGamePlayer, createId } from "@/domains/game-player";
 
-const CARDS = create([create(1)]);
+const CARDS = SelectableCards.create([StoryPoint.create(1)]);
 
 test("should return error if game is not found", async () => {
   // Arrange
   const input = {
-    gameId: createId(),
+    gameId: Game.createId(),
   };
   const repository = createMockedGameRepository();
   const dispatcher = createMockedDispatcher();
@@ -30,19 +31,18 @@ test("should return error if game is not found", async () => {
 
 test("should save game showed down", async () => {
   // Arrange
-  const gameId = createId();
-  const player = createGamePlayer({
-    id: createId(),
+  const gameId = Game.createId();
+  const player = GamePlayer.createGamePlayer({
+    id: GamePlayer.createId(),
     gameId,
-    userId: createId(),
-    cards: CARDS,
+    userId: User.createId(),
   });
-  const game = create({
+  const game = Game.create({
     id: gameId,
     name: "game",
     players: [player.id],
     cards: CARDS,
-    hands: [{ playerId: player.id, card: CARDS.at(0) }],
+    hands: [{ playerId: player.id, hand: UserHand.handed(CARDS[0]) }],
   });
 
   const input = {
@@ -65,19 +65,18 @@ test("should save game showed down", async () => {
 
 test("should dispatch ShowedDown event", async () => {
   // Arrange
-  const gameId = createId();
-  const player = createGamePlayer({
-    id: createId(),
+  const gameId = Game.createId();
+  const player = GamePlayer.createGamePlayer({
+    id: GamePlayer.createId(),
     gameId,
-    userId: createId(),
-    cards: CARDS,
+    userId: User.createId(),
   });
-  const game = create({
+  const game = Game.create({
     id: gameId,
     name: "game",
     players: [player.id],
     cards: CARDS,
-    hands: [{ playerId: player.id, card: CARDS.at(0) }],
+    hands: [{ playerId: player.id, hand: UserHand.handed(CARDS[0]) }],
   });
 
   const input = {

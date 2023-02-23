@@ -1,10 +1,10 @@
-import { Id, UserMode } from "@/domains/game-player";
+import * as GamePlayer from "@/domains/game-player";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserModeInput {
-  gamePlayerId: Id;
-  mode: UserMode;
+  gamePlayerId: GamePlayer.Id;
+  mode: GamePlayer.UserMode;
 }
 
 export type ChangeUserModeOutput = { kind: "success" } | { kind: "notFound" } | { kind: "canNotChangeMode" };
@@ -18,8 +18,8 @@ export class ChangeUserModeUseCase implements UseCase<ChangeUserModeInput, Promi
       return { kind: "notFound" };
     }
 
-    const event = game.changeUserMode(input.mode);
-    this.gamePlayerRepository.save(game);
+    const [player, event] = GamePlayer.changeUserMode(game, input.mode);
+    this.gamePlayerRepository.save(player);
 
     if (event) {
       this.dispatcher.dispatch(event);

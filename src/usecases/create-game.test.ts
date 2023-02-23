@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
-import { create } from "@/domains/selectable-cards";
-import { create } from "@/domains/story-point";
-import { createId } from "@/domains/user";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as User from "@/domains/user";
 import { CreateGameUseCase } from "./create-game";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import * as sinon from "sinon";
@@ -11,7 +11,7 @@ test("should return error if numbers is invalid", () => {
   const input = {
     name: "foo",
     points: [],
-    createdBy: createId(),
+    createdBy: User.createId(),
   };
   const dispatcher = createMockedDispatcher();
   const repository = createMockedGameRepository();
@@ -29,7 +29,7 @@ test("should return error if numbers contains invalid story point", () => {
   const input = {
     name: "foo",
     points: [-1],
-    createdBy: createId(),
+    createdBy: User.createId(),
   };
   const dispatcher = createMockedDispatcher();
   const repository = createMockedGameRepository();
@@ -47,7 +47,7 @@ test("should save new game into repository", () => {
   const input = {
     name: "foo",
     points: [1],
-    createdBy: createId(),
+    createdBy: User.createId(),
   };
   const dispatcher = createMockedDispatcher();
   const save = sinon.fake();
@@ -69,7 +69,7 @@ test("should dispatch game created event", () => {
   const input = {
     name: "foo",
     points: [1],
-    createdBy: createId(),
+    createdBy: User.createId(),
   };
   const dispatch = sinon.fake();
   const dispatcher = createMockedDispatcher({
@@ -86,5 +86,7 @@ test("should dispatch game created event", () => {
   expect(dispatch.callCount).toBe(1);
   expect(dispatch.lastCall.firstArg.name).toBe("foo");
   expect(dispatch.lastCall.firstArg.createdBy.userId).toEqual(input.createdBy);
-  expect(dispatch.lastCall.firstArg.selectableCards.cards).toEqual(create([create(1)]).cards);
+  expect(dispatch.lastCall.firstArg.selectableCards.cards).toEqual(
+    SelectableCards.create([StoryPoint.create(1)]).cards
+  );
 });

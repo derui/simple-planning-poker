@@ -1,9 +1,9 @@
-import { Id } from "@/domains/user";
+import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserNameInput {
-  userId: Id;
+  userId: User.Id;
   name: string;
 }
 
@@ -18,12 +18,12 @@ export class ChangeUserNameUseCase implements UseCase<ChangeUserNameInput, Promi
       return { kind: "notFound" };
     }
 
-    if (!user.canChangeName(input.name)) {
+    if (!User.canChangeName(input.name)) {
       return { kind: "canNotChangeName" };
     }
 
-    const event = user.changeName(input.name);
-    this.userRepository.save(user);
+    const [newUser, event] = User.changeName(user, input.name);
+    this.userRepository.save(newUser);
 
     if (event) {
       this.dispatcher.dispatch(event);

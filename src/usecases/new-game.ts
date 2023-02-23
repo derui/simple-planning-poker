@@ -1,9 +1,9 @@
-import { GameId } from "@/domains/game";
+import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface NewGameUseCaseInput {
-  gameId: GameId;
+  gameId: Game.GameId;
 }
 
 export type NewGameUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
@@ -17,10 +17,10 @@ export class NewGameUseCase implements UseCase<NewGameUseCaseInput, Promise<NewG
       return { kind: "notFoundGame" };
     }
 
-    const event = game.newGame();
+    const [newGame, event] = Game.newGame(game);
 
     this.dispatcher.dispatch(event);
-    this.gameRepository.save(game);
+    this.gameRepository.save(newGame);
 
     return { kind: "success" };
   }

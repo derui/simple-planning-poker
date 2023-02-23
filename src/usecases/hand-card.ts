@@ -1,11 +1,13 @@
-import { T } from "@/domains/card";
-import { Id } from "@/domains/game-player";
+import * as Card from "@/domains/card";
+import * as GamePlayer from "@/domains/game-player";
+import * as SelectableCards from "@/domains/selectable-cards";
 import { GamePlayerRepository } from "@/domains/game-player-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface HandCardUseCaseInput {
-  playerId: Id;
-  card: T;
+  playerId: GamePlayer.Id;
+  card: Card.T;
+  selectableCards: SelectableCards.T;
 }
 
 export type HandCardUseCaseOutput = { kind: "success" } | { kind: "notFoundGamePlayer" };
@@ -19,8 +21,8 @@ export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<Ha
       return { kind: "notFoundGamePlayer" };
     }
 
-    const event = player.takeHand(input.card);
-    this.gamePlayerRepository.save(player);
+    const [newPlayer, event] = GamePlayer.takeHand(player, input.card, input.selectableCards);
+    this.gamePlayerRepository.save(newPlayer);
     if (event) {
       this.dispatcher.dispatch(event);
     }

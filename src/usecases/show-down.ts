@@ -1,9 +1,9 @@
-import { GameId } from "@/domains/game";
+import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface ShowDownUseCaseInput {
-  gameId: GameId;
+  gameId: Game.GameId;
 }
 
 export type ShowDownUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
@@ -17,13 +17,13 @@ export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<Sh
       return { kind: "notFoundGame" };
     }
 
-    const event = game.showDown();
+    const [newGame, event] = Game.showDown(game);
+
+    this.gameRepository.save(newGame);
 
     if (event) {
       this.dispatcher.dispatch(event);
     }
-
-    this.gameRepository.save(game);
 
     return { kind: "success" };
   }

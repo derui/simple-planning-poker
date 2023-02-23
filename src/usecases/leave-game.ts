@@ -1,11 +1,11 @@
-import { GameId } from "@/domains/game";
-import { Id } from "@/domains/user";
+import * as Game from "@/domains/game";
+import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {
-  gameId: GameId;
-  userId: Id;
+  gameId: Game.GameId;
+  userId: User.Id;
 }
 
 export type LeaveGameUseCaseOutput = { kind: "success" } | { kind: "notFoundUser" } | { kind: "leaveFailed" };
@@ -19,8 +19,8 @@ export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<
     if (!user) {
       return { kind: "notFoundUser" };
     }
-    const event = user.leaveFrom(input.gameId);
-    this.userRepository.save(user);
+    const [newUser, event] = User.leaveFrom(user, input.gameId);
+    this.userRepository.save(newUser);
 
     if (!event) {
       return { kind: "leaveFailed" };

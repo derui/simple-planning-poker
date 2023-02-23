@@ -1,17 +1,17 @@
-import { Id } from "@/domains/game-player";
-import { InvitationSignature } from "@/domains/invitation";
-import { JoinService } from "@/domains/join-service";
-import { Id } from "@/domains/user";
+import * as GamePlayer from "@/domains/game-player";
+import * as Invitation from "@/domains/invitation";
+import * as JoinService from "@/domains/join-service";
+import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
-  signature: InvitationSignature;
-  userId: Id;
+  signature: Invitation.InvitationSignature;
+  userId: User.Id;
 }
 
 export type JoinUserUseCaseOutput =
-  | { kind: "success"; gamePlayerId: Id }
+  | { kind: "success"; gamePlayerId: GamePlayer.Id }
   | { kind: "notFoundUser" }
   | { kind: "joinFailed" };
 
@@ -19,7 +19,7 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
   constructor(
     private dispatcher: EventDispatcher,
     private userRepository: UserRepository,
-    private joinService: JoinService
+    private joinService: JoinService.JoinService
   ) {}
 
   async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {

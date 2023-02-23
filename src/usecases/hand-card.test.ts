@@ -1,21 +1,23 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
-import { createId } from "@/domains/game";
-import { create } from "@/domains/selectable-cards";
-import { create } from "@/domains/story-point";
-import { createId } from "@/domains/user";
-import { createMockedDispatcher, createMockedGamePlayerRepository } from "@/test-lib";
-import { createGiveUpCard } from "@/domains/card";
+import * as Game from "@/domains/game";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as User from "@/domains/user";
+import { createMemoryGamePlayerRepository, createMockedDispatcher, createMockedGamePlayerRepository } from "@/test-lib";
+import * as Card from "@/domains/card";
 import { HandCardUseCase } from "./hand-card";
-import { createGamePlayer, createId } from "@/domains/game-player";
+import * as GamePlayer from "@/domains/game-player";
+import * as UserHand from "@/domains/user-hand";
 
-const CARDS = create([create(1)]);
+const CARDS = SelectableCards.create([StoryPoint.create(1)]);
 
 test("should return error if player is not found", async () => {
   // Arrange
   const input = {
-    playerId: createId(),
-    card: createGiveUpCard(),
+    playerId: GamePlayer.createId(),
+    card: Card.create(StoryPoint.create(1)),
+    selectableCards: CARDS,
   };
   const repository = createMockedGamePlayerRepository();
   const dispatcher = createMockedDispatcher();
@@ -31,20 +33,17 @@ test("should return error if player is not found", async () => {
 
 test("should save player with card selected by user", async () => {
   // Arrange
-  const player = createGamePlayer({
-    id: createId(),
-    userId: createId(),
-    gameId: createId(),
-    cards: CARDS,
+  const player = GamePlayer.createGamePlayer({
+    id: GamePlayer.createId(),
+    userId: User.createId(),
+    gameId: Game.createId(),
   });
   const input = {
     playerId: player.id,
-    card: createGiveUpCard(),
+    card: Card.create(StoryPoint.create(1)),
+    selectableCards: CARDS,
   };
-  const findBy = sinon.fake.returns(Promise.resolve(player));
-  const repository = createMockedGamePlayerRepository({
-    findBy,
-  });
+  const repository = createMemoryGamePlayerRepository([player]);
   const dispatcher = createMockedDispatcher();
 
   const useCase = new HandCardUseCase(dispatcher, repository);
@@ -54,20 +53,22 @@ test("should save player with card selected by user", async () => {
 
   // Assert
   expect(ret.kind).toEqual("success");
-  expect(player.hand).toEqual(createGiveUpCard());
+
+  const updated = await repository.findBy(player.id);
+  expect(updated?.hand).toEqual(UserHand.handed(Card.create(StoryPoint.create(1))));
 });
 
 test("should dispatch UserHanded event", async () => {
   // Arrange
-  const player = createGamePlayer({
-    id: createId(),
-    userId: createId(),
-    gameId: createId(),
-    cards: CARDS,
+  const player = GamePlayer.createGamePlayer({
+    id: GamePlayer.createId(),
+    userId: User.createId(),
+    gameId: Game.createId(),
   });
   const input = {
     playerId: player.id,
-    card: createGiveUpCard(),
+    card: Card.create(StoryPoint.create(1)),
+    selectableCards: CARDS,
   };
   const findBy = sinon.fake.returns(Promise.resolve(player));
   const repository = createMockedGamePlayerRepository({
