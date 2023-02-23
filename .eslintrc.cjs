@@ -20,7 +20,7 @@ module.exports = {
     // project: "./tsconfig.json",
   },
   rules: {
-    "func-style": ["error", "expression", {allowArrowFunctions: true}],
+    "func-style": ["error", "expression"],
     "react/prop-types": "warn",
     "import/no-unresolved": "off",
     "react/jsx-uses-vars": "warn",
