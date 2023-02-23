@@ -4,11 +4,15 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 
 // INJECT REDUCER IMPORT HERE
+import * as auth from "./slices/auth";
+
 import * as user from "./slices/user";
 
 // INJECT EPIC IMPORT HERE
 
 const reducers = {
+  auth: auth.reducer,
+
   user: user.reducer,
 
   // do not format this structure.
