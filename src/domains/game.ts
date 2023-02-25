@@ -1,14 +1,11 @@
-import { isSuperset } from "@/utils/set";
 import produce from "immer";
 import * as Base from "./base";
-import { DomainEvent } from "./event";
-import * as EventFactory from "./event-factory";
-import * as GamePlayer from "./game-player";
+import { DomainEvent, DOMAIN_EVENTS, GenericDomainEvent } from "./event";
+import * as User from "./user";
 import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
-import * as StoryPoint from "./story-point";
-import { Branded } from "./type";
-import * as Hand from "./user-hand";
+import * as Round from "./round";
+import * as GamePlayer from "./game-player";
 
 export type Id = Base.Id<"Game">;
 
@@ -16,101 +13,88 @@ export const createId = function createGameId(v?: string) {
   return Base.create<"Game">(v);
 };
 
-export interface PlayerHand {
-  readonly playerId: GamePlayer.Id;
-  readonly hand: Hand.T;
-}
-
-const tag = Symbol();
-type CalculatedStoryPoint = Branded<number, typeof tag>;
-
 // Game is value object
 export interface T {
   readonly id: Id;
   readonly name: string;
-  readonly showedDown: boolean;
-  readonly players: GamePlayer.Id[];
+  readonly joinedPlayers: GamePlayer.T[];
+  readonly owner: User.Id;
   readonly cards: SelectableCards.T;
-  readonly hands: PlayerHand[];
+  readonly round: Round.T;
+  readonly finishedRounds: Round.Id[];
+}
+
+export interface NewRoundStarted extends DomainEvent<"NewRoundStarted"> {
+  readonly gameId: Id;
+  readonly roundId: Round.Id;
+}
+
+export interface GameCreated extends DomainEvent<"GameCreated"> {
+  gameId: Id;
+  name: string;
+  createdBy: User.Id;
+  selectableCards: SelectableCards.T;
 }
 
 export const create = ({
   id,
   name,
-  players,
+  joinedPlayers,
   cards,
-  hands = [],
+  owner,
+  round,
+  finishedRounds,
 }: {
   id: Id;
   name: string;
-  players: GamePlayer.Id[];
+  joinedPlayers: GamePlayer.T[];
+  owner: User.Id;
   cards: SelectableCards.T;
-  hands?: PlayerHand[];
-}): T => {
-  if (players.length === 0) {
-    throw new Error("Least one player need in game");
+  round?: Round.T;
+  finishedRounds: Round.Id[];
+}): [T, GenericDomainEvent] => {
+  const distinctedPlayers = new Map(joinedPlayers.map((v) => [v.user, v]));
+  if (!distinctedPlayers.has(owner)) {
+    distinctedPlayers.set(owner, { user: owner, mode: GamePlayer.UserMode.normal });
   }
 
-  const handedPlayers = new Set(hands.map((v) => v.playerId));
-  const playerIds = new Set(players);
-  if (!isSuperset(playerIds, handedPlayers)) {
-    throw new Error("Found unknown player not in this game");
-  }
+  const event: GameCreated = {
+    kind: "GameCreated",
+    gameId: id,
+    name: name,
+    createdBy: owner,
+    selectableCards: cards,
+  };
 
-  return {
+  const game = {
     id,
     name,
-    showedDown: false,
     cards,
-    players: Array.from(players),
-    hands: Array.from(hands),
+    owner,
+    joinedPlayers: Array.from(distinctedPlayers.values()),
+    round:
+      round ??
+      Round.roundOf({
+        id: Round.createId(),
+        selectableCards: cards,
+        count: 1,
+        hands: [],
+      }),
+    finishedRounds,
   };
+
+  return [game, event];
 };
 
+/**
+ * make invitation for this game. A signature created this function is used to join user in this game.
+ */
 export const makeInvitation = function makeInvitation(game: T) {
   return Invitation.create(game.id);
 };
 
-export const canShowDown = function canShowDown(game: T) {
-  return game.hands.length > 0;
-};
-
-export const showDown = function showDown(game: T): [T, DomainEvent?] {
-  if (!canShowDown(game)) {
-    return [game];
-  }
-
-  return [
-    produce(game, (draft) => {
-      draft.showedDown = true;
-    }),
-    EventFactory.gameShowedDown(game.id),
-  ];
-};
-
-export const calculateAverage = function calculateAverage(game: T) {
-  if (!game.showedDown) {
-    return undefined;
-  }
-
-  const cards = game.hands
-    .map((v) => v.hand)
-    .filter(Hand.isHanded)
-    .map((v) => v.card);
-
-  if (cards.length === 0) {
-    return StoryPoint.create(0);
-  }
-
-  const average =
-    cards.reduce((point, v) => {
-      return point + v;
-    }, 0) / cards.length;
-
-  return average as CalculatedStoryPoint;
-};
 export const canChangeName = function canChangeName(name: string) {
-  return name !== "";
+  return name.trim() !== "";
 };
 
 export const changeName = function changeName(game: T, name: string) {
@@ -119,14 +103,41 @@ export const changeName = function changeName(game: T, name: string) {
   }
 
   return produce(game, (draft) => {
-    draft.name = name;
+    draft.name = name.trim();
   });
 };
 
-export const newGame = function newGame(game: T): [T, DomainEvent] {
+export const newRound = function newRound(game: T): [T, GenericDomainEvent] {
+  if (Round.isRound(game.round)) {
+    throw new Error("Can not open new round because it is not finished yet");
+  }
+
   const newObj = produce(game, (draft) => {
-    draft.showedDown = false;
+    draft.round = Round.roundOf({ id: Round.createId(), count: game.round.count + 1, selectableCards: game.cards });
+
+    draft.finishedRounds.push(game.round.id);
   });
 
-  return [newObj, EventFactory.newGameStarted(game.id)];
+  const event: NewRoundStarted = {
+    kind: DOMAIN_EVENTS.NewRoundStarted,
+    gameId: game.id,
+    roundId: newObj.round.id,
+  };
+
+  return [newObj, event];
+};
+
+export const declarePlayerTo = function declarePlayerTo(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
+  const joinedUser = game.joinedPlayers.find((v) => v.user === user);
+
+  if (!joinedUser) {
+    throw new Error("The user didn't join game");
+  }
+
+  return produce(game, (draft) => {
+    const map = new Map(draft.joinedPlayers.map((v) => [v.user, v]));
+    map.set(user, { user, mode });
+
+    draft.joinedPlayers = Array.from(map.values());
+  });
 };

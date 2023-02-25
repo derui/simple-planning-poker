@@ -1,144 +1,132 @@
-import { test, expect } from "vitest";
-import { create, createId, showDown, calculateAverage } from "./game";
-import * as GamePlayer from "./game-player";
+import { test, expect, describe } from "vitest";
+import { changeName, create, createId, declarePlayerTo, GameCreated, newRound, NewRoundStarted } from "./game";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
+import * as User from "./user";
+import * as Round from "./round";
 import * as UserHand from "./user-hand";
+import * as GamePlayer from "./game-player";
 
 const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
 
-test("throw error if initial joined user is empty", () => {
-  // Arrange
-
-  // Act
-  // Assert
-  expect(() => create({ id: createId(), name: "name", players: [], cards })).toThrowError(/Least one player need/);
-});
-
-test("should not be able to show down when all user did not hand yet", () => {
-  // Arrange
-  const game = create({
-    id: createId(),
+test("get aggregate and event when game created ", () => {
+  const [game, event] = create({
+    id: createId("id"),
     name: "name",
-    players: [GamePlayer.createId()],
+    joinedPlayers: [],
+    owner: User.createId("user"),
+    finishedRounds: [],
     cards,
   });
 
-  // Act
-  const [, event] = showDown(game);
-
-  // Assert
-  expect(event).toBeUndefined;
+  expect(game.id).toBe(createId("id"));
+  expect(game.id).toBe((event as GameCreated).gameId);
+  expect((event as GameCreated).createdBy).toBe(User.createId("user"));
+  expect((event as GameCreated).name).toBe("name");
+  expect(game.name).toBe("name");
+  expect(game.joinedPlayers).toHaveLength(1);
+  expect(game.joinedPlayers).toEqual([{ user: User.createId("user"), mode: GamePlayer.UserMode.normal }]);
+  expect(game.owner).toEqual(User.createId("user"));
+  expect(game.round.count).toBe(1);
+  expect(game.round.hands).toHaveLength(0);
+  expect(game.finishedRounds).toHaveLength(0);
 });
 
-test("should be able to show down when least one user handed", () => {
-  // Arrange
-  const user1 = GamePlayer.createId();
-  const user2 = GamePlayer.createId();
-  const game = create({
-    id: createId(),
+test("newRound should throw error when round is not finished", () => {
+  const [game] = create({
+    id: createId("id"),
     name: "name",
-    players: [user1, user2],
-    cards,
-    hands: [{ playerId: user1, hand: UserHand.handed(cards[0]) }],
-  });
-
-  // Act
-  const [ret, event] = showDown(game);
-
-  // Assert
-  expect(ret.showedDown).toBeTruthy;
-  expect(calculateAverage(ret)).toEqual(1);
-  expect(event).not.toBeUndefined;
-});
-
-test("should return undefined as average when the game does not show down yet", () => {
-  // Arrange
-  const user1 = GamePlayer.createId();
-  const game = create({
-    id: createId(),
-    name: "name",
-    players: [user1],
+    joinedPlayers: [],
+    owner: User.createId("user"),
+    finishedRounds: [],
     cards,
   });
 
-  // Act
-  const ret = calculateAverage(game);
-
-  // Assert
-  expect(game.showedDown).toBeFalsy();
-  expect(ret).toBeUndefined;
+  expect(() => {
+    newRound(game);
+  }).toThrowError(/is not finished yet/);
 });
 
-test("should return average story point when the game showed down", () => {
-  // Arrange
-  const user1 = GamePlayer.createId();
-  const user2 = GamePlayer.createId();
-  let game = create({
-    id: createId(),
+test("newRound should make new round", () => {
+  const [finishedRound] = Round.showDown(
+    Round.roundOf({
+      id: Round.createId(),
+      count: 2,
+      selectableCards: cards,
+      hands: [{ user: User.createId("user"), hand: UserHand.giveUp() }],
+    }),
+    new Date()
+  );
+
+  const [game] = create({
+    id: createId("id"),
     name: "name",
-    players: [user1, user2],
+    joinedPlayers: [],
+    round: finishedRound,
+    owner: User.createId("user"),
+    finishedRounds: [],
     cards,
-    hands: [
-      { playerId: user1, hand: UserHand.handed(cards[0]) },
-      { playerId: user2, hand: UserHand.handed(cards[1]) },
-    ],
   });
 
-  // Act
-  [game] = showDown(game);
-  const ret = calculateAverage(game);
+  const [updated, event] = newRound(game);
 
-  // Assert
-  expect(ret).toEqual(1.5);
+  expect(updated.round.id).not.toBe(finishedRound.id);
+  expect(updated.round.count).toBe(3);
+  expect(updated.finishedRounds[0]).toBe(finishedRound.id);
+  expect((event as NewRoundStarted).gameId).toBe(game.id);
+  expect((event as NewRoundStarted).roundId).toBe(updated.round.id);
 });
 
-test("should ignore give up card to calculate average", () => {
-  // Arrange
-  const user1 = GamePlayer.createId();
-  const user2 = GamePlayer.createId();
-  const user3 = GamePlayer.createId();
-
-  let game = create({
-    id: createId(),
+describe("game name", () => {
+  const [game] = create({
+    id: createId("id"),
     name: "name",
-    players: [user1, user2, user3],
+    joinedPlayers: [],
+    owner: User.createId("user"),
+    finishedRounds: [],
     cards,
-    hands: [
-      { playerId: user1, hand: UserHand.handed(cards[0]) },
-      { playerId: user2, hand: UserHand.giveUp() },
-      { playerId: user3, hand: UserHand.unselected() },
-    ],
   });
 
-  // Act
-  [game] = showDown(game);
-  const ret = calculateAverage(game);
+  test("can change name of game", () => {
+    const changed = changeName(game, "changed name");
 
-  // Assert
-  expect(ret).toEqual(1);
+    expect(changed.name).toBe("changed name");
+  });
+
+  test("should throw errro if name is not valid", () => {
+    expect(() => changeName(game, "")).toThrowError(/can not change name/);
+    expect(() => changeName(game, "   \t ")).toThrowError(/can not change name/);
+  });
 });
 
-test("should return 0 if all user giveup", () => {
-  // Arrange
-  const user1 = GamePlayer.createId();
-  const user2 = GamePlayer.createId();
+describe("declare player mode to", () => {
+  test("should be able to change player mode", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
 
-  let game = create({
-    id: createId(),
-    name: "name",
-    players: [user1, user2],
-    cards,
-    hands: [
-      { playerId: user1, hand: UserHand.giveUp() },
-      { playerId: user2, hand: UserHand.giveUp() },
-    ],
+    const changed = declarePlayerTo(game, User.createId("user"), GamePlayer.UserMode.inspector);
+
+    expect(changed.joinedPlayers[0]).toEqual({ user: User.createId("user"), mode: GamePlayer.UserMode.inspector });
   });
 
-  // Act
-  [game] = showDown(game);
-  const ret = calculateAverage(game);
+  test("should throw error if not joined user", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
 
-  // Assert
-  expect(ret).toEqual(0);
+    expect(() => {
+      declarePlayerTo(game, User.createId("not found"), GamePlayer.UserMode.inspector);
+    }).toThrowError(/The user didn't join game/);
+  });
 });
