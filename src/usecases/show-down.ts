@@ -6,7 +6,7 @@ export interface ShowDownUseCaseInput {
   gameId: Game.Id;
 }
 
-export type ShowDownUseCaseOutput = { kind: "success" } | { kind: "notFoundGame" };
+export type ShowDownUseCaseOutput = "success" | "notFoundGame" | "showDownFailed";
 
 export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<ShowDownUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
@@ -14,17 +14,21 @@ export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<Sh
   async execute(input: ShowDownUseCaseInput): Promise<ShowDownUseCaseOutput> {
     const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
-      return { kind: "notFoundGame" };
+      return "notFoundGame";
     }
 
-    const [newGame, event] = Game.showDown(game);
+    try {
+      const [newGame, event] = Game.showDown(game, new Date());
 
-    this.gameRepository.save(newGame);
+      this.gameRepository.save(newGame);
 
-    if (event) {
       this.dispatcher.dispatch(event);
-    }
 
-    return { kind: "success" };
+      return "success";
+    } catch (e) {
+      console.error(e);
+
+      return "showDownFailed";
+    }
   }
 }
