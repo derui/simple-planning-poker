@@ -30,7 +30,7 @@ test("should return error if can not change name of the user", async () => {
   };
   const dispatcher = createMockedDispatcher();
   const repository = createMockedUserRepository({
-    findBy: sinon.fake.returns(Promise.resolve(User.createUser({ id: userId, name: "foo", joinedGames: [] }))),
+    findBy: sinon.fake.returns(Promise.resolve(User.create({ id: userId, name: "foo" }))),
   });
   const useCase = new ChangeUserNameUseCase(dispatcher, repository);
 
@@ -52,7 +52,7 @@ test("should dispatch event", async () => {
   const save = sinon.fake();
   const repository = createMockedUserRepository({
     save,
-    findBy: sinon.fake.returns(Promise.resolve(User.createUser({ id: userId, name: "foo", joinedGames: [] }))),
+    findBy: sinon.fake.returns(Promise.resolve(User.create({ id: userId, name: "foo" }))),
   });
   const useCase = new ChangeUserNameUseCase(dispatcher, repository);
 
