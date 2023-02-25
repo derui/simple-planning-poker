@@ -1,11 +1,23 @@
 import { test, expect, describe } from "vitest";
-import { changeName, create, createId, declarePlayerTo, GameCreated, newRound, NewRoundStarted } from "./game";
+import {
+  changeName,
+  create,
+  createId,
+  declarePlayerTo,
+  GameCreated,
+  joinUser,
+  makeInvitation,
+  newRound,
+  NewRoundStarted,
+} from "./game";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
 import * as User from "./user";
 import * as Round from "./round";
 import * as UserHand from "./user-hand";
 import * as GamePlayer from "./game-player";
+import * as Invitation from "./invitation";
+import { DOMAIN_EVENTS } from "./event";
 
 const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -128,5 +140,60 @@ describe("declare player mode to", () => {
     expect(() => {
       declarePlayerTo(game, User.createId("not found"), GamePlayer.UserMode.inspector);
     }).toThrowError(/The user didn't join game/);
+  });
+});
+
+describe("join user", () => {
+  test("should be able to join user", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    const [changed, event] = joinUser(game, User.createId("new"), makeInvitation(game));
+
+    expect(changed.joinedPlayers.find((v) => v.user === User.createId("new"))).toEqual({
+      user: User.createId("new"),
+      mode: GamePlayer.UserMode.normal,
+    });
+    expect(event).toEqual({
+      kind: DOMAIN_EVENTS.UserJoined,
+      gameId: game.id,
+      userId: User.createId("new"),
+    });
+  });
+
+  test("should throw error if invitation is invalid", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    expect(() => {
+      joinUser(game, User.createId("new"), "invitation" as Invitation.T);
+    }).toThrowError(/signature is invalid/);
+  });
+
+  test("should throw error if user is already joined", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    expect(() => {
+      joinUser(game, User.createId("new"), makeInvitation(game));
+    }).toThrowError(/already joined/);
   });
 });

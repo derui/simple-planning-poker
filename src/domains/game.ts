@@ -36,6 +36,11 @@ export interface GameCreated extends DomainEvent<"GameCreated"> {
   selectableCards: SelectableCards.T;
 }
 
+export interface UserJoined extends DomainEvent<"UserJoined"> {
+  gameId: Id;
+  userId: User.Id;
+}
+
 export const create = ({
   id,
   name,
@@ -140,4 +145,26 @@ export const declarePlayerTo = function declarePlayerTo(game: T, user: User.Id, 
 
     draft.joinedPlayers = Array.from(map.values());
   });
+};
+
+export const joinUser = function joinUser(game: T, user: User.Id, invitation: Invitation.T): [T, GenericDomainEvent] {
+  if (invitation !== makeInvitation(game)) {
+    throw new Error("This signature is invalid");
+  }
+
+  if (game.joinedPlayers.some((v) => v.user === user)) {
+    throw new Error("A player already joined");
+  }
+
+  const newObj = produce(game, (draft) => {
+    draft.joinedPlayers.push({ user, mode: GamePlayer.UserMode.normal });
+  });
+
+  const event: UserJoined = {
+    kind: DOMAIN_EVENTS.UserJoined,
+    gameId: game.id,
+    userId: user,
+  };
+
+  return [newObj, event];
 };

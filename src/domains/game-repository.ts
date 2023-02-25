@@ -9,5 +9,5 @@ export interface GameRepository {
   findBy(id: Game.Id): Promise<Game.T | undefined>;
 
   // find game by invitation signature
-  findByInvitationSignature(signature: InvitationSignature): Promise<Game.T | undefined>;
+  findByInvitation(signature: InvitationSignature): Promise<Game.T | undefined>;
 }
