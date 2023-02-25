@@ -1,13 +1,13 @@
 import { test, expect } from "vitest";
 import { DOMAIN_EVENTS } from "./event";
-import { createUser, createId, changeName, canChangeName } from "./user";
+import { create, createId, changeName, canChangeName } from "./user";
 
 test("create user with id", () => {
   // Arrange
   const name = "name";
 
   // Act
-  const ret = createUser({
+  const ret = create({
     id: createId(),
     name,
   });
@@ -21,7 +21,7 @@ test("join user into a game", () => {
   const name = "name";
 
   // Act
-  const ret = createUser({
+  const ret = create({
     id: createId(),
     name,
   });
@@ -33,7 +33,7 @@ test("join user into a game", () => {
 test("change name", () => {
   // Arrange
   const name = "name";
-  const user = createUser({
+  const user = create({
     id: createId(),
     name,
   });
@@ -52,7 +52,7 @@ test("throw error if user name is empty", () => {
 
   // Assert
   expect(() =>
-    createUser({
+    create({
       id: createId(),
       name: "",
     })
@@ -62,7 +62,7 @@ test("throw error if user name is empty", () => {
 test("throw error when change to empty name", () => {
   // Arrange
   const name = "name";
-  const user = createUser({
+  const user = create({
     id: createId(),
     name,
   });
@@ -86,7 +86,7 @@ test("validate name", () => {
 test("should return event to notify user name changed", () => {
   // Arrange
   const name = "name";
-  const user = createUser({
+  const user = create({
     id: createId(),
     name,
   });

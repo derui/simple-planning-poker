@@ -25,7 +25,7 @@ export interface UserNameChanged extends DomainEvent<"UserNameChanged"> {
 /**
    create user from id and name
  */
-export const createUser = ({ id, name }: { id: Id; name: string }): T => {
+export const create = ({ id, name }: { id: Id; name: string }): T => {
   if (name === "") {
     throw new Error("can not create user with empty name");
   }
