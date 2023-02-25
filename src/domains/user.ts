@@ -1,10 +1,6 @@
-import { unique } from "@/utils/array";
 import produce from "immer";
 import * as Base from "./base";
-import { DomainEvent } from "./event";
-import * as EventFactory from "./event-factory";
-import * as Game from "./game";
-import * as GamePlayer from "./game-player";
+import { DomainEvent, DOMAIN_EVENTS, GenericDomainEvent } from "./event";
 
 export type Id = Base.Id<"User">;
 
@@ -16,36 +12,27 @@ export const createId = (value?: string): Id => {
   }
 };
 
-export interface JoinedGame {
-  gameId: Game.Id;
-  playerId: GamePlayer.Id;
-}
-
 export interface T {
   readonly id: Id;
   readonly name: string;
-  readonly joinedGames: JoinedGame[];
 }
 
-const equalJoinedGame = (v1: JoinedGame, v2: JoinedGame) => {
-  return v1.gameId === v2.gameId && v1.playerId === v2.playerId;
-};
+export interface UserNameChanged extends DomainEvent<"UserNameChanged"> {
+  userId: Id;
+  name: string;
+}
 
 /**
    create user from id and name
  */
-export const createUser = ({ id, name, joinedGames }: { id: Id; name: string; joinedGames: JoinedGame[] }): T => {
+export const createUser = ({ id, name }: { id: Id; name: string }): T => {
   if (name === "") {
     throw new Error("can not create user with empty name");
   }
-  const games = unique(joinedGames, equalJoinedGame);
 
   return {
     id,
     name,
-    get joinedGames() {
-      return Array.from(games);
-    },
   };
 };
 
@@ -53,39 +40,21 @@ export const canChangeName = (name: string) => {
   return name !== "";
 };
 
-export const changeName = (user: T, name: string): [T, DomainEvent] => {
+export const changeName = (user: T, name: string): [T, GenericDomainEvent] => {
   if (!canChangeName(name)) {
     throw new Error("can not change name");
   }
 
-  return [
-    produce(user, (draft) => {
-      draft.name = name;
-    }),
-    EventFactory.userNameChanged(user.id, name),
-  ];
-};
-
-export const findJoinedGame = (user: T, gameId: Game.Id) => {
-  return user.joinedGames.find((v) => v.gameId === gameId);
-};
-
-export const isJoined = (user: T, gameId: Game.Id) => {
-  return !!findJoinedGame(user, gameId);
-};
-
-export const leaveFrom = (user: T, gameId: Game.Id): [T, DomainEvent?] => {
-  const leavedGame = findJoinedGame(user, gameId);
-  if (!leavedGame) {
-    return [user];
-  }
-
-  const games = user.joinedGames.filter((v) => v.gameId !== gameId);
+  const event: UserNameChanged = {
+    kind: DOMAIN_EVENTS.UserNameChanged,
+    userId: user.id,
+    name: name.trim(),
+  };
 
   return [
     produce(user, (draft) => {
-      draft.joinedGames = games;
+      draft.name = name.trim();
     }),
-    EventFactory.userLeaveFromGame(user.id, leavedGame.playerId, leavedGame.gameId),
+    event,
   ];
 };
