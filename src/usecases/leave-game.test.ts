@@ -1,9 +1,11 @@
 import { test, expect } from "vitest";
 import sinon from "sinon";
 import * as Game from "@/domains/game";
-import * as GamePlayer from "@/domains/game-player";
 import * as User from "@/domains/user";
-import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
+import * as GamePlayer from "@/domains/game-player";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import { createMockedGameRepository } from "@/test-lib";
 import { LeaveGameUseCase } from "./leave-game";
 
 test("should return error if user not found", async () => {
@@ -12,83 +14,45 @@ test("should return error if user not found", async () => {
     userId: User.createId(),
     gameId: Game.createId(),
   };
-  const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository();
-  const useCase = new LeaveGameUseCase(dispatcher, userRepository);
+  const gameRepository = createMockedGameRepository();
+  const useCase = new LeaveGameUseCase(gameRepository);
 
   // Act
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret.kind).toBe("notFoundUser");
-});
-
-test("should return error if user did not join to a game", async () => {
-  // Arrange
-  const gameId = Game.createId();
-  const user = User.createUser({ id: User.createId(), name: "test", joinedGames: [] });
-  const input = {
-    gameId,
-    userId: user.id,
-  };
-
-  const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository({
-    findBy: sinon.fake.resolves(user),
-  });
-  const useCase = new LeaveGameUseCase(dispatcher, userRepository);
-
-  // Act
-  const ret = await useCase.execute(input);
-
-  // Assert
-  expect(ret.kind).toBe("leaveFailed");
+  expect(ret).toBe("notFoundGame");
 });
 
 test("should return success if user leaved from a game", async () => {
   // Arrange
   const gameId = Game.createId();
-  const playerId = GamePlayer.createId();
-  const user = User.createUser({ id: User.createId(), name: "test", joinedGames: [{ gameId, playerId }] });
+  const user = User.create({ id: User.createId(), name: "test" });
   const input = {
     gameId,
     userId: user.id,
   };
+  const game = Game.create({
+    id: gameId,
+    name: "name",
+    cards: SelectableCards.create([StoryPoint.create(1)]),
+    owner: User.createId("id"),
+    joinedPlayers: [{ user: user.id, mode: GamePlayer.UserMode.normal }],
+    finishedRounds: [],
+  })[0];
 
-  const dispatcher = createMockedDispatcher();
-  const userRepository = createMockedUserRepository({
-    findBy: sinon.fake.resolves(user),
+  const save = sinon.fake();
+  const gameRepository = createMockedGameRepository({
+    save,
+    findBy: sinon.fake.resolves(game),
   });
-  const useCase = new LeaveGameUseCase(dispatcher, userRepository);
+  const useCase = new LeaveGameUseCase(gameRepository);
 
   // Act
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret.kind).toBe("success");
-});
-
-test("should dispatch event to be joined by user", async () => {
-  // Arrange
-  const gameId = Game.createId();
-  const playerId = GamePlayer.createId();
-  const user = User.createUser({ id: User.createId(), name: "test", joinedGames: [{ gameId, playerId }] });
-  const input = {
-    gameId,
-    userId: user.id,
-  };
-
-  const dispatch = sinon.fake();
-  const dispatcher = createMockedDispatcher({ dispatch });
-  const userRepository = createMockedUserRepository({
-    findBy: sinon.fake.resolves(user),
-  });
-
-  const useCase = new LeaveGameUseCase(dispatcher, userRepository);
-
-  // Act
-  await useCase.execute(input);
-
-  // Assert
-  expect(dispatch.callCount).toBe(1);
+  expect(ret).toBe("success");
+  expect(save.callCount).toBe(1);
+  expect(save.lastCall.lastArg.joinedPlayers).toHaveLength(1);
 });

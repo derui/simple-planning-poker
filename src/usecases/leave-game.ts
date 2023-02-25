@@ -1,32 +1,27 @@
 import * as Game from "@/domains/game";
+import { GameRepository } from "@/domains/game-repository";
 import * as User from "@/domains/user";
-import { UserRepository } from "@/domains/user-repository";
-import { EventDispatcher, UseCase } from "./base";
+import { UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {
   gameId: Game.Id;
   userId: User.Id;
 }
 
-export type LeaveGameUseCaseOutput = { kind: "success" } | { kind: "notFoundUser" } | { kind: "leaveFailed" };
+export type LeaveGameUseCaseOutput = "success" | "notFoundGame";
 
 export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<LeaveGameUseCaseOutput>> {
-  constructor(private dispatcher: EventDispatcher, private userRepository: UserRepository) {}
+  constructor(private gameRepository: GameRepository) {}
 
   async execute(input: LeaveGameUseCaseInput): Promise<LeaveGameUseCaseOutput> {
-    const user = await this.userRepository.findBy(input.userId);
+    const game = await this.gameRepository.findBy(input.gameId);
 
-    if (!user) {
-      return { kind: "notFoundUser" };
+    if (!game) {
+      return "notFoundGame";
     }
-    const [newUser, event] = User.leaveFrom(user, input.gameId);
-    this.userRepository.save(newUser);
+    const newGame = Game.acceptLeaveFrom(game, input.userId);
+    await this.gameRepository.save(newGame);
 
-    if (!event) {
-      return { kind: "leaveFailed" };
-    }
-    this.dispatcher.dispatch(event);
-
-    return { kind: "success" };
+    return "success";
   }
 }
