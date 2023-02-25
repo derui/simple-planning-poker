@@ -85,8 +85,6 @@ test("should dispatch game created event", () => {
   expect(ret.kind).toBe("success");
   expect(dispatch.callCount).toBe(1);
   expect(dispatch.lastCall.firstArg.name).toBe("foo");
-  expect(dispatch.lastCall.firstArg.createdBy.userId).toEqual(input.createdBy);
-  expect(dispatch.lastCall.firstArg.selectableCards.cards).toEqual(
-    SelectableCards.create([StoryPoint.create(1)]).cards
-  );
+  expect(dispatch.lastCall.firstArg.createdBy).toEqual(input.createdBy);
+  expect(dispatch.lastCall.firstArg.selectableCards).toEqual(SelectableCards.create([StoryPoint.create(1)]));
 });
