@@ -1,4 +1,4 @@
-import { create, Id } from "./base";
+import { Id } from "./base";
 import * as Card from "./card";
 import { Id } from "./game";
 import * as GamePlayer from "./game-player";
@@ -8,15 +8,14 @@ import * as User from "./user";
 export type EventId = Id<"Event">;
 
 // A base event interface
-export interface DomainEvent {
-  id: EventId;
+export interface GenericDomainEvent {
   kind: string;
 }
 
-type Eventize<Kind extends string> = DomainEvent & { kind: Kind };
-
-// create event id
-export const createEventId = (): EventId => create<"Event">();
+// abstract interface.
+export interface DomainEvent<Kind extends keyof DomainEvents> extends GenericDomainEvent {
+  kind: Kind;
+}
 
 // define event kinds
 
@@ -30,6 +29,7 @@ export const DOMAIN_EVENTS = {
   GamePlayerCardSelected: "GamePlayerCardSelected",
   UserLeavedFromGame: "UserLeavedFromGame",
   GamePlayerGiveUp: "GamePlayerGiveUp",
+  RoundFinished: "RoundFinished",
 } as const;
 
 export type DomainEvents = { [key in keyof typeof DOMAIN_EVENTS]: (typeof DOMAIN_EVENTS)[key] };
