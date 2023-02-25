@@ -1,40 +1,46 @@
-import * as GamePlayer from "@/domains/game-player";
+import { GameRepository } from "@/domains/game-repository";
 import * as Invitation from "@/domains/invitation";
-import * as JoinService from "@/domains/join-service";
 import * as User from "@/domains/user";
+import * as Game from "@/domains/game";
 import { UserRepository } from "@/domains/user-repository";
 import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
-  signature: Invitation.InvitationSignature;
+  signature: Invitation.T;
   userId: User.Id;
 }
 
-export type JoinUserUseCaseOutput =
-  | { kind: "success"; gamePlayerId: GamePlayer.Id }
-  | { kind: "notFoundUser" }
-  | { kind: "joinFailed" };
+export type JoinUserUseCaseOutput = "success" | "notFoundUser" | "notFoundGame" | "joinFailed";
 
 export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<JoinUserUseCaseOutput>> {
   constructor(
     private dispatcher: EventDispatcher,
     private userRepository: UserRepository,
-    private joinService: JoinService.JoinService
+    private gameRepository: GameRepository
   ) {}
 
   async execute(input: JoinUserUseCaseInput): Promise<JoinUserUseCaseOutput> {
     const user = await this.userRepository.findBy(input.userId);
 
     if (!user) {
-      return { kind: "notFoundUser" };
+      return "notFoundUser";
     }
-    const event = await this.joinService.join(user, input.signature);
-
-    if (!event) {
-      return { kind: "joinFailed" };
+    const game = await this.gameRepository.findByInvitation(input.signature);
+    if (!game) {
+      return "notFoundGame";
     }
-    this.dispatcher.dispatch(event);
 
-    return { kind: "success", gamePlayerId: event.gamePlayerId };
+    try {
+      const [newGame, event] = Game.joinUser(game, user.id, input.signature);
+      await this.gameRepository.save(newGame);
+
+      this.dispatcher.dispatch(event);
+
+      return "success";
+    } catch (e) {
+      console.error(e);
+
+      return "joinFailed";
+    }
   }
 }
