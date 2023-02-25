@@ -13,10 +13,9 @@ import {
 import { getInitialState, reducer } from "./auth";
 import * as User from "@/domains/user";
 
-const USER = User.createUser({
+const USER = User.create({
   id: User.createId(),
   name: "name",
-  joinedGames: [],
 });
 
 test("initial state", () => {

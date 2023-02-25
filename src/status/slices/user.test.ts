@@ -12,7 +12,7 @@ test("initial state", () => {
 });
 
 test("put current user if authentication did succeed", () => {
-  const user = User.createUser({
+  const user = User.create({
     id: User.createId(),
     name: "name",
     joinedGames: [],
@@ -25,7 +25,7 @@ test("put current user if authentication did succeed", () => {
 });
 
 test("put current user if sign-in did succeed", () => {
-  const user = User.createUser({
+  const user = User.create({
     id: User.createId(),
     name: "name",
     joinedGames: [],
@@ -38,7 +38,7 @@ test("put current user if sign-in did succeed", () => {
 });
 
 test("put current user if sign-up did succeed", () => {
-  const user = User.createUser({
+  const user = User.create({
     id: User.createId(),
     name: "name",
     joinedGames: [],
@@ -51,7 +51,7 @@ test("put current user if sign-up did succeed", () => {
 });
 
 test("change name does not affect when current user is not set", () => {
-  const user = User.createUser({
+  const user = User.create({
     id: User.createId(),
     name: "name",
     joinedGames: [],
@@ -64,7 +64,7 @@ test("change name does not affect when current user is not set", () => {
 });
 
 test("get changed user when current user set-upped", () => {
-  const user = User.createUser({
+  const user = User.create({
     id: User.createId(),
     name: "name",
     joinedGames: [],
