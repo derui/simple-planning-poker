@@ -1,36 +1,21 @@
 import { Id } from "@/domains/game";
 
-export interface GameRefResolver {
-  name(id: Id): string;
+export const name = function name(id: Id) {
+  return `/games/${id}/name`;
+};
 
-  userHands(id: Id): string;
+export const cards = function cards(id: Id) {
+  return `/games/${id}/cards`;
+};
 
-  cards(id: Id): string;
+export const users = function users(id: Id) {
+  return `/games/${id}/users`;
+};
 
-  showedDown(id: Id): string;
-  users(id: Id): string;
-}
+export const round = function round(id: Id) {
+  return `/games/${id}/round`;
+};
 
-export const createGameRefResolver = (): GameRefResolver => {
-  return {
-    name(id: Id) {
-      return `/games/${id}/name`;
-    },
-
-    userHands(id: Id) {
-      return `/games/${id}/userHands`;
-    },
-
-    cards(id: Id) {
-      return `/games/${id}/cards`;
-    },
-
-    showedDown(id: Id) {
-      return `/games/${id}/showedDown`;
-    },
-
-    users(id: Id) {
-      return `/games/${id}/users`;
-    },
-  };
+export const finishedRounds = function finishedRounds(id: Id) {
+  return `/games/${id}/finishedRounds`;
 };

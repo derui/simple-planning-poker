@@ -6,8 +6,8 @@ import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { get, ref } from "firebase/database";
-import { GamePlayerRepositoryImpl } from "./game-player-repository";
 import { GameRepositoryImpl } from "./game-repository";
+import { RoundRepositoryImpl } from "./round-repository";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -30,37 +30,33 @@ afterEach(async () => {
 
 test("should be able to save and find a game", async () => {
   // Arrange
-  const game = Game.create({
+  const [game] = Game.create({
     id: Game.createId(),
     name: "test",
-    players: [GamePlayer.createId()],
+    owner: User.createId("id"),
+    joinedPlayers: [GamePlayer.create({ userId: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
+    finishedRounds: [],
   });
 
-  const player = GamePlayer.create({
-    id: game.players[0],
-    userId: User.createId(),
-    gameId: game.id,
-  });
-
-  const repository = new GameRepositoryImpl(database);
-  const playerRepository = new GamePlayerRepositoryImpl(database);
+  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 
   // Act
-  await playerRepository.save(player);
   await repository.save(game);
   const instance = await repository.findBy(game.id);
 
   // Assert
   expect(instance?.id).toEqual(game.id);
   expect(instance?.name).toEqual(game.name);
-  expect(instance?.players).toEqual(game.players);
+  expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
   expect(instance?.cards).toEqual(game.cards);
+  expect(instance?.round).toEqual(game.round);
+  expect(instance?.finishedRounds).toEqual(game.finishedRounds);
 });
 
 test("should not be able find a game if it did not save before", async () => {
   // Arrange
-  const repository = new GameRepositoryImpl(database);
+  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 
   // Act
   const instance = await repository.findBy(Game.createId());
@@ -71,27 +67,21 @@ test("should not be able find a game if it did not save before", async () => {
 
 test("should save invitation in key", async () => {
   // Arrange
-  const game = Game.create({
+  const [game] = Game.create({
     id: Game.createId(),
     name: "test",
-    players: [GamePlayer.createId()],
+    owner: User.createId("id"),
+    joinedPlayers: [GamePlayer.create({ userId: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
+    finishedRounds: [],
   });
 
-  const player = GamePlayer.create({
-    id: game.players[0],
-    userId: User.createId(),
-    gameId: game.id,
-  });
-
-  const repository = new GameRepositoryImpl(database);
-  const playerRepository = new GamePlayerRepositoryImpl(database);
+  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 
   // Act
-  await playerRepository.save(player);
   await repository.save(game);
 
   // Assert
-  const snapshot = await get(ref(database, `/invitations/${Game.makeInvitation(game).signature}`));
+  const snapshot = await get(ref(database, `/invitations/${Game.makeInvitation(game)}`));
   expect(snapshot.val()).toEqual(game.id);
 });
