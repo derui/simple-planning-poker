@@ -1,6 +1,7 @@
 import { test, expect, describe } from "vitest";
 import {
   acceptLeaveFrom,
+  acceptPlayerHand,
   changeName,
   create,
   createId,
@@ -10,6 +11,7 @@ import {
   makeInvitation,
   newRound,
   NewRoundStarted,
+  showDown,
 } from "./game";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -19,6 +21,7 @@ import * as UserHand from "./user-hand";
 import * as GamePlayer from "./game-player";
 import * as Invitation from "./invitation";
 import { DOMAIN_EVENTS } from "./event";
+import { parseDateTime } from "./type";
 
 const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -230,5 +233,61 @@ describe("leave", () => {
     expect(ret).not.toBe(game);
     expect(ret.joinedPlayers).toHaveLength(1);
     expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
+  });
+});
+
+describe("show down", () => {
+  test("should be able to show down the round", () => {
+    let [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
+    game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
+    const ret = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
+
+    expect(ret[0]).not.toBe(game);
+    expect(Round.isFinishedRound(ret[0].round)).toBe(true);
+    expect(ret[0].finishedRounds).toEqual([]);
+    expect(ret[1].kind).toBe(DOMAIN_EVENTS.RoundFinished);
+  });
+
+  test("throw error if round already finished", () => {
+    let [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
+    game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
+    const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
+
+    expect(() => {
+      showDown(finished, new Date());
+    }).toThrowError(/should start new round/);
+  });
+
+  test("throw error if round can not finished", () => {
+    let [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    expect(() => {
+      showDown(game, new Date());
+    }).toThrowError(/Can not finish round/);
   });
 });

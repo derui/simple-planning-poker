@@ -6,6 +6,7 @@ import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
 import * as Round from "./round";
 import * as GamePlayer from "./game-player";
+import * as UserHand from "./user-hand";
 
 export type Id = Base.Id<"Game">;
 
@@ -179,5 +180,42 @@ export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id):
 
   return produce(game, (draft) => {
     draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
+  });
+};
+
+/**
+ * show down current round of the game
+ */
+export const showDown = function showDown(game: T, now: Date): [T, GenericDomainEvent] {
+  const round = game.round;
+  if (!Round.isRound(round)) {
+    throw new Error("Can not show down. should start new round");
+  }
+
+  const [finishedRound, event] = Round.showDown(round, now);
+
+  return [
+    produce(game, (draft) => {
+      draft.round = finishedRound;
+    }),
+    event,
+  ];
+};
+
+export const acceptPlayerHand = function acceptPlayerHand(game: T, userId: User.Id, hand: UserHand.T): T {
+  const round = game.round;
+  if (!Round.isRound(round)) {
+    throw new Error("Can not accept hand to finished round");
+  }
+
+  let updated = round;
+  if (UserHand.isHanded(hand)) {
+    updated = Round.takePlayerCard(round, userId, hand.card);
+  } else if (UserHand.isGiveUp(hand)) {
+    updated = Round.acceptPlayerToGiveUp(round, userId);
+  }
+
+  return produce(game, (draft) => {
+    draft.round = updated;
   });
 };

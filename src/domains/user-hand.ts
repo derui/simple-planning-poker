@@ -38,3 +38,11 @@ export const kindOf = function kindOf(hand: T): Kind {
 export const isHanded = function isHanded(hand: T): hand is ReturnType<typeof handed> {
   return kindOf(hand) === "handed";
 };
+
+export const isGiveUp = function isGiveUp(hand: T): hand is ReturnType<typeof handed> {
+  return kindOf(hand) === "giveUp";
+};
+
+export const isUnselected = function isUnselected(hand: T): hand is ReturnType<typeof handed> {
+  return kindOf(hand) === "unselected";
+};
