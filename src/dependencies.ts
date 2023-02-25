@@ -1,5 +1,4 @@
 import { GameObserver, UserObserver } from "./contexts/observer";
-import { GamePlayerRepository } from "./domains/game-player-repository";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
 import { Authenticator } from "./status/signin/types";
@@ -9,7 +8,7 @@ import { CreateGameUseCase } from "./usecases/create-game";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
-import { NewGameUseCase } from "./usecases/new-game";
+import { NewRoundUseCase } from "./usecases/new-round";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { DependencyRegistrar } from "./utils/dependency-registrar";
 
@@ -17,12 +16,11 @@ export type Dependencies = {
   userRepository: UserRepository;
   userObserver: UserObserver;
   changeUserNameUseCase: ChangeUserNameUseCase;
-  gamePlayerRepository: GamePlayerRepository;
   gameRepository: GameRepository;
   createGameUseCase: CreateGameUseCase;
   handCardUseCase: HandCardUseCase;
   showDownUseCase: ShowDownUseCase;
-  newGameUseCase: NewGameUseCase;
+  newRoundUseCase: NewRoundUseCase;
   changeUserModeUseCase: ChangeUserModeUseCase;
   joinUserUseCase: JoinUserUseCase;
   leaveGameUseCase: LeaveGameUseCase;
