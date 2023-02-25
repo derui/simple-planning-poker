@@ -168,3 +168,16 @@ export const joinUser = function joinUser(game: T, user: User.Id, invitation: In
 
   return [newObj, event];
 };
+
+/**
+ * An user leave from this game
+ */
+export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): T {
+  if (game.joinedPlayers.every((v) => v.user !== user)) {
+    return game;
+  }
+
+  return produce(game, (draft) => {
+    draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
+  });
+};

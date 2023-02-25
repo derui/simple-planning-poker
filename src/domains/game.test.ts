@@ -1,5 +1,6 @@
 import { test, expect, describe } from "vitest";
 import {
+  acceptLeaveFrom,
   changeName,
   create,
   createId,
@@ -195,5 +196,39 @@ describe("join user", () => {
     expect(() => {
       joinUser(game, User.createId("new"), makeInvitation(game));
     }).toThrowError(/already joined/);
+  });
+});
+
+describe("leave", () => {
+  test("should not do anything if user is not in game", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    const ret = acceptLeaveFrom(game, User.createId("not found"));
+
+    expect(ret).toBe(game);
+  });
+
+  test("remove user that want to leave from game", () => {
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+    });
+
+    const ret = acceptLeaveFrom(game, User.createId("new"));
+
+    expect(ret).not.toBe(game);
+    expect(ret.joinedPlayers).toHaveLength(1);
+    expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
   });
 });
