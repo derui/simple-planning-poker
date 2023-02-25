@@ -1,32 +1,35 @@
-import * as Card from "@/domains/card";
-import * as GamePlayer from "@/domains/game-player";
-import * as SelectableCards from "@/domains/selectable-cards";
-import { GamePlayerRepository } from "@/domains/game-player-repository";
-import { EventDispatcher, UseCase } from "./base";
+import * as User from "@/domains/user";
+import * as Game from "@/domains/game";
+import * as UserHand from "@/domains/user-hand";
+import { UseCase } from "./base";
+import { GameRepository } from "@/domains/game-repository";
 
 export interface HandCardUseCaseInput {
-  playerId: GamePlayer.Id;
-  card: Card.T;
-  selectableCards: SelectableCards.T;
+  userId: User.Id;
+  gameId: Game.Id;
+  userHand: UserHand.T;
 }
 
-export type HandCardUseCaseOutput = { kind: "success" } | { kind: "notFoundGamePlayer" };
+export type HandCardUseCaseOutput = "success" | "notFoundGame" | "HandCardFailed";
 
 export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<HandCardUseCaseOutput>> {
-  constructor(private dispatcher: EventDispatcher, private gamePlayerRepository: GamePlayerRepository) {}
+  constructor(private gameRepository: GameRepository) {}
 
   async execute(input: HandCardUseCaseInput): Promise<HandCardUseCaseOutput> {
-    const player = await this.gamePlayerRepository.findBy(input.playerId);
-    if (!player) {
-      return { kind: "notFoundGamePlayer" };
+    const game = await this.gameRepository.findBy(input.gameId);
+    if (!game) {
+      return "notFoundGame";
     }
 
-    const [newPlayer, event] = GamePlayer.takeHand(player, input.card, input.selectableCards);
-    this.gamePlayerRepository.save(newPlayer);
-    if (event) {
-      this.dispatcher.dispatch(event);
-    }
+    try {
+      const newGame = Game.acceptPlayerHand(game, input.userId, input.userHand);
+      this.gameRepository.save(newGame);
 
-    return { kind: "success" };
+      return "success";
+    } catch (e) {
+      console.error(e);
+
+      return "HandCardFailed";
+    }
   }
 }
