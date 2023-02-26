@@ -36,3 +36,8 @@ export const joinGameFailure = createAction<{ reason: string }>(`${prefix}:joinG
 export const openGame = createAction<Game.Id>(`${prefix}:openGame`);
 export const openGameSuccess = createAction<Game.T>(`${prefix}:openGameSuccess`);
 export const openGameFailure = createAction<{ reason: string }>(`${prefix}:openGameFailure`);
+
+// create game
+export const createGame = createAction<{ name: string; points: number[] }>(`${prefix}:createGame`);
+export const createGameSuccess = createAction<Game.T>(`${prefix}:createGameSuccess`);
+export const createGameFailure = createAction<{ reason: string }>(`${prefix}:createGameFailure`);

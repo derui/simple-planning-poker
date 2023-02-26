@@ -12,14 +12,14 @@ export interface CreateGameUseCaseInput {
 }
 
 export type CreateGameUseCaseOutput =
-  | { kind: "success"; gameId: Game.Id }
+  | { kind: "success"; game: Game.T }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" };
 
-export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, CreateGameUseCaseOutput> {
+export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Promise<CreateGameUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
 
-  execute(input: CreateGameUseCaseInput): CreateGameUseCaseOutput {
+  async execute(input: CreateGameUseCaseInput): Promise<CreateGameUseCaseOutput> {
     if (!input.points.every(StoryPoint.isValid)) {
       return { kind: "invalidStoryPoint" };
     }
@@ -42,9 +42,9 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Create
       cards: selectableCards,
     });
 
-    this.gameRepository.save(game);
+    await this.gameRepository.save(game);
     this.dispatcher.dispatch(event);
 
-    return { kind: "success", gameId };
+    return { kind: "success", game };
   }
 }

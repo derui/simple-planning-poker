@@ -5,6 +5,7 @@ import { UserRepository } from "./domains/user-repository";
 import { EventDispatcher } from "./usecases/base";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
+import { CreateGameUseCase } from "./usecases/create-game";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
@@ -59,8 +60,17 @@ export const createMockedLeaveGameUseCase = function createMockedLeaveGameUseCas
     execute: mock.execute ?? sinon.fake(),
   } as LeaveGameUseCase;
 };
+
 export const createMockedJoinUserUseCase = function createMockedJoinUserUseCase(mock: Partial<JoinUserUseCase> = {}) {
   return {
     execute: mock.execute ?? sinon.fake(),
   } as JoinUserUseCase;
+};
+
+export const createMockedCreateGameUseCase = function createMockedCreateGameUseCase(
+  mock: Partial<CreateGameUseCase> = {}
+) {
+  return {
+    execute: mock.execute ?? sinon.fake(),
+  } as CreateGameUseCase;
 };

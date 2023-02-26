@@ -7,7 +7,7 @@ import * as GameAction from "@/status/actions/game";
 import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
 import * as UserHand from "@/domains/user-hand";
 
-type Epics = "giveUp" | "handCard" | "changeUserMode" | "leaveGame" | "joinGame" | "openGame";
+type Epics = "giveUp" | "handCard" | "changeUserMode" | "leaveGame" | "joinGame" | "openGame" | "createGame";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -199,6 +199,41 @@ export const gameEpic = (
             }
 
             return GameAction.openGameSuccess(output);
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  createGame: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.createGame.match),
+      switchMap(({ payload }) => {
+        const { user } = state$.value;
+        const currentUser = user.currentUser;
+
+        if (!currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("createGameUseCase");
+
+        return from(
+          useCase.execute({
+            name: payload.name,
+            points: payload.points,
+            createdBy: currentUser.id,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.createGameSuccess(output.game);
+              case "invalidStoryPoint":
+                return GameAction.createGameFailure({ reason: "Story point must be greater than 0" });
+              case "invalidStoryPoints":
+                return GameAction.createGameFailure({ reason: "Need least 1 point to create game" });
+            }
           })
         );
       }),

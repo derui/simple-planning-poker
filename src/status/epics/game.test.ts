@@ -14,6 +14,7 @@ import { gameEpic } from "./game";
 import { signInSuccess } from "../actions/signin";
 import {
   createMockedChangeUserModeUseCase,
+  createMockedCreateGameUseCase,
   createMockedGameRepository,
   createMockedHandCardUseCase,
   createMockedJoinUserUseCase,
@@ -389,5 +390,45 @@ describe("open game", () => {
     const ret = await firstValueFrom(epics.openGame(action$, state$, null));
 
     expect(ret).toEqual(GameAction.openGameSuccess(game));
+  });
+});
+
+describe("create game", () => {
+  test("create game", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves({ kind: "success", game: game });
+    registrar.register(
+      "createGameUseCase",
+      createMockedCreateGameUseCase({
+        execute: fake,
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess(user));
+
+    const action$ = of(GameAction.createGame({ name: "foo", points: [1] }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.createGame(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.createGameSuccess(game));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.firstArg).toEqual({
+      name: "foo",
+      points: [1],
+      createdBy: user.id,
+    });
   });
 });
