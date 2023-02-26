@@ -3,7 +3,9 @@ import * as sinon from "sinon";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
 import { EventDispatcher } from "./usecases/base";
+import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
+import { HandCardUseCase } from "./usecases/hand-card";
 
 export const createMockedDispatcher = (mock: Partial<EventDispatcher> = {}) => {
   return {
@@ -32,4 +34,18 @@ export const createMockedChangeUserNameUseCase = function createMockedChangeUser
   return {
     execute: mock.execute ?? sinon.fake(),
   } as ChangeUserNameUseCase;
+};
+
+export const createMockedChangeUserModeUseCase = function createMockedChangeUserModeUseCase(
+  mock: Partial<ChangeUserModeUseCase> = {}
+) {
+  return {
+    execute: mock.execute ?? sinon.fake(),
+  } as ChangeUserModeUseCase;
+};
+
+export const createMockedHandCardUseCase = function createMockedHandCardUseCase(mock: Partial<HandCardUseCase> = {}) {
+  return {
+    execute: mock.execute ?? sinon.fake(),
+  } as HandCardUseCase;
 };

@@ -26,7 +26,7 @@ test("should return error if game is not found", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual("notFoundGame");
+  expect(ret).toEqual({ kind: "notFoundGame" });
 });
 
 test("should save player with card selected by user", async () => {
@@ -56,7 +56,7 @@ test("should save player with card selected by user", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual("success");
+  expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
   expect(save.callCount).toBe(1);
   expect(save.lastCall.firstArg.round.hands).toEqual(new Map([[input.userId, UserHand.handed(CARDS[0])]]));
 });

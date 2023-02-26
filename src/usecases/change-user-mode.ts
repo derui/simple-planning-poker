@@ -10,7 +10,7 @@ export interface ChangeUserModeInput {
   mode: GamePlayer.UserMode;
 }
 
-export type ChangeUserModeOutput = { kind: "success" } | { kind: "notFound" };
+export type ChangeUserModeOutput = { kind: "success"; game: Game.T } | { kind: "notFound" };
 
 export class ChangeUserModeUseCase implements UseCase<ChangeUserModeInput, Promise<ChangeUserModeOutput>> {
   constructor(private gameRepository: GameRepository) {}
@@ -24,6 +24,6 @@ export class ChangeUserModeUseCase implements UseCase<ChangeUserModeInput, Promi
     const newGame = Game.declarePlayerTo(game, input.userId, input.mode);
     await this.gameRepository.save(newGame);
 
-    return { kind: "success" };
+    return { kind: "success", game: newGame };
   }
 }

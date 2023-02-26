@@ -10,7 +10,10 @@ export interface HandCardUseCaseInput {
   userHand: UserHand.T;
 }
 
-export type HandCardUseCaseOutput = "success" | "notFoundGame" | "HandCardFailed";
+export type HandCardUseCaseOutput =
+  | { kind: "success"; game: Game.T }
+  | { kind: "notFoundGame" }
+  | { kind: "HandCardFailed" };
 
 export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<HandCardUseCaseOutput>> {
   constructor(private gameRepository: GameRepository) {}
@@ -18,18 +21,18 @@ export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<Ha
   async execute(input: HandCardUseCaseInput): Promise<HandCardUseCaseOutput> {
     const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
-      return "notFoundGame";
+      return { kind: "notFoundGame" };
     }
 
     try {
       const newGame = Game.acceptPlayerHand(game, input.userId, input.userHand);
       this.gameRepository.save(newGame);
 
-      return "success";
+      return { kind: "success", game: newGame };
     } catch (e) {
       console.error(e);
 
-      return "HandCardFailed";
+      return { kind: "HandCardFailed" };
     }
   }
 }

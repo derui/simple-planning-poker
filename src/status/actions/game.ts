@@ -4,6 +4,9 @@ import * as Invitation from "@/domains/invitation";
 
 const prefix = "gamePlayer";
 
+// common failure.
+export const somethingFailure = createAction<string>(`${prefix}:somethingFailure`);
+
 // give up the game
 export const giveUp = createAction(`${prefix}:giveUp`);
 export const giveUpSuccess = createAction<Game.T>(`${prefix}:giveUpSuccess`);
