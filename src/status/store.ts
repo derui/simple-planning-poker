@@ -11,6 +11,8 @@ import * as auth from "./slices/auth";
 import * as user from "./slices/user";
 
 // INJECT EPIC IMPORT HERE
+import { gameEpic } from "./epics/game";
+
 import { userEpic } from "./epics/user";
 
 const reducers = {
@@ -26,6 +28,8 @@ const reducers = {
 // eslint-disable-next-line
 export const createStore = (registrar: DependencyRegistrar<Dependencies>) => {
   const rootEpics = [
+    ...Object.values(gameEpic(registrar)),
+
     ...Object.values(userEpic(registrar)),
 
     // do not format this structure.
