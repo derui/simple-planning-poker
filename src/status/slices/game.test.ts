@@ -6,6 +6,7 @@ import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
+import { UserMode } from "@/domains/game-player";
 
 const [GAME] = Game.create({
   id: Game.createId(),
@@ -35,14 +36,7 @@ test("update game with handCardSuccess", () => {
 });
 
 test("update game with change to inspector success", () => {
-  const ret = reducer(getInitialState(), GameAction.changeToInspectorSuccess(GAME));
-
-  expect(ret.currentGame).toBe(GAME);
-  expect(ret.loading).toBe(false);
-});
-
-test("update game with action changing normal player success", () => {
-  const ret = reducer(getInitialState(), GameAction.changeToNormalPlayerSuccess(GAME));
+  const ret = reducer(getInitialState(), GameAction.changeUserModeSuccess(GAME));
 
   expect(ret.currentGame).toBe(GAME);
   expect(ret.loading).toBe(false);
@@ -70,8 +64,7 @@ test("update game with action opening game", () => {
 
 describe("loading", () => {
   [
-    GameAction.changeToInspector(),
-    GameAction.changeToNormalPlayer(),
+    GameAction.changeUserMode(UserMode.inspector),
     GameAction.giveUp(),
     GameAction.handCard({ cardIndex: 0 }),
     GameAction.leaveGame(),

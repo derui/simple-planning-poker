@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import * as Game from "@/domains/game";
 import {
   giveUp,
-  changeToInspectorSuccess,
-  changeToNormalPlayerSuccess,
   giveUpSuccess,
   handCardSuccess,
   joinGameSuccess,
@@ -11,11 +9,11 @@ import {
   notifyGameChanges,
   openGameSuccess,
   handCard,
-  changeToInspector,
-  changeToNormalPlayer,
   leaveGame,
   joinGame,
   openGame,
+  changeUserMode,
+  changeUserModeSuccess,
 } from "../actions/game";
 import { WritableDraft } from "immer/dist/internal";
 
@@ -45,16 +43,14 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(giveUp, loading);
     builder.addCase(handCard, loading);
-    builder.addCase(changeToInspector, loading);
-    builder.addCase(changeToNormalPlayer, loading);
+    builder.addCase(changeUserMode, loading);
     builder.addCase(leaveGame, loading);
     builder.addCase(joinGame, loading);
     builder.addCase(openGame, loading);
 
     builder.addCase(giveUpSuccess, updateCurrentGame);
     builder.addCase(handCardSuccess, updateCurrentGame);
-    builder.addCase(changeToInspectorSuccess, updateCurrentGame);
-    builder.addCase(changeToNormalPlayerSuccess, updateCurrentGame);
+    builder.addCase(changeUserModeSuccess, updateCurrentGame);
     builder.addCase(notifyGameChanges, updateCurrentGame);
     builder.addCase(joinGameSuccess, updateCurrentGame);
     builder.addCase(openGameSuccess, updateCurrentGame);

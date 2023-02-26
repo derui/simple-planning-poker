@@ -1,6 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as Game from "@/domains/game";
 import * as Invitation from "@/domains/invitation";
+import { UserMode } from "@/domains/game-player";
 
 const prefix = "gamePlayer";
 
@@ -16,11 +17,8 @@ export const handCard = createAction<{ cardIndex: number }>(`${prefix}:handCard`
 export const handCardSuccess = createAction<Game.T>(`${prefix}:handCardSuccess`);
 
 // change user mode
-export const changeToInspector = createAction(`${prefix}:changeToInspector`);
-export const changeToInspectorSuccess = createAction<Game.T>(`${prefix}:changeToInspectorSuccess`);
-
-export const changeToNormalPlayer = createAction(`${prefix}:changeToNormalPlayer`);
-export const changeToNormalPlayerSuccess = createAction<Game.T>(`${prefix}:changeToNormalPlayerSuccess`);
+export const changeUserMode = createAction<UserMode>(`${prefix}:changeUserMode`);
+export const changeUserModeSuccess = createAction<Game.T>(`${prefix}:changeUserModeSuccess`);
 
 // notify game update
 export const notifyGameChanges = createAction<Game.T>(`${prefix}:notifyGamenChanges`);
