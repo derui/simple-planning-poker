@@ -6,8 +6,8 @@ import * as epic from './<%= name %>';
 import {createDependencyRegistrar} from '@/utils/dependency-registrar';
 import {Dependencies} from '@/dependencies';
 
-const registrar = createDependencyRegistrar<Dependencies>();
 
-test('test epic', async (t) => {
+test('test epic', async () => {
+  const registrar = createDependencyRegistrar<Dependencies>();
 
 });
