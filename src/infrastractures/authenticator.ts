@@ -2,7 +2,7 @@ import { create, createId, Id } from "../domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { Database, get, ref } from "firebase/database";
-import { Authenticator } from "@/status/signin/types";
+import { Authenticator } from "@/status/type";
 
 export class FirebaseAuthenticator implements Authenticator {
   constructor(private auth: Auth, private database: Database, private userRepository: UserRepository) {}
@@ -34,7 +34,7 @@ export class FirebaseAuthenticator implements Authenticator {
       const uid = auth.user.uid;
 
       const userId = createId(uid);
-      const user = create({ id: userId, name, joinedGames: [] });
+      const user = create({ id: userId, name });
       this.userRepository.save(user);
 
       return userId;
