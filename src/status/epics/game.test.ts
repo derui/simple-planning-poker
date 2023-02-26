@@ -12,8 +12,9 @@ import { createPureStore } from "../store";
 import { StateObservable } from "redux-observable";
 import { gameEpic } from "./game";
 import { signInSuccess } from "../actions/signin";
-import { createMockedHandCardUseCase } from "@/test-lib";
+import { createMockedChangeUserModeUseCase, createMockedHandCardUseCase } from "@/test-lib";
 import sinon from "sinon";
+import { UserMode } from "@/domains/game-player";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -245,5 +246,40 @@ describe("hand card", () => {
     const ret = await firstValueFrom(epics.handCard(action$, state$, null));
 
     expect(ret).toEqual(GameAction.somethingFailure("failed with exception"));
+  });
+});
+
+describe("change user mode", () => {
+  test("get mode changed", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const expected = Game.declarePlayerTo(game, user.id, UserMode.inspector);
+    registrar.register(
+      "changeUserModeUseCase",
+      createMockedChangeUserModeUseCase({
+        execute: sinon.fake.resolves({ kind: "success", game: expected }),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(signInSuccess(user));
+
+    const action$ = of(GameAction.changeUserMode(UserMode.inspector));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.changeUserMode(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.changeUserModeSuccess(expected));
   });
 });

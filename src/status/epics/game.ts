@@ -7,14 +7,7 @@ import * as GameAction from "@/status/actions/game";
 import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
 import * as UserHand from "@/domains/user-hand";
 
-type Epics =
-  | "giveUp"
-  | "handCard"
-  | "changeToInspector"
-  | "changeToNromalPlayer"
-  | "leaveGame"
-  | "joinGame"
-  | "openGame";
+type Epics = "giveUp" | "handCard" | "changeUserMode" | "leaveGame" | "joinGame" | "openGame";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -81,6 +74,37 @@ export const gameEpic = (
             switch (output.kind) {
               case "success":
                 return GameAction.handCardSuccess(output.game);
+              default:
+                return GameAction.somethingFailure(output.kind);
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+  changeUserMode: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.changeUserMode.match),
+      switchMap(({ payload }) => {
+        const { game, user } = state$.value;
+
+        if (!game.currentGame || !user.currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("changeUserModeUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: game.currentGame.id,
+            userId: user.currentUser.id,
+            mode: payload,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.changeUserModeSuccess(output.game);
               default:
                 return GameAction.somethingFailure(output.kind);
             }
