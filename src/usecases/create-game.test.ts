@@ -6,7 +6,7 @@ import { CreateGameUseCase } from "./create-game";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import * as sinon from "sinon";
 
-test("should return error if numbers is invalid", () => {
+test("should return error if numbers is invalid", async () => {
   // Arrange
   const input = {
     name: "foo",
@@ -18,13 +18,13 @@ test("should return error if numbers is invalid", () => {
   const useCase = new CreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = useCase.execute(input);
+  const ret = await useCase.execute(input);
 
   // Assert
   expect(ret.kind).toBe("invalidStoryPoints");
 });
 
-test("should return error if numbers contains invalid story point", () => {
+test("should return error if numbers contains invalid story point", async () => {
   // Arrange
   const input = {
     name: "foo",
@@ -36,13 +36,13 @@ test("should return error if numbers contains invalid story point", () => {
   const useCase = new CreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = useCase.execute(input);
+  const ret = await useCase.execute(input);
 
   // Assert
   expect(ret.kind).toBe("invalidStoryPoint");
 });
 
-test("should save new game into repository", () => {
+test("should save new game into repository", async () => {
   // Arrange
   const input = {
     name: "foo",
@@ -57,14 +57,14 @@ test("should save new game into repository", () => {
   const useCase = new CreateGameUseCase(dispatcher, repository);
 
   // Act
-  useCase.execute(input);
+  await useCase.execute(input);
 
   // Assert
   expect(save.callCount).toBe(1);
   expect(save.lastCall.firstArg.name).toBe("foo");
 });
 
-test("should dispatch game created event", () => {
+test("should dispatch game created event", async () => {
   // Arrange
   const input = {
     name: "foo",
@@ -79,7 +79,7 @@ test("should dispatch game created event", () => {
   const useCase = new CreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = useCase.execute(input);
+  const ret = await useCase.execute(input);
 
   // Assert
   expect(ret.kind).toBe("success");
