@@ -10,7 +10,11 @@ export interface JoinUserUseCaseInput {
   userId: User.Id;
 }
 
-export type JoinUserUseCaseOutput = "success" | "notFoundUser" | "notFoundGame" | "joinFailed";
+export type JoinUserUseCaseOutput =
+  | { kind: "success"; game: Game.T }
+  | { kind: "notFoundUser" }
+  | { kind: "notFoundGame" }
+  | { kind: "joinFailed" };
 
 export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<JoinUserUseCaseOutput>> {
   constructor(
@@ -23,11 +27,11 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
     const user = await this.userRepository.findBy(input.userId);
 
     if (!user) {
-      return "notFoundUser";
+      return { kind: "notFoundUser" };
     }
     const game = await this.gameRepository.findByInvitation(input.signature);
     if (!game) {
-      return "notFoundGame";
+      return { kind: "notFoundGame" };
     }
 
     try {
@@ -36,11 +40,11 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
 
       this.dispatcher.dispatch(event);
 
-      return "success";
+      return { kind: "success", game: newGame };
     } catch (e) {
       console.error(e);
 
-      return "joinFailed";
+      return { kind: "joinFailed" };
     }
   }
 }

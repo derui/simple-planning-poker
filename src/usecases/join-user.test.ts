@@ -25,7 +25,7 @@ test("should return error if user not found", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toBe("notFoundUser");
+  expect(ret).toEqual({ kind: "notFoundUser" });
 });
 
 test("should be error when signature is invalid", async () => {
@@ -50,7 +50,7 @@ test("should be error when signature is invalid", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toBe("notFoundGame");
+  expect(ret).toEqual({ kind: "notFoundGame" });
 });
 
 test("should save game that user joined in", async () => {
@@ -77,7 +77,9 @@ test("should save game that user joined in", async () => {
   const userRepository = createMockedUserRepository({
     findBy: sinon.fake.resolves(user),
   });
+  const save = sinon.fake();
   const gameRepository = createMockedGameRepository({
+    save,
     findByInvitation: sinon.fake.resolves(game),
   });
   const useCase = new JoinUserUseCase(dispatcher, userRepository, gameRepository);
@@ -86,7 +88,7 @@ test("should save game that user joined in", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toBe("success");
+  expect(ret).toEqual({ kind: "success", game: save.lastCall.lastArg });
 });
 
 test("should dispatch event to be joined by user", async () => {

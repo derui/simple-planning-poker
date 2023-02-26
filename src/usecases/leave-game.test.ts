@@ -21,7 +21,7 @@ test("should return error if user not found", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toBe("notFoundGame");
+  expect(ret).toEqual({ kind: "notFoundGame" });
 });
 
 test("should return success if user leaved from a game", async () => {
@@ -52,7 +52,7 @@ test("should return success if user leaved from a game", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toBe("success");
+  expect(ret).toEqual({ kind: "success", game: save.lastCall.lastArg });
   expect(save.callCount).toBe(1);
   expect(save.lastCall.lastArg.joinedPlayers).toHaveLength(1);
 });
