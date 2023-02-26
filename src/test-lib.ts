@@ -2,7 +2,7 @@
 import * as sinon from "sinon";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
-import { Authenticator } from "./status/signin/types";
+import { Authenticator } from "./status/type";
 import { EventDispatcher } from "./usecases/base";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
