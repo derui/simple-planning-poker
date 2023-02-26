@@ -7,7 +7,10 @@ export interface ChangeUserNameInput {
   name: string;
 }
 
-export type ChangeUserNameOutput = { kind: "success" } | { kind: "canNotChangeName" } | { kind: "notFound" };
+export type ChangeUserNameOutput =
+  | { kind: "success"; user: User.T }
+  | { kind: "canNotChangeName" }
+  | { kind: "notFound" };
 
 export class ChangeUserNameUseCase implements UseCase<ChangeUserNameInput, Promise<ChangeUserNameOutput>> {
   constructor(private dispatcher: EventDispatcher, private userRepository: UserRepository) {}
@@ -29,6 +32,6 @@ export class ChangeUserNameUseCase implements UseCase<ChangeUserNameInput, Promi
       this.dispatcher.dispatch(event);
     }
 
-    return { kind: "success" };
+    return { kind: "success", user: newUser };
   }
 }
