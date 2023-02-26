@@ -113,4 +113,95 @@ export const gameEpic = (
       }),
       commonCatchError
     ),
+  leaveGame: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.leaveGame.match),
+      switchMap(() => {
+        const { game, user } = state$.value;
+
+        if (!game.currentGame || !user.currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("leaveGameUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: game.currentGame.id,
+            userId: user.currentUser.id,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.leaveGameSuccess();
+              default:
+                return GameAction.somethingFailure(output.kind);
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+  joinGame: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.joinGame.match),
+      switchMap(({ payload }) => {
+        const { user } = state$.value;
+
+        if (!user.currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("joinUserUseCase");
+
+        return from(
+          useCase.execute({
+            userId: user.currentUser.id,
+            signature: payload,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.joinGameSuccess(output.game);
+              default:
+                return GameAction.somethingFailure(output.kind);
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  openGame: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.openGame.match),
+      switchMap(({ payload }) => {
+        const { user } = state$.value;
+        const currentUser = user.currentUser;
+
+        if (!currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const repository = registrar.resolve("gameRepository");
+        const game = repository.findBy(payload);
+
+        return from(game).pipe(
+          map((output) => {
+            if (!output) {
+              return GameAction.openGameFailure({ reason: "Can not find game" });
+            }
+
+            if (!output.joinedPlayers.some((v) => v.user === currentUser.id)) {
+              return GameAction.openGameFailure({ reason: "Current user did not join the game" });
+            }
+
+            return GameAction.openGameSuccess(output);
+          })
+        );
+      }),
+      commonCatchError
+    ),
 });

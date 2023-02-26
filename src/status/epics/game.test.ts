@@ -12,7 +12,13 @@ import { createPureStore } from "../store";
 import { StateObservable } from "redux-observable";
 import { gameEpic } from "./game";
 import { signInSuccess } from "../actions/signin";
-import { createMockedChangeUserModeUseCase, createMockedHandCardUseCase } from "@/test-lib";
+import {
+  createMockedChangeUserModeUseCase,
+  createMockedGameRepository,
+  createMockedHandCardUseCase,
+  createMockedJoinUserUseCase,
+  createMockedLeaveGameUseCase,
+} from "@/test-lib";
 import sinon from "sinon";
 import { UserMode } from "@/domains/game-player";
 
@@ -281,5 +287,107 @@ describe("change user mode", () => {
     const ret = await firstValueFrom(epics.changeUserMode(action$, state$, null));
 
     expect(ret).toEqual(GameAction.changeUserModeSuccess(expected));
+  });
+});
+
+describe("leave game", () => {
+  test("leave game", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const expected = Game.declarePlayerTo(game, user.id, UserMode.inspector);
+    registrar.register(
+      "leaveGameUseCase",
+      createMockedLeaveGameUseCase({
+        execute: sinon.fake.resolves({ kind: "success", game: expected }),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(signInSuccess(user));
+
+    const action$ = of(GameAction.leaveGame());
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.leaveGame(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.leaveGameSuccess());
+  });
+});
+describe("join game", () => {
+  test("join game", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register(
+      "joinUserUseCase",
+      createMockedJoinUserUseCase({
+        execute: sinon.fake.resolves({ kind: "success", game: game }),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(signInSuccess(user));
+
+    const action$ = of(GameAction.joinGame(Game.makeInvitation(game)));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.joinGame(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.joinGameSuccess(game));
+  });
+});
+
+describe("open game", () => {
+  test("open game", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register(
+      "gameRepository",
+      createMockedGameRepository({
+        findBy: sinon.fake.resolves(game),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(signInSuccess(user));
+
+    const action$ = of(GameAction.openGame(game.id));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.openGame(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.openGameSuccess(game));
   });
 });
