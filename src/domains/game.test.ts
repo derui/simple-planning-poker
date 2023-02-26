@@ -44,7 +44,7 @@ test("get aggregate and event when game created ", () => {
   expect(game.joinedPlayers).toEqual([{ user: User.createId("user"), mode: GamePlayer.UserMode.normal }]);
   expect(game.owner).toEqual(User.createId("user"));
   expect(game.round.count).toBe(1);
-  expect(game.round.hands).toHaveLength(0);
+  expect(game.round.hands).toEqual({});
   expect(game.finishedRounds).toHaveLength(0);
 });
 

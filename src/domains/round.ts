@@ -20,8 +20,8 @@ interface PlayerHand {
 const _calculatedStoryPoint = Symbol();
 type CalculatedStoryPoint = Branded<number, typeof _calculatedStoryPoint>;
 
-const _finishedRound = Symbol();
-const _round = Symbol();
+const _finishedRound = "FinishedRound";
+const _round = "Round";
 
 /**
  * A type for finished round. This type can not any mutate.
@@ -30,7 +30,7 @@ export type FinishedRound = {
   readonly _tag: typeof _finishedRound;
   readonly id: Id;
   readonly count: number;
-  readonly hands: Map<User.Id, UserHand.T>;
+  readonly hands: Record<User.Id, UserHand.T>;
   readonly finishedAt: DateTime;
 };
 
@@ -41,7 +41,7 @@ export type Round = {
   readonly _tag: typeof _round;
   readonly id: Id;
   readonly count: number;
-  readonly hands: Map<User.Id, UserHand.T>;
+  readonly hands: Record<User.Id, UserHand.T>;
   readonly selectableCards: SelectableCards.T;
 };
 
@@ -75,7 +75,7 @@ export const roundOf = function roundOf({
     _tag: _round,
     id,
     count,
-    hands: new Map(hands.map((v) => [v.user, v.hand])),
+    hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
     selectableCards: SelectableCards.clone(selectableCards),
   };
 };
@@ -98,7 +98,7 @@ export const finishedRoundOf = function finishedRoundOf({
     _tag: _finishedRound,
     id,
     count,
-    hands: new Map(hands.map((v) => [v.user, v.hand])),
+    hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
     finishedAt,
   };
 };
@@ -111,9 +111,9 @@ export const takePlayerCard = function takePlayerCard(round: Round, userId: User
     throw new Error("Can not accept this card");
   }
 
-  const hands = new Map(round.hands.entries());
+  const hands = Object.assign({}, round.hands);
 
-  hands.set(userId, UserHand.handed(card));
+  hands[userId] = UserHand.handed(card);
 
   return produce(round, (draft) => {
     draft.hands = hands;
@@ -124,12 +124,8 @@ export const takePlayerCard = function takePlayerCard(round: Round, userId: User
  * Round accepts player to give up in this round.
  */
 export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, userId: User.Id) {
-  const hands = new Map(round.hands.entries());
-
-  hands.set(userId, UserHand.giveUp());
-
   return produce(round, (draft) => {
-    draft.hands = hands;
+    draft.hands[userId] = UserHand.giveUp();
   });
 };
 
@@ -137,13 +133,13 @@ export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, 
  * finish a round. Throw error if round has no hand.
  */
 export const showDown = function showDown(round: Round, now: Date): [FinishedRound, GenericDomainEvent] {
-  if (round.hands.size === 0) {
+  if (Object.keys(round.hands).length === 0) {
     throw new Error("Can not finish round because it has no hand");
   }
 
-  const hands = Array.from(round.hands.entries()).map(([user, hand]) => {
+  const hands = Object.entries(round.hands).map(([user, hand]) => {
     return {
-      user,
+      user: user as User.Id,
       hand,
     };
   });
@@ -159,7 +155,7 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
  * calculate averate on round.
  */
 export const calculateAverage = function calculateAverage(round: FinishedRound) {
-  const cards = Array.from(round.hands.values())
+  const cards = Object.values(round.hands)
     .filter(UserHand.isHanded)
     .map((v) => v.card);
 

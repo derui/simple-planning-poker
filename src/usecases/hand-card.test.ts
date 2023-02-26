@@ -58,5 +58,5 @@ test("should save player with card selected by user", async () => {
   // Assert
   expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
   expect(save.callCount).toBe(1);
-  expect(save.lastCall.firstArg.round.hands).toEqual(new Map([[input.userId, UserHand.handed(CARDS[0])]]));
+  expect(save.lastCall.firstArg.round.hands).toEqual(Object.fromEntries([[input.userId, UserHand.handed(CARDS[0])]]));
 });

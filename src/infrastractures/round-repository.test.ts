@@ -52,7 +52,7 @@ test("should be able to save and find a round", async () => {
   expect(instance?.id).toEqual(round.id);
   expect(instance?.count).toEqual(round.count);
   expect(instance?.hands).toEqual(
-    new Map<User.Id, UserHand.T>([
+    Object.fromEntries([
       [User.createId("user1"), UserHand.handed(cards[0])],
       [User.createId("user2"), UserHand.handed(cards[1])],
       [User.createId("user3"), UserHand.giveUp()],
@@ -90,7 +90,7 @@ test("should be able to save and find a finished round", async () => {
   expect(instance?.id).toEqual(round.id);
   expect(instance?.count).toEqual(round.count);
   expect(instance?.hands).toEqual(
-    new Map<User.Id, UserHand.T>([
+    Object.fromEntries([
       [User.createId("user1"), UserHand.handed(cards[0])],
       [User.createId("user2"), UserHand.handed(cards[1])],
       [User.createId("user3"), UserHand.giveUp()],

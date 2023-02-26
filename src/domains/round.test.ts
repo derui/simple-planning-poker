@@ -23,7 +23,7 @@ const cards = SelectableCards.create([StoryPoint.create(2), StoryPoint.create(3)
 test("get round", () => {
   const ret = roundOf({ id: createId("id"), count: 1, selectableCards: cards });
 
-  expect(ret.hands).toHaveLength(0);
+  expect(ret.hands).toEqual({});
   expect(ret.id).toBe(createId("id"));
   expect(ret.count).toBe(1);
   expect(ret.selectableCards).toEqual(cards);
@@ -33,7 +33,7 @@ test("get finished round", () => {
   const now = formatToDateTime(new Date());
   const ret = finishedRoundOf({ id: createId("id"), count: 1, finishedAt: now, hands: [] });
 
-  expect(ret.hands).toHaveLength(0);
+  expect(ret.hands).toEqual({});
   expect(ret.finishedAt).toBe(now);
   expect(ret.id).toBe(createId("id"));
 });
@@ -45,7 +45,7 @@ test("round can accept user hand", () => {
   expect(round).not.toBe(changed);
   expect(round.id).toBe(changed.id);
   expect(round.selectableCards).toBe(changed.selectableCards);
-  expect(changed.hands).toEqual(new Map([[User.createId("id"), UserHand.handed(cards[0])]]));
+  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
 });
 
 test("update hand if user already take their hand before", () => {
@@ -53,7 +53,7 @@ test("update hand if user already take their hand before", () => {
   let changed = takePlayerCard(round, User.createId("id"), cards[0]);
   changed = takePlayerCard(changed, User.createId("id"), cards[1]);
 
-  expect(changed.hands).toEqual(new Map([[User.createId("id"), UserHand.handed(cards[1])]]));
+  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[1])]]));
 });
 
 test("throw error when a card user took is not contained selectable cards", () => {
@@ -74,7 +74,7 @@ test("round can accept user giveup", () => {
   round = acceptPlayerToGiveUp(round, User.createId("id2"));
 
   expect(round.hands).toEqual(
-    new Map<User.Id, UserHand.T>([
+    Object.fromEntries([
       [User.createId("id"), UserHand.handed(cards[0])],
       [User.createId("id2"), UserHand.giveUp()],
     ])
@@ -90,7 +90,7 @@ test("give upped user can take other hand", () => {
   });
   round = takePlayerCard(round, User.createId("id"), cards[0]);
 
-  expect(round.hands).toEqual(new Map<User.Id, UserHand.T>([[User.createId("id"), UserHand.handed(cards[0])]]));
+  expect(round.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
 });
 
 describe("", () => {
