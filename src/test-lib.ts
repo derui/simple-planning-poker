@@ -2,6 +2,7 @@
 import * as sinon from "sinon";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
+import { Authenticator } from "./status/signin/types";
 import { EventDispatcher } from "./usecases/base";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
@@ -73,4 +74,11 @@ export const createMockedCreateGameUseCase = function createMockedCreateGameUseC
   return {
     execute: mock.execute ?? sinon.fake(),
   } as CreateGameUseCase;
+};
+export const createMockedAuthenticator = function createMockedAuthenticator(mock: Partial<Authenticator> = {}) {
+  return {
+    currentUserIdIfExists: mock.currentUserIdIfExists ?? sinon.fake(),
+    signIn: mock.signIn ?? sinon.fake(),
+    signUp: mock.signUp ?? sinon.fake(),
+  } as Authenticator;
 };
