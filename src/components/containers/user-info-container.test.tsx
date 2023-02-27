@@ -6,7 +6,6 @@ import { act } from "react-dom/test-utils";
 import { UserInfoContainer } from "./user-info-container";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
-
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomCards, randomGame } from "@/test-lib";
