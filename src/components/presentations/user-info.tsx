@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
-import { UserInfoUpdaterComponent } from "./user-info-updater";
+import { UserInfoUpdater } from "./user-info-updater";
 import { UserMode } from "@/domains/game-player";
 
 interface Props extends BaseProps {
@@ -67,18 +67,15 @@ export function UserInfo(props: Props) {
       </span>
       <span className={styles.indicator(opened)} data-testid={testid("indicator")} data-opened={opened}></span>
       {opened ? (
-        <UserInfoUpdaterComponent
+        <UserInfoUpdater
           name={props.name}
           mode={props.mode}
-          onChangeName={(name) => {
+          onChangeUserInfo={(mode, name) => {
             setOpened(false);
 
             if (props.onChangeName) {
               props.onChangeName(name);
             }
-          }}
-          onChangeMode={(mode) => {
-            setOpened(false);
 
             if (props.onChangeMode) {
               props.onChangeMode(mode);
