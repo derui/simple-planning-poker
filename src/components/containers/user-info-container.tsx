@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
-import { UserInfoUpdater } from "./user-info-updater";
+import { UserInfoUpdater } from "../presentations/user-info-updater";
 import { UserMode } from "@/domains/game-player";
 
 interface Props extends BaseProps {
@@ -55,7 +55,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function UserInfo(props: Props) {
+export function UserInfoContainer(props: Props) {
   const testid = generateTestId(props.testid);
   const [opened, setOpened] = React.useState(false);
 
