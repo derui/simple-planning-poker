@@ -2,14 +2,13 @@ import React from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserInfoUpdater } from "../presentations/user-info-updater";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import * as UserAction from "@/status/actions/user";
+import * as GameAction from "@/status/actions/game";
 import { UserMode } from "@/domains/game-player";
+import { selectUserInfo } from "@/status/selectors/user";
 
-interface Props extends BaseProps {
-  name: string;
-  mode: UserMode;
-  onChangeName?: (name: string) => void;
-  onChangeMode?: (mode: UserMode) => void;
-}
+type Props = BaseProps;
 
 const styles = {
   root: classnames(
@@ -58,29 +57,34 @@ const styles = {
 export function UserInfoContainer(props: Props) {
   const testid = generateTestId(props.testid);
   const [opened, setOpened] = React.useState(false);
+  const [payload, loading] = useAppSelector(selectUserInfo());
+  const dispatch = useAppDispatch();
+
+  const handleChangeUserInfo = (mode: UserMode, name: string) => {
+    setOpened(false);
+    dispatch(UserAction.changeName(name));
+    dispatch(GameAction.changeUserMode(mode));
+  };
+
+  if (loading !== "finished" || !payload) {
+    return null;
+  }
 
   return (
     <div className={styles.root} data-testid={testid("root")} onClick={() => setOpened(!opened)}>
       <span className={styles.icon}></span>
       <span className={styles.name} data-testid={testid("name")}>
-        {props.name}
+        {payload.userName}
       </span>
-      <span className={styles.indicator(opened)} data-testid={testid("indicator")} data-opened={opened}></span>
+      {loading !== "finished" ? null : (
+        <span className={styles.indicator(opened)} data-testid={testid("indicator")} data-opened={opened}></span>
+      )}
       {opened ? (
         <UserInfoUpdater
-          name={props.name}
-          mode={props.mode}
-          onChangeUserInfo={(mode, name) => {
-            setOpened(false);
-
-            if (props.onChangeName) {
-              props.onChangeName(name);
-            }
-
-            if (props.onChangeMode) {
-              props.onChangeMode(mode);
-            }
-          }}
+          testid={testid("updater")}
+          name={payload.userName}
+          mode={payload.userMode}
+          onChangeUserInfo={handleChangeUserInfo}
         />
       ) : null}
     </div>

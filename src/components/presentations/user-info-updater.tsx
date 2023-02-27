@@ -69,6 +69,7 @@ export function UserInfoUpdater({ name, mode, onChangeUserInfo, ...rest }: Props
       <div className={styles.nameEditor} data-testid={testid("nameEditor")}>
         <label className={styles.nameEditorLabel}>Name</label>
         <input
+          data-testid={testid("nameEditorInput")}
           className={styles.nameEditorInput}
           type="text"
           defaultValue={name}
