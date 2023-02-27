@@ -10,6 +10,10 @@ import { CreateGameUseCase } from "./usecases/create-game";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
+import * as Game from "@/domains/game";
+import * as User from "@/domains/user";
 
 export const createMockedDispatcher = (mock: Partial<EventDispatcher> = {}) => {
   return {
@@ -81,4 +85,30 @@ export const createMockedAuthenticator = function createMockedAuthenticator(mock
     signIn: mock.signIn ?? sinon.fake(),
     signUp: mock.signUp ?? sinon.fake(),
   } as Authenticator;
+};
+
+export const randomCards = function randomCards() {
+  const length = Math.floor(Math.random() * 10) + 1;
+  const cards = new Array(length);
+
+  for (let i = 0; i < length; i++) {
+    cards[i] = Math.floor(Math.random() * 100);
+  }
+
+  return SelectableCards.create(cards.map(StoryPoint.create));
+};
+
+/**
+ * create random game for test usage
+ */
+export const randomGame = function randomGame(args: Partial<Parameters<typeof Game.create>[0]>) {
+  return Game.create({
+    id: args.id ?? Game.createId(),
+    cards: args.cards ?? randomCards(),
+    owner: args.owner ?? User.createId(),
+    finishedRounds: args.finishedRounds ?? [],
+    joinedPlayers: args.joinedPlayers ?? [],
+    name: args.name ?? "random game",
+    round: args.round,
+  })[0];
 };
