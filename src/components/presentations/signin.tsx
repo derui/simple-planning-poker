@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import * as React from "react";
 import { Transition } from "react-transition-group";
+import { BaseProps, generateTestId } from "../base";
 
-interface Props {
+interface Props extends BaseProps {
   title: string;
   onSubmit: (param: { email: string; password: string }) => void;
   authenticating: boolean;
@@ -112,18 +113,24 @@ const overlayStyles = {
     ),
 } as const;
 
-const Overlay = ({ authenticating }: { authenticating: boolean }) => {
+const Overlay = ({ authenticating }: { authenticating: boolean; testid: string }) => {
+  const ref = React.useRef(null);
   return (
-    <Transition in={authenticating} timeout={200}>
+    <Transition nodeRef={ref} in={authenticating} timeout={200}>
       {(state) => {
-        return <div className={overlayStyles.root(state)}>Authenticating...</div>;
+        return (
+          <div ref={ref} className={overlayStyles.root(state)} data-testid={testid}>
+            Authenticating...
+          </div>
+        );
       }}
     </Transition>
   );
 };
 
 // eslint-disable-next-line func-style
-export function SignInComponent({ title, onSubmit, authenticating, children }: React.PropsWithChildren<Props>) {
+export function SignInComponent({ title, onSubmit, authenticating, children, testid }: React.PropsWithChildren<Props>) {
+  const gen = generateTestId(testid);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -135,23 +142,31 @@ export function SignInComponent({ title, onSubmit, authenticating, children }: R
 
   return (
     <form className={styles.root} onSubmit={handleSubmit}>
-      <header className={styles.header}>{title}</header>
+      <header className={styles.header} data-testid={gen("heade")}>
+        {title}
+      </header>
       <main className={styles.main}>
-        <Overlay authenticating={authenticating} />
+        <Overlay testid={gen("overlay")} authenticating={authenticating} />
         <ul className={styles.inputContainer}>
           <li className={styles.inputTerm}>
-            <label className={styles.inputLabel}>email</label>
+            <label htmlFor="email" className={styles.inputLabel}>
+              email
+            </label>
             <input
               type="text"
+              name="email"
               className={styles.input}
               defaultValue={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </li>
           <li className={styles.inputTerm}>
-            <label className={styles.inputLabel}>password</label>
+            <label htmlFor="password" className={styles.inputLabel}>
+              password
+            </label>
             <input
               type="password"
+              name="email"
               minLength={6}
               className={styles.input}
               defaultValue={password}
