@@ -1,8 +1,8 @@
-import signInActionContext from "@/contexts/actions/signin-actions";
-import { useAuthenticatingState } from "@/status/signin/selectors";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router";
-import { SignInComponent } from "../presentations/signin";
+import { SignIn } from "../presentations/signin";
+import { useAuthenticatingState } from "@/status/signin/selectors";
+import signInActionContext from "@/contexts/actions/signin-actions";
 
 interface Props {}
 
@@ -24,11 +24,11 @@ const SignUpContainer: React.FunctionComponent<Props> = () => {
   }, []);
 
   return (
-    <SignInComponent
+    <SignIn
       title="Sign Up"
       onSubmit={(email, password) => signUp(email, password, signInCallback)}
       authenticating={authenticating}
-    ></SignInComponent>
+    ></SignIn>
   );
 };
 

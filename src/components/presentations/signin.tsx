@@ -92,7 +92,6 @@ const overlayStyles = {
       "h-full",
       "bg-white",
       "z-10",
-      "invisible",
       "transition-opacity",
       {
         visible: state === "entering",
@@ -113,7 +112,7 @@ const overlayStyles = {
     ),
 } as const;
 
-const Overlay = ({ authenticating }: { authenticating: boolean; testid: string }) => {
+const Overlay = ({ authenticating, testid }: { authenticating: boolean; testid: string }) => {
   const ref = React.useRef(null);
   return (
     <Transition nodeRef={ref} in={authenticating} timeout={200}>
@@ -129,7 +128,7 @@ const Overlay = ({ authenticating }: { authenticating: boolean; testid: string }
 };
 
 // eslint-disable-next-line func-style
-export function SignInComponent({ title, onSubmit, authenticating, children, testid }: React.PropsWithChildren<Props>) {
+export function SignIn({ title, onSubmit, authenticating, children, testid }: React.PropsWithChildren<Props>) {
   const gen = generateTestId(testid);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -142,34 +141,33 @@ export function SignInComponent({ title, onSubmit, authenticating, children, tes
 
   return (
     <form className={styles.root} onSubmit={handleSubmit}>
-      <header className={styles.header} data-testid={gen("heade")}>
+      <header className={styles.header} data-testid={gen("header")}>
         {title}
       </header>
       <main className={styles.main}>
         <Overlay testid={gen("overlay")} authenticating={authenticating} />
         <ul className={styles.inputContainer}>
           <li className={styles.inputTerm}>
-            <label htmlFor="email" className={styles.inputLabel}>
-              email
-            </label>
+            <label className={styles.inputLabel}>email</label>
             <input
               type="text"
               name="email"
               className={styles.input}
-              defaultValue={email}
+              value={email}
+              placeholder="email"
+              data-testid={gen("email")}
               onChange={(e) => setEmail(e.target.value)}
             />
           </li>
           <li className={styles.inputTerm}>
-            <label htmlFor="password" className={styles.inputLabel}>
-              password
-            </label>
+            <label className={styles.inputLabel}>password</label>
             <input
               type="password"
-              name="email"
+              name="password"
               minLength={6}
               className={styles.input}
-              defaultValue={password}
+              value={password}
+              data-testid={gen("password")}
               onChange={(e) => setPassword(e.target.value)}
             />
           </li>
