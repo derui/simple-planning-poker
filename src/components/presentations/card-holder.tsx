@@ -1,5 +1,5 @@
 import React from "react";
-import { SelectableCardComponent } from "./selectable-card";
+import { SelectableCard } from "./selectable-card";
 
 interface Props {
   displays: string[];
@@ -14,11 +14,11 @@ const createCard = (
   onClickCard: (index: number) => void
 ) => {
   return (
-    <SelectableCardComponent
+    <SelectableCard
       key={index}
-      display={display}
+      storyPoint={display}
       selected={index === selectedIndex}
-      onClick={() => onClickCard(index)}
+      onSelected={() => onClickCard(index)}
     />
   );
 };

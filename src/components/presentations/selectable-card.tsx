@@ -1,21 +1,44 @@
-import React from "react";
 import classnames from "classnames";
 
 interface Props {
-  display: string;
+  storyPoint: string;
   selected: boolean;
-  onClick: () => void;
+  onSelect: () => void;
 }
 
-export const SelectableCardComponent: React.FunctionComponent<Props> = (props) => {
-  const className = classnames({
-    "app__game__selectable-card": true,
-    "app__game__selectable-card--selected": props.selected,
-  });
+const styles = {
+  root: (selected: boolean) =>
+    classnames(
+      "flex",
+      "flex-col",
+      "h-12",
+      "w-6",
+      "rounded",
+      "border",
+      "border-primary-400",
+      "bg-white",
+      "text-primary-400",
+      "text-center",
+      "justify-center",
+      "m-3",
+      "transition-transform",
+      "first-of-type:ml-0",
+      "last-of-type:mr-0",
 
+      "hover:[transform:transformY(calc(-1 * 0.5rem))]",
+      {
+        "bg-primary-400": selected,
+        "text-secondary1-200": selected,
+        "[transform:transformY(calc(-1 * 0.5rem))]": selected,
+      }
+    ),
+};
+
+// eslint-disable-next-line func-style
+export function SelectableCard(props: Props) {
   return (
-    <div className={className} onClick={props.onClick}>
-      <span className="app__game__selectable-card__storypoint">{props.display}</span>
+    <div className={styles.root(props.selected)} onClick={props.onSelect} data-selected={props.selected}>
+      {props.storyPoint}
     </div>
   );
-};
+}

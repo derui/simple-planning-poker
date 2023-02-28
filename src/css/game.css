@@ -211,45 +211,6 @@
   align-items: flex-end;
 }
 
-.app__game__selectable-card {
-  display: flex;
-  flex-direction: column;
-  height: var(--card-height);
-  width: var(--card-width);
-  border-radius: var(--base-border-radius);
-  border: 1px solid var(--primary-3);
-  background-color: white;
-  color: var(--primary-4);
-  text-align: center;
-  justify-content: center;
-  margin: var(--space-base);
-
-  /* transition */
-  transition: transform 100ms ease-out;
-
-  &:first-of-type {
-    margin-left: 0;
-  }
-
-  &:last-of-type {
-    margin-right: 0;
-  }
-
-  &:hover {
-    transform: translateY(calc(-1 * var(--space-base)));
-  }
-
-  &.app__game__selectable-card--selected {
-    background-color: var(--primary-3);
-    color: var(--secondary-1-1);
-    transform: translateY(calc(-1 * var(--space-base)));
-  }
-}
-
-.app__game__selectable-card__storypoint {
-  text-align: center;
-}
-
 .app__game__main__user-hand {
   display: inline-block;
 }
