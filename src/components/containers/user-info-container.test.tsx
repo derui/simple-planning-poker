@@ -26,8 +26,8 @@ test("should not open initial", () => {
     cards: randomCards(),
   });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   render(
     <Provider store={store}>
@@ -45,8 +45,8 @@ test("should open updater when clicked", async () => {
   const user = User.create({ id: User.createId(), name: "name" });
   const game = randomGame({ owner: user.id });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   render(
     <Provider store={store}>
@@ -64,8 +64,8 @@ test("should dispatch after changed", async () => {
   const user = User.create({ id: User.createId(), name: "name" });
   const game = randomGame({ owner: user.id });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   render(
     <Provider store={store}>
@@ -85,8 +85,8 @@ test("should update data after success", async () => {
   const user = User.create({ id: User.createId(), name: "name" });
   const game = randomGame({ owner: user.id });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   render(
     <Provider store={store}>

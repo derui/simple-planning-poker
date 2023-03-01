@@ -25,8 +25,8 @@ test("should return current user info ", () => {
     cards: CARDS,
   });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(signInSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   const ret = s.selectUserInfo()(store.getState());
 
@@ -54,8 +54,8 @@ test("should not return value when the user was not joined before", () => {
     cards: CARDS,
   });
 
-  store.dispatch(openGameSuccess(game));
   store.dispatch(signInSuccess(user));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
 
   const ret = s.selectUserInfo()(store.getState());
 
