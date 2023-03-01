@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as Game from "@/domains/game";
+import { WritableDraft } from "immer/dist/internal";
 import {
   giveUp,
   giveUpSuccess,
@@ -15,7 +15,7 @@ import {
   changeUserMode,
   changeUserModeSuccess,
 } from "../actions/game";
-import { WritableDraft } from "immer/dist/internal";
+import * as Game from "@/domains/game";
 
 interface GameState {
   currentGame: Game.T | null;
@@ -53,7 +53,10 @@ const slice = createSlice({
     builder.addCase(changeUserModeSuccess, updateCurrentGame);
     builder.addCase(notifyGameChanges, updateCurrentGame);
     builder.addCase(joinGameSuccess, updateCurrentGame);
-    builder.addCase(openGameSuccess, updateCurrentGame);
+    builder.addCase(openGameSuccess, (draft, { payload }) => {
+      draft.currentGame = payload.game;
+      draft.loading = false;
+    });
 
     builder.addCase(leaveGameSuccess, (state) => {
       state.currentGame = null;

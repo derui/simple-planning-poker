@@ -56,7 +56,7 @@ test("update game with action joining game", () => {
 });
 test("update game with action opening game", () => {
   let ret = reducer(getInitialState(), GameAction.openGame(GAME.id));
-  ret = reducer(ret, GameAction.openGameSuccess(GAME));
+  ret = reducer(ret, GameAction.openGameSuccess({ game: GAME, players: [] }));
 
   expect(ret.currentGame).toBe(GAME);
   expect(ret.loading).toBe(false);

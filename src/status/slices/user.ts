@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions/signin";
 import { changeNameSuccess, notifyOtherUserChanged } from "../actions/user";
+import { openGameSuccess } from "../actions/game";
 import * as User from "@/domains/user";
 
 interface UserState {
@@ -45,6 +46,12 @@ const slice = createSlice({
       }
       draft.currentUser = payload;
       draft.users[payload.id] = payload;
+    });
+
+    builder.addCase(openGameSuccess, (draft, { payload }) => {
+      for (let player of payload.players) {
+        draft.users[player.id] = player;
+      }
     });
   },
 });

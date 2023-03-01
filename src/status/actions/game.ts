@@ -1,6 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as Game from "@/domains/game";
 import * as Invitation from "@/domains/invitation";
+import * as User from "@/domains/user";
 import { UserMode } from "@/domains/game-player";
 
 const prefix = "gamePlayer";
@@ -34,7 +35,7 @@ export const joinGameFailure = createAction<{ reason: string }>(`${prefix}:joinG
 
 // select game user already joined
 export const openGame = createAction<Game.Id>(`${prefix}:openGame`);
-export const openGameSuccess = createAction<Game.T>(`${prefix}:openGameSuccess`);
+export const openGameSuccess = createAction<{ game: Game.T; players: User.T[] }>(`${prefix}:openGameSuccess`);
 export const openGameFailure = createAction<{ reason: string }>(`${prefix}:openGameFailure`);
 
 // create game
