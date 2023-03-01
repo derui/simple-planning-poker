@@ -1,7 +1,7 @@
-import * as User from "@/domains/user";
 import { createSlice } from "@reduxjs/toolkit";
 import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions/signin";
 import { changeNameSuccess, notifyOtherUserChanged } from "../actions/user";
+import * as User from "@/domains/user";
 
 interface UserState {
   users: { [k: User.Id]: User.T };
@@ -22,14 +22,17 @@ const slice = createSlice({
 
     builder.addCase(tryAuthenticateSuccess, (draft, { payload }) => {
       draft.currentUser = payload;
+      draft.users[payload.id] = payload;
     });
 
     builder.addCase(signInSuccess, (draft, { payload }) => {
       draft.currentUser = payload;
+      draft.users[payload.id] = payload;
     });
 
     builder.addCase(signUpSuccess, (draft, { payload }) => {
       draft.currentUser = payload;
+      draft.users[payload.id] = payload;
     });
 
     builder.addCase(notifyOtherUserChanged, (draft, { payload }) => {
@@ -41,6 +44,7 @@ const slice = createSlice({
         return;
       }
       draft.currentUser = payload;
+      draft.users[payload.id] = payload;
     });
   },
 });
