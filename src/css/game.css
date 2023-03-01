@@ -225,60 +225,6 @@
   flex-direction: column-reverse;
 }
 
-.app__game__main__player-card {
-  display: flex;
-  flex-direction: column;
-  height: var(--card-height);
-  width: var(--card-width);
-  border-radius: var(--base-border-radius);
-  border: 1px solid var(--primary-3);
-  background-color: white;
-  color: var(--primary-4);
-  text-align: center;
-  justify-content: center;
-  margin: var(--space-base);
-  transition: transform 0.2s ease;
-
-  &.app__game__main__player-card--handed {
-    background-color: var(--primary-3);
-    color: var(--secondary-1-1);
-    transform: rotateY(180deg);
-  }
-
-  &.app__game__main__player-card--result {
-    background-color: var(--primary-3);
-    color: var(--secondary-1-1);
-    transform: rotateY(-180deg);
-  }
-
-  &.app__game__main__player-card--transition {
-    background-color: white;
-    color: var(--primary-4);
-    transform: rotateY(0deg);
-  }
-}
-
-.app__game__main__player-card--inspector {
-  display: flex;
-  flex-direction: column;
-  height: var(--card-height);
-  width: var(--card-width);
-  border-radius: var(--base-border-radius);
-  border: 1px solid var(--primary-3);
-  justify-content: center;
-  margin: var(--space-base);
-  align-items: center;
-}
-
-.app__game__main__player-card__eye {
-  display: block;
-  mask: url("../svg/eye.svg") no-repeat center center;
-  mask-size: contain;
-  background-color: var(--primary-3);
-  height: calc(var(--card-height) - var(--space-base));
-  width: calc(var(--card-width) - var(--space-base));
-}
-
 /* average show case */
 .app__game__average-point-showcase {
   flex: 0 1 auto;
