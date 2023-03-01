@@ -29,10 +29,11 @@ export const createMockedGameRepository = (mock: Partial<GameRepository> = {}): 
   };
 };
 
-export const createMockedUserRepository = (mock: Partial<UserRepository> = {}) => {
+export const createMockedUserRepository = (mock: Partial<UserRepository> = {}): UserRepository => {
   return {
     save: mock.save ?? sinon.fake(),
     findBy: mock.findBy ?? sinon.fake(),
+    listIn: mock.listIn ?? sinon.fake(),
   };
 };
 

@@ -1,4 +1,10 @@
 import { expect, test, describe } from "vitest";
+import { firstValueFrom, NEVER, of } from "rxjs";
+import { StateObservable } from "redux-observable";
+import sinon from "sinon";
+import { createPureStore } from "../store";
+import { signInSuccess } from "../actions/signin";
+import { gameEpic } from "./game";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import * as Game from "@/domains/game";
@@ -7,11 +13,6 @@ import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as GameAction from "@/status/actions/game";
 import * as UserHand from "@/domains/user-hand";
-import { firstValueFrom, NEVER, of } from "rxjs";
-import { createPureStore } from "../store";
-import { StateObservable } from "redux-observable";
-import { gameEpic } from "./game";
-import { signInSuccess } from "../actions/signin";
 import {
   createMockedChangeUserModeUseCase,
   createMockedCreateGameUseCase,
@@ -19,8 +20,8 @@ import {
   createMockedHandCardUseCase,
   createMockedJoinUserUseCase,
   createMockedLeaveGameUseCase,
+  createMockedUserRepository,
 } from "@/test-lib";
-import sinon from "sinon";
 import { UserMode } from "@/domains/game-player";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
@@ -40,18 +41,19 @@ describe("giveUp", () => {
   });
 
   test("should error if user is not set", async () => {
+    const owner = User.create({ id: User.createId(), name: "name" });
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
       joinedPlayers: [],
-      owner: User.createId(),
+      owner: owner.id,
       finishedRounds: [],
       cards: CARDS,
     });
     const registrar = createDependencyRegistrar<Dependencies>();
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [owner] }));
 
     const action$ = of(GameAction.giveUp());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -62,15 +64,15 @@ describe("giveUp", () => {
   });
 
   test("get changed game", async () => {
+    const user = User.create({ id: User.createId(), name: "foo" });
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
       joinedPlayers: [],
-      owner: User.createId(),
+      owner: user.id,
       finishedRounds: [],
       cards: CARDS,
     });
-    const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
     const expected = Game.acceptPlayerHand(game, user.id, UserHand.giveUp());
@@ -83,7 +85,7 @@ describe("giveUp", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.giveUp());
@@ -115,7 +117,7 @@ describe("giveUp", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.giveUp());
@@ -142,6 +144,7 @@ describe("hand card", () => {
   });
 
   test("should error if user is not set", async () => {
+    const user = User.create({ id: User.createId(), name: "name" });
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
@@ -153,7 +156,7 @@ describe("hand card", () => {
     const registrar = createDependencyRegistrar<Dependencies>();
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
 
     const action$ = of(GameAction.handCard({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -185,7 +188,7 @@ describe("hand card", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.handCard({ cardIndex: 1 }));
@@ -212,7 +215,7 @@ describe("hand card", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.handCard({ cardIndex: 5 }));
@@ -244,7 +247,7 @@ describe("hand card", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.handCard({ cardIndex: 1 }));
@@ -279,7 +282,7 @@ describe("change user mode", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.changeUserMode(UserMode.inspector));
@@ -314,7 +317,7 @@ describe("leave game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.leaveGame());
@@ -347,7 +350,6 @@ describe("join game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.joinGame(Game.makeInvitation(game)));
@@ -372,6 +374,7 @@ describe("open game", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
+    registrar.register("userRepository", createMockedUserRepository({ listIn: sinon.fake.resolves([user]) }));
     registrar.register(
       "gameRepository",
       createMockedGameRepository({
@@ -381,7 +384,6 @@ describe("open game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess(game));
     store.dispatch(signInSuccess(user));
 
     const action$ = of(GameAction.openGame(game.id));
@@ -389,7 +391,7 @@ describe("open game", () => {
 
     const ret = await firstValueFrom(epics.openGame(action$, state$, null));
 
-    expect(ret).toEqual(GameAction.openGameSuccess(game));
+    expect(ret).toEqual(GameAction.openGameSuccess({ game, players: [user] }));
   });
 });
 

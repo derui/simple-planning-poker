@@ -1,10 +1,10 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
+import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
 import type { RootState } from "../store";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
-import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
 import * as UserHand from "@/domains/user-hand";
 
 type Epics = "giveUp" | "handCard" | "changeUserMode" | "leaveGame" | "joinGame" | "openGame" | "createGame";
@@ -186,10 +186,19 @@ export const gameEpic = (
         }
 
         const repository = registrar.resolve("gameRepository");
-        const game = repository.findBy(payload);
+        const userRepository = registrar.resolve("userRepository");
 
-        return from(game).pipe(
-          map((output) => {
+        return from(repository.findBy(payload)).pipe(
+          switchMap((game) => {
+            if (!game) {
+              return of([game, []] as const);
+            }
+
+            const users = userRepository.listIn(game.joinedPlayers.map((v) => v.user));
+
+            return from(users).pipe(map((users) => [game, users] as const));
+          }),
+          map(([output, players]) => {
             if (!output) {
               return GameAction.openGameFailure({ reason: "Can not find game" });
             }
@@ -198,7 +207,7 @@ export const gameEpic = (
               return GameAction.openGameFailure({ reason: "Current user did not join the game" });
             }
 
-            return GameAction.openGameSuccess(output);
+            return GameAction.openGameSuccess({ game: output, players });
           })
         );
       }),

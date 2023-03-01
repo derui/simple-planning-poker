@@ -6,4 +6,7 @@ export interface UserRepository {
 
   // find user by id
   findBy(id: Id): Promise<T | undefined>;
+
+  // find user by id
+  listIn(ids: Id[]): Promise<T[]>;
 }
