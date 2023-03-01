@@ -1,19 +1,22 @@
 import React from "react";
 import classnames from "classnames";
-import PlayerHandComponent, { PlayerHandComponentProps } from "./player-hand";
+import PlayerHandComponent, { Props } from "./player-hand";
+import { UserMode } from "@/domains/game-player";
 
 interface Props {
-  position: "upper" | "lower";
-  userHands: Omit<PlayerHandComponentProps, "namePosition">[];
+  name: string;
+  mode: UserMode;
+  storyPoint: number | null;
+  selected: boolean;
+  showedDown: boolean;
 }
 
-export const PlayerHandsComponent: React.FunctionComponent<Props> = (props) => {
-  const className = classnames({
-    "app__game__main__users-in-upper": props.position === "upper",
-    "app__game__main__users-in-lower": props.position === "lower",
-  });
+const styles = {
+  root: classnames("flex", "justify-around"),
+};
 
-  const createUserHand = (props: PlayerHandComponentProps, index: number) => {
+export const PlayerHandsComponent: React.FunctionComponent<Props> = (props) => {
+  const createUserHand = (props: Props, index: number) => {
     return <PlayerHandComponent key={index} {...props} />;
   };
 

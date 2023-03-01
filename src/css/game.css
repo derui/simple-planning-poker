@@ -211,20 +211,6 @@
   align-items: flex-end;
 }
 
-.app__game__main__user-hand {
-  display: inline-block;
-}
-
-.app__game__main__user-hand-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.app__game__main__user-hand-container--flipped {
-  flex-direction: column-reverse;
-}
-
 /* average show case */
 .app__game__average-point-showcase {
   flex: 0 1 auto;
