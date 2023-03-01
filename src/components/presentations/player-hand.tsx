@@ -4,9 +4,9 @@ import { BaseProps, generateTestId } from "../base";
 import { UserMode } from "@/domains/game-player";
 
 interface Props extends BaseProps {
-  name: string;
-  mode: UserMode;
-  display: string;
+  userName: string;
+  userMode: UserMode;
+  displayValue: string;
   selected: boolean;
   opened: boolean;
 }
@@ -71,7 +71,7 @@ export default function PlayerHandComponent(props: Props) {
   }, []);
 
   let card: ReactElement;
-  if (props.mode === UserMode.inspector) {
+  if (props.userMode === UserMode.inspector) {
     card = (
       <span className={styles.card("notSelected", false)} data-testid={gen("card")} data-mode="inspector">
         <span className={styles.eye} data-testid={gen("eye")}></span>
@@ -80,14 +80,14 @@ export default function PlayerHandComponent(props: Props) {
   } else {
     card = (
       <span className={styles.card(state, transition)} data-testid={gen("card")} data-mode="normal" data-state={state}>
-        {state === "result" ? props.display : ""}
+        {state === "result" ? props.displayValue : ""}
       </span>
     );
   }
 
   return (
     <div className={styles.root} data-testid={gen("root")}>
-      <span>{props.name}</span>
+      <span>{props.userName}</span>
       {card}
     </div>
   );
