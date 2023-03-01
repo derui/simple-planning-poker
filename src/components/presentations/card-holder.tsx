@@ -16,7 +16,7 @@ const createCard = (
   return (
     <SelectableCard
       key={index}
-      storyPoint={display}
+      display={display}
       selected={index === selectedIndex}
       onSelected={() => onClickCard(index)}
     />

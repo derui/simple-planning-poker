@@ -1,7 +1,7 @@
 import classnames from "classnames";
 
 interface Props {
-  storyPoint: string;
+  display: string;
   selected: boolean;
   onSelect: () => void;
 }
@@ -38,7 +38,7 @@ const styles = {
 export function SelectableCard(props: Props) {
   return (
     <div className={styles.root(props.selected)} onClick={props.onSelect} data-selected={props.selected}>
-      {props.storyPoint}
+      {props.display}
     </div>
   );
 }
