@@ -16,3 +16,7 @@ export const equals = (v1: T, v2: T) => {
 };
 
 export const asStoryPoint = (card: T): StoryPoint.T => StoryPoint.create(card);
+
+export const toString = function toString(card: T) {
+  return `${card}`;
+};
