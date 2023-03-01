@@ -13,7 +13,8 @@ const styles = {
   root: classnames("flex", "justify-around"),
 };
 
-export const PlayerHandsComponent: React.FunctionComponent<Props> = ({ opened, hands, testid }) => {
+// eslint-disable-next-line func-style
+export default function PlayerHandsComponent({ opened, hands, testid }: Props) {
   const gen = generateTestId(testid);
 
   const createUserHand = (props: UserHandInfo, index: number) => {
@@ -25,4 +26,4 @@ export const PlayerHandsComponent: React.FunctionComponent<Props> = ({ opened, h
       {hands.map((v, index) => createUserHand(v, index))}
     </div>
   );
-};
+}
