@@ -6,7 +6,7 @@ module.exports = [
     type: 'select',
     name: 'type',
     message: 'select component type',
-    choices: ['atoms', 'molecules', 'organisms', 'containers']
+    choices: ['presentations', 'containers', 'pages']
   },
   {
     type: 'input',
