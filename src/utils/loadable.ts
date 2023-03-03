@@ -4,11 +4,11 @@ const _loading = Symbol();
 const _error = Symbol();
 const _finished = Symbol();
 
-export type LoadingStatus = typeof _loading | typeof _error | typeof _finished;
+export type T = typeof _loading | typeof _error | typeof _finished;
 
-export type LoadingState = [undefined, typeof _loading];
-export type ErrorState<E> = [E, typeof _error];
-export type FinishedState<T> = [T, typeof _finished];
+type LoadingState = [undefined, typeof _loading];
+type ErrorState<E> = [E, typeof _error];
+type FinishedState<T> = [T, typeof _finished];
 
 /**
  * simple loading handler

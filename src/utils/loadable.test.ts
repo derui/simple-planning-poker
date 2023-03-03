@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { error, finished, isError, isFinished, isLoading, loading } from "./type";
+import { error, finished, isError, isFinished, isLoading, loading } from "./loadable";
 
 test("make loading", () => {
   const state = loading();
