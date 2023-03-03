@@ -1,5 +1,5 @@
 import React from "react";
-import { GameInfoComponent } from "./game-info";
+import { GameInfo } from "./game-info";
 import { GameSettingsComponent } from "./game-settings";
 import { UserInfo } from "./user-info";
 import { UserMode } from "@/domains/game-player";
@@ -18,7 +18,7 @@ interface Props {
 export const GameHeaderComponent: React.FunctionComponent<Props> = (props) => {
   return (
     <div className="app__game__header">
-      <GameInfoComponent gameName={props.gameName} onLeaveGame={() => props.onLeaveGame()} />
+      <GameInfo gameName={props.gameName} onLeaveGame={() => props.onLeaveGame()} />
       <div className="app__game__header__right">
         <GameSettingsComponent origin={props.origin} invitationSignature={props.invitationSignature} />
         <UserInfo
