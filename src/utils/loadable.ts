@@ -4,8 +4,6 @@ const _loading = Symbol();
 const _error = Symbol();
 const _finished = Symbol();
 
-export type T = typeof _loading | typeof _error | typeof _finished;
-
 type LoadingState = [undefined, typeof _loading];
 type ErrorState<E> = [E, typeof _error];
 type FinishedState<T> = [T, typeof _finished];
@@ -13,26 +11,26 @@ type FinishedState<T> = [T, typeof _finished];
 /**
  * simple loading handler
  */
-export type Loadable<T, E = unknown> = LoadingState | ErrorState<E> | FinishedState<T>;
+export type T<T, E = unknown> = LoadingState | ErrorState<E> | FinishedState<T>;
 
 /**
  * check loading state is loading
  */
-export const isLoading = function isLoading<T>(loadable: Loadable<T>): loadable is LoadingState {
+export const isLoading = function isLoading<Obj>(loadable: T<Obj>): loadable is LoadingState {
   return loadable[1] === _loading;
 };
 
 /**
  * check loading state is error
  */
-export const isError = function isError<E>(loadable: Loadable<unknown, E>): loadable is ErrorState<E> {
+export const isError = function isError<E>(loadable: T<unknown, E>): loadable is ErrorState<E> {
   return loadable[1] === _error;
 };
 
 /**
  * check loading state is finished
  */
-export const isFinished = function isFinished<T>(loadable: Loadable<T>): loadable is FinishedState<T> {
+export const isFinished = function isFinished<Obj>(loadable: T<Obj>): loadable is FinishedState<T> {
   return loadable[1] === _finished;
 };
 

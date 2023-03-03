@@ -9,6 +9,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 
 import { UserMode } from "@/domains/game-player";
+import { isError, isLoading } from "@/utils/loadable";
 
 const CARDS = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -30,7 +31,7 @@ test("should return current user info ", () => {
 
   const ret = s.selectUserInfo()(store.getState());
 
-  expect(ret).toEqual([{ userName: "foo", userMode: UserMode.normal }, "finished"]);
+  expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal });
 });
 
 test("should loading with undefined when game or user is not provided", () => {
@@ -38,7 +39,7 @@ test("should loading with undefined when game or user is not provided", () => {
 
   const ret = s.selectUserInfo()(store.getState());
 
-  expect(ret).toEqual([undefined, "loading"]);
+  expect(isLoading(ret)).toBe(true);
 });
 
 test("should not return value when the user was not joined before", () => {
@@ -59,5 +60,5 @@ test("should not return value when the user was not joined before", () => {
 
   const ret = s.selectUserInfo()(store.getState());
 
-  expect(ret).toEqual([undefined, "finished"]);
+  expect(isError(ret)).toBe(true);
 });

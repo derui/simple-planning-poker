@@ -1,7 +1,7 @@
 import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { UserMode } from "@/domains/game-player";
-import { Loading } from "@/type";
+import * as Loadable from "@/utils/loadable";
 
 const selectSelf = (state: RootState) => state;
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
@@ -16,19 +16,16 @@ export interface UserInfo {
  * return UserInfo in current game with current user
  */
 export const selectUserInfo = function selectUserInfo() {
-  return createDraftSafeSelector(
-    [selectUser, selectGame],
-    ({ currentUser }, { currentGame }): [UserInfo | undefined, Loading] => {
-      if (!currentUser || !currentGame) {
-        return [undefined, "loading"];
-      }
-
-      const userMode = currentGame.joinedPlayers.find((v) => v.user === currentUser.id)?.mode;
-      if (!userMode) {
-        return [undefined, "finished"];
-      }
-
-      return [{ userName: currentUser.name, userMode }, "finished"];
+  return createDraftSafeSelector([selectUser, selectGame], ({ currentUser }, { currentGame }): Loadable.T<UserInfo> => {
+    if (!currentUser || !currentGame) {
+      return Loadable.loading();
     }
-  );
+
+    const userMode = currentGame.joinedPlayers.find((v) => v.user === currentUser.id)?.mode;
+    if (!userMode) {
+      return Loadable.error();
+    }
+
+    return Loadable.finished({ userName: currentUser.name, userMode });
+  });
 };

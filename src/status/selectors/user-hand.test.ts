@@ -8,13 +8,14 @@ import * as Game from "@/domains/game";
 import * as UserHand from "@/domains/user-hand";
 import { randomGame } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
+import { isLoading } from "@/utils/loadable";
 
 test("return undefined if game not opened", () => {
   const store = createPureStore();
 
   const ret = s.selectUserHandInfos()(store.getState());
 
-  expect(ret).toEqual([undefined, "loading"]);
+  expect(isLoading(ret)).toBe(true);
 });
 
 test("return one hand from the game contains only owner", () => {
@@ -27,16 +28,13 @@ test("return one hand from the game contains only owner", () => {
 
   const ret = s.selectUserHandInfos()(store.getState());
 
-  expect(ret).toEqual([
-    [
-      {
-        userName: "owner",
-        userMode: UserMode.normal,
-        displayValue: "?",
-        selected: false,
-      },
-    ],
-    "finished",
+  expect(ret[0]).toEqual([
+    {
+      userName: "owner",
+      userMode: UserMode.normal,
+      displayValue: "?",
+      selected: false,
+    },
   ]);
 });
 
