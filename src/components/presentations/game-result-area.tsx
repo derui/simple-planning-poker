@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PlayerHandsComponent } from "../presentations/player-hands";
+import { PlayerHands } from "../presentations/player-hands";
 import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
@@ -34,7 +34,7 @@ const convertHands = (hands: UserHandViewModel[]) =>
 
 const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undefined) => {
   if (hands) {
-    return <PlayerHandsComponent position={position} userHands={convertHands(hands)} />;
+    return <PlayerHands position={position} userHands={convertHands(hands)} />;
   }
 
   return <PlayerHandsWithSpinnerComponent />;

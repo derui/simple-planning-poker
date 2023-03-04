@@ -1,7 +1,6 @@
-import React from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
-import PlayerHand from "./player-hand";
+import { PlayerHand } from "./player-hand";
 import { UserHandInfo } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
@@ -14,7 +13,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export default function PlayerHandsComponent({ opened, hands, testid }: Props) {
+export function PlayerHands({ opened, hands, testid }: Props) {
   const gen = generateTestId(testid);
 
   const createUserHand = (props: UserHandInfo, index: number) => {
