@@ -61,6 +61,7 @@ export default defineConfig({
         'height': 'height',
         'stroke': 'stroke, stroke-width',
         'fill': 'fill',
+        'transform': 'transform',
       },
       gridTemplateColumns: {
         'top-toolbar': 'min-content 1fr min-content min-content',

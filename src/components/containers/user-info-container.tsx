@@ -18,7 +18,7 @@ const styles = {
     "px-3",
     "border-1-bt",
     "border-1-bt-transparent",
-    "transition-color",
+    "transition-colors",
     "cursor-pointer",
     "hover:border-secondary-500"
   ),

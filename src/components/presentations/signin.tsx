@@ -68,7 +68,7 @@ const styles = {
     "px-4",
     "py-3",
     "cursor-pointer",
-    "transition-color",
+    "transition-colors",
     "transition-shadow",
     "active:shadow-md",
     "hover:text-secondary1-200",

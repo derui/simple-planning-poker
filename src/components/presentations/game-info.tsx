@@ -20,7 +20,7 @@ const styles = {
       "border",
       "border-transparent",
       "bg-none",
-      "transition-color",
+      "transition-colors",
       "transition-clip-path",
       "[clip-path:polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)]",
       "cursor-pointer",

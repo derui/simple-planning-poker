@@ -81,7 +81,7 @@ export function UserInfoUpdater({ name, mode, onChangeUserInfo, ...rest }: Props
         testid={testid("userMode")}
         label="Inspector Mode"
         initialChecked={currentMode === UserMode.inspector}
-        onChange={(v) => {
+        onToggle={(v) => {
           setMode(v ? UserMode.inspector : UserMode.normal);
         }}
       />

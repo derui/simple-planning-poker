@@ -14,7 +14,7 @@ const styles = {
       "p-2",
       "bg-none",
       "border-2",
-      "transition-color",
+      "transition-colors",
       "cursor-pointer",
       "w-6",
       "h-6",

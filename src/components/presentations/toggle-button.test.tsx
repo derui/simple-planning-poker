@@ -6,10 +6,9 @@ import { ToggleButton } from "./toggle-button";
 afterEach(cleanup);
 
 test("apply initial checked", () => {
-  render(<ToggleButton label="name" initialChecked={true} onChange={() => {}} />);
+  render(<ToggleButton initialChecked={true} onToggle={() => {}} />);
 
   expect(screen.queryByTestId("root")).not.toBeNull();
-  expect(screen.getByTestId("label").textContent).toMatch(/name/);
   expect((screen.getByTestId("input") as HTMLInputElement).checked).toBe(true);
 });
 
@@ -17,9 +16,8 @@ test("change checking when rail clicked", async () => {
   expect.assertions(2);
   render(
     <ToggleButton
-      label="name"
       initialChecked={false}
-      onChange={(v) => {
+      onToggle={(v) => {
         expect(v).toBe(true);
       }}
     />
@@ -31,7 +29,7 @@ test("change checking when rail clicked", async () => {
 });
 
 test("toggle checked state", async () => {
-  render(<ToggleButton label="name" initialChecked={false} onChange={() => {}} />);
+  render(<ToggleButton initialChecked={false} onToggle={() => {}} />);
 
   await userEvent.click(screen.getByTestId("rail"));
 
