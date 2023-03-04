@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { GameHeaderComponent } from "../presentations/game-header";
 import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
 import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
-import GameAreaResultComponent from "../presentations/game-result-area";
+import GameArea from "../presentations/game-result-area";
 import { UserMode } from "@/domains/game-player";
 import { Id } from "@/domains/game";
 import gameActionsContext from "@/contexts/actions/game-actions";
@@ -82,7 +82,7 @@ const GameResultContainer: React.FunctionComponent<Props> = () => {
         invitationSignature={signature || ""}
       />
       <main className="app__game__main">
-        <GameAreaResultComponent onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
+        <GameArea onNewGame={onNewGame} lines={userHands} userMode={currentUserMode} />
       </main>
       {createAveragePointShowcase(showDownResult)}
     </div>

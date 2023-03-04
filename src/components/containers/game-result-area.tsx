@@ -1,15 +1,12 @@
-import * as React from "react";
 import { PlayerHands } from "../presentations/player-hands";
-import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
+import { BaseProps } from "../base";
 import { UserMode } from "@/domains/game-player";
-import { asStoryPoint } from "@/domains/card";
-import { UserHandViewModel } from "@/status/game/types";
-import { Future } from "@/status/util";
+import { UserHandInfo } from "@/status/selectors/user-hand";
 
-interface Props {
+interface Props extends BaseProps {
   onNewGame: () => void;
   userMode: UserMode;
-  lines: Future<{ upperLine: UserHandViewModel[]; lowerLine: UserHandViewModel[] }>;
+  hands: UserHandInfo[];
 }
 
 const GameProgressionButton = (props: Props) => {
@@ -40,7 +37,8 @@ const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undef
   return <PlayerHandsWithSpinnerComponent />;
 };
 
-const GameAreaResultComponent: React.FunctionComponent<Props> = (props) => {
+// eslint-disable-next-line func-style
+export function GameArea(props: Props) {
   const button = GameProgressionButton(props);
   const upper = toHands("upper", props.lines.valueMaybe()?.upperLine);
   const lower = toHands("lower", props.lines.valueMaybe()?.lowerLine);
@@ -56,6 +54,6 @@ const GameAreaResultComponent: React.FunctionComponent<Props> = (props) => {
       </div>
     </div>
   );
-};
+}
 
-export default GameAreaResultComponent;
+export default GameArea;
