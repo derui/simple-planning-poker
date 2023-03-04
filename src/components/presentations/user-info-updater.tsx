@@ -13,35 +13,50 @@ export interface Props extends BaseProps {
 }
 
 const styles = {
-  root: classnames("flex", "flex-col", "absolute", "t-6", "r-0", "p-4", "border", "border-secondary1-500", "rounded"),
+  root: classnames(
+    "flex",
+    "flex-col",
+    "absolute",
+    "t-6",
+    "r-0",
+    "p-3",
+    "pt-1",
+    "border",
+    "border-secondary1-500",
+    "rounded"
+  ),
 
-  applier: classnames("text-right", "mt-4"),
+  applier: classnames("text-right", "mt-3"),
 
   submit: (disabled: boolean) =>
     classnames(
       "rounded",
       "border",
-      "border-secondary1-400",
-      "bg-secondary1-300",
-      "py-3",
-      "px-4",
-      "cursor-pointer",
-      "transition-shadow",
-      "transition-color",
+      "py-2",
+      "px-3",
+      "transition-all",
+      "active:shadow-md",
+      {
+        "border-secondary1-400": !disabled,
+        "bg-secondary1-300": !disabled,
+        "cursor-pointer": !disabled,
+        "text-secondary1-500": !disabled,
+      },
       {
         "bg-secondary1-200": disabled,
         "border-secondary1-300": disabled,
         "cursor-default": disabled,
+        "text-secondary1-400": disabled,
       }
     ),
 
-  nameEditor: classnames("flex", "flex-auto", "flex-col", "border", "border-secondary1-500"),
-  nameEditorLabel: classnames("flex-none", "text-center", "px-4", "py-3", "bg-secondary1-500", "text-secondary1-200"),
+  nameEditor: classnames("flex", "flex-auto", "flex-col", "border", "border-secondary1-500", "rounded", "mt-3"),
+  nameEditorLabel: classnames("flex-none", "text-center", "px-3", "py-2", "bg-secondary1-500", "text-secondary1-200"),
   nameEditorInput: classnames(
     "flex-auto",
     "w-40",
-    "mx-4",
-    "my-3",
+    "mx-3",
+    "my-2",
     "outline-none",
     "border-0",
     "border-b-q",
