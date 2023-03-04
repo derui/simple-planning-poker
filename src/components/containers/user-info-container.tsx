@@ -7,6 +7,7 @@ import * as UserAction from "@/status/actions/user";
 import * as GameAction from "@/status/actions/game";
 import { UserMode } from "@/domains/game-player";
 import { selectUserInfo } from "@/status/selectors/user";
+import { isFinished } from "@/utils/loadable";
 
 type Props = BaseProps;
 
@@ -57,7 +58,7 @@ const styles = {
 export function UserInfoContainer(props: Props) {
   const testid = generateTestId(props.testid);
   const [opened, setOpened] = React.useState(false);
-  const [payload, loading] = useAppSelector(selectUserInfo());
+  const userInfo = useAppSelector(selectUserInfo());
   const dispatch = useAppDispatch();
 
   const handleChangeUserInfo = (mode: UserMode, name: string) => {
@@ -66,9 +67,11 @@ export function UserInfoContainer(props: Props) {
     dispatch(GameAction.changeUserMode(mode));
   };
 
-  if (loading !== "finished" || !payload) {
+  if (!isFinished(userInfo)) {
     return null;
   }
+
+  const payload = userInfo[0];
 
   return (
     <div className={styles.root} data-testid={testid("root")} onClick={() => setOpened(!opened)}>
@@ -76,9 +79,7 @@ export function UserInfoContainer(props: Props) {
       <span className={styles.name} data-testid={testid("name")}>
         {payload.userName}
       </span>
-      {loading !== "finished" ? null : (
-        <span className={styles.indicator(opened)} data-testid={testid("indicator")} data-opened={opened}></span>
-      )}
+      <span className={styles.indicator(opened)} data-testid={testid("indicator")} data-opened={opened}></span>
       {opened ? (
         <UserInfoUpdater
           testid={testid("updater")}
