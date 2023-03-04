@@ -10,9 +10,20 @@ const styles = {
   root: classNames("flex", "justify-center", "px-3", "py-2", "relative", "h-32", "items-center"),
   results: classNames("flex", "flex-none"),
   average: classNames("flex", "flex-col", "justify-center", "items-center", "bg-primary-400", "rounded", "p-3"),
-  equal: classNames("flex-none", "text-lg", "text-secondary2-200"),
+  equal: classNames(
+    "flex-none",
+    "inline-block",
+    "w-6",
+    "h-6",
+    "bg-primary-400",
+    "mr-4",
+    "[mask-size:cover]",
+    "[mask-repeat:no-repeat]",
+    "[mask-position:center]",
+    '[mask-image:url("/static/svg/tabler-icons/equal.svg")]'
+  ),
   averageLabel: classNames("flex-none", "text-secondary2-200"),
-  averageValue: classNames("flex-none", "items-center", "text-xl"),
+  averageValue: classNames("flex-none", "items-center", "text-xl", "text-secondary2-200"),
 
   resultDisplay: {
     root: classNames("flex", "flex-col", "items-center", "mr-3", "last-of-type:mr-6"),
