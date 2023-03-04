@@ -1,7 +1,6 @@
 ---
 to: src/components/<%= type %>/<%= name %>.tsx
 ---
-import React from 'react';
 import classNames from 'classnames';
 
 export interface Props {
@@ -13,7 +12,7 @@ export interface Props {
   componentName = splittedNames[splittedNames.length - 1];
 %>
 
-export const <%= h.changeCase.pascal(componentName) %>: React.FC<Props> = (props) => {
-
+// eslint-disable-next-line func-style
+export function <%= h.changeCase.pascal(componentName) %>(props: Props) {
   return <span>need implementation</span>
 };
