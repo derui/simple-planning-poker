@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserMode } from "@/domains/game-player";
@@ -14,16 +14,16 @@ interface Props extends BaseProps {
 type State = "notSelected" | "handed" | "result";
 
 const styles = {
-  root: classnames("flex", "flex-col", "align-center"),
-  card: (state: State, transition: boolean) =>
+  root: classnames("flex", "flex-col", "items-center"),
+  card: (state: State) =>
     classnames(
       "flex",
       "flex-col",
-      "h-24",
+      "h-16",
       "w-12",
       "rounded",
-      "bg-white",
       "text-center",
+      "items-center",
       "justify-center",
       "border",
       "border-primary-400",
@@ -31,19 +31,17 @@ const styles = {
       "text-primary-500",
       "transition-transform",
       {
+        "bg-white": state === "notSelected",
+      },
+      {
         "bg-primary-400": state === "handed",
         "text-secondary1-200": state === "handed",
         "[transform:rotateY(180deg)]": state === "handed",
       },
       {
-        "bg-primary-400": state === "result",
-        "text-secondary1-200": state === "result",
-        "[transform:rotateY(180deg)]": state === "result",
-      },
-      {
-        "bg-white": transition,
-        "text-primary-500": transition,
-        "[transform:rotateY(0deg)]": transition,
+        "bg-white": state === "result",
+        "text-primary-500": state === "result",
+        "[transform:rotateY(0deg)]": state === "result",
       }
     ),
 
@@ -58,17 +56,9 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export default function PlayerHandComponent(props: Props) {
+export function PlayerHand(props: Props) {
   const gen = generateTestId(props.testid);
-  const [transition, setTransition] = useState(false);
   const state = props.opened ? (props.selected ? "result" : "notSelected") : props.selected ? "handed" : "notSelected";
-
-  React.useEffect(() => {
-    if (props.opened) {
-      const t = setTimeout(() => setTransition(true));
-      return () => clearTimeout(t);
-    }
-  }, []);
 
   let card: ReactElement;
   if (props.userMode === UserMode.inspector) {
@@ -79,7 +69,7 @@ export default function PlayerHandComponent(props: Props) {
     );
   } else {
     card = (
-      <span className={styles.card(state, transition)} data-testid={gen("card")} data-mode="normal" data-state={state}>
+      <span className={styles.card(state)} data-testid={gen("card")} data-mode="normal" data-state={state}>
         {state === "result" ? props.displayValue : ""}
       </span>
     );
