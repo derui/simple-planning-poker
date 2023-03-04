@@ -29,7 +29,7 @@ test("apply name and mode", async () => {
 
   await userEvent.clear(getByRole(screen.getByTestId("nameEditor"), "textbox"));
   await userEvent.type(getByRole(screen.getByTestId("nameEditor"), "textbox"), "changed");
-  await userEvent.click(screen.getByTestId("userMode/rail"));
+  await userEvent.click(screen.getByLabelText("Inspector"));
 
   await userEvent.click(screen.getByTestId("submit"));
 });
@@ -46,7 +46,7 @@ test("should be disabled if name is not valid", async () => {
   );
 
   await userEvent.clear(getByRole(screen.getByTestId("nameEditor"), "textbox"));
-  await userEvent.click(screen.getByTestId("userMode/rail"));
+  await userEvent.click(screen.getByLabelText("Normal"));
 
   const button = screen.getByTestId("submit");
   expect(button.getAttribute("disabled")).not.toBeNull();

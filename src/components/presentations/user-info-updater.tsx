@@ -1,7 +1,8 @@
 import classnames from "classnames";
 import React from "react";
 import { BaseProps, generateTestId } from "../base";
-import { ToggleButton } from "./toggle-button";
+import { RadioGroup } from "./radio-group";
+import { RadioButton } from "./radio-button";
 import { UserMode } from "@/domains/game-player";
 import * as User from "@/domains/user";
 
@@ -76,15 +77,28 @@ export function UserInfoUpdater({ name, mode, onChangeUserInfo, ...rest }: Props
           onChange={(e) => setCurrentName(e.target.value)}
         />
       </div>
+      <div className={styles.nameEditor}>
+        <span className={styles.nameEditorLabel}>User Mode</span>
+        <RadioGroup testid={testid("user-mode")}>
+          <RadioButton
+            testid={testid("inspector")}
+            label="Inspector"
+            value={UserMode.inspector}
+            name="mode"
+            onChange={(v) => setMode(v as UserMode)}
+            checked={currentMode === UserMode.inspector}
+          />
+          <RadioButton
+            testid={testid("normal")}
+            label="Normal"
+            value={UserMode.normal}
+            name="mode"
+            onChange={(v) => setMode(v as UserMode)}
+            checked={currentMode === UserMode.normal}
+          />
+        </RadioGroup>
+      </div>
 
-      <ToggleButton
-        testid={testid("userMode")}
-        label="Inspector Mode"
-        initialChecked={currentMode === UserMode.inspector}
-        onToggle={(v) => {
-          setMode(v ? UserMode.inspector : UserMode.normal);
-        }}
-      />
       <div className={styles.applier}>
         <button
           data-testid={testid("submit")}
