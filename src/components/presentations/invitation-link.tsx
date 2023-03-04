@@ -21,7 +21,7 @@ const styles = {
       "rounded-full",
       "before:inline-block",
       "before: flex-none",
-      'before:[mask-image:url("/assets/svg/tabler-icons/settings.svg")]',
+      'before:[mask-image:url("/static/svg/tabler-icons/settings.svg")]',
       "before:[mask-size:cover]",
       "before:w-full",
       "before:h-full",

@@ -31,7 +31,7 @@ const styles = {
     "h-6",
     "bg-secondary1-500",
     "mr-3",
-    '[mask-image:url("/assets/svg/tabler-icon/user.svg")]',
+    '[mask-image:url("/static/svg/tabler-icon/user.svg")]',
     "[mask-size:cover]"
   ),
 
@@ -42,7 +42,7 @@ const styles = {
       "ml-3",
       "inline-block",
       "flex-none",
-      '[mask-image:url("/assets/svg/tabler-icon/shevron-down.svg")]',
+      '[mask-image:url("/static/svg/tabler-icon/shevron-down.svg")]',
       "[mask-size:cover]",
       "w-5",
       "h-5",
