@@ -8,6 +8,6 @@ export interface BaseProps {
 /**
  * generateTestId with parent.
  */
-export const generateTestId = function generateTestId(parentTestid: string | undefined) {
+export const generateTestId = function generateTestId(parentTestid?: string) {
   return (key: string) => (parentTestid ? `${parentTestid}/${key}` : key);
 };
