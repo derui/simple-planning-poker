@@ -1,8 +1,11 @@
 import * as React from "react";
+import { useNavigate, useParams } from "react-router";
 import { GameHeaderComponent } from "../presentations/game-header";
+import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
+import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
+import GameAreaResultComponent from "../presentations/game-result-area";
 import { UserMode } from "@/domains/game-player";
 import { Id } from "@/domains/game";
-import { useNavigate, useParams } from "react-router";
 import gameActionsContext from "@/contexts/actions/game-actions";
 import { ShowDownResultViewModel } from "@/status/game/types";
 import {
@@ -14,9 +17,6 @@ import {
 } from "@/status/game/selectors";
 import userActionsContext from "@/contexts/actions/user-actions";
 import { Future, mapFuture } from "@/status/util";
-import AveragePointShowcaseWithSpinnerComponent from "../presentations/average-point-showcase-with-spinner";
-import AveragePointShowcaseComponent from "../presentations/average-point-showcase";
-import GameAreaResultComponent from "../presentations/game-result-area";
 
 interface Props {}
 

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { PlayerHandsComponent } from "../presentations/player-hands";
+import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { UserHandViewModel } from "@/status/game/types";
 import { Future } from "@/status/util";
-import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
 
 interface Props {
   onNewGame: () => void;

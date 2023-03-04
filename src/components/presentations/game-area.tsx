@@ -1,11 +1,11 @@
 import * as React from "react";
+import { Grid } from "react-loader-spinner";
 import { PlayerHandsComponent } from "../presentations/player-hands";
+import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
 import { UserMode } from "@/domains/game-player";
 import { asStoryPoint } from "@/domains/card";
 import { GameStatus, UserHandViewModel } from "@/status/game/types";
 import { Future } from "@/status/util";
-import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
-import { Grid } from "react-loader-spinner";
 
 interface Props {
   onShowDown: () => void;

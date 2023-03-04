@@ -1,10 +1,11 @@
 import * as React from "react";
+import { useNavigate, useParams } from "react-router";
 import { CardHolderComponent } from "../presentations/card-holder";
 import { GameHeaderComponent } from "../presentations/game-header";
 import { EmptyCardHolderComponent } from "../presentations/empty-card-holder";
+import GameAreaComponent from "../presentations/game-area";
 import { UserMode } from "@/domains/game-player";
 import { Id } from "@/domains/game";
-import { useNavigate, useParams } from "react-router";
 import gameActionsContext, { GameActions } from "@/contexts/actions/game-actions";
 import {
   useCurrentGameName,
@@ -15,7 +16,6 @@ import {
   useUserHandsState,
 } from "@/status/game/selectors";
 import userActionsContext from "@/contexts/actions/user-actions";
-import GameAreaComponent from "../presentations/game-area";
 import { mapFuture } from "@/status/util";
 
 interface Props {}
