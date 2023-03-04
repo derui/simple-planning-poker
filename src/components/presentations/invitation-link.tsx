@@ -7,7 +7,7 @@ interface Props extends BaseProps {
 }
 
 const styles = {
-  root: classNames("flex", "flex-col", "relative", "mr-4"),
+  root: classNames("flex", "flex-col", "relative", "mr-4", "w-8", "h-8"),
   opener: (opened: boolean) =>
     classNames(
       "outline-none",
@@ -16,8 +16,8 @@ const styles = {
       "border-2",
       "transition-colors",
       "cursor-pointer",
-      "w-6",
-      "h-6",
+      "w-8",
+      "h-8",
       "rounded-full",
       "before:inline-block",
       "before: flex-none",
@@ -36,19 +36,31 @@ const styles = {
       }
     ),
   container: (opened: boolean) =>
-    classNames("flex", "absolute", "top-6", "right-0", "border-2", "border-secondary1-500", "p-4", {
+    classNames("flex", "absolute", "top-8", "-right-2", "border", "border-secondary1-500", "px-3", "py-2", "rounded", {
       visible: opened,
       invisible: !opened,
     }),
   item: classNames("flex", "flex-auto"),
   label: classNames(
+    "rounded-l",
     "flex-none",
     "whitespace-nowrap",
     "text-center",
-    "px-4",
-    "py-3",
-    "bg-secondary1-500",
+    "px-3",
+    "py-2",
+    "bg-secondary1-400",
     "text-secondary1-200"
+  ),
+  input: classNames(
+    "rounded-r",
+    "outline-none",
+    "pl-3",
+    "border",
+    "border-l-0",
+    "transition-colors",
+    "border-secondary1-100",
+    "hover:border-secondary1-500",
+    "active:border-secondary1-500"
   ),
 };
 
@@ -63,7 +75,7 @@ export function InvitationLink(props: Props) {
       <div className={styles.container(opened)} data-testid={gen("container")}>
         <div className={styles.item}>
           <span className={styles.label}>Invitation Link</span>
-          <input type="text" readOnly value={props.invitationLink} />
+          <input className={styles.input} type="text" readOnly value={props.invitationLink} />
         </div>
       </div>
     </div>
