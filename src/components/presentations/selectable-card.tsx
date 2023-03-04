@@ -1,6 +1,7 @@
 import classnames from "classnames";
+import { BaseProps, generateTestId } from "../base";
 
-interface Props {
+interface Props extends BaseProps {
   display: string;
   selected: boolean;
   onSelect: () => void;
@@ -38,8 +39,15 @@ const styles = {
 
 // eslint-disable-next-line func-style
 export function SelectableCard(props: Props) {
+  const gen = generateTestId(props.testid);
+
   return (
-    <div className={styles.root(props.selected)} onClick={props.onSelect} data-selected={props.selected}>
+    <div
+      className={styles.root(props.selected)}
+      onClick={props.onSelect}
+      data-testid={gen("root")}
+      data-selected={props.selected}
+    >
       {props.display}
     </div>
   );
