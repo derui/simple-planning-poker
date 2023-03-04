@@ -30,9 +30,6 @@ export default defineConfig({
       darkgray: "#404040",
       gray: "#808080",
       lightgray: "#D0D0D0",
-      'darkgray-alpha': "rgb(0 0 0 / 60%)",
-      'gray-alpha': "rgb(0 0 0 / 40%)",
-      'lightgray-alpha': "rgb(0 0 0 / 10%)",
       white: '#FFF'
     },
     overflow: {
