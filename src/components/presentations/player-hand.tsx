@@ -47,7 +47,7 @@ const styles = {
 
   eye: classnames(
     "block",
-    '[mask:url("/static/svg/tabler-icons/eye.svg")]',
+    '[mask-image:url("/static/svg/tabler-icons/eye.svg")]',
     "[mask-size:contain]",
     "bg-primary-400",
     "h-10",
