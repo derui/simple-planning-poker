@@ -24,7 +24,7 @@ test("initial state", () => {
 
 test("tryAuthentication successed", () => {
   let state = reducer(getInitialState(), tryAuthenticate());
-  state = reducer(state, tryAuthenticateSuccess(USER));
+  state = reducer(state, tryAuthenticateSuccess({ user: USER }));
 
   expect(state.progress).toBe("authenticated");
 });
@@ -37,14 +37,14 @@ test("tryAuthentication failed", () => {
 });
 
 test("can not accept tryAuthenticateSuccess before tryAuthenticate", () => {
-  const state = reducer(getInitialState(), tryAuthenticateSuccess(USER));
+  const state = reducer(getInitialState(), tryAuthenticateSuccess({ user: USER }));
 
   expect(state.progress).toBe("unauthenticated");
 });
 
 test("sign in succeeded", () => {
   let state = reducer(getInitialState(), signIn({ email: "mail", password: "pass" }));
-  state = reducer(state, signInSuccess(USER));
+  state = reducer(state, signInSuccess({ user: USER }));
 
   expect(state.progress).toBe("authenticated");
 });
@@ -58,7 +58,7 @@ test("sign in failed", () => {
 
 test("sign up succeeded", () => {
   let state = reducer(getInitialState(), signUp({ email: "mail", password: "pass" }));
-  state = reducer(state, signUpSuccess(USER));
+  state = reducer(state, signUpSuccess({ user: USER }));
 
   expect(state.progress).toBe("authenticated");
 });

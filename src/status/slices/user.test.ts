@@ -3,6 +3,7 @@ import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions
 import { changeNameSuccess } from "../actions/user";
 import { getInitialState, reducer } from "./user";
 import * as User from "@/domains/user";
+import * as Game from "@/domains/game";
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({
@@ -17,9 +18,13 @@ test("put current user if authentication did succeed", () => {
     name: "name",
   });
 
-  const state = reducer(getInitialState(), tryAuthenticateSuccess(user));
+  const state = reducer(
+    getInitialState(),
+    tryAuthenticateSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } })
+  );
 
   expect(state.currentUser).toEqual(user);
+  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -29,9 +34,10 @@ test("put current user if sign-in did succeed", () => {
     name: "name",
   });
 
-  const state = reducer(getInitialState(), signInSuccess(user));
+  const state = reducer(getInitialState(), signInSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } }));
 
   expect(state.currentUser).toEqual(user);
+  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -41,9 +47,10 @@ test("put current user if sign-up did succeed", () => {
     name: "name",
   });
 
-  const state = reducer(getInitialState(), signUpSuccess(user));
+  const state = reducer(getInitialState(), signUpSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } }));
 
   expect(state.currentUser).toEqual(user);
+  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -64,7 +71,7 @@ test("get changed user when current user set-upped", () => {
     name: "name",
   });
 
-  let state = reducer(getInitialState(), signUpSuccess(user));
+  let state = reducer(getInitialState(), signUpSuccess({ user }));
   state = reducer(state, changeNameSuccess(User.changeName(user, "foobar")[0]));
 
   expect(state.currentUser?.name).toEqual("foobar");
