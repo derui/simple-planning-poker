@@ -1,13 +1,14 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
+import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
+import { get, ref, update } from "firebase/database";
+import { GameRepositoryImpl } from "./game-repository";
+import { RoundRepositoryImpl } from "./round-repository";
+import { joinedGames } from "./user-ref-resolver";
 import * as Game from "@/domains/game";
 import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
-import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
-import { get, ref } from "firebase/database";
-import { GameRepositoryImpl } from "./game-repository";
-import { RoundRepositoryImpl } from "./round-repository";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -84,4 +85,31 @@ test("should save invitation in key", async () => {
   // Assert
   const snapshot = await get(ref(database, `/invitations/${Game.makeInvitation(game)}`));
   expect(snapshot.val()).toEqual(game.id);
+});
+
+test("should be able to list games an user joined", async () => {
+  // Arrange
+  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const gameId = Game.createId();
+  const otherGameId = Game.createId();
+
+  await update(ref(database), {
+    [`${joinedGames(User.createId("1"))}/${gameId}`]: "name",
+    [`${joinedGames(User.createId("1"))}/${otherGameId}`]: "name2",
+    [`${joinedGames(User.createId("2"))}/${gameId}`]: "name",
+    [`${joinedGames(User.createId("3"))}/${otherGameId}`]: "name2",
+    [`${joinedGames(User.createId("4"))}/${gameId}`]: "name",
+    [`${joinedGames(User.createId("5"))}/${otherGameId}`]: "name2",
+  });
+
+  // Act
+  const ret = await repository.listUserJoined(User.createId("1"));
+
+  // Assert
+  expect(ret).toEqual(
+    expect.arrayContaining([
+      { id: gameId, name: "name" },
+      { id: otherGameId, name: "name2" },
+    ])
+  );
 });

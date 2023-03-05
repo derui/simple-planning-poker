@@ -1,3 +1,6 @@
+import { child, Database, get, ref, update } from "firebase/database";
+import * as resolver from "./game-ref-resolver";
+import * as UserRefResolver from "./user-ref-resolver";
 import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import * as StoryPoint from "@/domains/story-point";
@@ -5,8 +8,7 @@ import * as Round from "@/domains/round";
 import * as User from "@/domains/user";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as Invitation from "@/domains/invitation";
-import { child, Database, get, ref, update } from "firebase/database";
-import * as resolver from "./game-ref-resolver";
+
 import { RoundRepository } from "@/domains/round-repository";
 
 export class GameRepositoryImpl implements GameRepository {
@@ -87,5 +89,20 @@ export class GameRepositoryImpl implements GameRepository {
     });
 
     return game;
+  }
+
+  async listUserJoined(user: User.Id): Promise<{ id: Game.Id; name: string }[]> {
+    const snapshot = await get(ref(this.database, UserRefResolver.joinedGames(user)));
+    const val = snapshot.val();
+
+    if (!val) {
+      return [];
+    }
+
+    const ret = Object.entries(val).map(([key, value]) => {
+      return { id: Game.createId(key), name: value as string };
+    });
+
+    return ret;
   }
 }

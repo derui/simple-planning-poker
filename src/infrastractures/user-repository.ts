@@ -1,4 +1,5 @@
 import { Database, get, ref, update } from "firebase/database";
+import * as UserRefResolver from "./user-ref-resolver";
 import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { filterUndefined } from "@/utils/basic";
@@ -15,7 +16,7 @@ export class UserRepositoryImpl implements UserRepository {
   save(user: User.T): void {
     const databaseRef = ref(this.database);
     const updates: { [key: string]: any } = {};
-    updates[`users/${user.id}/name`] = user.name;
+    updates[UserRefResolver.name(user.id)] = user.name;
 
     update(databaseRef, updates);
   }
