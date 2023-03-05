@@ -2,7 +2,6 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { CreateGamePage } from "./create-game";
 import { JoinGamePage } from "./join-game";
 import { createPureStore } from "@/status/store";
 import { joinGame } from "@/status/actions/game";
@@ -41,7 +40,6 @@ test("dispatch event with signature", async () => {
           <Route path="abc/:signature" element={<JoinGamePage />} />
         </Routes>
       </MemoryRouter>
-      <CreateGamePage />
     </Provider>
   );
 });

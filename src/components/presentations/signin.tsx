@@ -14,10 +14,10 @@ const styles = {
     "flex",
     "relative",
     "flex-col",
-    "w-64",
+    "w-1/2",
     "m-auto",
     "border",
-    "border-secondary1-400",
+    "border-primary-400",
     "rounded",
     "shadow-md",
     "z-0"
@@ -35,26 +35,37 @@ const styles = {
     "text-secondary1-200"
   ),
 
-  main: classNames("flex-auto", "bg-white", "relative", "p-4"),
+  main: classNames("flex-auto", "bg-white", "relative", "px-4", "py-8"),
 
   inputContainer: classNames("flex", "flex-col", "w-full", "mx-auto", "list-none", "py-0", "px-4"),
 
-  inputTerm: classNames("flex", "flex-auto", "align-center", "mb-4", "last:mb-0"),
+  inputTerm: classNames("flex", "flex-auto", "items-center", "mb-4", "last:mb-0"),
 
-  inputLabel: classNames("flex-none", "w-20"),
+  inputLabel: classNames("flex-[0_0_auto]", "w-24"),
 
-  input: classNames("flex-auto", "h-8"),
+  input: classNames(
+    "flex-auto",
+    "w-full",
+    "p-2",
+    "outline-none",
+    "rounded",
+    "border",
+    "border-lightgray/40",
+    "bg-lightgray/20",
+    "transition-colors",
+    "focus:border-secondary2-500",
+    "focus:bg-white"
+  ),
 
   footer: classNames(
     "flex-auto",
     "p-3",
     "text-lg",
     "font-bold",
-    "rounded",
-    "rounded-t-none",
-    "rounded-l-none",
+    "rounded-b",
     "text-right",
-    "bg-primary-400",
+    "border",
+    "border-t-primary-400",
     "text-secondary1-200"
   ),
 
@@ -67,9 +78,9 @@ const styles = {
     "text-secondary1-500",
     "px-4",
     "py-3",
+    "rounded",
     "cursor-pointer",
-    "transition-colors",
-    "transition-shadow",
+    "transition-all",
     "active:shadow-md",
     "hover:text-secondary1-200",
     "hover:bg-secondary1-500"
@@ -140,7 +151,7 @@ export function SignIn({ title, onSubmit, authenticating, children, testid }: Re
   };
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit}>
+    <form className={styles.root} onSubmit={handleSubmit} data-testid={gen("root")}>
       <header className={styles.header} data-testid={gen("header")}>
         {title}
       </header>
@@ -154,7 +165,7 @@ export function SignIn({ title, onSubmit, authenticating, children, testid }: Re
               name="email"
               className={styles.input}
               value={email}
-              placeholder="email"
+              placeholder="e.g. yourname@yourdomain.com"
               data-testid={gen("email")}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -166,6 +177,7 @@ export function SignIn({ title, onSubmit, authenticating, children, testid }: Re
               name="password"
               minLength={6}
               className={styles.input}
+              placeholder="Password"
               value={password}
               data-testid={gen("password")}
               onChange={(e) => setPassword(e.target.value)}
