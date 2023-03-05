@@ -26,6 +26,7 @@ export const createMockedGameRepository = (mock: Partial<GameRepository> = {}): 
     save: mock.save ?? sinon.fake(),
     findBy: mock.findBy ?? sinon.fake(),
     findByInvitation: mock.findByInvitation ?? sinon.fake(),
+    listUserJoined: mock.listUserJoined ?? sinon.fake.resolves([]),
   };
 };
 

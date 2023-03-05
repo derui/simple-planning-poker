@@ -1,15 +1,15 @@
 import { test, expect } from "vitest";
+import { StateObservable } from "redux-observable";
+import { firstValueFrom, NEVER, of } from "rxjs";
+import sinon from "sinon";
+import { createPureStore } from "../store";
+import { signInSuccess } from "../actions/signin";
 import * as epic from "./user";
 import * as User from "@/domains/user";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import * as UserAction from "@/status/actions/user";
 
-import { StateObservable } from "redux-observable";
-import { firstValueFrom, NEVER, of } from "rxjs";
-import { createPureStore } from "../store";
-import { signInSuccess } from "../actions/signin";
-import sinon from "sinon";
 import { createMockedChangeUserNameUseCase } from "@/test-lib";
 
 test("should get user changed name", async () => {
@@ -18,7 +18,7 @@ test("should get user changed name", async () => {
   const user = User.create({ id: User.createId(), name: "foo" });
 
   const store = createPureStore();
-  store.dispatch(signInSuccess(user));
+  store.dispatch(signInSuccess({ user }));
 
   const action$ = of(UserAction.changeName("changed"));
 
@@ -64,7 +64,7 @@ test("should fail if use case failed", async () => {
   const user = User.create({ id: User.createId(), name: "foo" });
 
   const store = createPureStore();
-  store.dispatch(signInSuccess(user));
+  store.dispatch(signInSuccess({ user }));
 
   const action$ = of(UserAction.changeName("changed"));
 
@@ -90,7 +90,7 @@ test("should fail if error occurred", async () => {
   const user = User.create({ id: User.createId(), name: "foo" });
 
   const store = createPureStore();
-  store.dispatch(signInSuccess(user));
+  store.dispatch(signInSuccess({ user }));
 
   const action$ = of(UserAction.changeName("changed"));
 

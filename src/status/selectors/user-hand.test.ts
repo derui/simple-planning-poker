@@ -23,7 +23,7 @@ test("return one hand from the game contains only owner", () => {
   const user = User.create({ id: User.createId(), name: "owner" });
   const game = randomGame({ owner: user.id, joinedPlayers: [] });
 
-  store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
   const ret = s.selectUserHandInfos()(store.getState());
@@ -44,7 +44,7 @@ test("return hands with handed user", () => {
   const otherUser = User.create({ id: User.createId(), name: "other" });
   const game = randomGame({ owner: user.id, joinedPlayers: [{ user: otherUser.id, mode: UserMode.normal }] });
 
-  store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
   store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.handed(game.cards[0]))));
 
@@ -71,7 +71,7 @@ test("give up hand", () => {
   const otherUser = User.create({ id: User.createId(), name: "other" });
   const game = randomGame({ owner: user.id, joinedPlayers: [{ user: otherUser.id, mode: UserMode.normal }] });
 
-  store.dispatch(tryAuthenticateSuccess(user));
+  store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
   store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.giveUp())));
 

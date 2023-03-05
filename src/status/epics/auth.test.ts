@@ -1,14 +1,15 @@
 import { test, expect, describe } from "vitest";
+import { firstValueFrom, NEVER, of } from "rxjs";
+import { StateObservable } from "redux-observable";
+import sinon from "sinon";
+import { createPureStore } from "../store";
+import { authEpic } from "./auth";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import * as User from "@/domains/user";
-import { authEpic } from "./auth";
-import { createPureStore } from "../store";
+import * as Game from "@/domains/game";
 import * as SignInAction from "@/status/actions/signin";
-import { firstValueFrom, NEVER, of } from "rxjs";
-import { StateObservable } from "redux-observable";
-import { createMockedAuthenticator, createMockedUserRepository } from "@/test-lib";
-import sinon from "sinon";
+import { createMockedAuthenticator, createMockedGameRepository, createMockedUserRepository } from "@/test-lib";
 
 describe("try authenticate", () => {
   test("get current user if exists", async () => {
@@ -30,13 +31,19 @@ describe("try authenticate", () => {
         findBy: sinon.fake.resolves(user),
       })
     );
+    registrar.register(
+      "gameRepository",
+      createMockedGameRepository({
+        listUserJoined: sinon.fake.resolves([{ id: Game.createId("key"), name: "name" }]),
+      })
+    );
 
     const action$ = of(SignInAction.tryAuthenticate());
     const state$ = new StateObservable(NEVER, store.getState());
 
     const ret = await firstValueFrom(epics.tryAuthenticate(action$, state$, null));
 
-    expect(ret).toEqual(SignInAction.tryAuthenticateSuccess(user));
+    expect(ret).toEqual(SignInAction.tryAuthenticateSuccess({ user, joinedGames: { [Game.createId("key")]: "name" } }));
   });
 
   test("should fail if already authenticated", async () => {
@@ -46,7 +53,7 @@ describe("try authenticate", () => {
 
     const user = User.create({ id: User.createId(), name: "user" });
 
-    store.dispatch(SignInAction.signInSuccess(user));
+    store.dispatch(SignInAction.signInSuccess({ user, joinedGames: {} }));
     registrar.register(
       "authenticator",
       createMockedAuthenticator({
@@ -59,6 +66,7 @@ describe("try authenticate", () => {
         findBy: sinon.fake.resolves(user),
       })
     );
+    registrar.register("gameRepository", createMockedGameRepository());
 
     const action$ = of(SignInAction.tryAuthenticate());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -90,13 +98,14 @@ describe("sign in", () => {
         findBy: sinon.fake.resolves(user),
       })
     );
+    registrar.register("gameRepository", createMockedGameRepository());
 
     const action$ = of(SignInAction.signIn({ email: "email", password: "password" }));
     const state$ = new StateObservable(NEVER, store.getState());
 
     const ret = await firstValueFrom(epics.signIn(action$, state$, null));
 
-    expect(ret).toEqual(SignInAction.signInSuccess(user));
+    expect(ret).toEqual(SignInAction.signInSuccess({ user, joinedGames: {} }));
     expect(signIn.lastCall.firstArg).toBe("email");
     expect(signIn.lastCall.args[1]).toBe("password");
   });
@@ -124,12 +133,14 @@ describe("sign up", () => {
       })
     );
 
+    registrar.register("gameRepository", createMockedGameRepository());
+
     const action$ = of(SignInAction.signUp({ email: "email", password: "password" }));
     const state$ = new StateObservable(NEVER, store.getState());
 
     const ret = await firstValueFrom(epics.signUp(action$, state$, null));
 
-    expect(ret).toEqual(SignInAction.signUpSuccess(user));
+    expect(ret).toEqual(SignInAction.signUpSuccess({ user, joinedGames: {} }));
     expect(signUp.lastCall.firstArg).toBe("email");
     expect(signUp.lastCall.args[1]).toBe("email");
     expect(signUp.lastCall.args[2]).toBe("password");

@@ -86,7 +86,7 @@ describe("giveUp", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.giveUp());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -118,7 +118,7 @@ describe("giveUp", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.giveUp());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -189,7 +189,7 @@ describe("hand card", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.handCard({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -216,7 +216,7 @@ describe("hand card", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.handCard({ cardIndex: 5 }));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -248,7 +248,7 @@ describe("hand card", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.handCard({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -283,7 +283,7 @@ describe("change user mode", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.changeUserMode(UserMode.inspector));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -318,7 +318,7 @@ describe("leave game", () => {
     const epics = gameEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.leaveGame());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -350,7 +350,7 @@ describe("join game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.joinGame(Game.makeInvitation(game)));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -384,7 +384,7 @@ describe("open game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.openGame(game.id));
     const state$ = new StateObservable(NEVER, store.getState());
@@ -418,7 +418,7 @@ describe("create game", () => {
 
     const epics = gameEpic(registrar);
     const store = createPureStore();
-    store.dispatch(signInSuccess(user));
+    store.dispatch(signInSuccess({ user }));
 
     const action$ = of(GameAction.createGame({ name: "foo", points: [1] }));
     const state$ = new StateObservable(NEVER, store.getState());
