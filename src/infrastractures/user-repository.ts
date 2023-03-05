@@ -1,9 +1,16 @@
+import { Database, get, ref, update } from "firebase/database";
 import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
-import { Database, get, ref, update } from "firebase/database";
+import { filterUndefined } from "@/utils/basic";
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(private database: Database) {}
+
+  async listIn(ids: User.Id[]): Promise<User.T[]> {
+    const users = await Promise.all(ids.map(this.findBy));
+
+    return users.filter(filterUndefined);
+  }
 
   save(user: User.T): void {
     const databaseRef = ref(this.database);
