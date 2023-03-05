@@ -1,12 +1,13 @@
-import React from "react";
 import classNames from "classnames";
 import { GameInfo } from "../presentations/game-info";
 import { InvitationLink } from "../presentations/invitation-link";
-import { UserInfoUpdater } from "../presentations/user-info-updater";
-import { useAppSelector } from "../hooks";
-import { BaseProps } from "../base";
-import { selectUserInfo } from "@/status/selectors/user";
-import { isLoading } from "@/utils/loadable";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { BaseProps, generateTestId } from "../base";
+import { Skeleton } from "../presentations/skeleton";
+import { UserInfoContainer } from "./user-info-container";
+import { isFinished } from "@/utils/loadable";
+import { selectCurrentGameInvitationLink, selectCurrentGameName } from "@/status/selectors/game";
+import { leaveGame } from "@/status/actions/game";
 
 type Props = BaseProps;
 
@@ -15,28 +16,31 @@ const styles = {
   right: classNames("flex", "flex-auto", "align-center", "justify-end"),
 } as const;
 
-export const GameHeaderComponent: React.FunctionComponent<Props> = (props) => {
-  const userInfo = useAppSelector(selectUserInfo());
+// eslint-disable-next-line func-style
+export function GameHeaderContainer(props: Props) {
+  const gen = generateTestId(props.testid);
+  const gameName = useAppSelector(selectCurrentGameName());
+  const invitation = useAppSelector(selectCurrentGameInvitationLink());
 
-  if (isLoading(userInfo)) {
+  const dispatch = useAppDispatch();
+
+  if (!isFinished(gameName) || !isFinished(invitation)) {
     return (
-      <div className={styles.root}>
-        <GameInfo gameName={props.gameName} onLeaveGame={() => props.onLeaveGame()} />
-        <div className={styles.right}>
-          <InvitationLink />
-          <UserInfoUpdater name={userInfo.userName} onChangeUserInfo={handleChangeUserInfo} mode={props.userMode} />
-        </div>
+      <div className={styles.root} data-testid={gen("root")}>
+        <Skeleton testid={gen("loading")} />
       </div>
     );
   }
 
+  const handleLeaveGame = () => dispatch(leaveGame());
+
   return (
-    <div className={styles.root}>
-      <GameInfo gameName={props.gameName} onLeaveGame={() => props.onLeaveGame()} />
+    <div className={styles.root} data-testid={gen("root")}>
+      <GameInfo gameName={gameName[0]} onLeaveGame={handleLeaveGame} testid={gen("game-info")} />
       <div className={styles.right}>
-        <InvitationLink />
-        <UserInfoUpdater name={userInfo.userName} onChangeUserInfo={handleChangeUserInfo} mode={props.userMode} />
+        <InvitationLink invitationLink={invitation[0]} testid={gen("invitation")} />
+        <UserInfoContainer testid={gen("user-info")} />
       </div>
     </div>
   );
-};
+}
