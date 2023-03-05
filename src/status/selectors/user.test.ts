@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { test, expect, describe } from "vitest";
 import { createPureStore } from "../store";
 import { openGameSuccess } from "../actions/game";
 import { signInSuccess } from "../actions/signin";
@@ -26,7 +26,7 @@ test("should return current user info ", () => {
     cards: CARDS,
   });
 
-  store.dispatch(signInSuccess(user));
+  store.dispatch(signInSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
   const ret = s.selectUserInfo()(store.getState());
@@ -55,10 +55,43 @@ test("should not return value when the user was not joined before", () => {
     cards: CARDS,
   });
 
-  store.dispatch(signInSuccess(user));
+  store.dispatch(signInSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
   const ret = s.selectUserInfo()(store.getState());
 
   expect(isError(ret)).toBe(true);
+});
+
+describe("joined games", () => {
+  test("return empty when user did not join any games before ", () => {
+    const store = createPureStore();
+    const user = User.create({ id: User.createId("1"), name: "foo" });
+    store.dispatch(signInSuccess({ user }));
+
+    const ret = s.selectJoinedGames()(store.getState());
+
+    expect(ret).toEqual([]);
+  });
+
+  test("return games", () => {
+    const store = createPureStore();
+    const user = User.create({ id: User.createId("1"), name: "foo" });
+    store.dispatch(
+      signInSuccess({
+        user,
+        joinedGames: {
+          [Game.createId("id1")]: "name1",
+          [Game.createId("id2")]: "name2",
+        },
+      })
+    );
+
+    const ret = s.selectJoinedGames()(store.getState());
+
+    expect(ret).toEqual([
+      { gameId: Game.createId("id1"), name: "name1" },
+      { gameId: Game.createId("id2"), name: "name2" },
+    ]);
+  });
 });
