@@ -9,6 +9,7 @@ test("initial state", () => {
   expect(getInitialState()).toEqual({
     currentUser: null,
     users: {},
+    currentUserJoinedGames: {},
   });
 });
 
