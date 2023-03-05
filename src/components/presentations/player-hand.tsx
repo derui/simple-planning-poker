@@ -1,21 +1,19 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserMode } from "@/domains/game-player";
+import { UserHandState } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
   userName: string;
   userMode: UserMode;
   displayValue: string;
-  selected: boolean;
-  opened: boolean;
+  state: UserHandState;
 }
-
-type State = "notSelected" | "handed" | "result";
 
 const styles = {
   root: classnames("flex", "flex-col", "items-center"),
-  card: (state: State) =>
+  card: (state: UserHandState) =>
     classnames(
       "flex",
       "flex-col",
@@ -58,19 +56,18 @@ const styles = {
 // eslint-disable-next-line func-style
 export function PlayerHand(props: Props) {
   const gen = generateTestId(props.testid);
-  const state = props.opened ? (props.selected ? "result" : "notSelected") : props.selected ? "handed" : "notSelected";
 
   let card: ReactElement;
   if (props.userMode === UserMode.inspector) {
     card = (
-      <span className={styles.card("notSelected", false)} data-testid={gen("card")} data-mode="inspector">
+      <span className={styles.card("notSelected")} data-testid={gen("card")} data-mode="inspector">
         <span className={styles.eye} data-testid={gen("eye")}></span>
       </span>
     );
   } else {
     card = (
-      <span className={styles.card(state)} data-testid={gen("card")} data-mode="normal" data-state={state}>
-        {state === "result" ? props.displayValue : ""}
+      <span className={styles.card(props.state)} data-testid={gen("card")} data-mode="normal" data-state={props.state}>
+        {props.state === "result" ? props.displayValue : ""}
       </span>
     );
   }

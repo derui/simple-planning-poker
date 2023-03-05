@@ -33,7 +33,7 @@ test("return one hand from the game contains only owner", () => {
       userName: "owner",
       userMode: UserMode.normal,
       displayValue: "?",
-      selected: false,
+      state: "notSelected",
     },
   ]);
 });
@@ -55,13 +55,13 @@ test("return hands with handed user", () => {
     userName: "owner",
     userMode: UserMode.normal,
     displayValue: "?",
-    selected: false,
+    state: "notSelected",
   });
   expect(ret).toContainEqual({
     userName: "other",
     userMode: UserMode.normal,
     displayValue: `${game.cards[0]}`,
-    selected: true,
+    state: "handed",
   });
 });
 
@@ -82,12 +82,13 @@ test("give up hand", () => {
     userName: "owner",
     userMode: UserMode.normal,
     displayValue: "?",
-    selected: false,
+    state: "notSelected",
   });
+
   expect(ret).toContainEqual({
     userName: "other",
     userMode: UserMode.normal,
     displayValue: "?",
-    selected: true,
+    state: "handed",
   });
 });

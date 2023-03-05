@@ -21,9 +21,8 @@ export const Normal: Story = {
   args: {
     userName: "name",
     userMode: UserMode.normal,
-    selected: false,
+    state: "notSelected",
     displayValue: "value",
-    opened: false,
   },
 };
 
@@ -31,9 +30,8 @@ export const Inspector: Story = {
   args: {
     userName: "name",
     userMode: UserMode.inspector,
-    selected: false,
+    state: "notSelected",
     displayValue: "value",
-    opened: false,
   },
 };
 
@@ -41,9 +39,8 @@ export const InspectorOpened: Story = {
   args: {
     userName: "name",
     userMode: UserMode.inspector,
-    selected: false,
+    state: "notSelected",
     displayValue: "value",
-    opened: true,
   },
 };
 
@@ -51,9 +48,8 @@ export const NormalSelected: Story = {
   args: {
     userName: "name",
     userMode: UserMode.normal,
-    selected: true,
+    state: "handed",
     displayValue: "value",
-    opened: false,
   },
 };
 
@@ -61,9 +57,8 @@ export const NormalSelectedAndOpened: Story = {
   args: {
     userName: "name",
     userMode: UserMode.normal,
-    selected: true,
+    state: "result",
     displayValue: "value",
-    opened: true,
   },
 };
 
@@ -71,8 +66,7 @@ export const NormalUnselectedAndOpened: Story = {
   args: {
     userName: "name",
     userMode: UserMode.normal,
-    selected: false,
+    state: "notSelected",
     displayValue: "value",
-    opened: true,
   },
 };
