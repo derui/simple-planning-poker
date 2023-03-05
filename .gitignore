@@ -1,9 +1,9 @@
 node_modules
-public/
 yarn-error.log
 .log/
 .firebase/
 .firebaserc
+/dist/
 
 database-debug.log
 ui-debug.log
