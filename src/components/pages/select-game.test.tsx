@@ -62,4 +62,7 @@ test("show empty if games is empty", async () => {
   );
 
   expect(screen.getAllByTestId("game-name")).toHaveLength(3);
+  expect(screen.getAllByTestId("game-name").map((v) => v.textContent)).toEqual(
+    expect.arrayContaining(["name", "long name", "looooong name"])
+  );
 });
