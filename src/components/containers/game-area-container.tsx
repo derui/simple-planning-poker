@@ -1,78 +1,104 @@
 import * as React from "react";
-import { Grid } from "react-loader-spinner";
+import classNames from "classnames";
 import { PlayerHands } from "../presentations/player-hands";
-import PlayerHandsWithSpinnerComponent from "./player-hands-with-spinner";
-import { UserMode } from "@/domains/game-player";
-import { asStoryPoint } from "@/domains/card";
-import { GameStatus, UserHandViewModel } from "@/status/game/types";
-import { Future } from "@/status/util";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { Skeleton } from "../presentations/skeleton";
+import { selectUserHandInfos } from "@/status/selectors/user-hand";
+import { isFinished } from "@/utils/loadable";
+import { selectCanShowDown } from "@/status/selectors/game";
+import * as GameAction from "@/status/actions/game";
+import { AppDispatch } from "@/status/store";
 
-interface Props {
-  onShowDown: () => void;
-  gameStatus: Future<GameStatus>;
-  userMode: UserMode;
-  lines: Future<{ upperLine: UserHandViewModel[]; lowerLine: UserHandViewModel[] }>;
-}
+const styles = {
+  root: classNames("relative", "w-full", "h-full"),
+  gridContainer: classNames(
+    "w-full",
+    "h-full",
+    "grid",
+    "grid-rows-[1fr_h-36_h-24_h-36_1fr]",
+    "grid-cols-[1fr_max-content_1fr]"
+  ),
+  hands: classNames("flex"),
+  table: classNames(
+    "flex",
+    "rounded-full",
+    "border-2",
+    "border-primary-400",
+    "bg-secondary1-300",
+    "h-20",
+    "min-w-64",
+    "flex-col",
+    "items-center",
+    "justify-center"
+  ),
+  nextGameButton: classNames(
+    "flex-none",
+    "outline-none",
+    "border",
+    "border-prinary-500",
+    "rounded",
+    "bg-primary-200",
+    "text-primary-500",
+    "px-3",
+    "py-2",
+    "transition-all",
+    "active:shadow",
+    "hover:text-primary-200",
+    "hover:bg-primary-500"
+  ),
+};
 
-const GameProgressionButton = (props: Props) => {
-  const { userMode, gameStatus, onShowDown } = props;
-
-  if (userMode === UserMode.inspector) {
-    return <span className="app__game__main__game-management-button--waiting">Inspecting...</span>;
-  }
-
-  const status = gameStatus.valueMaybe();
-  if (!status || status === "ShowedDown") {
+const GameProgressionButton = (dispatch: AppDispatch, displayButton: boolean) => {
+  if (!displayButton) {
     return (
-      <span className="app__game__main__game-management-button--waiting">
-        <Grid height={24} width={24} />
+      <span className="flex-none" data-testid="waiting">
+        Waiting to select card...
       </span>
     );
   }
 
-  switch (status) {
-    case "EmptyUserHand":
-      return <span className="app__game__main__game-management-button--waiting">Waiting to select card...</span>;
-    case "CanShowDown":
-      return (
-        <button className="app__game__main__game-management-button--show-down" onClick={() => onShowDown()}>
-          Show down!
-        </button>
-      );
-  }
-};
-
-const convertHands = (hands: UserHandViewModel[]) =>
-  hands.map((v) => ({
-    ...v,
-    storyPoint: v.card ? asStoryPoint(v.card)?.value ?? null : null,
-    showedDown: false,
-  }));
-
-const toHands = (position: "upper" | "lower", hands: UserHandViewModel[] | undefined) => {
-  if (hands) {
-    return <PlayerHands position={position} userHands={convertHands(hands)} />;
-  }
-
-  return <PlayerHandsWithSpinnerComponent />;
-};
-
-const GameAreaComponent: React.FunctionComponent<Props> = (props) => {
-  const button = GameProgressionButton(props);
-  const upper = toHands("upper", props.lines.valueMaybe()?.upperLine);
-  const lower = toHands("lower", props.lines.valueMaybe()?.lowerLine);
-
   return (
-    <div className="app__game__main__game-area">
-      <div className="app__game__main__grid-container">
-        <div className="app__game__main__upper-spacer"></div>
-        {upper}
-        <div className="app__game__main__table">{button}</div>
-        {lower}
-        <div className="app__game__main__lower-spacer"></div>
-      </div>
-    </div>
+    <button className={styles.nextGameButton} onClick={() => dispatch(GameAction.showDown())}>
+      Show down!
+    </button>
   );
 };
 
-export default GameAreaComponent;
+// eslint-disable-next-line func-style
+export function GameAreaContainer() {
+  const hands = useAppSelector(selectUserHandInfos());
+  const displayNewRoundButton = useAppSelector(selectCanShowDown());
+  const dispatch = useAppDispatch();
+
+  if (!isFinished(hands)) {
+    return (
+      <div className={styles.root}>
+        <div className={styles.gridContainer}>
+          <div></div>
+          <Skeleton testid="upper-loading" />
+          <div className={styles.table}>
+            <Skeleton testid="table-loading" />
+          </div>
+          <Skeleton testid="lower-loading" />
+          <div></div>
+        </div>
+      </div>
+    );
+  }
+
+  const button = GameProgressionButton(dispatch, displayNewRoundButton);
+  const upper = hands[0].filter((_, index) => index % 2 === 0);
+  const lower = hands[0].filter((_, index) => index % 2 === 1);
+
+  return (
+    <div className={styles.root}>
+      <div className={styles.gridContainer}>
+        <div></div>
+        <PlayerHands hands={upper} testid="upper" />
+        <div className={styles.table}>{button}</div>
+        <PlayerHands hands={lower} testid="lower" />
+        <div></div>
+      </div>
+    </div>
+  );
+}

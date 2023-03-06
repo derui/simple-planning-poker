@@ -47,3 +47,8 @@ export const createGameFailure = createAction<{ reason: string }>(`${prefix}:cre
 export const newRound = createAction(`${prefix}:newRound`);
 export const newRoundSuccess = createAction<Game.T>(`${prefix}:newRoundSuccess`);
 export const newRoundFailure = createAction<{ reason: string }>(`${prefix}:newRoundFailure`);
+
+// new round
+export const showDown = createAction(`${prefix}:showDown`);
+export const showDownSuccess = createAction<Game.T>(`${prefix}:showDownSuccess`);
+export const showDownFailed = createAction<{ reason: string }>(`${prefix}:showDownFailed`);
