@@ -183,6 +183,10 @@ export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id):
   });
 };
 
+export const isShowedDown = function isShowedDown(game: T) {
+  return Round.isFinishedRound(game.round);
+};
+
 /**
  * show down current round of the game
  */

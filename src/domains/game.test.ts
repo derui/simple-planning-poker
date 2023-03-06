@@ -7,6 +7,7 @@ import {
   createId,
   declarePlayerTo,
   GameCreated,
+  isShowedDown,
   joinUser,
   makeInvitation,
   newRound,
@@ -230,6 +231,7 @@ describe("leave", () => {
 
     const ret = acceptLeaveFrom(game, User.createId("new"));
 
+    expect(isShowedDown(ret)).toBe(false);
     expect(ret).not.toBe(game);
     expect(ret.joinedPlayers).toHaveLength(1);
     expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
@@ -271,6 +273,7 @@ describe("show down", () => {
     game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
     const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
 
+    expect(isShowedDown(finished)).toBe(true);
     expect(() => {
       showDown(finished, new Date());
     }).toThrowError(/should start new round/);

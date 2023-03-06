@@ -1,11 +1,11 @@
-import * as Base from "@/domains/base";
+import produce from "immer";
 import * as UserHand from "./user-hand";
 import * as User from "./user";
 import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
-import produce from "immer";
 import { Branded, DateTime, dateTimeToString } from "./type";
 import { GenericDomainEvent, DOMAIN_EVENTS, DomainEvent } from "./event";
+import * as Base from "@/domains/base";
 
 /**
  * Id of round
@@ -129,11 +129,23 @@ export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, 
   });
 };
 
+export const canShowDown = function canShowDown(round: T) {
+  if (isFinishedRound(round)) {
+    return false;
+  }
+
+  if (Object.keys(round.hands).length === 0) {
+    return false;
+  }
+
+  return true;
+};
+
 /**
  * finish a round. Throw error if round has no hand.
  */
 export const showDown = function showDown(round: Round, now: Date): [FinishedRound, GenericDomainEvent] {
-  if (Object.keys(round.hands).length === 0) {
+  if (!canShowDown(round)) {
     throw new Error("Can not finish round because it has no hand");
   }
 

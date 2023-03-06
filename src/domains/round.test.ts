@@ -9,6 +9,7 @@ import {
   calculateAverage,
   isRound,
   isFinishedRound,
+  canShowDown,
 } from "./round";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -93,7 +94,7 @@ test("give upped user can take other hand", () => {
   expect(round.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
 });
 
-describe("", () => {
+describe("show down", () => {
   test("finish round", () => {
     const round = roundOf({
       id: createId("id"),
@@ -105,6 +106,8 @@ describe("", () => {
     const now = new Date();
     const [finished, event] = showDown(round, now);
 
+    expect(canShowDown(round)).toBe(true);
+    expect(canShowDown(finished)).toBe(false);
     expect(finished.id).toBe(round.id);
     expect(finished.hands).toEqual(round.hands);
     expect(finished.hands).not.toBe(round.hands);
@@ -119,6 +122,7 @@ describe("", () => {
   test("can not finish round that has no hand", () => {
     const round = roundOf({ id: createId("id"), count: 1, selectableCards: cards, hands: [] });
 
+    expect(canShowDown(round)).toBe(false);
     expect(() => showDown(round, new Date())).toThrowError();
   });
 });
