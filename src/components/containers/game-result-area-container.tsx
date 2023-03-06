@@ -1,17 +1,14 @@
 import classNames from "classnames";
 import { PlayerHands } from "../presentations/player-hands";
 import { BaseProps } from "../base";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
-import { UserMode } from "@/domains/game-player";
-import { selectUserHandInfos, UserHandInfo } from "@/status/selectors/user-hand";
+import { selectUserHandInfos } from "@/status/selectors/user-hand";
 import { isFinished } from "@/utils/loadable";
+import { AppDispatch } from "@/status/store";
+import { newRound } from "@/status/actions/game";
 
-interface Props extends BaseProps {
-  onNewGame: () => void;
-  userMode: UserMode;
-  hands: UserHandInfo[];
-}
+type Props = BaseProps;
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
@@ -52,51 +49,48 @@ const styles = {
   ),
 };
 
-const GameProgressionButton = (props: Props) => {
-  const { onNewGame } = props;
-
+const GameProgressionButton = (dispatch: AppDispatch) => {
   return (
-    <button className={styles.nextGameButton} onClick={() => onNewGame()}>
-      Start next game
+    <button className={styles.nextGameButton} onClick={() => dispatch(newRound())}>
+      Start next round
     </button>
   );
 };
 
 // eslint-disable-next-line func-style
-export function GameArea(props: Props) {
+export function GameResultAreaContainer() {
   const hands = useAppSelector(selectUserHandInfos());
+  const dispatch = useAppDispatch();
 
   if (!isFinished(hands)) {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
           <div></div>
-          <Skeleton />
+          <Skeleton testid="upper-loading" />
           <div className={styles.table}>
-            <Skeleton />
+            <Skeleton testid="table-loading" />
           </div>
-          <Skeleton />
+          <Skeleton testid="lower-loading" />
           <div></div>
         </div>
       </div>
     );
   }
 
-  const button = GameProgressionButton(props);
-  const upper = hands[0].filter((_, index) => index / 2 === 0);
-  const lower = hands[0].filter((_, index) => index / 2 === 1);
+  const button = GameProgressionButton(dispatch);
+  const upper = hands[0].filter((_, index) => index % 2 === 0);
+  const lower = hands[0].filter((_, index) => index % 2 === 1);
 
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
         <div></div>
-        <PlayerHands hands={upper} />
+        <PlayerHands hands={upper} testid="upper" />
         <div className={styles.table}>{button}</div>
-        <PlayerHands hands={lower} />
+        <PlayerHands hands={lower} testid="lower" />
         <div></div>
       </div>
     </div>
   );
 }
-
-export default GameArea;

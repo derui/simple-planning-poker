@@ -42,3 +42,8 @@ export const openGameFailure = createAction<{ reason: string }>(`${prefix}:openG
 export const createGame = createAction<{ name: string; points: number[] }>(`${prefix}:createGame`);
 export const createGameSuccess = createAction<Game.T>(`${prefix}:createGameSuccess`);
 export const createGameFailure = createAction<{ reason: string }>(`${prefix}:createGameFailure`);
+
+// new round
+export const newRound = createAction(`${prefix}:newRound`);
+export const newRoundSuccess = createAction<Game.T>(`${prefix}:newRoundSuccess`);
+export const newRoundFailure = createAction<{ reason: string }>(`${prefix}:newRoundFailure`);
