@@ -1,12 +1,18 @@
+import { EventDispatcher, UseCase } from "./base";
 import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
-import { EventDispatcher, UseCase } from "./base";
 
 export interface ShowDownUseCaseInput {
   gameId: Game.Id;
 }
 
-export type ShowDownUseCaseOutput = "success" | "notFoundGame" | "showDownFailed";
+export type ShowDownUseCaseOutput =
+  | {
+      kind: "success";
+      output: Game.T;
+    }
+  | { kind: "notFoundGame" }
+  | { kind: "showDownFailed" };
 
 export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<ShowDownUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
@@ -14,7 +20,7 @@ export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<Sh
   async execute(input: ShowDownUseCaseInput): Promise<ShowDownUseCaseOutput> {
     const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
-      return "notFoundGame";
+      return { kind: "notFoundGame" };
     }
 
     try {
@@ -24,11 +30,11 @@ export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<Sh
 
       this.dispatcher.dispatch(event);
 
-      return "success";
+      return { kind: "success", output: newGame };
     } catch (e) {
       console.error(e);
 
-      return "showDownFailed";
+      return { kind: "showDownFailed" };
     }
   }
 }
