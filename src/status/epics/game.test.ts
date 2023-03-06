@@ -20,6 +20,7 @@ import {
   createMockedHandCardUseCase,
   createMockedJoinUserUseCase,
   createMockedLeaveGameUseCase,
+  createMockedShowDownUseCase,
   createMockedUserRepository,
 } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
@@ -431,6 +432,46 @@ describe("create game", () => {
       name: "foo",
       points: [1],
       createdBy: user.id,
+    });
+  });
+});
+
+describe("show down", () => {
+  test("create game", async () => {
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves({ kind: "success", game: game });
+    registrar.register(
+      "showDownUseCase",
+      createMockedShowDownUseCase({
+        execute: fake,
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+
+    const action$ = of(GameAction.showDown());
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.showDown(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.showDownSuccess(game));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.firstArg).toEqual({
+      gameId: game.id,
     });
   });
 });

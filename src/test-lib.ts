@@ -10,6 +10,7 @@ import { CreateGameUseCase } from "./usecases/create-game";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
+import { ShowDownUseCase } from "./usecases/show-down";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as Game from "@/domains/game";
@@ -81,6 +82,13 @@ export const createMockedCreateGameUseCase = function createMockedCreateGameUseC
     execute: mock.execute ?? sinon.fake(),
   } as CreateGameUseCase;
 };
+
+export const createMockedShowDownUseCase = function createMockedShowDownUseCase(mock: Partial<ShowDownUseCase> = {}) {
+  return {
+    execute: mock.execute ?? sinon.fake(),
+  } as ShowDownUseCase;
+};
+
 export const createMockedAuthenticator = function createMockedAuthenticator(mock: Partial<Authenticator> = {}) {
   return {
     currentUserIdIfExists: mock.currentUserIdIfExists ?? sinon.fake(),

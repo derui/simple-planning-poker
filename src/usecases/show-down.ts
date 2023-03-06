@@ -9,7 +9,7 @@ export interface ShowDownUseCaseInput {
 export type ShowDownUseCaseOutput =
   | {
       kind: "success";
-      output: Game.T;
+      game: Game.T;
     }
   | { kind: "notFoundGame" }
   | { kind: "showDownFailed" };
@@ -26,11 +26,11 @@ export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<Sh
     try {
       const [newGame, event] = Game.showDown(game, new Date());
 
-      this.gameRepository.save(newGame);
+      await this.gameRepository.save(newGame);
 
       this.dispatcher.dispatch(event);
 
-      return { kind: "success", output: newGame };
+      return { kind: "success", game: newGame };
     } catch (e) {
       console.error(e);
 

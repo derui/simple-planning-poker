@@ -7,7 +7,15 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
 import * as UserHand from "@/domains/user-hand";
 
-type Epics = "giveUp" | "handCard" | "changeUserMode" | "leaveGame" | "joinGame" | "openGame" | "createGame";
+type Epics =
+  | "giveUp"
+  | "handCard"
+  | "changeUserMode"
+  | "leaveGame"
+  | "joinGame"
+  | "openGame"
+  | "createGame"
+  | "showDown";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -242,6 +250,40 @@ export const gameEpic = (
                 return GameAction.createGameFailure({ reason: "Story point must be greater than 0" });
               case "invalidStoryPoints":
                 return GameAction.createGameFailure({ reason: "Need least 1 point to create game" });
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  showDown: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.showDown.match),
+      switchMap(() => {
+        const {
+          game: { currentGame },
+        } = state$.value;
+
+        if (!currentGame) {
+          return of(GameAction.somethingFailure("Can not show down with nullish"));
+        }
+
+        const useCase = registrar.resolve("showDownUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: currentGame.id,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.showDownSuccess(output.game);
+              case "notFoundGame":
+                return GameAction.showDownFailed({ reason: "can not find game" });
+              case "showDownFailed":
+                return GameAction.showDownFailed({ reason: "failed some reason" });
             }
           })
         );

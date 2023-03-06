@@ -59,7 +59,7 @@ test("should save game showed down", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "success", output: save.lastCall.firstArg });
+  expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
 });
 
 test("should return error if the game can not show down", async () => {
