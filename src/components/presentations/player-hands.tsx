@@ -5,7 +5,6 @@ import { UserHandInfo } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
   hands: UserHandInfo[];
-  opened: boolean;
 }
 
 const styles = {
@@ -13,11 +12,11 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function PlayerHands({ opened, hands, testid }: Props) {
+export function PlayerHands({ hands, testid }: Props) {
   const gen = generateTestId(testid);
 
   const createUserHand = (props: UserHandInfo, index: number) => {
-    return <PlayerHand key={index} opened={opened} testid={gen("hand")} {...props} />;
+    return <PlayerHand key={index} testid={gen("hand")} {...props} />;
   };
 
   return (
