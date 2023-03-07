@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import * as React from "react";
-import { Transition } from "react-transition-group";
 import { BaseProps, generateTestId } from "../base";
 
 interface Props extends BaseProps {
@@ -124,21 +123,6 @@ const overlayStyles = {
     ),
 } as const;
 
-const Overlay = ({ authenticating, testid }: { authenticating: boolean; testid: string }) => {
-  const ref = React.useRef(null);
-  return (
-    <Transition nodeRef={ref} in={authenticating} timeout={200}>
-      {(state) => {
-        return (
-          <div ref={ref} className={overlayStyles.root(state)} data-testid={testid}>
-            Authenticating...
-          </div>
-        );
-      }}
-    </Transition>
-  );
-};
-
 // eslint-disable-next-line func-style
 export function SignIn({ title, onSubmit, authenticating, children, testid }: React.PropsWithChildren<Props>) {
   const gen = generateTestId(testid);
@@ -157,7 +141,6 @@ export function SignIn({ title, onSubmit, authenticating, children, testid }: Re
         {title}
       </header>
       <main className={styles.main}>
-        <Overlay testid={gen("overlay")} authenticating={authenticating} />
         <ul className={styles.inputContainer}>
           <li className={styles.inputTerm}>
             <label className={styles.inputLabel}>email</label>

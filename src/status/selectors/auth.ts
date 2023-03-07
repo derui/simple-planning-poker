@@ -8,7 +8,7 @@ const selectAuth = createDraftSafeSelector(selectSelf, (state) => state.auth);
  * get authentication progressing or not
  */
 export const selectAuthenticating = function selectAuthenticating() {
-  return createDraftSafeSelector(selectAuth, (auth) => {
+  return createDraftSafeSelector(selectAuth, (auth): boolean => {
     return auth.authenticating;
   });
 };

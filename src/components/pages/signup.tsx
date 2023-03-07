@@ -1,14 +1,44 @@
-import { useAppDispatch } from "../hooks";
+import classNames from "classnames";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { SignIn } from "../presentations/signin";
+import { Overlay } from "../presentations/overlay";
+import { Loader } from "../presentations/loader";
 import { signUp } from "@/status/actions/signin";
+import { selectAuthenticating } from "@/status/selectors/auth";
+
+const styles = {
+  overlayDialog: classNames(
+    "flex",
+    "flex-row",
+    "p-4",
+    "h-16",
+    "border",
+    "border-secondary1-400",
+    "rounded",
+    "bg-white",
+    "items-center"
+  ),
+  dialogText: classNames("ml-3"),
+};
 
 // eslint-disable-next-line func-style
 export function SignUpPage() {
+  const authenticating = useAppSelector(selectAuthenticating());
   const dispatch = useAppDispatch();
 
   const handleSubmit = ({ email, password }: { email: string; password: string }) => {
     dispatch(signUp({ email, password }));
   };
 
-  return <SignIn title="Sign In" onSubmit={handleSubmit} authenticating={false} testid="signin"></SignIn>;
+  return (
+    <div>
+      <Overlay show={authenticating} testid={"overlay"}>
+        <div className={styles.overlayDialog}>
+          <Loader size="m" shown={true} testid={"loader"} />
+          <span className={styles.dialogText}>Authenticating...</span>
+        </div>
+      </Overlay>
+      <SignIn title="Sign In" onSubmit={handleSubmit} authenticating={authenticating} testid="signin"></SignIn>
+    </div>
+  );
 }
