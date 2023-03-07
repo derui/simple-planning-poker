@@ -14,7 +14,6 @@ const styles = {
     "m-auto",
     "min-w-fit",
     "max-w-md",
-    "h-64",
     "shadow",
     "z-10",
     "border",
@@ -29,16 +28,15 @@ const styles = {
     "font-bold",
     "rounded-t",
     "bg-primary-400",
-    "text-secondary1-200",
-    "h-12"
+    "text-secondary1-200"
   ),
   headerText: classNames("align-middle"),
   main: {
-    root: classNames("flex-auto", "bg-white", "p-3", "flex", "flex-row"),
+    root: classNames("flex-auto", "bg-white", "p-4", "flex", "flex-row"),
     description: classNames("align-center", "text-primary-400"),
     input: {
-      container: classNames("w-full", "mx-auto", "flex-auto"),
-      row: classNames("flex", "items-center", "mb-2"),
+      container: classNames("w-full", "mx-auto", "flex-auto", "px-3"),
+      row: classNames("flex", "items-center", "mb-4", "last:mb-0"),
       label: classNames("flex-auto", "w-24", "mr-3", "text-secondary2-500"),
       input: classNames(
         "flex-auto",

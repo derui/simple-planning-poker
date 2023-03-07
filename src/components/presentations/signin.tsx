@@ -14,7 +14,8 @@ const styles = {
     "flex",
     "relative",
     "flex-col",
-    "w-1/2",
+    "min-w-fit",
+    "max-w-md",
     "m-auto",
     "border",
     "border-primary-400",
@@ -25,7 +26,7 @@ const styles = {
 
   header: classNames(
     "flex-auto",
-    "p-4",
+    "p-2",
     "text-lg",
     "font-bold",
     "rounded",
@@ -35,9 +36,9 @@ const styles = {
     "text-secondary1-200"
   ),
 
-  main: classNames("flex-auto", "bg-white", "relative", "px-4", "py-8"),
+  main: classNames("flex-auto", "bg-white", "relative", "p-4"),
 
-  inputContainer: classNames("flex", "flex-col", "w-full", "mx-auto", "list-none", "py-0", "px-4"),
+  inputContainer: classNames("flex", "flex-col", "w-full", "mx-auto", "list-none", "py-0", "px-3"),
 
   inputTerm: classNames("flex", "flex-auto", "items-center", "mb-4", "last:mb-0"),
 
@@ -59,7 +60,7 @@ const styles = {
 
   footer: classNames(
     "flex-auto",
-    "p-3",
+    "p-2",
     "text-lg",
     "font-bold",
     "rounded-b",
