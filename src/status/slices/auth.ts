@@ -15,10 +15,12 @@ type AuthenticationProgress = "unauthenticated" | "tryAuthenticate" | "signIn" |
 
 interface AuthState {
   progress: AuthenticationProgress;
+  authenticating: boolean;
 }
 
 const initialState = {
   progress: "unauthenticated",
+  authenticating: false,
 } as AuthState satisfies AuthState;
 
 const slice = createSlice({
@@ -31,54 +33,63 @@ const slice = createSlice({
     builder.addCase(tryAuthenticate, (draft) => {
       if (draft.progress === "unauthenticated") {
         draft.progress = "tryAuthenticate";
+        draft.authenticating = true;
       }
     });
 
     builder.addCase(tryAuthenticateSuccess, (draft) => {
       if (draft.progress === "tryAuthenticate") {
         draft.progress = "authenticated";
+        draft.authenticating = false;
       }
     });
 
     builder.addCase(tryAuthenticateFailure, (draft) => {
       if (draft.progress === "tryAuthenticate") {
         draft.progress = "failed";
+        draft.authenticating = false;
       }
     });
 
     builder.addCase(signIn, (draft) => {
       if (draft.progress === "unauthenticated" || draft.progress === "failed") {
         draft.progress = "signIn";
+        draft.authenticating = true;
       }
     });
 
     builder.addCase(signInSuccess, (draft) => {
       if (draft.progress === "signIn") {
         draft.progress = "authenticated";
+        draft.authenticating = false;
       }
     });
 
     builder.addCase(signInFailure, (draft) => {
       if (draft.progress === "signIn") {
         draft.progress = "failed";
+        draft.authenticating = false;
       }
     });
 
     builder.addCase(signUp, (draft) => {
       if (draft.progress === "unauthenticated" || draft.progress === "failed") {
         draft.progress = "signUp";
+        draft.authenticating = true;
       }
     });
 
     builder.addCase(signUpSuccess, (draft) => {
       if (draft.progress === "signUp") {
         draft.progress = "authenticated";
+        draft.authenticating = false;
       }
     });
 
     builder.addCase(signUpFailure, (draft) => {
       if (draft.progress === "signUp") {
         draft.progress = "failed";
+        draft.authenticating = false;
       }
     });
   },

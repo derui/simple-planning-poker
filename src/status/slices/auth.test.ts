@@ -19,7 +19,7 @@ const USER = User.create({
 });
 
 test("initial state", () => {
-  expect(getInitialState()).toEqual({ progress: "unauthenticated" });
+  expect(getInitialState()).toEqual({ progress: "unauthenticated", authenticating: false });
 });
 
 test("tryAuthentication successed", () => {
