@@ -3,13 +3,21 @@ import { useParams } from "react-router";
 import classNames from "classnames";
 import { useAppDispatch } from "../hooks";
 import { Loader } from "../presentations/loader";
+import { Overlay } from "../presentations/overlay";
 import * as Invitation from "@/domains/invitation";
 import { joinGame } from "@/status/actions/game";
 
 const styles = {
-  root: classNames("flex", "relative", "w-full", "h-full", "items-center", "justify-center"),
-  overlay: classNames("absolute", "z-10", "bg-gray/20", "w-full", "h-full", "top-0", "left-0"),
-  dialog: classNames("flex-[0_0_auto]", "border", "border-secondary1-400", "rounded", "p-3", "bg-white", "z-10"),
+  dialog: classNames(
+    "flex-[0_0_auto]",
+    "border",
+    "border-secondary1-400",
+    "rounded",
+    "p-3",
+    "bg-white",
+    "z-10",
+    "shadow"
+  ),
   dialogHeader: classNames("flex", "items-center"),
   dialogText: classNames("align-middle", "ml-2"),
 } as const;
@@ -26,8 +34,7 @@ export function JoinGamePage() {
   }, [param.signature]);
 
   return (
-    <div className={styles.root} data-testid="root">
-      <div className={styles.overlay}></div>
+    <Overlay show={true} testid="overlay">
       <div className={styles.dialog}>
         <h3 className={styles.dialogHeader}>
           <Loader size="m" shown={true} testid={"loader"} />
@@ -36,6 +43,6 @@ export function JoinGamePage() {
           </span>
         </h3>
       </div>
-    </div>
+    </Overlay>
   );
 }
