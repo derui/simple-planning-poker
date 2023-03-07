@@ -18,6 +18,26 @@ export const selectCurrentGameName = function selectCurrentGameName() {
   });
 };
 
+export interface CardInfo {
+  display: string;
+  index: number;
+}
+
+/**
+ * select cards that are selectable in current game.
+ */
+export const selectCards = function selectCards() {
+  return createDraftSafeSelector(selectCurrentGame, (game): Loadable.T<CardInfo[]> => {
+    if (!game) {
+      return Loadable.loading();
+    }
+
+    const cards = game.cards.map((c, index) => ({ display: `${c}`, index }));
+
+    return Loadable.finished(cards);
+  });
+};
+
 /**
  * select invitation link of the current game.
  */
