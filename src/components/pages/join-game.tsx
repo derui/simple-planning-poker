@@ -34,15 +34,17 @@ export function JoinGamePage() {
   }, [param.signature]);
 
   return (
-    <Overlay show={true} testid="overlay">
-      <div className={styles.dialog}>
-        <h3 className={styles.dialogHeader}>
-          <Loader size="m" shown={true} testid={"loader"} />
-          <span className={styles.dialogText}>
-            Joining to the game... <br /> Wait a moment, please
-          </span>
-        </h3>
-      </div>
-    </Overlay>
+    <div data-testid="root">
+      <Overlay show={true} testid="overlay">
+        <div className={styles.dialog}>
+          <h3 className={styles.dialogHeader}>
+            <Loader size="m" shown={true} testid={"loader"} />
+            <span className={styles.dialogText}>
+              Joining to the game... <br /> Wait a moment, please
+            </span>
+          </h3>
+        </div>
+      </Overlay>
+    </div>
   );
 }

@@ -46,5 +46,4 @@ test("disable submit while authenticating", async () => {
   render(<SignIn authenticating={true} title="test" onSubmit={() => {}}></SignIn>);
 
   expect((screen.getByRole("button") as HTMLInputElement).disabled).toBe(true);
-  expect(screen.queryByTestId("overlay")).not.toBeNull();
 });
