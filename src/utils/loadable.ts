@@ -30,7 +30,7 @@ export const isError = function isError<E>(loadable: T<unknown, E>): loadable is
 /**
  * check loading state is finished
  */
-export const isFinished = function isFinished<Obj>(loadable: T<Obj>): loadable is FinishedState<T> {
+export const isFinished = function isFinished<Obj>(loadable: T<Obj>): loadable is FinishedState<Obj> {
   return loadable[1] === _finished;
 };
 
