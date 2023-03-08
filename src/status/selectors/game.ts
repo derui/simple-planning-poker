@@ -96,3 +96,36 @@ export const selectCanShowDown = function selectCanShowDown() {
     return Round.canShowDown(currentGame.round);
   });
 };
+
+interface RoundResultInfo {
+  average: number;
+  cardAndCounts: [number, number][];
+}
+
+export const selectRoundResult = function selectRoundResult() {
+  return createDraftSafeSelector(selectCurrentGame, (currentGame): Loadable.T<RoundResultInfo> => {
+    if (!currentGame) {
+      return Loadable.loading();
+    }
+
+    if (!Round.isFinishedRound(currentGame.round)) {
+      return Loadable.error();
+    }
+
+    const average = Round.calculateAverage(currentGame.round);
+
+    const handMap = new Map<number, number>();
+
+    Object.values(currentGame.round.hands).forEach((v) => {
+      if (UserHand.isHanded(v)) {
+        const count = handMap.get(v.card) ?? 1;
+        handMap.set(v.card, count);
+      }
+    });
+
+    return Loadable.finished({
+      average,
+      cardAndCounts: Array.from(handMap.entries()).sort(([v1], [v2]) => v1 - v2),
+    });
+  });
+};
