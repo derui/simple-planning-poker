@@ -11,20 +11,31 @@ import { AppDispatch } from "@/status/store";
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
-  gridContainer: classNames(
-    "w-full",
-    "h-full",
-    "grid",
-    "grid-rows-[1fr_h-36_h-24_h-36_1fr]",
-    "grid-cols-[1fr_max-content_1fr]"
-  ),
+  gridContainer: classNames("w-full", "h-full", "grid", "grid-rows-[1fr_8rem_5rem_8rem_1fr]", "grid-cols-3"),
   hands: classNames("flex"),
   table: classNames(
+    "row-start-3",
+    "col-start-2",
     "flex",
     "rounded-full",
     "border-2",
     "border-primary-400",
     "bg-secondary1-300",
+    "h-20",
+    "min-w-64",
+    "flex-col",
+    "items-center",
+    "justify-center"
+  ),
+
+  tableLoading: classNames(
+    "row-start-3",
+    "col-start-2",
+    "flex",
+    "rounded-full",
+    "border-2",
+    "border-primary-400",
+    "px-4",
     "h-20",
     "min-w-64",
     "flex-col",
@@ -74,12 +85,19 @@ export function GameAreaContainer() {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
-          <div></div>
-          <Skeleton testid="upper-loading" />
-          <div className={styles.table}>
+          <div className="col-span-full row-start-1"></div>
+          <div className="col-start-2 row-start-2 flex items-center">
+            {" "}
+            <Skeleton testid="upper-loading" />
+          </div>
+          <div className={styles.tableLoading}>
             <Skeleton testid="table-loading" />
           </div>
-          <Skeleton testid="lower-loading" />
+          <div className="col-start-2 row-start-4 flex items-center">
+            {" "}
+            <Skeleton testid="lower-loading" />
+          </div>
+          <div className="row-start-5 col-span-full"></div>
           <div></div>
         </div>
       </div>
@@ -93,11 +111,16 @@ export function GameAreaContainer() {
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
-        <div></div>
-        <PlayerHands hands={upper} testid="upper" />
+        <div className="col-span-1"></div>
+        <div className="col-span-2">
+          {" "}
+          <PlayerHands hands={upper} testid="upper" />
+        </div>
         <div className={styles.table}>{button}</div>
-        <PlayerHands hands={lower} testid="lower" />
-        <div></div>
+        <div className="col-span-4">
+          <PlayerHands hands={lower} testid="lower" />
+        </div>
+        <div className="col-span-5"></div>
       </div>
     </div>
   );

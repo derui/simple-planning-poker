@@ -4,7 +4,7 @@ import { BaseProps, generateTestId } from "../base";
 type Props = BaseProps;
 
 const styles = {
-  root: classNames("flex", "flex-auto", "w-full", "h-full", "animate-pulse", "bg-lightgray"),
+  root: classNames("flex", "flex-none", "w-full", "h-10", "animate-pulse", "bg-lightgray"),
 };
 
 // eslint-disable-next-line func-style
