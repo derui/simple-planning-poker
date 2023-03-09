@@ -39,10 +39,23 @@ const styles = {
       }
     ),
   container: (opened: boolean) =>
-    classNames("flex", "absolute", "top-8", "-right-2", "border", "border-secondary1-500", "px-3", "py-2", "rounded", {
-      visible: opened,
-      invisible: !opened,
-    }),
+    classNames(
+      "flex",
+      "absolute",
+      "top-8",
+      "-right-2",
+      "bg-white",
+      "border",
+      "border-secondary1-500",
+      "px-3",
+      "py-2",
+      "rounded",
+      "shadow",
+      {
+        visible: opened,
+        invisible: !opened,
+      }
+    ),
   item: classNames("flex", "flex-auto"),
   label: classNames(
     "rounded-l",
@@ -57,7 +70,7 @@ const styles = {
   input: classNames(
     "rounded-r",
     "outline-none",
-    "pl-3",
+    "px-3",
     "border",
     "border-l-0",
     "transition-colors",
