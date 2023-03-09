@@ -21,9 +21,9 @@ export const Default: Story = {
   render() {
     return (
       <RadioGroup>
-        <RadioButton label="one" value="one" name="radio" onChange={() => {}} checked />
-        <RadioButton label="two" value="two" name="radio" onChange={() => {}} />
-        <RadioButton label="three" value="three" name="radio" onChange={() => {}} />
+        <RadioButton label="one" value="one" name="radio" onCheck={() => {}} checked />
+        <RadioButton label="two" value="two" name="radio" onCheck={() => {}} />
+        <RadioButton label="three" value="three" name="radio" onCheck={() => {}} />
       </RadioGroup>
     );
   },

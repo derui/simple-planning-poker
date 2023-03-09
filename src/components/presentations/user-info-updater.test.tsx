@@ -14,7 +14,7 @@ test("should not open initial", () => {
 });
 
 test("apply name and mode", async () => {
-  expect.assertions(2);
+  expect.assertions(3);
 
   render(
     <UserInfoUpdater
@@ -30,6 +30,8 @@ test("apply name and mode", async () => {
   await userEvent.clear(getByRole(screen.getByTestId("nameEditor"), "textbox"));
   await userEvent.type(getByRole(screen.getByTestId("nameEditor"), "textbox"), "changed");
   await userEvent.click(screen.getByLabelText("Inspector"));
+
+  expect(screen.getByLabelText("Inspector")).toHaveProperty("checked", true);
 
   await userEvent.click(screen.getByTestId("submit"));
 });

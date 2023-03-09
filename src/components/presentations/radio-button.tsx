@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useRef } from "react";
 import { BaseProps, generateTestId } from "../base";
 
 export interface Props extends BaseProps {
@@ -6,7 +7,7 @@ export interface Props extends BaseProps {
   name: string;
   value: string;
   checked?: boolean;
-  onChange: (value: string) => void;
+  onCheck: () => void;
 }
 
 const styles = {
@@ -18,18 +19,17 @@ const styles = {
       "px-2",
       "py-1",
       "rounded-lg",
-      "cursor-pointer",
       "transition-colors",
       "bg-white",
+      "cursor-pointer",
       {
         "border-primary-300": checked,
         "text-primary-500": checked,
-        "hover:bg-primary-200/50": checked,
       },
       {
         "border-secondary1-300": !checked,
         "text-secondary1-500": !checked,
-        "hover:bg-secondary1-200/50": !checked,
+        "hover:bg-secondary1-200": !checked,
       }
     ),
   input: classNames("hidden"),
@@ -39,12 +39,19 @@ const styles = {
 // eslint-disable-next-line func-style
 export function RadioButton(props: Props) {
   const gen = generateTestId(props.testid);
+  const ref = useRef<HTMLInputElement>(null);
 
   return (
     <span className={styles.root(props.checked ?? false)} data-testid={gen("root")}>
-      <label className={styles.label}>
+      <label
+        className={styles.label}
+        onClick={() => {
+          ref.current?.click();
+        }}
+      >
         {props.label}
         <input
+          ref={ref}
           className={styles.input}
           data-testid={gen("input")}
           type="radio"
@@ -52,7 +59,9 @@ export function RadioButton(props: Props) {
           value={props.value}
           checked={props.checked}
           onChange={(e) => {
-            props.onChange(e.target.value);
+            if (e.target.value === props.value) {
+              props.onCheck();
+            }
           }}
         />
       </label>

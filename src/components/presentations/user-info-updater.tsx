@@ -96,19 +96,23 @@ export function UserInfoUpdater({ name, mode, onChangeUserInfo, ...rest }: Props
         <span className={styles.nameEditorLabel}>User Mode</span>
         <RadioGroup testid={testid("user-mode")}>
           <RadioButton
+            key="inspector"
             testid={testid("inspector")}
             label="Inspector"
             value={UserMode.inspector}
             name="mode"
-            onChange={(v) => setMode(v as UserMode)}
+            onCheck={() => {
+              setMode(UserMode.inspector);
+            }}
             checked={currentMode === UserMode.inspector}
           />
           <RadioButton
+            key="normal"
             testid={testid("normal")}
             label="Normal"
             value={UserMode.normal}
             name="mode"
-            onChange={(v) => setMode(v as UserMode)}
+            onCheck={() => setMode(UserMode.normal)}
             checked={currentMode === UserMode.normal}
           />
         </RadioGroup>
