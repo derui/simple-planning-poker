@@ -122,3 +122,13 @@ export const randomGame = function randomGame(args: Partial<Parameters<typeof Ga
     round: args.round,
   })[0];
 };
+
+/**
+ * create random game for test usage
+ */
+export const randomUser = function randomUser(args: Partial<Parameters<typeof User.create>[0]>) {
+  return User.create({
+    id: args.id ?? User.createId(),
+    name: args.name ?? "random user",
+  });
+};

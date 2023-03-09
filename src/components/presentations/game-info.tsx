@@ -10,8 +10,8 @@ const styles = {
   root: classNames("flex-none", "flex", "text-primary-500", "pr-2", "justify-center"),
   name: {
     contaienr: classNames("flex", "flex-auto", "align-stretch", "items-center"),
-    label: classNames("flex", "flex-none", "text-primary-300", "align-center"),
-    name: classNames("flex", "flex-auto", "font-bold", "px-3", "py-2", "align-center"),
+    label: classNames("flex", "flex-none", "text-primary-300", "items-center"),
+    name: classNames("flex", "flex-auto", "font-bold", "px-3", "py-2", "items-center"),
   },
   actions: {
     root: classNames("flex", "flex-none"),

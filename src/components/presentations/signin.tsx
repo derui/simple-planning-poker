@@ -89,40 +89,6 @@ const styles = {
   signUpLink: classNames("text-center"),
 };
 
-const overlayStyles = {
-  root: (state: string) =>
-    classNames(
-      "flex",
-      "flex-auto",
-      "align-center",
-      "justify-center",
-      "absolute",
-      "left-0",
-      "top-0",
-      "w-full",
-      "h-full",
-      "bg-white",
-      "z-10",
-      "transition-opacity",
-      {
-        visible: state === "entering",
-        "opacity-100": state === "entering",
-      },
-      {
-        visible: state === "entering",
-        "opacity-100": state === "entering",
-      },
-      {
-        visible: state === "exiting",
-        "opacity-0": state === "exiting",
-      },
-      {
-        invisible: state === "exited",
-        "opacity-0": state === "exited",
-      }
-    ),
-} as const;
-
 // eslint-disable-next-line func-style
 export function SignIn({ title, onSubmit, authenticating, children, testid }: React.PropsWithChildren<Props>) {
   const gen = generateTestId(testid);

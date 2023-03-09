@@ -17,8 +17,8 @@ const styles = {
     classnames(
       "flex",
       "flex-col",
-      "h-16",
-      "w-12",
+      "h-20",
+      "w-14",
       "rounded",
       "text-center",
       "items-center",

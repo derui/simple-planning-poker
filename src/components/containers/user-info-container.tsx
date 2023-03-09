@@ -3,6 +3,7 @@ import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserInfoUpdater } from "../presentations/user-info-updater";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { Loader } from "../presentations/loader";
 import * as UserAction from "@/status/actions/user";
 import * as GameAction from "@/status/actions/game";
 import { UserMode } from "@/domains/game-player";
@@ -15,7 +16,7 @@ const styles = {
   root: classnames(
     "flex",
     "relative",
-    "align-center",
+    "items-center",
     "px-3",
     "border-1-bt",
     "border-1-bt-transparent",
@@ -68,7 +69,11 @@ export function UserInfoContainer(props: Props) {
   };
 
   if (!isFinished(userInfo)) {
-    return null;
+    return (
+      <div className={styles.root} data-testid={testid("root")}>
+        <Loader size="m" shown testid={testid("loader")} />
+      </div>
+    );
   }
 
   const payload = userInfo[0];
