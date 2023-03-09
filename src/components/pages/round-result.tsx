@@ -1,10 +1,10 @@
 import * as React from "react";
 import classNames from "classnames";
-import { GameAreaContainer } from "../containers/game-area-container";
 import { GameHeaderContainer } from "../containers/game-header-container";
 import { useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { AveragePointShowcase } from "../presentations/average-point-showcase";
+import { GameResultAreaContainer } from "../containers/game-result-area-container";
 import { isFinished } from "@/utils/loadable";
 import { selectRoundResult } from "@/status/selectors/game";
 
@@ -33,7 +33,7 @@ export function RoundResult() {
     <div className={styles.root}>
       <GameHeaderContainer />
       <main className={styles.main}>
-        <GameAreaContainer />
+        <GameResultAreaContainer />
       </main>
       {showcase}
     </div>

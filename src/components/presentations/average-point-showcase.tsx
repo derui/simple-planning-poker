@@ -37,9 +37,10 @@ const styles = {
       "border-primary-400",
       "text-center",
       "justify-center",
-      "m-3"
+      "m-3",
+      "relative"
     ),
-    count: classNames("text-black", "align-center"),
+    count: classNames("text-black", "align-center", "absolute", "bottom-0"),
   },
 };
 

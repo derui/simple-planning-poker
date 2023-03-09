@@ -14,6 +14,8 @@ import {
   openGame,
   changeUserMode,
   changeUserModeSuccess,
+  showDownSuccess,
+  newRoundSuccess,
 } from "../actions/game";
 import * as Game from "@/domains/game";
 
@@ -53,6 +55,8 @@ const slice = createSlice({
     builder.addCase(changeUserModeSuccess, updateCurrentGame);
     builder.addCase(notifyGameChanges, updateCurrentGame);
     builder.addCase(joinGameSuccess, updateCurrentGame);
+    builder.addCase(showDownSuccess, updateCurrentGame);
+    builder.addCase(newRoundSuccess, updateCurrentGame);
     builder.addCase(openGameSuccess, (draft, { payload }) => {
       draft.currentGame = payload.game;
       draft.loading = false;

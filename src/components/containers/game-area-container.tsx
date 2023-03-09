@@ -46,7 +46,7 @@ const styles = {
     "flex-none",
     "outline-none",
     "border",
-    "border-prinary-500",
+    "border-primary-500",
     "rounded",
     "bg-primary-200",
     "text-primary-500",
@@ -98,7 +98,6 @@ export function GameAreaContainer() {
             <Skeleton testid="lower-loading" />
           </div>
           <div className="row-start-5 col-span-full"></div>
-          <div></div>
         </div>
       </div>
     );
