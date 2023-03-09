@@ -48,3 +48,5 @@ export function JoinGamePage() {
     </div>
   );
 }
+
+export default JoinGamePage;

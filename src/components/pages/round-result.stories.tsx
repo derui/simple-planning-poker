@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { install } from "@twind/core";
 
 import { Provider } from "react-redux";
-import { RoundResult } from "./round-result";
+import { RoundResultPage } from "./round-result";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess, showDownSuccess } from "@/status/actions/game";
@@ -17,9 +17,9 @@ install(twind);
 
 const meta = {
   title: "Page/Round Result",
-  component: RoundResult,
+  component: RoundResultPage,
   tags: ["autodocs"],
-} satisfies Meta<typeof RoundResult>;
+} satisfies Meta<typeof RoundResultPage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -30,7 +30,7 @@ export const Loading: Story = {
 
     return (
       <Provider store={store}>
-        <RoundResult />
+        <RoundResultPage />
       </Provider>
     );
   },
@@ -59,7 +59,7 @@ export const Loaded: Story = {
 
     return (
       <Provider store={store}>
-        <RoundResult />
+        <RoundResultPage />
       </Provider>
     );
   },

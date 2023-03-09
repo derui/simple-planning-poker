@@ -41,7 +41,7 @@ function CardHolderContainer() {
 }
 
 // eslint-disable-next-line func-style
-export function Round() {
+export function RoundPage() {
   return (
     <div className={styles.root}>
       <GameHeaderContainer />
@@ -52,3 +52,5 @@ export function Round() {
     </div>
   );
 }
+
+export default RoundPage;

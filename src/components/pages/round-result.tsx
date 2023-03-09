@@ -15,7 +15,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function RoundResult() {
+export function RoundResultPage() {
   const averageResult = useAppSelector(selectRoundResult());
 
   let showcase = (
@@ -39,3 +39,5 @@ export function RoundResult() {
     </div>
   );
 }
+
+export default RoundResultPage;

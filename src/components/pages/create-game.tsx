@@ -152,3 +152,5 @@ export function CreateGamePage() {
     </form>
   );
 }
+
+export default CreateGamePage;

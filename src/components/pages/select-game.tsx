@@ -110,3 +110,5 @@ export function SelectGamePage() {
     </div>
   );
 }
+
+export default SelectGamePage;
