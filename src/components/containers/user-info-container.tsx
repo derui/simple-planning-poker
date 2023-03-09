@@ -13,17 +13,21 @@ import { isFinished } from "@/utils/loadable";
 type Props = BaseProps;
 
 const styles = {
-  root: classnames(
-    "flex",
-    "relative",
-    "items-center",
-    "px-3",
-    "border-1-bt",
-    "border-1-bt-transparent",
-    "transition-colors",
-    "cursor-pointer",
-    "hover:border-secondary-500"
-  ),
+  root: (opened: boolean) =>
+    classnames(
+      "flex",
+      "relative",
+      "items-center",
+      "px-3",
+      "border-b",
+      "transition-colors",
+      "cursor-pointer",
+      {
+        "border-transparent": !opened,
+        "border-secondary1-500": opened,
+      },
+      "hover:border-secondary1-500"
+    ),
 
   icon: classnames(
     "inline-block",
@@ -32,18 +36,18 @@ const styles = {
     "h-6",
     "bg-secondary1-500",
     "mr-3",
-    '[mask-image:url("/static/svg/tabler-icon/user.svg")]',
+    '[mask-image:url("/static/svg/tabler-icons/user.svg")]',
     "[mask-size:cover]"
   ),
 
-  name: classnames("inline-block", "flex-none", "w-32", "overflow-hidden", "text-ellipsis", "text-primary-500"),
+  name: classnames("inline-block", "flex-none", "w-24", "overflow-hidden", "text-ellipsis", "text-primary-500"),
 
   indicator: (opened: boolean) =>
     classnames(
       "ml-3",
       "inline-block",
       "flex-none",
-      '[mask-image:url("/static/svg/tabler-icon/shevron-down.svg")]',
+      '[mask-image:url("/static/svg/tabler-icons/chevron-down.svg")]',
       "[mask-size:cover]",
       "w-5",
       "h-5",
@@ -70,7 +74,7 @@ export function UserInfoContainer(props: Props) {
 
   if (!isFinished(userInfo)) {
     return (
-      <div className={styles.root} data-testid={testid("root")}>
+      <div className={styles.root(opened)} data-testid={testid("root")}>
         <Loader size="m" shown testid={testid("loader")} />
       </div>
     );
@@ -79,7 +83,7 @@ export function UserInfoContainer(props: Props) {
   const payload = userInfo[0];
 
   return (
-    <div className={styles.root} data-testid={testid("root")} onClick={() => setOpened(!opened)}>
+    <div className={styles.root(opened)} data-testid={testid("root")} onClick={() => setOpened(!opened)}>
       <span className={styles.icon}></span>
       <span className={styles.name} data-testid={testid("name")}>
         {payload.userName}

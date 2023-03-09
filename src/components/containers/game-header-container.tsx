@@ -12,7 +12,7 @@ import { leaveGame } from "@/status/actions/game";
 type Props = BaseProps;
 
 const styles = {
-  root: classNames("flex", "flex-none", "justify-between", "text-white", "items-center", "p-4", "z-30"),
+  root: classNames("flex", "flex-none", "justify-between", "items-center", "p-4", "z-30"),
   right: classNames("flex", "flex-auto", "align-center", "justify-end"),
 } as const;
 
