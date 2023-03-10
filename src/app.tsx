@@ -17,24 +17,25 @@ function PrivateRoute({ children }: PropsWithChildren) {
   return <>{children}</>;
 }
 
-export const App: React.FunctionComponent<{}> = () => {
-  const LaziedGameContainer = React.lazy(() => lazyImport(import("./components/pages/round")));
-  const LaziedGameResultContainer = React.lazy(() => lazyImport(import("./components/pages/round-result")));
-  const LaziedGameCreatorContainer = React.lazy(() => lazyImport(import("./components/pages/create-game")));
-  const LaziedGameSelectorContainer = React.lazy(() => lazyImport(import("./components/pages/select-game")));
-  const LaziedInvitationContainer = React.lazy(() => lazyImport(import("./components/pages/join-game")));
-  const LaziedSignInContainer = React.lazy(() => lazyImport(import("./components/pages/signin")));
-  const LaziedSignUpContainer = React.lazy(() => lazyImport(import("./components/pages/signup")));
+// eslint-disable-next-line func-style
+export function App() {
+  const LaziedRoundPage = React.lazy(() => lazyImport(import("./components/pages/round")));
+  const LaziedRoundResultPage = React.lazy(() => lazyImport(import("./components/pages/round-result")));
+  const LaziedCreateGamePage = React.lazy(() => lazyImport(import("./components/pages/create-game")));
+  const LaziedSelectGamePage = React.lazy(() => lazyImport(import("./components/pages/select-game")));
+  const LaziedJoinPage = React.lazy(() => lazyImport(import("./components/pages/join-game")));
+  const LaziedSignInPagen = React.lazy(() => lazyImport(import("./components/pages/signin")));
+  const LaziedSignUpPage = React.lazy(() => lazyImport(import("./components/pages/signup")));
 
   return (
-    <div className="app__root">
+    <>
       <BrowserRouter>
         <Routes>
           <Route
             path="/game/create"
             element={
               <PrivateRoute>
-                <LaziedGameCreatorContainer />
+                <LaziedCreateGamePage />
               </PrivateRoute>
             }
           ></Route>
@@ -42,7 +43,7 @@ export const App: React.FunctionComponent<{}> = () => {
             path="/"
             element={
               <PrivateRoute>
-                <LaziedGameSelectorContainer />
+                <LaziedSelectGamePage />
               </PrivateRoute>
             }
           ></Route>
@@ -50,7 +51,7 @@ export const App: React.FunctionComponent<{}> = () => {
             path="/game/:gameId"
             element={
               <PrivateRoute>
-                <LaziedGameContainer />
+                <LaziedRoundPage />
               </PrivateRoute>
             }
           ></Route>
@@ -58,7 +59,7 @@ export const App: React.FunctionComponent<{}> = () => {
             path="/game/:gameId/result"
             element={
               <PrivateRoute>
-                <LaziedGameResultContainer />
+                <LaziedRoundResultPage />
               </PrivateRoute>
             }
           ></Route>
@@ -66,14 +67,14 @@ export const App: React.FunctionComponent<{}> = () => {
             path="/invitation/:signature"
             element={
               <PrivateRoute>
-                <LaziedInvitationContainer />
+                <LaziedJoinPage />
               </PrivateRoute>
             }
           ></Route>
-          <Route path="/signin" element={<LaziedSignInContainer />}></Route>
-          <Route path="/signup" element={<LaziedSignUpContainer />}></Route>
+          <Route path="/signin" element={<LaziedSignInPagen />}></Route>
+          <Route path="/signup" element={<LaziedSignUpPage />}></Route>
         </Routes>
       </BrowserRouter>
-    </div>
+    </>
   );
-};
+}
