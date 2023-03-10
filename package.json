@@ -10,7 +10,7 @@
     "ci": "CI=true vite",
     "start:emulators": "firebase emulators:start",
     "build:bundle": "NODE_ENV=production vite build",
-    "copy-assets": "cpx 'assets/svg/**/*.svg' dist/static/",
+    "copy-assets": "cpx 'assets/**' dist/static/",
     "build": "pnpm run build:bundle && pnpm run copy-assets",
     "deploy:preview": "firebase hosting:channel:deploy preview_name",
     "deploy:production": "firebase deploy",
