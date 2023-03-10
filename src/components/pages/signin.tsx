@@ -7,6 +7,7 @@ import { signIn } from "@/status/actions/signin";
 import { selectAuthenticating } from "@/status/selectors/auth";
 
 const styles = {
+  root: classNames("h-full", "w-full"),
   link: classNames("text-primary-500", "hover:underline"),
   children: classNames("text-center", "mt-4", "mr-4"),
   overlayDialog: classNames(
@@ -33,7 +34,7 @@ export function SignInPage() {
   };
 
   return (
-    <div>
+    <div className={styles.root}>
       <Overlay show={authenticating} testid={"overlay"}>
         <div className={styles.overlayDialog}>
           <Loader size="m" shown={true} testid={"loader"} />

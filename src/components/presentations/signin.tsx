@@ -11,7 +11,7 @@ interface Props extends BaseProps {
 const styles = {
   root: classNames(
     "flex",
-    "relative",
+    "absolute",
     "flex-col",
     "min-w-fit",
     "max-w-md",
@@ -20,7 +20,10 @@ const styles = {
     "border-primary-400",
     "rounded",
     "shadow-md",
-    "z-0"
+    "z-0",
+    "top-1/2",
+    "left-1/2",
+    "[transform:translate(-50%,-50%)]"
   ),
 
   header: classNames(
