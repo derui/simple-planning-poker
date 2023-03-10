@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import React from "react";
-import * as ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom/client";
 import { install } from "@twind/core";
+import { Provider } from "react-redux";
 import { App } from "./app";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
@@ -25,6 +25,8 @@ import { LeaveGameUseCase } from "./usecases/leave-game";
 import config from "./twind.config.cjs";
 import { RoundRepositoryImpl } from "./infrastractures/round-repository";
 import { NewRoundUseCase } from "./usecases/new-round";
+import { createStore } from "./status/store";
+import { tryAuthenticate } from "./status/actions/signin";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -60,9 +62,16 @@ registrar.register("gameObserver", new GameObserverImpl(database, registrar.reso
 
 install(config);
 
-ReactDOM.render(
-  <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-    <App />
-  </gameObserverContext.Provider>,
-  document.getElementById("root")
+const store = createStore(registrar);
+
+store.dispatch(tryAuthenticate());
+
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+
+root.render(
+  <Provider store={store}>
+    <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
+      <App />
+    </gameObserverContext.Provider>
+  </Provider>
 );
