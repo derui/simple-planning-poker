@@ -9,7 +9,17 @@ interface Props extends BaseProps {
 const styles = {
   root: classNames("flex", "justify-center", "px-3", "py-2", "relative", "h-32", "items-center"),
   results: classNames("flex", "flex-none"),
-  average: classNames("flex", "flex-col", "justify-center", "items-center", "bg-primary-400", "rounded", "p-3"),
+  average: classNames(
+    "flex",
+    "flex-col",
+    "justify-center",
+    "items-center",
+    "bg-white",
+    "border",
+    "border-secondary2-500",
+    "rounded",
+    "p-3"
+  ),
   equal: classNames(
     "flex-none",
     "inline-block",
@@ -22,8 +32,8 @@ const styles = {
     "[mask-position:center]",
     '[mask-image:url("/static/svg/tabler-icons/equal.svg")]'
   ),
-  averageLabel: classNames("flex-none", "text-secondary2-200"),
-  averageValue: classNames("flex-none", "items-center", "text-xl", "text-secondary2-200"),
+  averageLabel: classNames("flex-none", "text-secondary2-500"),
+  averageValue: classNames("flex-none", "items-center", "text-xl", "text-secondary2-500"),
 
   resultDisplay: {
     root: classNames("flex", "flex-col", "items-center", "mr-3", "last-of-type:mr-6"),
