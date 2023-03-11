@@ -14,6 +14,8 @@ function PrivateRoute({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!state) {
       navigate("/signin", { state: { from: location }, replace: true });
+    } else {
+      navigate(location.pathname);
     }
   }, [state]);
 
@@ -55,7 +57,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/game/:gameId",
+        path: "/game/:gameId/round/:roundId",
         element: (
           <PrivateRoute>
             <LaziedRoundPage />
@@ -63,7 +65,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/game/:gameId/result",
+        path: "/game/:gameId/round/:roundId/result",
         element: (
           <PrivateRoute>
             <LaziedRoundResultPage />
