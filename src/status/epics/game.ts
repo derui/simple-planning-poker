@@ -17,8 +17,7 @@ type Epics =
   | "openGame"
   | "createGame"
   | "showDown"
-  | "observeOpenedGame"
-  | "observeJoinedGame";
+  | "observeOpenedGame";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -31,11 +30,11 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
     const gameObserver = registrar.resolve("gameObserver");
 
     return new Observable((subscriber) => {
+      subscriber.next(noopOnEpic());
+
       gameObserver.subscribe(payload.game.id, (game) => {
         subscriber.next(GameAction.notifyGameChanges(game));
       });
-
-      subscriber.next(noopOnEpic());
     });
   });
 };
@@ -310,6 +309,8 @@ export const gameEpic = (
   observeOpenedGame: (action$) =>
     action$.pipe(
       filter(GameAction.openGameSuccess.match),
-      map((v) => v.payload)
+      map((v) => v.payload),
+      observeGame(registrar),
+      commonCatchError
     ),
 });
