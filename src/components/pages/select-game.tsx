@@ -74,7 +74,7 @@ const styles = {
     "hover:text-secondary1-200",
     "hover:bg-secondary1-500"
   ),
-  empty: classNames("flex-auto", "text-center", "relative"),
+  empty: classNames("flex-auto", "text-center", "relative", "py-8", "px-3"),
   emptyText: classNames("relative", "align-middle", "text-lg", "font-bold"),
 } as const;
 
@@ -103,7 +103,7 @@ export function SelectGamePage() {
       <header className={styles.header}>Select game you already joined</header>
       <main className={styles.main.root}>{games.length > 0 ? gameComponents : <Empty />}</main>
       <footer className={styles.footer}>
-        <Link className={styles.opener} to="/game/create" role="button">
+        <Link className={styles.opener} to={"/game/create"} role="button">
           Create Game
         </Link>
       </footer>
