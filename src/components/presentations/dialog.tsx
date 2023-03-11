@@ -1,12 +1,15 @@
 import classNames from "classnames";
 import React, { PropsWithChildren } from "react";
 import { BaseProps, generateTestId } from "../base";
+import { Loader } from "./loader";
 
-export interface Props extends BaseProps {
+type ButtonState = "disabled" | "enabled" | "loading";
+
+interface Props extends BaseProps {
   title: string;
   onSubmitClick: () => void;
   buttonLabel?: string;
-  loading: boolean;
+  buttonState: ButtonState;
 }
 
 const styles = {
@@ -21,7 +24,7 @@ const styles = {
     "border-primary-400",
     "rounded",
     "shadow-md",
-    "z-20",
+    "z-0",
     "top-1/2",
     "left-1/2",
     "[transform:translate(-50%,-50%)]"
@@ -62,6 +65,9 @@ const styles = {
   ),
 
   footer: classNames(
+    "flex",
+    "flex-col",
+    "items-end",
     "flex-auto",
     "p-2",
     "bg-white",
@@ -74,22 +80,32 @@ const styles = {
     "text-secondary1-200"
   ),
 
-  submit: classNames(
-    "flex-auto",
-    "outline-none",
-    "border",
-    "border-secondary1-500",
-    "bg-secondary1-200",
-    "text-secondary1-500",
-    "px-3",
-    "py-2",
-    "rounded",
-    "cursor-pointer",
-    "transition-all",
-    "active:shadow-md",
-    "hover:text-secondary1-200",
-    "hover:bg-secondary1-500"
-  ),
+  submit: (state: ButtonState) =>
+    classNames(
+      "flex",
+      "flex-none",
+      "outline-none",
+      "border",
+      "px-3",
+      "py-2",
+      "rounded",
+      "cursor-pointer",
+      "items-center",
+      "justify-center",
+      "transition-all",
+      {
+        "text-gray": state !== "enabled",
+        "bg-lightgray/20": state !== "enabled",
+      },
+      {
+        "text-secondary1-500": state === "enabled",
+        "active:shadow-md": state === "enabled",
+        "hover:text-secondary1-200": state === "enabled",
+        "hover:bg-secondary1-500": state === "enabled",
+        "bg-secondary1-200": state === "enabled",
+        "border-secondary1-500": state === "enabled",
+      }
+    ),
 };
 
 // eslint-disable-next-line func-style
@@ -103,6 +119,8 @@ export function Dialog(props: PropsWithChildren<Props>) {
     props.onSubmitClick();
   };
 
+  const disabled = props.buttonState !== "enabled";
+
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <header className={styles.header} data-testid={gen("header")}>
@@ -110,7 +128,8 @@ export function Dialog(props: PropsWithChildren<Props>) {
       </header>
       <main className={styles.main}>{props.children}</main>
       <footer className={styles.footer}>
-        <button type="button" className={styles.submit} disabled={props.loading} onClick={handleClick}>
+        <button type="button" className={styles.submit(props.buttonState)} disabled={disabled} onClick={handleClick}>
+          <Loader size="s" shown={props.buttonState === "loading"} testid={gen("loader")} />
           {props.buttonLabel ?? "Submit"}
         </button>
       </footer>

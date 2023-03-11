@@ -11,6 +11,9 @@ const meta = {
   title: "Presentational/Dialog",
   component: Dialog,
   tags: ["autodocs"],
+  argTypes: {
+    buttonState: ["disabled", "enabled", "loading"],
+  },
 } satisfies Meta<typeof Dialog>;
 
 export default meta;
@@ -20,7 +23,7 @@ export const Empty: Story = {
   args: {
     title: "sample",
     onSubmitClick() {},
-    loading: false,
+    buttonState: "enabled",
   },
 };
 
@@ -28,7 +31,7 @@ export const WithChildren: Story = {
   args: {
     title: "sample",
     onSubmitClick() {},
-    loading: false,
+    buttonState: "enabled",
   },
   render(args) {
     return (

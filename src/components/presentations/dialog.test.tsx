@@ -7,7 +7,7 @@ import { Dialog } from "./dialog";
 afterEach(cleanup);
 
 test("should be able to render", () => {
-  render(<Dialog title="title" onSubmitClick={() => {}} loading={false} />);
+  render(<Dialog title="title" onSubmitClick={() => {}} buttonState="enabled" />);
 
   expect(screen.queryByText("title")).not.toBeNull();
   expect(screen.queryByText("Submit")?.tagName).toBe("BUTTON");
@@ -15,7 +15,7 @@ test("should be able to render", () => {
 
 test("display children", () => {
   render(
-    <Dialog title="title" onSubmitClick={() => {}} loading={false}>
+    <Dialog title="title" onSubmitClick={() => {}} buttonState="enabled">
       <span>child</span>
     </Dialog>
   );
@@ -31,7 +31,7 @@ test("handle click footer button", async () => {
       onSubmitClick={() => {
         expect(true);
       }}
-      loading={false}
+      buttonState="enabled"
     />
   );
 
@@ -39,7 +39,14 @@ test("handle click footer button", async () => {
 });
 
 test("disable button while loading", async () => {
-  render(<Dialog title="title" onSubmitClick={() => {}} loading={true} />);
+  render(<Dialog title="title" onSubmitClick={() => {}} buttonState="disabled" />);
 
   expect(screen.getByRole("button")).toHaveProperty("disabled", true);
+});
+
+test("show loader when loading", async () => {
+  render(<Dialog title="title" onSubmitClick={() => {}} buttonState="loading" />);
+
+  expect(screen.getByRole("button")).toHaveProperty("disabled", true);
+  expect(screen.queryByTestId("loader/root")).not.toBeNull();
 });

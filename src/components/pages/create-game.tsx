@@ -47,6 +47,7 @@ export function CreateGamePage() {
       })
     );
   };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -54,7 +55,7 @@ export function CreateGamePage() {
   };
 
   return (
-    <Dialog title="Create game" loading={!canSubmit} onSubmitClick={dispatchEvent}>
+    <Dialog title="Create game" buttonState={canSubmit ? "enabled" : "disabled"} onSubmitClick={dispatchEvent}>
       <form className={styles.main.input.container} onSubmit={handleSubmit}>
         <span className={styles.main.input.row}>
           <label htmlFor="name" className={styles.main.input.label}>

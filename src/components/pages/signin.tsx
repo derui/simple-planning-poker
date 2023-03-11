@@ -94,7 +94,12 @@ export function SignInPage(props: Props) {
           <span className={styles.dialogText}>Authenticating...</span>
         </div>
       </Overlay>
-      <Dialog title={title} onSubmitClick={handleSubmit} loading={authenticating} testid="signin">
+      <Dialog
+        title={title}
+        onSubmitClick={handleSubmit}
+        buttonState={authenticating ? "loading" : "enabled"}
+        testid="signin"
+      >
         <form className={styles.root} onSubmit={handleSubmit} data-testid={"root"}>
           <ul className={styles.inputContainer}>
             <li className={styles.inputTerm}>
