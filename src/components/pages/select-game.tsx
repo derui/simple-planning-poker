@@ -11,7 +11,7 @@ const styles = {
     "m-auto",
     "min-w-fit",
     "w-1/2",
-    "max-h-1/3",
+    "max-h-96",
     "shadow",
     "z-0",
     "border",
