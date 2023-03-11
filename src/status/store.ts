@@ -2,6 +2,8 @@ import { Action, configureStore } from "@reduxjs/toolkit";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
 // INJECT REDUCER IMPORT HERE
+import * as round from "./slices/round";
+
 import * as game from "./slices/game";
 
 import * as auth from "./slices/auth";
@@ -19,6 +21,8 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import type { Dependencies } from "@/dependencies";
 
 const reducers = {
+  round: round.reducer,
+
   game: game.reducer,
 
   auth: auth.reducer,
