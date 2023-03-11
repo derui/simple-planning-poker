@@ -1,11 +1,11 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
+import { HandCardUseCase } from "./hand-card";
 import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import { createMockedGameRepository } from "@/test-lib";
-import { HandCardUseCase } from "./hand-card";
 import * as UserHand from "@/domains/user-hand";
 
 const CARDS = SelectableCards.create([StoryPoint.create(1)]);

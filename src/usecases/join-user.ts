@@ -1,9 +1,9 @@
+import { EventDispatcher, UseCase } from "./base";
 import { GameRepository } from "@/domains/game-repository";
 import * as Invitation from "@/domains/invitation";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import { UserRepository } from "@/domains/user-repository";
-import { EventDispatcher, UseCase } from "./base";
 
 export interface JoinUserUseCaseInput {
   signature: Invitation.T;

@@ -1,7 +1,7 @@
+import { Database, onValue, ref } from "firebase/database";
 import { T, Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 import { UserObserver } from "@/contexts/observer";
-import { Database, onValue, ref } from "firebase/database";
 
 export class UserObserverImpl implements UserObserver {
   constructor(private database: Database, private userRepository: UserRepository) {}

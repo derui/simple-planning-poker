@@ -1,9 +1,9 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
+import { filter, map, switchMap, catchError, startWith, from, of } from "rxjs";
 import type { RootState } from "../store";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
-import { filter, map, switchMap, catchError, startWith, from, of } from "rxjs";
 import { changeName, changeNameFailure, changeNameSuccess } from "@/status/actions/user";
 
 type Epics = "changeUserName";

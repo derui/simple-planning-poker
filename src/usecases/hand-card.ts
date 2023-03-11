@@ -1,7 +1,7 @@
+import { UseCase } from "./base";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import * as UserHand from "@/domains/user-hand";
-import { UseCase } from "./base";
 import { GameRepository } from "@/domains/game-repository";
 
 export interface HandCardUseCaseInput {

@@ -1,10 +1,10 @@
 import { test, expect } from "vitest";
+import * as sinon from "sinon";
+import { CreateGameUseCase } from "./create-game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
-import { CreateGameUseCase } from "./create-game";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
-import * as sinon from "sinon";
 
 test("should return error if numbers is invalid", async () => {
   // Arrange

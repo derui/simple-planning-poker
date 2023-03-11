@@ -1,7 +1,7 @@
-import { unique } from "@/utils/array";
 import * as Card from "./card";
 import * as StoryPoint from "./story-point";
 import { Branded } from "./type";
+import { unique } from "@/utils/array";
 
 const Tag = Symbol("SelectableCards");
 export type T = Branded<Card.T[], typeof Tag>;

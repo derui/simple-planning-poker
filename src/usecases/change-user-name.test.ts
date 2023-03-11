@@ -1,8 +1,8 @@
 import { test, expect } from "vitest";
+import * as sinon from "sinon";
+import { ChangeUserNameUseCase } from "./change-user-name";
 import * as User from "@/domains/user";
 import { createMockedDispatcher, createMockedUserRepository } from "@/test-lib";
-import { ChangeUserNameUseCase } from "./change-user-name";
-import * as sinon from "sinon";
 
 test("should return error if user not found", async () => {
   // Arrange

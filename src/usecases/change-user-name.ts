@@ -1,6 +1,6 @@
+import { EventDispatcher, UseCase } from "./base";
 import * as User from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
-import { EventDispatcher, UseCase } from "./base";
 
 export interface ChangeUserNameInput {
   userId: User.Id;

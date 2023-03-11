@@ -1,12 +1,12 @@
 import { test, expect } from "vitest";
+import * as sinon from "sinon";
+import { ChangeUserModeUseCase } from "./change-user-mode";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import { createMockedGameRepository } from "@/test-lib";
-import * as sinon from "sinon";
-import { ChangeUserModeUseCase } from "./change-user-mode";
 
 test("should return error if user not found", async () => {
   // Arrange

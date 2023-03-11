@@ -1,4 +1,6 @@
 import { test, expect } from "vitest";
+import * as sinon from "sinon";
+import { NewRoundUseCase } from "./new-round";
 import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
@@ -6,8 +8,6 @@ import * as User from "@/domains/user";
 import * as Round from "@/domains/round";
 import * as UserHand from "@/domains/user-hand";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
-import { NewRoundUseCase } from "./new-round";
-import * as sinon from "sinon";
 import { dateTimeToString } from "@/domains/type";
 import { DOMAIN_EVENTS } from "@/domains/event";
 

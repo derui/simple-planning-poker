@@ -1,12 +1,12 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
+import { JoinUserUseCase } from "./join-user";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
 import * as Invitation from "@/domains/invitation";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import { createMockedDispatcher, createMockedGameRepository, createMockedUserRepository } from "@/test-lib";
-import { JoinUserUseCase } from "./join-user";
 import { DOMAIN_EVENTS } from "@/domains/event";
 
 test("should return error if user not found", async () => {

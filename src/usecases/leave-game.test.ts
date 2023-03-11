@@ -1,12 +1,12 @@
 import { test, expect } from "vitest";
 import sinon from "sinon";
+import { LeaveGameUseCase } from "./leave-game";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
 import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import { createMockedGameRepository } from "@/test-lib";
-import { LeaveGameUseCase } from "./leave-game";
 
 test("should return error if user not found", async () => {
   // Arrange

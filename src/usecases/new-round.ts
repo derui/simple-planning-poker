@@ -1,6 +1,6 @@
+import { EventDispatcher, UseCase } from "./base";
 import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
-import { EventDispatcher, UseCase } from "./base";
 
 export interface NewRoundUseCaseInput {
   gameId: Game.Id;

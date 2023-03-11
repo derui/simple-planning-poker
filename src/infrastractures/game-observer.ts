@@ -1,7 +1,7 @@
+import { Database, ref, onValue, Unsubscribe } from "firebase/database";
 import { GameObserver } from "@/contexts/observer";
 import { T, Id } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
-import { Database, ref, onValue, Unsubscribe } from "firebase/database";
 
 export class GameObserverImpl implements GameObserver {
   private _unsubscribe: Unsubscribe | null = null;

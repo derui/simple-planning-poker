@@ -1,7 +1,7 @@
+import { UseCase } from "./base";
 import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import * as User from "@/domains/user";
-import { UseCase } from "./base";
 
 export interface LeaveGameUseCaseInput {
   gameId: Game.Id;
