@@ -7,6 +7,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import { UserMode } from "@/domains/game-player";
+import { randomGame } from "@/test-lib";
 
 const [GAME] = Game.create({
   id: Game.createId(),
@@ -18,7 +19,7 @@ const [GAME] = Game.create({
 });
 
 test("initial state", () => {
-  expect(getInitialState()).toEqual({ currentGame: null, loading: false });
+  expect(getInitialState()).toEqual({ currentGame: null, loading: false, states: { creating: false } });
 });
 
 test("update game with giveUpSuccess", () => {
@@ -70,5 +71,25 @@ describe("loading", () => {
 
       expect(ret.loading).toBe(true);
     });
+  });
+});
+
+describe("states creating", () => {
+  test("should set creating while game creating", () => {
+    const ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
+
+    expect(ret.states.creating).toBe(true);
+  });
+  test("should not set creating after game creating failed", () => {
+    let ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
+    ret = reducer(ret, GameAction.createGameFailure({ reason: "reason" }));
+
+    expect(ret.states.creating).toBe(false);
+  });
+  test("should not set creating after game creating succeeded", () => {
+    let ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
+    ret = reducer(ret, GameAction.createGameSuccess(randomGame({})));
+
+    expect(ret.states.creating).toBe(false);
   });
 });

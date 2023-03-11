@@ -15,17 +15,26 @@ import {
   changeUserModeSuccess,
   showDownSuccess,
   newRoundSuccess,
+  createGame,
+  createGameSuccess,
+  createGameFailure,
 } from "../actions/game";
 import * as Game from "@/domains/game";
 
 interface GameState {
   currentGame: Game.T | null;
   loading: boolean;
+  states: {
+    creating: boolean;
+  };
 }
 
 const initialState = {
   currentGame: null,
   loading: false,
+  states: {
+    creating: false,
+  },
 } as GameState satisfies GameState;
 
 const updateCurrentGame = function updateCurrentGame(state: WritableDraft<GameState>, action: { payload: Game.T }) {
@@ -48,7 +57,6 @@ const slice = createSlice({
     builder.addCase(leaveGame, loading);
     builder.addCase(joinGame, loading);
     builder.addCase(openGame, loading);
-
     builder.addCase(giveUpSuccess, updateCurrentGame);
     builder.addCase(handCardSuccess, updateCurrentGame);
     builder.addCase(changeUserModeSuccess, updateCurrentGame);
@@ -64,6 +72,17 @@ const slice = createSlice({
       state.currentGame = null;
       state.loading = false;
     });
+
+    builder.addCase(createGame, (draft) => {
+      draft.states.creating = true;
+    });
+
+    builder.addMatcher(
+      (action) => createGameSuccess.match(action) || createGameFailure.match(action),
+      (draft) => {
+        draft.states.creating = false;
+      }
+    );
   },
 });
 
