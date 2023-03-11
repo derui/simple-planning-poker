@@ -3,6 +3,7 @@ import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-r
 import { useAppSelector } from "../components/hooks";
 import { selectAuthenticated } from "../status/selectors/auth";
 import lazyImport from "../utils/lazy-import";
+import { RootLayout } from "./layout";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
@@ -30,54 +31,61 @@ const LaziedSignUpPage = React.lazy(() => lazyImport(import("../components/pages
 export const routes = createBrowserRouter([
   {
     path: "/",
-    loader: async () => redirect("/game"),
-  },
-  {
-    path: "/game/create",
-    element: (
-      <PrivateRoute>
-        <LaziedCreateGamePage />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/game",
-    element: (
-      <PrivateRoute>
-        <LaziedSelectGamePage />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/game/:gameId",
-    element: (
-      <PrivateRoute>
-        <LaziedRoundPage />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/game/:gameId/result",
-    element: (
-      <PrivateRoute>
-        <LaziedRoundResultPage />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/invitation/:signature",
-    element: (
-      <PrivateRoute>
-        <LaziedJoinPage />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/signin",
-    element: <LaziedSignInPage />,
-  },
-  {
-    path: "/signup",
-    element: <LaziedSignUpPage />,
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        path: "/",
+        loader: async () => redirect("/game"),
+      },
+      {
+        path: "/game/create",
+        element: (
+          <PrivateRoute>
+            <LaziedCreateGamePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/game",
+        element: (
+          <PrivateRoute>
+            <LaziedSelectGamePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/game/:gameId",
+        element: (
+          <PrivateRoute>
+            <LaziedRoundPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/game/:gameId/result",
+        element: (
+          <PrivateRoute>
+            <LaziedRoundResultPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/invitation/:signature",
+        element: (
+          <PrivateRoute>
+            <LaziedJoinPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/signin",
+        element: <LaziedSignInPage />,
+      },
+      {
+        path: "/signup",
+        element: <LaziedSignUpPage />,
+      },
+    ],
   },
 ]);
