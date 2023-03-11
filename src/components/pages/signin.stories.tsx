@@ -19,14 +19,34 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Initial: Story = {
+export const SignIn: Story = {
+  args: {
+    method: "signIn",
+  },
   render() {
     const store = createPureStore();
 
     return (
       <Provider store={store}>
         <MemoryRouter>
-          <SignInPage />
+          <SignInPage method="signIn" />
+        </MemoryRouter>
+      </Provider>
+    );
+  },
+};
+
+export const SignUp: Story = {
+  args: {
+    method: "signUp",
+  },
+  render() {
+    const store = createPureStore();
+
+    return (
+      <Provider store={store}>
+        <MemoryRouter>
+          <SignInPage method="signUp" />
         </MemoryRouter>
       </Provider>
     );
