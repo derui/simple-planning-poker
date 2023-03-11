@@ -8,7 +8,7 @@
     "start:vite": "vite",
     "start": "concurrently --handle-input \"pnpm:copy-assets\" \"pnpm:start:*\"",
     "ci": "CI=true vite",
-    "start:emulators": "firebase emulators:start",
+    "start:emulators": "firebase emulators:start --import ./misc",
     "build:bundle": "NODE_ENV=production vite build",
     "copy-assets": "cpx 'assets/**' dist/static/",
     "build": "pnpm run build:bundle && pnpm run copy-assets",
