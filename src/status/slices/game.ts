@@ -18,22 +18,23 @@ import {
   createGame,
   createGameSuccess,
   createGameFailure,
+  initializeCreatingGame,
 } from "../actions/game";
 import * as Game from "@/domains/game";
 
 interface GameState {
   currentGame: Game.T | null;
   loading: boolean;
-  states: {
-    creating: boolean;
+  status: {
+    creating: "prepared" | "creating" | "created" | "failed";
   };
 }
 
 const initialState = {
   currentGame: null,
   loading: false,
-  states: {
-    creating: false,
+  status: {
+    creating: "prepared",
   },
 } as GameState satisfies GameState;
 
@@ -74,15 +75,17 @@ const slice = createSlice({
     });
 
     builder.addCase(createGame, (draft) => {
-      draft.states.creating = true;
+      draft.status.creating = "creating";
     });
-
-    builder.addMatcher(
-      (action) => createGameSuccess.match(action) || createGameFailure.match(action),
-      (draft) => {
-        draft.states.creating = false;
-      }
-    );
+    builder.addCase(createGameFailure, (draft) => {
+      draft.status.creating = "failed";
+    });
+    builder.addCase(createGameSuccess, (draft) => {
+      draft.status.creating = "created";
+    });
+    builder.addCase(initializeCreatingGame, (draft) => {
+      draft.status.creating = "prepared";
+    });
   },
 });
 

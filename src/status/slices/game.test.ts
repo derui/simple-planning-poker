@@ -19,7 +19,7 @@ const [GAME] = Game.create({
 });
 
 test("initial state", () => {
-  expect(getInitialState()).toEqual({ currentGame: null, loading: false, states: { creating: false } });
+  expect(getInitialState()).toEqual({ currentGame: null, loading: false, status: { creating: "prepared" } });
 });
 
 test("update game with giveUpSuccess", () => {
@@ -78,18 +78,25 @@ describe("states creating", () => {
   test("should set creating while game creating", () => {
     const ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
 
-    expect(ret.states.creating).toBe(true);
+    expect(ret.status.creating).toBe("creating");
   });
   test("should not set creating after game creating failed", () => {
     let ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
     ret = reducer(ret, GameAction.createGameFailure({ reason: "reason" }));
 
-    expect(ret.states.creating).toBe(false);
+    expect(ret.status.creating).toBe("failed");
   });
   test("should not set creating after game creating succeeded", () => {
     let ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
     ret = reducer(ret, GameAction.createGameSuccess(randomGame({})));
 
-    expect(ret.states.creating).toBe(false);
+    expect(ret.status.creating).toBe("created");
+  });
+
+  test("should return prepared when initialize action given", () => {
+    let ret = reducer(getInitialState(), GameAction.createGame({ name: "name", points: [] }));
+    ret = reducer(ret, GameAction.initializeCreatingGame());
+
+    expect(ret.status.creating).toBe("prepared");
   });
 });

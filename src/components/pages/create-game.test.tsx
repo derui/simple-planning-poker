@@ -2,18 +2,21 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import { CreateGamePage } from "./create-game";
 import { createPureStore } from "@/status/store";
 import { createGame } from "@/status/actions/game";
 
 afterEach(cleanup);
 
+const route = createMemoryRouter([{ path: "/", element: <CreateGamePage /> }]);
+
 test("render page", () => {
   const store = createPureStore();
 
   render(
     <Provider store={store}>
-      <CreateGamePage />
+      <RouterProvider router={route} />
     </Provider>
   );
 
@@ -29,7 +32,7 @@ test("dispatch event after submit", async () => {
 
   render(
     <Provider store={store}>
-      <CreateGamePage />
+      <RouterProvider router={route} />
     </Provider>
   );
 
@@ -51,7 +54,7 @@ test("should be disabled when points are empty", async () => {
 
   render(
     <Provider store={store}>
-      <CreateGamePage />
+      <RouterProvider router={route} />
     </Provider>
   );
 
@@ -66,7 +69,7 @@ test("should be disabled when points are invalid", async () => {
 
   render(
     <Provider store={store}>
-      <CreateGamePage />
+      <RouterProvider router={route} />
     </Provider>
   );
 

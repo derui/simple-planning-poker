@@ -1,9 +1,11 @@
 import classNames from "classnames";
-import { FormEvent, useState } from "react";
-import { useAppDispatch } from "../hooks";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { Dialog } from "../presentations/dialog";
 import { createGame } from "@/status/actions/game";
 import * as Game from "@/domains/game";
+import { selectGameCreatingStatus } from "@/status/selectors/game";
 
 const DEFAULT_POINTS = "1,2,3,5,8,13,21,34,55,89";
 
@@ -36,8 +38,10 @@ const styles = {
 export function CreateGamePage() {
   const [name, setName] = useState("");
   const [points, setPoints] = useState(DEFAULT_POINTS);
+  const status = useAppSelector(selectGameCreatingStatus());
   const canSubmit = Game.canChangeName(name) && points.split(",").filter((v) => v.trim() !== "").length > 0;
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const dispatchEvent = () => {
     dispatch(
@@ -48,14 +52,22 @@ export function CreateGamePage() {
     );
   };
 
+  const buttonState = status === "creating" ? "loading" : canSubmit ? "enabled" : "disabled";
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     dispatchEvent();
   };
 
+  useEffect(() => {
+    if (status === "created") {
+      navigate("/game");
+    }
+  }, [status]);
+
   return (
-    <Dialog title="Create game" buttonState={canSubmit ? "enabled" : "disabled"} onSubmitClick={dispatchEvent}>
+    <Dialog title="Create game" buttonState={buttonState} onSubmitClick={dispatchEvent}>
       <form className={styles.main.input.container} onSubmit={handleSubmit}>
         <span className={styles.main.input.row}>
           <label htmlFor="name" className={styles.main.input.label}>

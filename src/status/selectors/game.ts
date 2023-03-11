@@ -68,6 +68,13 @@ export type PlayerHandInfo = {
 };
 
 /**
+ * return status of creating
+ */
+export const selectGameCreatingStatus = function selectGameCreatingStatus() {
+  return createDraftSafeSelector(selectGame, (game) => game.status.creating);
+};
+
+/**
  * select player hand that did current player
  */
 export const selectPlayerHandedCard = function selectPlayerHandedCard() {

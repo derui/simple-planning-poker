@@ -43,6 +43,7 @@ export const openGameSuccess = createAction<OpenedGamePayload>(`${prefix}:openGa
 export const openGameFailure = createAction<{ reason: string }>(`${prefix}:openGameFailure`);
 
 // create game
+export const initializeCreatingGame = createAction(`${prefix}:initializeCreatingGame`);
 export const createGame = createAction<{ name: string; points: number[] }>(`${prefix}:createGame`);
 export const createGameSuccess = createAction<Game.T>(`${prefix}:createGameSuccess`);
 export const createGameFailure = createAction<{ reason: string }>(`${prefix}:createGameFailure`);
