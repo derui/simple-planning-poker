@@ -1,10 +1,12 @@
 import classNames from "classnames";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { SignIn } from "../presentations/signin";
 import { Overlay } from "../presentations/overlay";
 import { Loader } from "../presentations/loader";
 import { signIn } from "@/status/actions/signin";
-import { selectAuthenticating } from "@/status/selectors/auth";
+import { selectAuthenticated, selectAuthenticating } from "@/status/selectors/auth";
 
 const styles = {
   root: classNames("h-full", "w-full"),
@@ -27,11 +29,19 @@ const styles = {
 // eslint-disable-next-line func-style
 export function SignInPage() {
   const authenticating = useAppSelector(selectAuthenticating());
+  const authenticated = useAppSelector(selectAuthenticated());
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = ({ email, password }: { email: string; password: string }) => {
     dispatch(signIn({ email, password }));
   };
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate("/game", { replace: true });
+    }
+  }, [authenticated]);
 
   return (
     <div className={styles.root}>
@@ -44,9 +54,9 @@ export function SignInPage() {
       <SignIn title="Sign In" onSubmit={handleSubmit} authenticating={authenticating} testid="signin">
         <p className={styles.children}>
           or{" "}
-          <a className={styles.link} href="/signup">
+          <Link className={styles.link} to={"/signup"}>
             Sign up
-          </a>
+          </Link>
         </p>
       </SignIn>
     </div>

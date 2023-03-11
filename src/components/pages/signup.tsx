@@ -1,10 +1,12 @@
 import classNames from "classnames";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { SignIn } from "../presentations/signin";
 import { Overlay } from "../presentations/overlay";
 import { Loader } from "../presentations/loader";
 import { signUp } from "@/status/actions/signin";
-import { selectAuthenticating } from "@/status/selectors/auth";
+import { selectAuthenticated, selectAuthenticating } from "@/status/selectors/auth";
 
 const styles = {
   overlayDialog: classNames(
@@ -24,11 +26,19 @@ const styles = {
 // eslint-disable-next-line func-style
 export function SignUpPage() {
   const authenticating = useAppSelector(selectAuthenticating());
+  const authenticated = useAppSelector(selectAuthenticated());
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = ({ email, password }: { email: string; password: string }) => {
     dispatch(signUp({ email, password }));
   };
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate("/game", { replace: true });
+    }
+  }, [authenticated]);
 
   return (
     <div>
@@ -38,7 +48,7 @@ export function SignUpPage() {
           <span className={styles.dialogText}>Authenticating...</span>
         </div>
       </Overlay>
-      <SignIn title="Sign In" onSubmit={handleSubmit} authenticating={authenticating} testid="signin"></SignIn>
+      <SignIn title="Sign Up" onSubmit={handleSubmit} authenticating={authenticating} testid="signin"></SignIn>
     </div>
   );
 }
