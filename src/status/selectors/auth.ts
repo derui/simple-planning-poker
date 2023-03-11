@@ -12,3 +12,9 @@ export const selectAuthenticating = function selectAuthenticating() {
     return auth.authenticating;
   });
 };
+
+export const selectAuthenticated = function selectAuthenticated() {
+  return createDraftSafeSelector(selectAuth, (auth) => {
+    return auth.progress === "authenticated";
+  });
+};
