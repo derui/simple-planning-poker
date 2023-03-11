@@ -358,7 +358,7 @@ describe("join game", () => {
 
     const ret = await firstValueFrom(epics.joinGame(action$, state$, null));
 
-    expect(ret).toEqual(GameAction.joinGameSuccess(game));
+    expect(ret).toEqual(GameAction.openGame(game.id));
   });
 });
 

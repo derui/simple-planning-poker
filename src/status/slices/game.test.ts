@@ -48,12 +48,6 @@ test("update game with action notifying game changes", () => {
   expect(ret.currentGame).toBe(GAME);
   expect(ret.loading).toBe(false);
 });
-test("update game with action joining game", () => {
-  const ret = reducer(getInitialState(), GameAction.joinGameSuccess(GAME));
-
-  expect(ret.currentGame).toBe(GAME);
-  expect(ret.loading).toBe(false);
-});
 test("update game with action opening game", () => {
   let ret = reducer(getInitialState(), GameAction.openGame(GAME.id));
   ret = reducer(ret, GameAction.openGameSuccess({ game: GAME, players: [] }));

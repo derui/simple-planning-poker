@@ -1,7 +1,8 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
-import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
+import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction, Observable } from "rxjs";
 import type { RootState } from "../store";
+import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
@@ -15,13 +16,29 @@ type Epics =
   | "joinGame"
   | "openGame"
   | "createGame"
-  | "showDown";
+  | "showDown"
+  | "observeOpenedGame"
+  | "observeJoinedGame";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
 
   return source.pipe(startWith(GameAction.somethingFailure("failed with exception")));
 });
+
+const observeGame = function observeGame(registrar: DependencyRegistrar<Dependencies>) {
+  return switchMap((payload: GameAction.OpenedGamePayload) => {
+    const gameObserver = registrar.resolve("gameObserver");
+
+    return new Observable((subscriber) => {
+      gameObserver.subscribe(payload.game.id, (game) => {
+        subscriber.next(GameAction.notifyGameChanges(game));
+      });
+
+      subscriber.next(noopOnEpic());
+    });
+  });
+};
 
 export const gameEpic = (
   registrar: DependencyRegistrar<Dependencies>
@@ -172,7 +189,7 @@ export const gameEpic = (
           map((output) => {
             switch (output.kind) {
               case "success":
-                return GameAction.joinGameSuccess(output.game);
+                return GameAction.openGame(output.game.id);
               default:
                 return GameAction.somethingFailure(output.kind);
             }
@@ -289,5 +306,10 @@ export const gameEpic = (
         );
       }),
       commonCatchError
+    ),
+  observeOpenedGame: (action$) =>
+    action$.pipe(
+      filter(GameAction.openGameSuccess.match),
+      map((v) => v.payload)
     ),
 });

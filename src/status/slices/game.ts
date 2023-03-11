@@ -4,7 +4,6 @@ import {
   giveUp,
   giveUpSuccess,
   handCardSuccess,
-  joinGameSuccess,
   leaveGameSuccess,
   notifyGameChanges,
   openGameSuccess,
@@ -54,7 +53,6 @@ const slice = createSlice({
     builder.addCase(handCardSuccess, updateCurrentGame);
     builder.addCase(changeUserModeSuccess, updateCurrentGame);
     builder.addCase(notifyGameChanges, updateCurrentGame);
-    builder.addCase(joinGameSuccess, updateCurrentGame);
     builder.addCase(showDownSuccess, updateCurrentGame);
     builder.addCase(newRoundSuccess, updateCurrentGame);
     builder.addCase(openGameSuccess, (draft, { payload }) => {

@@ -6,6 +6,11 @@ import { UserMode } from "@/domains/game-player";
 
 const prefix = "gamePlayer";
 
+export interface OpenedGamePayload {
+  game: Game.T;
+  players: User.T[];
+}
+
 // common failure.
 export const somethingFailure = createAction<string>(`${prefix}:somethingFailure`);
 
@@ -30,12 +35,11 @@ export const leaveGameSuccess = createAction(`${prefix}:leaveGameSuccess`);
 
 // join to the game.
 export const joinGame = createAction<Invitation.T>(`${prefix}:joinGame`);
-export const joinGameSuccess = createAction<Game.T>(`${prefix}:joinGameSuccess`);
 export const joinGameFailure = createAction<{ reason: string }>(`${prefix}:joinGameFailure`);
 
 // select game user already joined
 export const openGame = createAction<Game.Id>(`${prefix}:openGame`);
-export const openGameSuccess = createAction<{ game: Game.T; players: User.T[] }>(`${prefix}:openGameSuccess`);
+export const openGameSuccess = createAction<OpenedGamePayload>(`${prefix}:openGameSuccess`);
 export const openGameFailure = createAction<{ reason: string }>(`${prefix}:openGameFailure`);
 
 // create game
