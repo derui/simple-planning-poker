@@ -7,8 +7,7 @@ const styles = {
   root: classNames(
     "flex",
     "flex-col",
-    "relative",
-    "m-auto",
+    "absolute",
     "min-w-fit",
     "w-1/2",
     "max-h-96",
@@ -16,7 +15,10 @@ const styles = {
     "z-0",
     "border",
     "border-primary-400",
-    "rounded"
+    "rounded",
+    "top-1/2",
+    "left-1/2",
+    "[transform:translate(-50%,-50%)]"
   ),
   header: classNames("flex-none", "p-2", "text-lg", "font-bold", "rounded-t", "bg-primary-400", "text-secondary1-200"),
   main: {
