@@ -9,6 +9,8 @@ export class GameObserverImpl implements GameObserver {
   constructor(private database: Database, private gameRepository: GameRepository) {}
 
   subscribe(gameId: Id, subscriber: (game: T) => void): void {
+    this.unsubscribe();
+
     this.subscribingGameId = gameId;
     const _subscriber = async () => {
       const game = await this.gameRepository.findBy(gameId);
