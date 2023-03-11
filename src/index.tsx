@@ -4,7 +4,7 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import * as ReactDOM from "react-dom/client";
 import { install } from "@twind/core";
 import { Provider } from "react-redux";
-import { App } from "./app";
+import { RouterProvider } from "react-router";
 import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
@@ -27,6 +27,7 @@ import { RoundRepositoryImpl } from "./infrastractures/round-repository";
 import { NewRoundUseCase } from "./usecases/new-round";
 import { createStore } from "./status/store";
 import { tryAuthenticate } from "./status/actions/signin";
+import { routes } from "./routes/root";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -71,7 +72,7 @@ const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <Provider store={store}>
     <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-      <App />
+      <RouterProvider router={routes} />
     </gameObserverContext.Provider>
   </Provider>
 );
