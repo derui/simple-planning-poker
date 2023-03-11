@@ -53,18 +53,15 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "eslint_d": "^12.2.1",
     "firebase-tools": "^11.23.1",
     "hygen": "^6.2.11",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
-    "redux-observable": "^2.0.0",
     "sinon": "^15.0.1",
     "storybook": "7.0.0-beta.61",
     "stylelint": "^15.2.0",
     "stylelint-config-standard": "^30.0.1",
     "stylelint-prettier": "^2.0.0",
-    "tailwindcss": "^3.2.7",
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vitest": "^0.29.2"
@@ -85,6 +82,7 @@
     "react-router-dom": "^6.9.0",
     "react-transition-group": "^4.4.5",
     "redux": "^4.2.1",
+    "redux-observable": "^2.0.0",
     "rxjs": "^7.8.0",
     "uuid": "^9.0.0"
   }
