@@ -1,9 +1,11 @@
 import { expect, test } from "vitest";
 import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions/signin";
 import { changeNameSuccess } from "../actions/user";
+import { createGameSuccess } from "../actions/game";
 import { getInitialState, reducer } from "./user";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import { randomGame } from "@/test-lib";
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({
@@ -76,4 +78,17 @@ test("get changed user when current user set-upped", () => {
   state = reducer(state, changeNameSuccess(User.changeName(user, "foobar")[0]));
 
   expect(state.currentUser?.name).toEqual("foobar");
+});
+
+test("should add joined game when user created a game", () => {
+  const user = User.create({
+    id: User.createId(),
+    name: "name",
+  });
+  const game = randomGame({ owner: user.id });
+
+  let state = reducer(getInitialState(), signUpSuccess({ user }));
+  state = reducer(state, createGameSuccess(game));
+
+  expect(state.currentUserJoinedGames).toEqual({ [game.id]: game.name });
 });

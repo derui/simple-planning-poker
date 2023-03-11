@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions/signin";
 import { changeNameSuccess, notifyOtherUserChanged } from "../actions/user";
-import { openGameSuccess } from "../actions/game";
+import { createGameSuccess, openGameSuccess } from "../actions/game";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 
@@ -44,6 +44,10 @@ const slice = createSlice({
 
     builder.addCase(notifyOtherUserChanged, (draft, { payload }) => {
       draft.users[payload.id] = payload;
+    });
+
+    builder.addCase(createGameSuccess, (draft, { payload }) => {
+      draft.currentUserJoinedGames[payload.id] = payload.name;
     });
 
     builder.addCase(changeNameSuccess, (draft, { payload }) => {
