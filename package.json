@@ -16,7 +16,7 @@
     "deploy:production": "firebase deploy",
     "publish:preview": "pnpm run build && pnpm run deploy:preview",
     "publish:production": "pnpm run build && pnpm run deploy:production",
-    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix --ext .ts,.tsx src/ts/",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix --ext .ts,.tsx src/",
     "test": "firebase emulators:exec 'npx vitest run'",
     "test:watch": "firebase emulators:exec 'npx vitest watch'",
     "storybook": "storybook dev -p 6006",
