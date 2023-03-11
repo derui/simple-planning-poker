@@ -1,4 +1,4 @@
-import { GenericDomainEvent } from "@/domains/event";
+import { DomainEvent } from "@/domains/event";
 
 // base interface for use case
 export interface UseCase<I, O = void> {
@@ -7,5 +7,5 @@ export interface UseCase<I, O = void> {
 
 // interface to dispatch event
 export interface EventDispatcher {
-  dispatch(event: GenericDomainEvent): void;
+  dispatch(event: DomainEvent): void;
 }

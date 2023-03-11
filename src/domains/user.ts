@@ -1,6 +1,6 @@
 import produce from "immer";
 import * as Base from "./base";
-import { DomainEvent, DOMAIN_EVENTS, GenericDomainEvent } from "./event";
+import { DomainEvent, DOMAIN_EVENTS } from "./event";
 
 export type Id = Base.Id<"User">;
 
@@ -17,7 +17,8 @@ export interface T {
   readonly name: string;
 }
 
-export interface UserNameChanged extends DomainEvent<"UserNameChanged"> {
+export interface UserNameChanged extends DomainEvent {
+  readonly kind: "UserNameChanged";
   userId: Id;
   name: string;
 }
@@ -40,7 +41,7 @@ export const canChangeName = (name: string) => {
   return name !== "";
 };
 
-export const changeName = (user: T, name: string): [T, GenericDomainEvent] => {
+export const changeName = (user: T, name: string): [T, DomainEvent] => {
   if (!canChangeName(name)) {
     throw new Error("can not change name");
   }

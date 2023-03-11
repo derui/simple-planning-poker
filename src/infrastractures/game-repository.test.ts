@@ -95,12 +95,12 @@ test("should be able to list games an user joined", async () => {
   const otherGameId = Game.createId();
 
   await update(ref(database), {
-    [`${joinedGames(User.createId("1"))}/${gameId}`]: "name",
-    [`${joinedGames(User.createId("1"))}/${otherGameId}`]: "name2",
-    [`${joinedGames(User.createId("2"))}/${gameId}`]: "name",
-    [`${joinedGames(User.createId("3"))}/${otherGameId}`]: "name2",
-    [`${joinedGames(User.createId("4"))}/${gameId}`]: "name",
-    [`${joinedGames(User.createId("5"))}/${otherGameId}`]: "name2",
+    [`${joinedGames(User.createId("1"))}/${gameId}`]: { name: "name" },
+    [`${joinedGames(User.createId("1"))}/${otherGameId}`]: { name: "name2" },
+    [`${joinedGames(User.createId("2"))}/${gameId}`]: { name: "name" },
+    [`${joinedGames(User.createId("3"))}/${otherGameId}`]: { name: "name2" },
+    [`${joinedGames(User.createId("4"))}/${gameId}`]: { name: "name" },
+    [`${joinedGames(User.createId("5"))}/${otherGameId}`]: { name: "name2" },
   });
 
   // Act

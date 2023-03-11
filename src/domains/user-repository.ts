@@ -2,7 +2,7 @@ import { T, Id } from "./user";
 
 export interface UserRepository {
   // save user
-  save(user: T): void;
+  save(user: T): Promise<void>;
 
   // find user by id
   findBy(id: Id): Promise<T | undefined>;

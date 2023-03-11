@@ -1,6 +1,6 @@
 import produce from "immer";
 import * as Base from "./base";
-import { DomainEvent, DOMAIN_EVENTS, GenericDomainEvent } from "./event";
+import { DomainEvent, DOMAIN_EVENTS } from "./event";
 import * as User from "./user";
 import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
@@ -25,19 +25,31 @@ export interface T {
   readonly finishedRounds: Round.Id[];
 }
 
-export interface NewRoundStarted extends DomainEvent<"NewRoundStarted"> {
+export interface NewRoundStarted extends DomainEvent {
+  readonly kind: "NewRoundStarted";
   readonly gameId: Id;
   readonly roundId: Round.Id;
 }
 
-export interface GameCreated extends DomainEvent<"GameCreated"> {
+export const isNewRoundStarted = function isNewRoundStarted(event: DomainEvent): event is NewRoundStarted {
+  return event.kind === "NewRoundStarted";
+};
+
+export interface GameCreated extends DomainEvent {
+  readonly kind: "GameCreated";
   gameId: Id;
+  owner: User.Id;
   name: string;
   createdBy: User.Id;
   selectableCards: SelectableCards.T;
 }
 
-export interface UserJoined extends DomainEvent<"UserJoined"> {
+export const isGameCreated = function isGameCreated(event: DomainEvent): event is GameCreated {
+  return event.kind === "GameCreated";
+};
+
+export interface UserJoined extends DomainEvent {
+  readonly kind: "UserJoined";
   gameId: Id;
   userId: User.Id;
 }
@@ -58,7 +70,7 @@ export const create = ({
   cards: SelectableCards.T;
   round?: Round.T;
   finishedRounds: Round.Id[];
-}): [T, GenericDomainEvent] => {
+}): [T, DomainEvent] => {
   const distinctedPlayers = new Map(joinedPlayers.map((v) => [v.user, v]));
   if (!distinctedPlayers.has(owner)) {
     distinctedPlayers.set(owner, { user: owner, mode: GamePlayer.UserMode.normal });
@@ -67,6 +79,7 @@ export const create = ({
   const event: GameCreated = {
     kind: "GameCreated",
     gameId: id,
+    owner,
     name: name,
     createdBy: owner,
     selectableCards: cards,
@@ -113,7 +126,7 @@ export const changeName = function changeName(game: T, name: string) {
   });
 };
 
-export const newRound = function newRound(game: T): [T, GenericDomainEvent] {
+export const newRound = function newRound(game: T): [T, DomainEvent] {
   if (Round.isRound(game.round)) {
     throw new Error("Can not open new round because it is not finished yet");
   }
@@ -148,7 +161,7 @@ export const declarePlayerTo = function declarePlayerTo(game: T, user: User.Id, 
   });
 };
 
-export const joinUser = function joinUser(game: T, user: User.Id, invitation: Invitation.T): [T, GenericDomainEvent] {
+export const joinUser = function joinUser(game: T, user: User.Id, invitation: Invitation.T): [T, DomainEvent] {
   if (invitation !== makeInvitation(game)) {
     throw new Error("This signature is invalid");
   }
@@ -190,7 +203,7 @@ export const isShowedDown = function isShowedDown(game: T) {
 /**
  * show down current round of the game
  */
-export const showDown = function showDown(game: T, now: Date): [T, GenericDomainEvent] {
+export const showDown = function showDown(game: T, now: Date): [T, DomainEvent] {
   const round = game.round;
   if (!Round.isRound(round)) {
     throw new Error("Can not show down. should start new round");

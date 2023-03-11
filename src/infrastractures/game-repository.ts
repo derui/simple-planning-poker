@@ -100,7 +100,7 @@ export class GameRepositoryImpl implements GameRepository {
     }
 
     const ret = Object.entries(val).map(([key, value]) => {
-      return { id: Game.createId(key), name: value as string };
+      return { id: Game.createId(key), name: (value as any).name as string };
     });
 
     return ret;

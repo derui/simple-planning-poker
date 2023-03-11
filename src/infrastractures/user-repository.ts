@@ -13,12 +13,12 @@ export class UserRepositoryImpl implements UserRepository {
     return users.filter(filterUndefined);
   }
 
-  save(user: User.T): void {
+  async save(user: User.T): Promise<void> {
     const databaseRef = ref(this.database);
     const updates: { [key: string]: any } = {};
     updates[UserRefResolver.name(user.id)] = user.name;
 
-    update(databaseRef, updates);
+    await update(databaseRef, updates);
   }
 
   async findBy(id: User.Id): Promise<User.T | undefined> {

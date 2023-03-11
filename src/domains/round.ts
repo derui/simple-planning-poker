@@ -4,7 +4,7 @@ import * as User from "./user";
 import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
 import { Branded, DateTime, dateTimeToString } from "./type";
-import { GenericDomainEvent, DOMAIN_EVENTS, DomainEvent } from "./event";
+import { DomainEvent, DOMAIN_EVENTS } from "./event";
 import * as Base from "@/domains/base";
 
 /**
@@ -47,7 +47,8 @@ export type Round = {
 
 export type T = Round | FinishedRound;
 
-export interface RoundFinished extends DomainEvent<"RoundFinished"> {
+export interface RoundFinished extends DomainEvent {
+  readonly kind: "RoundFinished";
   roundId: Id;
 }
 
@@ -144,7 +145,7 @@ export const canShowDown = function canShowDown(round: T) {
 /**
  * finish a round. Throw error if round has no hand.
  */
-export const showDown = function showDown(round: Round, now: Date): [FinishedRound, GenericDomainEvent] {
+export const showDown = function showDown(round: Round, now: Date): [FinishedRound, DomainEvent] {
   if (!canShowDown(round)) {
     throw new Error("Can not finish round because it has no hand");
   }

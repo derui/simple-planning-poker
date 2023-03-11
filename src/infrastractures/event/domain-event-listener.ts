@@ -1,6 +1,6 @@
-import { DefinedDomainEvents } from "@/domains/event";
+import { DomainEvent, DomainEvent } from "@/domains/event";
 
 // listener interface for domain events
 export interface DomainEventListener {
-  handle(event: DefinedDomainEvents): void;
+  handle(event: DomainEvent): void;
 }

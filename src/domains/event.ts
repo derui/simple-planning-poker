@@ -1,11 +1,6 @@
 // A base event interface
-export interface GenericDomainEvent {
-  kind: string;
-}
-
-// abstract interface.
-export interface DomainEvent<Kind extends keyof DomainEvents> extends GenericDomainEvent {
-  kind: Kind;
+export interface DomainEvent {
+  kind: keyof DomainEvents;
 }
 
 // define event kinds
