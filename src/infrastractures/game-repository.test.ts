@@ -1,6 +1,7 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { get, ref, update } from "firebase/database";
+import { v4 } from "uuid";
 import { GameRepositoryImpl } from "./game-repository";
 import { RoundRepositoryImpl } from "./round-repository";
 import { joinedGames } from "./user-ref-resolver";
@@ -15,7 +16,7 @@ let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
   testEnv = await initializeTestEnvironment({
-    projectId: "demo-project-1234",
+    projectId: v4(),
     database: {},
   });
   database = testEnv.authenticatedContext("alice").database();
