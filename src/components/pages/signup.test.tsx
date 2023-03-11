@@ -2,6 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { Provider } from "react-redux";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router";
 import { SignUpPage } from "./signup";
 import { createPureStore } from "@/status/store";
 import { signUp } from "@/status/actions/signin";
@@ -13,7 +14,9 @@ test("render page", () => {
 
   render(
     <Provider store={store}>
-      <SignUpPage />
+      <MemoryRouter>
+        <SignUpPage />
+      </MemoryRouter>
     </Provider>
   );
 
@@ -34,7 +37,9 @@ test("dispatch event after submit", async () => {
 
   render(
     <Provider store={store}>
-      <SignUpPage />
+      <MemoryRouter>
+        <SignUpPage />
+      </MemoryRouter>
     </Provider>
   );
 

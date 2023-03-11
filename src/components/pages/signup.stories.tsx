@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { install } from "@twind/core";
 
 import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router";
 import { SignUpPage } from "./signup";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
@@ -24,7 +25,9 @@ export const Initial: Story = {
 
     return (
       <Provider store={store}>
-        <SignUpPage />
+        <MemoryRouter>
+          <SignUpPage />
+        </MemoryRouter>
       </Provider>
     );
   },
