@@ -3,13 +3,20 @@ import { firstValueFrom, NEVER, of } from "rxjs";
 import { StateObservable } from "redux-observable";
 import sinon from "sinon";
 import { createPureStore } from "../store";
+import { noopOnEpic } from "../actions/common";
+import { notifyOtherUserChanged } from "../actions/user";
 import { authEpic } from "./auth";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import * as SignInAction from "@/status/actions/signin";
-import { createMockedAuthenticator, createMockedGameRepository, createMockedUserRepository } from "@/test-lib";
+import {
+  createMockedAuthenticator,
+  createMockedGameRepository,
+  createMockedUserObserver,
+  createMockedUserRepository,
+} from "@/test-lib";
 
 describe("try authenticate", () => {
   test("get current user if exists", async () => {
@@ -144,5 +151,83 @@ describe("sign up", () => {
     expect(signUp.lastCall.firstArg).toBe("email");
     expect(signUp.lastCall.args[1]).toBe("email");
     expect(signUp.lastCall.args[2]).toBe("password");
+  });
+});
+
+describe("observe user after tryAuthenticate", () => {
+  test("get noop when no value from subscription", async () => {
+    const registrar = createDependencyRegistrar<Dependencies>();
+    const epics = authEpic(registrar);
+    const store = createPureStore();
+
+    const user = User.create({ id: User.createId(), name: "user" });
+
+    const currentUserIdIfExists = sinon.fake.resolves(user.id);
+    registrar.register(
+      "authenticator",
+      createMockedAuthenticator({
+        currentUserIdIfExists: currentUserIdIfExists,
+      })
+    );
+    const subscribe = sinon.fake();
+    registrar.register("userObserver", createMockedUserObserver({ subscribe }));
+    registrar.register(
+      "userRepository",
+      createMockedUserRepository({
+        findBy: sinon.fake.resolves(user),
+      })
+    );
+
+    registrar.register("gameRepository", createMockedGameRepository());
+
+    const action$ = of(SignInAction.tryAuthenticateSuccess({ user, joinedGames: {} }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.observeUserAfterTryAuthenticate(action$, state$, null));
+
+    expect(ret).toEqual(noopOnEpic());
+    expect(subscribe.lastCall.firstArg).toBe(user.id);
+  });
+
+  test("notify user when observer call callback", async () => {
+    const registrar = createDependencyRegistrar<Dependencies>();
+    const epics = authEpic(registrar);
+    const store = createPureStore();
+
+    const user = User.create({ id: User.createId(), name: "user" });
+
+    const currentUserIdIfExists = sinon.fake.resolves(user.id);
+    registrar.register(
+      "authenticator",
+      createMockedAuthenticator({
+        currentUserIdIfExists: currentUserIdIfExists,
+      })
+    );
+
+    const changed = User.changeName(user, "changed")[0];
+    const observer = {
+      subscribe(_id: any, callback: any) {
+        callback(changed);
+
+        return () => {};
+      },
+    };
+    registrar.register("userObserver", observer);
+    registrar.register(
+      "userRepository",
+      createMockedUserRepository({
+        findBy: sinon.fake.resolves(user),
+      })
+    );
+
+    registrar.register("gameRepository", createMockedGameRepository());
+
+    const action$ = of(SignInAction.tryAuthenticateSuccess({ user, joinedGames: {} }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret$ = epics.observeUserAfterTryAuthenticate(action$, state$, null);
+    const ret = await firstValueFrom(ret$);
+
+    expect(ret).toEqual(notifyOtherUserChanged(changed));
   });
 });

@@ -11,6 +11,7 @@ import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { ShowDownUseCase } from "./usecases/show-down";
+import { UserObserver } from "./contexts/observer";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as Game from "@/domains/game";
@@ -95,6 +96,12 @@ export const createMockedAuthenticator = function createMockedAuthenticator(mock
     signIn: mock.signIn ?? sinon.fake(),
     signUp: mock.signUp ?? sinon.fake(),
   } as Authenticator;
+};
+
+export const createMockedUserObserver = function createMockedUserObserver(mock: Partial<UserObserver> = {}) {
+  return {
+    subscribe: mock.subscribe ?? sinon.fake(),
+  } as UserObserver;
 };
 
 export const randomCards = function randomCards() {

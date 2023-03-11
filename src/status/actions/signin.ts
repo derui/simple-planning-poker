@@ -4,7 +4,7 @@ import * as Game from "@/domains/game";
 
 const prefix = "signin";
 
-interface AuthenticationSuccess {
+export interface AuthenticationSuccess {
   user: User.T;
   joinedGames?: Record<Game.Id, string>;
 }
@@ -23,3 +23,6 @@ export const signInFailure = createAction(`${prefix}:signInFailure`);
 export const signUp = createAction<{ email: string; password: string }>(`${prefix}:signUp`);
 export const signUpSuccess = createAction<AuthenticationSuccess>(`${prefix}:signUpSuccess`);
 export const signUpFailure = createAction(`${prefix}:signUpFailure`);
+
+// common failure to user observing
+export const observingFailure = createAction(`${prefix}:observingFailure`);

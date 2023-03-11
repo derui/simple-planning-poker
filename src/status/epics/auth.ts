@@ -1,14 +1,22 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
-import { catchError, filter, from, map, of, startWith, switchMap } from "rxjs";
+import { catchError, filter, from, map, Observable, of, OperatorFunction, startWith, switchMap, tap } from "rxjs";
 import type { RootState } from "../store";
+import { notifyOtherUserChanged } from "../actions/user";
+import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as SignIn from "@/status/actions/signin";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
 
-type Epics = "tryAuthenticate" | "signIn" | "signUp";
+type Epics =
+  | "tryAuthenticate"
+  | "signIn"
+  | "signUp"
+  | "observeUserAfterSignIn"
+  | "observeUserAfterTryAuthenticate"
+  | "observeUserAfterSignUp";
 
 const getAuthenticationSuccess = function getAuthenticationSuccess(registrar: DependencyRegistrar<Dependencies>) {
   return switchMap((user: User.T | undefined) => {
@@ -40,6 +48,22 @@ const getUser = function getUser(registrar: DependencyRegistrar<Dependencies>) {
     const repository = registrar.resolve("userRepository");
 
     return from(repository.findBy(ret));
+  });
+};
+
+const observeUser = function observeUser(
+  registrar: DependencyRegistrar<Dependencies>
+): OperatorFunction<SignIn.AuthenticationSuccess, Action> {
+  return switchMap((payload: SignIn.AuthenticationSuccess) => {
+    const observer = registrar.resolve("userObserver");
+
+    return new Observable((subscriber) => {
+      observer.subscribe(payload.user.id, (user) => {
+        subscriber.next(notifyOtherUserChanged(user));
+      });
+
+      subscriber.next(noopOnEpic());
+    });
   });
 };
 
@@ -119,6 +143,40 @@ export const authEpic = (
         console.error(e);
 
         return source.pipe(startWith(SignIn.signUpFailure()));
+      })
+    ),
+  observeUserAfterSignUp: (action$) =>
+    action$.pipe(
+      filter(SignIn.signUpSuccess.match),
+      map(({ payload }) => payload),
+      observeUser(registrar),
+      catchError((e, source) => {
+        console.error(e);
+
+        return source.pipe(startWith(SignIn.observingFailure()));
+      })
+    ),
+  observeUserAfterTryAuthenticate: (action$) =>
+    action$.pipe(
+      filter(SignIn.tryAuthenticateSuccess.match),
+      map(({ payload }) => payload),
+      observeUser(registrar),
+      catchError((e, source) => {
+        console.error(e);
+
+        return source.pipe(startWith(SignIn.observingFailure()));
+      })
+    ),
+  observeUserAfterSignIn: (action$) =>
+    action$.pipe(
+      filter(SignIn.signInSuccess.match),
+      map(({ payload }) => payload),
+      observeUser(registrar),
+      tap(console.log),
+      catchError((e, source) => {
+        console.error(e);
+
+        return source.pipe(startWith(SignIn.observingFailure()));
       })
     ),
 });
