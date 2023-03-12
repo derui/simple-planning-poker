@@ -13,7 +13,9 @@ test("render page", () => {
 
   render(
     <Provider store={store}>
-      <OpenGamePage />
+      <MemoryRouter>
+        <OpenGamePage />
+      </MemoryRouter>
     </Provider>
   );
 
