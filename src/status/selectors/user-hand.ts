@@ -3,12 +3,12 @@ import { RootState } from "../store";
 import { UserMode } from "@/domains/game-player";
 import * as UserHand from "@/domains/user-hand";
 import * as Card from "@/domains/card";
-import * as Round from "@/domains/round";
+import * as User from "@/domains/user";
 import { filterUndefined } from "@/utils/basic";
 import * as Loadable from "@/utils/loadable";
 
 const selectSelf = (state: RootState) => state;
-const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game.currentGame);
+const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round.instance);
 const selectUsers = createDraftSafeSelector(selectSelf, (state) => state.user.users);
 
 export type UserHandState = "notSelected" | "handed" | "result";
@@ -24,22 +24,22 @@ export interface UserHandInfo {
  * return UserInfo in current game with current user
  */
 export const selectUserHandInfos = function selectUserHandInfos() {
-  return createDraftSafeSelector([selectGame, selectUsers], (currentGame, users): Loadable.T<UserHandInfo[]> => {
-    if (!currentGame) {
+  return createDraftSafeSelector([selectRound, selectUsers], (round, users): Loadable.T<UserHandInfo[]> => {
+    if (!round) {
       return Loadable.loading();
     }
 
-    const opened = Round.isFinishedRound(currentGame.round);
+    const opened = round.finished;
 
-    const hands = currentGame.joinedPlayers
-      .map((v) => {
-        const user = users[v.user];
+    const hands = Object.entries(round.joinedPlayers)
+      .map(([userId, mode]) => {
+        const user = users[userId as User.Id];
 
         if (!user) return;
 
-        const hand = currentGame.round.hands[user.id];
+        const hand = round.hands[user.id];
         if (!hand) {
-          return { userName: user.name, userMode: v.mode, displayValue: "?", state: "notSelected" } as const;
+          return { userName: user.name, userMode: mode, displayValue: "?", state: "notSelected" } as const;
         }
 
         const state = opened ? (hand ? "result" : "notSelected") : hand ? "handed" : "notSelected";
@@ -52,7 +52,7 @@ export const selectUserHandInfos = function selectUserHandInfos() {
           displayValue = "?";
         }
 
-        if (displayValue) return { userName: user.name, userMode: v.mode, displayValue, state } as const;
+        if (displayValue) return { userName: user.name, userMode: mode, displayValue, state } as const;
       })
       .filter(filterUndefined);
 

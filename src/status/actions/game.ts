@@ -2,9 +2,8 @@ import { createAction } from "@reduxjs/toolkit";
 import * as Game from "@/domains/game";
 import * as Invitation from "@/domains/invitation";
 import * as User from "@/domains/user";
-import { UserMode } from "@/domains/game-player";
 
-const prefix = "gamePlayer";
+const prefix = "game";
 
 export interface OpenedGamePayload {
   game: Game.T;
@@ -13,18 +12,6 @@ export interface OpenedGamePayload {
 
 // common failure.
 export const somethingFailure = createAction<string>(`${prefix}:somethingFailure`);
-
-// give up the game
-export const giveUp = createAction(`${prefix}:giveUp`);
-export const giveUpSuccess = createAction<Game.T>(`${prefix}:giveUpSuccess`);
-
-// hand card
-export const handCard = createAction<{ cardIndex: number }>(`${prefix}:handCard`);
-export const handCardSuccess = createAction<Game.T>(`${prefix}:handCardSuccess`);
-
-// change user mode
-export const changeUserMode = createAction<UserMode>(`${prefix}:changeUserMode`);
-export const changeUserModeSuccess = createAction<Game.T>(`${prefix}:changeUserModeSuccess`);
 
 // notify game update
 export const notifyGameChanges = createAction<Game.T>(`${prefix}:notifyGamenChanges`);
@@ -52,8 +39,3 @@ export const createGameFailure = createAction<{ reason: string }>(`${prefix}:cre
 export const newRound = createAction(`${prefix}:newRound`);
 export const newRoundSuccess = createAction<Game.T>(`${prefix}:newRoundSuccess`);
 export const newRoundFailure = createAction<{ reason: string }>(`${prefix}:newRoundFailure`);
-
-// new round
-export const showDown = createAction(`${prefix}:showDown`);
-export const showDownSuccess = createAction<Game.T>(`${prefix}:showDownSuccess`);
-export const showDownFailed = createAction<{ reason: string }>(`${prefix}:showDownFailed`);

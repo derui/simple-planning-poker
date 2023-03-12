@@ -6,7 +6,6 @@ import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
-import { UserMode } from "@/domains/game-player";
 import { randomGame } from "@/test-lib";
 
 const [GAME] = Game.create({
@@ -20,27 +19,6 @@ const [GAME] = Game.create({
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({ currentGame: null, loading: false, status: { creating: "prepared" } });
-});
-
-test("update game with giveUpSuccess", () => {
-  const ret = reducer(getInitialState(), GameAction.giveUpSuccess(GAME));
-
-  expect(ret.currentGame).toBe(GAME);
-  expect(ret.loading).toBe(false);
-});
-
-test("update game with handCardSuccess", () => {
-  const ret = reducer(getInitialState(), GameAction.handCardSuccess(GAME));
-
-  expect(ret.currentGame).toBe(GAME);
-  expect(ret.loading).toBe(false);
-});
-
-test("update game with change to inspector success", () => {
-  const ret = reducer(getInitialState(), GameAction.changeUserModeSuccess(GAME));
-
-  expect(ret.currentGame).toBe(GAME);
-  expect(ret.loading).toBe(false);
 });
 
 test("update game with action notifying game changes", () => {
@@ -58,20 +36,15 @@ test("update game with action opening game", () => {
 });
 
 describe("loading", () => {
-  [
-    GameAction.changeUserMode(UserMode.inspector),
-    GameAction.giveUp(),
-    GameAction.handCard({ cardIndex: 0 }),
-    GameAction.leaveGame(),
-    GameAction.joinGame(Game.makeInvitation(GAME)),
-    GameAction.openGame(GAME.id),
-  ].forEach((action) => {
-    test(`should set loading with ${action.type}`, () => {
-      const ret = reducer(getInitialState(), action);
+  [GameAction.leaveGame(), GameAction.joinGame(Game.makeInvitation(GAME)), GameAction.openGame(GAME.id)].forEach(
+    (action) => {
+      test(`should set loading with ${action.type}`, () => {
+        const ret = reducer(getInitialState(), action);
 
-      expect(ret.loading).toBe(true);
-    });
-  });
+        expect(ret.loading).toBe(true);
+      });
+    }
+  );
 });
 
 describe("states creating", () => {

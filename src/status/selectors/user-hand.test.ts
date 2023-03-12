@@ -1,7 +1,8 @@
 import { test, expect } from "vitest";
 import { createPureStore } from "../store";
-import { handCardSuccess, openGameSuccess } from "../actions/game";
+import { openGameSuccess } from "../actions/game";
 import { tryAuthenticateSuccess } from "../actions/signin";
+import { handCardSuccess } from "../actions/round";
 import * as s from "./user-hand";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
@@ -46,7 +47,7 @@ test("return hands with handed user", () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.handed(game.cards[0]))));
+  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.handed(game.cards[0])).round));
 
   const [ret] = s.selectUserHandInfos()(store.getState());
 
@@ -73,22 +74,25 @@ test("give up hand", () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.giveUp())));
+  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.giveUp()).round));
 
   const [ret] = s.selectUserHandInfos()(store.getState());
 
   expect(ret).toHaveLength(2);
-  expect(ret).toContainEqual({
-    userName: "owner",
-    userMode: UserMode.normal,
-    displayValue: "?",
-    state: "notSelected",
-  });
-
-  expect(ret).toContainEqual({
-    userName: "other",
-    userMode: UserMode.normal,
-    displayValue: "?",
-    state: "handed",
-  });
+  expect(ret).toEqual(
+    expect.arrayContaining([
+      {
+        userName: "other",
+        userMode: UserMode.normal,
+        displayValue: "?",
+        state: "handed",
+      },
+      {
+        userName: "owner",
+        userMode: UserMode.normal,
+        displayValue: "?",
+        state: "notSelected",
+      },
+    ])
+  );
 });

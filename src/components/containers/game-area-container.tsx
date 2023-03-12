@@ -1,4 +1,3 @@
-import * as React from "react";
 import classNames from "classnames";
 import { PlayerHands } from "../presentations/player-hands";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -6,7 +5,7 @@ import { Skeleton } from "../presentations/skeleton";
 import { selectUserHandInfos } from "@/status/selectors/user-hand";
 import { isFinished } from "@/utils/loadable";
 import { selectCanShowDown } from "@/status/selectors/game";
-import * as GameAction from "@/status/actions/game";
+import * as RoundAction from "@/status/actions/round";
 import { AppDispatch } from "@/status/store";
 
 const styles = {
@@ -69,7 +68,7 @@ const GameProgressionButton = (dispatch: AppDispatch, displayButton: boolean) =>
   }
 
   return (
-    <button className={styles.nextGameButton} onClick={() => dispatch(GameAction.showDown())}>
+    <button className={styles.nextGameButton} onClick={() => dispatch(RoundAction.showDown())}>
       Show down!
     </button>
   );

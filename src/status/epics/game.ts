@@ -6,18 +6,8 @@ import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
-import * as UserHand from "@/domains/user-hand";
 
-type Epics =
-  | "giveUp"
-  | "handCard"
-  | "changeUserMode"
-  | "leaveGame"
-  | "joinGame"
-  | "openGame"
-  | "createGame"
-  | "showDown"
-  | "observeOpenedGame";
+type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -42,101 +32,6 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
 export const gameEpic = (
   registrar: DependencyRegistrar<Dependencies>
 ): Record<Epics, Epic<Action, Action, RootState>> => ({
-  giveUp: (action$, state$) =>
-    action$.pipe(
-      filter(GameAction.giveUp.match),
-      switchMap(() => {
-        const { game, user } = state$.value;
-
-        if (!game.currentGame || !user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
-        }
-
-        const useCase = registrar.resolve("handCardUseCase");
-
-        return from(
-          useCase.execute({ gameId: game.currentGame.id, userId: user.currentUser.id, userHand: UserHand.giveUp() })
-        ).pipe(
-          map((output) => {
-            switch (output.kind) {
-              case "success":
-                return GameAction.giveUpSuccess(output.game);
-              default:
-                return GameAction.somethingFailure(output.kind);
-            }
-          })
-        );
-      }),
-      commonCatchError
-    ),
-
-  handCard: (action$, state$) =>
-    action$.pipe(
-      filter(GameAction.handCard.match),
-      switchMap(({ payload }) => {
-        const { game, user } = state$.value;
-
-        if (!game.currentGame || !user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
-        }
-
-        const selectedCard = game.currentGame.cards[payload.cardIndex];
-        if (!selectedCard) {
-          return of(GameAction.somethingFailure("specified card not found"));
-        }
-
-        const useCase = registrar.resolve("handCardUseCase");
-
-        return from(
-          useCase.execute({
-            gameId: game.currentGame.id,
-            userId: user.currentUser.id,
-            userHand: UserHand.handed(selectedCard),
-          })
-        ).pipe(
-          map((output) => {
-            switch (output.kind) {
-              case "success":
-                return GameAction.handCardSuccess(output.game);
-              default:
-                return GameAction.somethingFailure(output.kind);
-            }
-          })
-        );
-      }),
-      commonCatchError
-    ),
-  changeUserMode: (action$, state$) =>
-    action$.pipe(
-      filter(GameAction.changeUserMode.match),
-      switchMap(({ payload }) => {
-        const { game, user } = state$.value;
-
-        if (!game.currentGame || !user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
-        }
-
-        const useCase = registrar.resolve("changeUserModeUseCase");
-
-        return from(
-          useCase.execute({
-            gameId: game.currentGame.id,
-            userId: user.currentUser.id,
-            mode: payload,
-          })
-        ).pipe(
-          map((output) => {
-            switch (output.kind) {
-              case "success":
-                return GameAction.changeUserModeSuccess(output.game);
-              default:
-                return GameAction.somethingFailure(output.kind);
-            }
-          })
-        );
-      }),
-      commonCatchError
-    ),
   leaveGame: (action$, state$) =>
     action$.pipe(
       filter(GameAction.leaveGame.match),
@@ -273,39 +168,6 @@ export const gameEpic = (
       commonCatchError
     ),
 
-  showDown: (action$, state$) =>
-    action$.pipe(
-      filter(GameAction.showDown.match),
-      switchMap(() => {
-        const {
-          game: { currentGame },
-        } = state$.value;
-
-        if (!currentGame) {
-          return of(GameAction.somethingFailure("Can not show down with nullish"));
-        }
-
-        const useCase = registrar.resolve("showDownUseCase");
-
-        return from(
-          useCase.execute({
-            gameId: currentGame.id,
-          })
-        ).pipe(
-          map((output) => {
-            switch (output.kind) {
-              case "success":
-                return GameAction.showDownSuccess(output.game);
-              case "notFoundGame":
-                return GameAction.showDownFailed({ reason: "can not find game" });
-              case "showDownFailed":
-                return GameAction.showDownFailed({ reason: "failed some reason" });
-            }
-          })
-        );
-      }),
-      commonCatchError
-    ),
   observeOpenedGame: (action$) =>
     action$.pipe(
       filter(GameAction.openGameSuccess.match),

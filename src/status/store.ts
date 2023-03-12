@@ -14,6 +14,7 @@ import { authEpic } from "./epics/auth";
 import { gameEpic } from "./epics/game";
 
 import { userEpic } from "./epics/user";
+import { roundEpic } from "./epics/round";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import type { Dependencies } from "@/dependencies";
 
@@ -36,6 +37,7 @@ export const createStore = (registrar: DependencyRegistrar<Dependencies>) => {
 
     ...Object.values(userEpic(registrar)),
 
+    ...Object.values(roundEpic(registrar)),
     // do not format this structure.
   ];
 

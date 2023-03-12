@@ -1,19 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/internal";
 import {
-  giveUp,
-  giveUpSuccess,
-  handCardSuccess,
   leaveGameSuccess,
   notifyGameChanges,
   openGameSuccess,
-  handCard,
   leaveGame,
   joinGame,
   openGame,
-  changeUserMode,
-  changeUserModeSuccess,
-  showDownSuccess,
   newRoundSuccess,
   createGame,
   createGameSuccess,
@@ -52,17 +45,10 @@ const slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(giveUp, loading);
-    builder.addCase(handCard, loading);
-    builder.addCase(changeUserMode, loading);
     builder.addCase(leaveGame, loading);
     builder.addCase(joinGame, loading);
     builder.addCase(openGame, loading);
-    builder.addCase(giveUpSuccess, updateCurrentGame);
-    builder.addCase(handCardSuccess, updateCurrentGame);
-    builder.addCase(changeUserModeSuccess, updateCurrentGame);
     builder.addCase(notifyGameChanges, updateCurrentGame);
-    builder.addCase(showDownSuccess, updateCurrentGame);
     builder.addCase(newRoundSuccess, updateCurrentGame);
     builder.addCase(openGameSuccess, (draft, { payload }) => {
       draft.currentGame = payload.game;
