@@ -10,6 +10,7 @@ const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game);
 const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.currentGame);
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectCurrentUser = createDraftSafeSelector(selectUser, (state) => state.currentUser);
+const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
 
 /**
  * return current game id if it was loaded.
@@ -24,8 +25,8 @@ export const selectCurrentGameId = function selectCurrentGameId() {
  * return current round id if it was loaded.
  */
 export const selectCurrentRoundId = function selectCurrentRoundId() {
-  return createDraftSafeSelector(selectCurrentGame, (game) => {
-    return game?.round?.id;
+  return createDraftSafeSelector(selectRound, (round) => {
+    return round.instance?.id;
   });
 };
 
