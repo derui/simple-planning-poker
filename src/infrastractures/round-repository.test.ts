@@ -15,7 +15,10 @@ let testEnv: RulesTestEnvironment;
 beforeAll(async () => {
   testEnv = await initializeTestEnvironment({
     projectId: v4(),
-    database: {},
+    database: {
+      host: "127.0.0.1",
+      port: 9000,
+    },
   });
   database = testEnv.authenticatedContext("alice").database();
 });

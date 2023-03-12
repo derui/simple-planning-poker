@@ -19,6 +19,7 @@
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix --ext .ts,.tsx src/",
     "test": "firebase emulators:exec 'npx vitest run'",
     "test:watch": "firebase emulators:exec 'npx vitest watch'",
+    "test:watch:noemu": "npx vitest watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
