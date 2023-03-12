@@ -10,6 +10,7 @@ import { selectCards, selectPlayerHandedCard } from "@/status/selectors/game";
 import { isFinished } from "@/utils/loadable";
 import { handCard } from "@/status/actions/round";
 import { openGame } from "@/status/actions/game";
+import * as Game from "@/domains/game";
 
 const styles = {
   root: classNames("flex", "flex-col", "h-full"),
