@@ -21,7 +21,7 @@ const styles = {
     "border-primary-400",
     "bg-secondary1-300",
     "h-20",
-    "min-w-64",
+    "min-w-fit",
     "flex-col",
     "items-center",
     "justify-center"
@@ -36,7 +36,7 @@ const styles = {
     "border-primary-400",
     "px-4",
     "h-20",
-    "min-w-64",
+    "min-w-fit",
     "flex-col",
     "items-center",
     "justify-center"

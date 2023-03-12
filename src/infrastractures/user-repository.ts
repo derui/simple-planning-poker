@@ -8,7 +8,7 @@ export class UserRepositoryImpl implements UserRepository {
   constructor(private database: Database) {}
 
   async listIn(ids: User.Id[]): Promise<User.T[]> {
-    const users = await Promise.all(ids.map(this.findBy));
+    const users = await Promise.all(ids.map((v) => this.findBy(v)));
 
     return users.filter(filterUndefined);
   }

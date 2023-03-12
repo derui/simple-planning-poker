@@ -28,6 +28,7 @@ const LaziedCreateGamePage = React.lazy(() => lazyImport(import("../components/p
 const LaziedSelectGamePage = React.lazy(() => lazyImport(import("../components/pages/select-game")));
 const LaziedJoinPage = React.lazy(() => lazyImport(import("../components/pages/join-game")));
 const LaziedSignInPage = React.lazy(() => lazyImport(import("../components/pages/signin")));
+const LaziedOpenGamePage = React.lazy(() => lazyImport(import("../components/pages/open-game")));
 
 export const routes = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ export const routes = createBrowserRouter([
         element: (
           <PrivateRoute>
             <LaziedSelectGamePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/game/:gameId",
+        element: (
+          <PrivateRoute>
+            <LaziedOpenGamePage />
           </PrivateRoute>
         ),
       },

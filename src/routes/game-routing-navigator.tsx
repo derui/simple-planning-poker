@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { useAppSelector } from "@/components/hooks";
 import { selectCurrentGameId, selectCurrentRoundId, selectRoundResult } from "@/status/selectors/game";
-import { isError, isFinished } from "@/utils/loadable";
+import { isFinished } from "@/utils/loadable";
 
 // eslint-disable-next-line func-style
 export function GameRoutingNavigator() {
@@ -16,8 +16,6 @@ export function GameRoutingNavigator() {
     if (gameId && roundId) {
       if (isFinished(roundResult)) {
         navigate(generatePath("/game/:gameId/round/:roundId/result", { gameId, roundId }));
-      } else if (isError(roundResult)) {
-        navigate(generatePath("/game/:gameId/round/:roundId", { gameId, roundId }));
       }
     }
   }, [gameId, roundId, roundResult]);
