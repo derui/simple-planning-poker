@@ -18,16 +18,23 @@ import * as UserHand from "./user-hand";
 import * as Card from "./card";
 import { DOMAIN_EVENTS } from "./event";
 import { dateTimeToString as formatToDateTime } from "./type";
+import { UserMode } from "./game-player";
 
 const cards = SelectableCards.create([StoryPoint.create(2), StoryPoint.create(3)]);
 
 test("get round", () => {
-  const ret = roundOf({ id: createId("id"), count: 1, selectableCards: cards });
+  const ret = roundOf({
+    id: createId("id"),
+    count: 1,
+    selectableCards: cards,
+    joinedPlayers: [{ user: User.createId("id"), mode: UserMode.normal }],
+  });
 
   expect(ret.hands).toEqual({});
   expect(ret.id).toBe(createId("id"));
   expect(ret.count).toBe(1);
   expect(ret.selectableCards).toEqual(cards);
+  expect(ret.joinedPlayers).toEqual([{ user: User.createId("id"), mode: UserMode.normal }]);
 });
 
 test("get finished round", () => {

@@ -5,6 +5,7 @@ import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
 import { Branded, DateTime, dateTimeToString } from "./type";
 import { DomainEvent, DOMAIN_EVENTS } from "./event";
+import { UserMode } from "./game-player";
 import * as Base from "@/domains/base";
 
 /**
@@ -23,27 +24,28 @@ type CalculatedStoryPoint = Branded<number, typeof _calculatedStoryPoint>;
 const _finishedRound = "FinishedRound";
 const _round = "Round";
 
-/**
- * A type for finished round. This type can not any mutate.
- */
-export type FinishedRound = {
-  readonly _tag: typeof _finishedRound;
+interface CommonRound {
   readonly id: Id;
   readonly count: number;
   readonly hands: Record<User.Id, UserHand.T>;
+  readonly joinedPlayers: { user: User.Id; mode: UserMode }[];
+}
+
+/**
+ * A type for finished round. This type can not any mutate.
+ */
+export interface FinishedRound extends CommonRound {
+  readonly _tag: typeof _finishedRound;
   readonly finishedAt: DateTime;
-};
+}
 
 /**
  * A type for active round. This type can mutate.
  */
-export type Round = {
+export interface Round extends CommonRound {
   readonly _tag: typeof _round;
-  readonly id: Id;
-  readonly count: number;
-  readonly hands: Record<User.Id, UserHand.T>;
   readonly selectableCards: SelectableCards.T;
-};
+}
 
 export type T = Round | FinishedRound;
 
@@ -66,11 +68,13 @@ export const roundOf = function roundOf({
   selectableCards,
   count,
   hands = [],
+  joinedPlayers = [],
 }: {
   id: Id;
   selectableCards: SelectableCards.T;
   count: number;
   hands?: PlayerHand[];
+  joinedPlayers?: { user: User.Id; mode: UserMode }[];
 }): Round {
   return {
     _tag: _round,
@@ -78,6 +82,7 @@ export const roundOf = function roundOf({
     count,
     hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
     selectableCards: SelectableCards.clone(selectableCards),
+    joinedPlayers,
   };
 };
 
@@ -89,11 +94,13 @@ export const finishedRoundOf = function finishedRoundOf({
   count,
   hands,
   finishedAt,
+  joinedPlayers = [],
 }: {
   id: Id;
   count: number;
   finishedAt: DateTime;
   hands: PlayerHand[];
+  joinedPlayers?: { user: User.Id; mode: UserMode }[];
 }): FinishedRound {
   return {
     _tag: _finishedRound,
@@ -101,6 +108,7 @@ export const finishedRoundOf = function finishedRoundOf({
     count,
     hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
     finishedAt,
+    joinedPlayers,
   };
 };
 
