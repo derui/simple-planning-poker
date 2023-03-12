@@ -1,48 +1,60 @@
 import * as Card from "./card";
+import { Branded } from "./type";
 
-const UserHandUnselected = Symbol();
-const UserHandGiveUp = Symbol();
-const UserHandHanded = Symbol();
+const UserHand = Symbol();
+type UserHand = typeof UserHand;
 
-export const unselected = function unselected() {
-  return { tag: UserHandUnselected } as const;
+interface Unselected {
+  _tag: "unselected";
+}
+
+interface Giveup {
+  _tag: "giveup";
+}
+interface Handed {
+  _tag: "handed";
+  card: Card.T;
+}
+
+export type T = Branded<Unselected | Giveup | Handed, UserHand>;
+
+export const unselected = function unselected(): T {
+  return { _tag: "unselected" } as T;
 };
 
-export const giveUp = function giveUp() {
-  return { tag: UserHandGiveUp } as const;
+export const giveUp = function giveUp(): T {
+  return { _tag: "giveup" } as T;
 };
-export const handed = function handed(card: Card.T) {
+export const handed = function handed(card: Card.T): T {
   return {
-    tag: UserHandHanded,
+    _tag: "handed",
     card,
-  } as const;
+  } as T;
 };
 
-export type T = ReturnType<typeof unselected> | ReturnType<typeof giveUp> | ReturnType<typeof handed>;
-
-export type Kind = "unselected" | "giveUp" | "handed";
+export type Kind = "unselected" | "giveup" | "handed";
 
 export const kindOf = function kindOf(hand: T): Kind {
-  switch (hand.tag) {
-    case UserHandGiveUp:
-      return "giveUp";
-    case UserHandHanded:
+  switch (hand._tag) {
+    case "giveup":
+      return "giveup";
+    case "handed":
       return "handed";
-    case UserHandUnselected:
+    case "unselected":
       return "unselected";
     default:
       throw new Error("unknown hand");
   }
 };
 
-export const isHanded = function isHanded(hand: T): hand is ReturnType<typeof handed> {
+export const isHanded = function isHanded(hand: T): hand is Branded<Handed, typeof UserHand> {
   return kindOf(hand) === "handed";
 };
 
-export const isGiveUp = function isGiveUp(hand: T): hand is ReturnType<typeof handed> {
-  return kindOf(hand) === "giveUp";
+export const isGiveUp = function isGiveUp(hand: T): hand is Branded<Giveup, typeof UserHand> {
+  return kindOf(hand) === "giveup";
 };
 
-export const isUnselected = function isUnselected(hand: T): hand is ReturnType<typeof handed> {
+export const isUnselected = function isUnselected(hand: T): hand is Branded<Unselected, typeof UserHand> {
   return kindOf(hand) === "unselected";
 };

@@ -11,7 +11,7 @@ export type Serialized =
 
 export const serialize = function serializeUserHand(hand: UserHand.T): Serialized {
   switch (UserHand.kindOf(hand)) {
-    case "giveUp":
+    case "giveup":
       return { kind: "giveUp" };
     case "unselected":
       return { kind: "unselected" };
