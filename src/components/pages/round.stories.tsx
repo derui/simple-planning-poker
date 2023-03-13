@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { install } from "@twind/core";
 
 import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router";
 import { RoundPage } from "./round";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
@@ -28,7 +29,9 @@ export const Loading: Story = {
 
     return (
       <Provider store={store}>
-        <RoundPage />
+        <MemoryRouter>
+          <RoundPage />
+        </MemoryRouter>
       </Provider>
     );
   },
@@ -50,7 +53,9 @@ export const Loaded: Story = {
 
     return (
       <Provider store={store}>
-        <RoundPage />
+        <MemoryRouter>
+          <RoundPage />
+        </MemoryRouter>
       </Provider>
     );
   },

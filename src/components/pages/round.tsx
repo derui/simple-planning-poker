@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import { useParams } from "react-router";
+import { generatePath, useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { CardHolder } from "../presentations/card-holder";
 import { GameHeaderContainer } from "../containers/game-header-container";
 import { GameAreaContainer } from "../containers/game-area-container";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
-import { selectCards, selectPlayerHandedCard } from "@/status/selectors/game";
+import { selectCards, selectPlayerHandedCard, selectRoundStatus } from "@/status/selectors/game";
 import { isFinished } from "@/utils/loadable";
 import { handCard } from "@/status/actions/round";
 import { openGame } from "@/status/actions/game";
@@ -20,11 +20,22 @@ const styles = {
 
 // eslint-disable-next-line func-style
 function CardHolderContainer() {
+  const params = useParams<{ gameId: string }>();
   const cards = useAppSelector(selectCards());
+  const roundStatus = useAppSelector(selectRoundStatus());
   const playerHand = useAppSelector(selectPlayerHandedCard());
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  if (!isFinished(cards)) {
+  useEffect(() => {
+    if (isFinished(roundStatus) && roundStatus[0].state === "Finished") {
+      navigate(
+        generatePath("/games/:gameId/rounds/:roundId/result", { gameId: params.gameId!, roundId: roundStatus[0].id })
+      );
+    }
+  }, [roundStatus]);
+
+  if (!isFinished(cards) || !isFinished(roundStatus)) {
     return (
       <div className={styles.cardHolder}>
         <Skeleton />
