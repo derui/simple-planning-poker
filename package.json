@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start:vite": "vite",
+    "start:tsc": "tsc --watch",
     "start": "concurrently --handle-input \"pnpm:copy-assets\" \"pnpm:start:*\"",
     "ci": "CI=true vite",
     "start:emulators": "firebase emulators:start --import ./misc",
