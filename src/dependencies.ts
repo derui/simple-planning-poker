@@ -1,4 +1,4 @@
-import { GameObserver, UserObserver } from "./contexts/observer";
+import { GameObserver, RoundObserver, UserObserver } from "./contexts/observer";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
 import { Authenticator } from "./status/type";
@@ -15,6 +15,7 @@ import { DependencyRegistrar } from "./utils/dependency-registrar";
 export type Dependencies = {
   userRepository: UserRepository;
   userObserver: UserObserver;
+  roundObserver: RoundObserver;
   changeUserNameUseCase: ChangeUserNameUseCase;
   gameRepository: GameRepository;
   createGameUseCase: CreateGameUseCase;

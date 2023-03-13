@@ -29,6 +29,7 @@ import { createStore } from "./status/store";
 import { tryAuthenticate } from "./status/actions/signin";
 import { routes } from "./routes/root";
 import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
+import { RoundObserverImpl } from "./infrastractures/round-observer";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -47,6 +48,7 @@ const dispatcher = new EventDispatcherImpl([new CreateGameEventListener(database
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
 registrar.register("userRepository", userRepository);
 registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
+registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("gameRepository", gameRepository);
 registrar.register("handCardUseCase", new HandCardUseCase(registrar.resolve("gameRepository")));
 registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, registrar.resolve("gameRepository")));
