@@ -26,38 +26,39 @@ test("get round", () => {
   const ret = roundOf({
     id: createId("id"),
     count: 1,
-    selectableCards: cards,
+    cards: cards,
     joinedPlayers: [{ user: User.createId("id"), mode: UserMode.normal }],
   });
 
   expect(ret.hands).toEqual({});
   expect(ret.id).toBe(createId("id"));
   expect(ret.count).toBe(1);
-  expect(ret.selectableCards).toEqual(cards);
+  expect(ret.cards).toEqual(cards);
   expect(ret.joinedPlayers).toEqual([{ user: User.createId("id"), mode: UserMode.normal }]);
 });
 
 test("get finished round", () => {
   const now = formatToDateTime(new Date());
-  const ret = finishedRoundOf({ id: createId("id"), count: 1, finishedAt: now, hands: [] });
+  const ret = finishedRoundOf({ id: createId("id"), count: 1, cards, finishedAt: now, hands: [] });
 
   expect(ret.hands).toEqual({});
   expect(ret.finishedAt).toBe(now);
+  expect(ret.cards).toEqual(cards);
   expect(ret.id).toBe(createId("id"));
 });
 
 test("round can accept user hand", () => {
-  const round = roundOf({ id: createId("id"), count: 1, selectableCards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
   const changed = takePlayerCard(round, User.createId("id"), cards[0]);
 
   expect(round).not.toBe(changed);
   expect(round.id).toBe(changed.id);
-  expect(round.selectableCards).toBe(changed.selectableCards);
+  expect(round.cards).toBe(changed.cards);
   expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
 });
 
 test("update hand if user already take their hand before", () => {
-  const round = roundOf({ id: createId("id"), count: 1, selectableCards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
   let changed = takePlayerCard(round, User.createId("id"), cards[0]);
   changed = takePlayerCard(changed, User.createId("id"), cards[1]);
 
@@ -65,7 +66,7 @@ test("update hand if user already take their hand before", () => {
 });
 
 test("throw error when a card user took is not contained selectable cards", () => {
-  const round = roundOf({ id: createId("id"), count: 1, selectableCards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
 
   expect(() => {
     takePlayerCard(round, User.createId("id"), Card.create(StoryPoint.create(5)));
@@ -76,7 +77,7 @@ test("round can accept user giveup", () => {
   let round = roundOf({
     id: createId("id"),
     count: 1,
-    selectableCards: cards,
+    cards: cards,
     hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
   });
   round = acceptPlayerToGiveUp(round, User.createId("id2"));
@@ -93,7 +94,7 @@ test("give upped user can take other hand", () => {
   let round = roundOf({
     id: createId("id"),
     count: 1,
-    selectableCards: cards,
+    cards: cards,
     hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
   });
   round = takePlayerCard(round, User.createId("id"), cards[0]);
@@ -106,7 +107,7 @@ describe("show down", () => {
     const round = roundOf({
       id: createId("id"),
       count: 1,
-      selectableCards: cards,
+      cards: cards,
       hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
     });
 
@@ -127,7 +128,7 @@ describe("show down", () => {
   });
 
   test("can not finish round that has no hand", () => {
-    const round = roundOf({ id: createId("id"), count: 1, selectableCards: cards, hands: [] });
+    const round = roundOf({ id: createId("id"), count: 1, cards: cards, hands: [] });
 
     expect(canShowDown(round)).toBe(false);
     expect(() => showDown(round, new Date())).toThrowError();
@@ -139,7 +140,7 @@ describe("calculate average", () => {
     const round = roundOf({
       id: createId("id"),
       count: 1,
-      selectableCards: cards,
+      cards: cards,
       hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
     });
 
@@ -153,7 +154,7 @@ describe("calculate average", () => {
   test("should be zero all player gave up or unselected", () => {
     const round = roundOf({
       id: createId("id"),
-      selectableCards: cards,
+      cards: cards,
       count: 1,
       hands: [
         { user: User.createId("id1"), hand: UserHand.giveUp() },
@@ -173,7 +174,7 @@ describe("calculate average", () => {
     const round = roundOf({
       id: createId("id"),
       count: 1,
-      selectableCards: cards,
+      cards: cards,
       hands: [
         { user: User.createId("id1"), hand: UserHand.handed(cards[0]) },
         { user: User.createId("id2"), hand: UserHand.handed(cards[1]) },
@@ -193,7 +194,7 @@ describe("guards", () => {
   test("should be able to guard round", () => {
     const round = roundOf({
       id: createId("id"),
-      selectableCards: cards,
+      cards: cards,
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
     });
@@ -207,7 +208,7 @@ describe("guards", () => {
   test("should be able to guard finished round", () => {
     const round = roundOf({
       id: createId("id"),
-      selectableCards: cards,
+      cards: cards,
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
     });

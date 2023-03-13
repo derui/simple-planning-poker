@@ -157,3 +157,16 @@ export const selectRoundResult = function selectRoundResult() {
     });
   });
 };
+
+/**
+ * return status of round
+ */
+export const selectRoundStatus = function selectRoundStatus() {
+  return createDraftSafeSelector(selectRound, (round) => {
+    if (!round.instance) {
+      return Loadable.loading();
+    }
+
+    return Loadable.finished({ id: round.instance.id, state: round.instance.state });
+  });
+};

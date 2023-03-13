@@ -29,6 +29,7 @@ interface CommonRound {
   readonly count: number;
   readonly hands: Record<User.Id, UserHand.T>;
   readonly joinedPlayers: { user: User.Id; mode: UserMode }[];
+  readonly cards: SelectableCards.T;
 }
 
 /**
@@ -44,7 +45,6 @@ export interface FinishedRound extends CommonRound {
  */
 export interface Round extends CommonRound {
   readonly _tag: typeof _round;
-  readonly selectableCards: SelectableCards.T;
 }
 
 export type T = Round | FinishedRound;
@@ -65,13 +65,13 @@ export const createId = function createId(id?: string): Id {
  */
 export const roundOf = function roundOf({
   id,
-  selectableCards,
+  cards,
   count,
   hands = [],
   joinedPlayers = [],
 }: {
   id: Id;
-  selectableCards: SelectableCards.T;
+  cards: SelectableCards.T;
   count: number;
   hands?: PlayerHand[];
   joinedPlayers?: { user: User.Id; mode: UserMode }[];
@@ -81,7 +81,7 @@ export const roundOf = function roundOf({
     id,
     count,
     hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
-    selectableCards: SelectableCards.clone(selectableCards),
+    cards: SelectableCards.clone(cards),
     joinedPlayers,
   };
 };
@@ -91,12 +91,14 @@ export const roundOf = function roundOf({
  */
 export const finishedRoundOf = function finishedRoundOf({
   id,
+  cards,
   count,
   hands,
   finishedAt,
   joinedPlayers = [],
 }: {
   id: Id;
+  cards: SelectableCards.T;
   count: number;
   finishedAt: DateTime;
   hands: PlayerHand[];
@@ -108,6 +110,7 @@ export const finishedRoundOf = function finishedRoundOf({
     count,
     hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
     finishedAt,
+    cards: SelectableCards.clone(cards),
     joinedPlayers,
   };
 };
@@ -116,7 +119,7 @@ export const finishedRoundOf = function finishedRoundOf({
  * Player take the hand to round.
  */
 export const takePlayerCard = function takePlayerCard(round: Round, userId: User.Id, card: Card.T) {
-  if (!SelectableCards.contains(round.selectableCards, card)) {
+  if (!SelectableCards.contains(round.cards, card)) {
     throw new Error("Can not accept this card");
   }
 
@@ -169,7 +172,7 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
     kind: DOMAIN_EVENTS.RoundFinished,
     roundId: round.id,
   };
-  return [finishedRoundOf({ id: round.id, count: round.count, finishedAt: dateTimeToString(now), hands }), event];
+  return [finishedRoundOf({ ...round, finishedAt: dateTimeToString(now), hands }), event];
 };
 
 /**

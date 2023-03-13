@@ -32,7 +32,7 @@ export class RoundRepositoryImpl implements RoundRepository {
     }, {});
 
     if (Round.isRound(round)) {
-      updates[resolver.cards(round.id)] = round.selectableCards;
+      updates[resolver.cards(round.id)] = round.cards;
     }
 
     if (Round.isFinishedRound(round)) {

@@ -39,6 +39,7 @@ test("should save game showed down", async () => {
     round: Round.finishedRoundOf({
       id: Round.createId(),
       hands: [],
+      cards,
       count: 1,
       finishedAt: dateTimeToString(new Date()),
     }),

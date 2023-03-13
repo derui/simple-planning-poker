@@ -38,7 +38,7 @@ test("should be able to save and find a round", async () => {
   const round = R.roundOf({
     id: R.createId(),
     count: 1,
-    selectableCards: cards,
+    cards: cards,
     hands: [
       { user: User.createId("user1"), hand: UserHand.handed(cards[0]) },
       { user: User.createId("user2"), hand: UserHand.handed(cards[1]) },
@@ -70,7 +70,7 @@ test("should be able to save and find a round", async () => {
       [User.createId("user4"), UserHand.unselected()],
     ])
   );
-  expect(instance?.selectableCards).toEqual(round.selectableCards);
+  expect(instance?.cards).toEqual(round.cards);
   expect(instance?.joinedPlayers).toEqual(
     expect.arrayContaining([
       { user: User.createId("user1"), mode: UserMode.normal },
@@ -87,7 +87,7 @@ test("should be able to save and find a finished round", async () => {
   const round = R.roundOf({
     id: R.createId(),
     count: 1,
-    selectableCards: cards,
+    cards: cards,
     hands: [
       { user: User.createId("user1"), hand: UserHand.handed(cards[0]) },
       { user: User.createId("user2"), hand: UserHand.handed(cards[1]) },

@@ -42,6 +42,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
       id,
       count,
       finishedAt,
+      cards: selectableCards,
       hands: deserializedHands,
     });
   }
@@ -49,7 +50,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
   return Round.roundOf({
     id,
     count,
-    selectableCards,
+    cards: selectableCards,
     hands: deserializedHands,
     joinedPlayers: Object.entries(joinedPlayers).map(([k, v]) => ({ user: User.createId(k), mode: v })),
   });

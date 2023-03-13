@@ -69,7 +69,7 @@ test("newRound should make new round", () => {
     Round.roundOf({
       id: Round.createId(),
       count: 2,
-      selectableCards: cards,
+      cards: cards,
       hands: [{ user: User.createId("user"), hand: UserHand.giveUp() }],
     }),
     new Date()

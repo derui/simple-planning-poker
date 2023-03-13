@@ -6,7 +6,6 @@ import * as Round from "@/domains/round";
 import * as Card from "@/domains/card";
 import * as User from "@/domains/user";
 import * as UserHand from "@/domains/user-hand";
-import * as SelectableCards from "@/domains/selectable-cards";
 import { UserMode } from "@/domains/game-player";
 
 type State = "NotPrepared" | "Finished" | "ShowDownPrepared";
@@ -27,10 +26,7 @@ interface RoundState {
 const initialState = {} as RoundState satisfies RoundState;
 
 const normalize = function normalize(draft: WritableDraft<RoundState>, round: Round.T) {
-  let cards: SelectableCards.T | undefined = undefined;
-  if (Round.isRound(round)) {
-    cards = round.selectableCards;
-  }
+  const cards = Round.isRound(round) ? round.cards : undefined;
 
   if (!draft.instance) {
     draft.instance = {
