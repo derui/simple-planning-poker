@@ -20,6 +20,7 @@ interface RoundState {
     hands: Record<User.Id, UserHand.T>;
     joinedPlayers: Record<User.Id, UserMode>;
     state: State;
+    averagePoint: number;
   };
 }
 
@@ -46,6 +47,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
         return accum;
       }, {}),
       state: Round.isFinishedRound(round) ? "Finished" : Round.canShowDown(round) ? "ShowDownPrepared" : "NotPrepared",
+      averagePoint: Round.isFinishedRound(round) ? Round.calculateAverage(round) : 0,
     };
   } else {
     draft.instance.id = round.id;
@@ -67,6 +69,8 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
       ? "ShowDownPrepared"
       : "NotPrepared";
   }
+
+  draft.instance.averagePoint = Round.isFinishedRound(round) ? Round.calculateAverage(round) : 0;
 };
 
 const slice = createSlice({
@@ -112,6 +116,10 @@ const slice = createSlice({
 
     builder.addCase(newRoundSuccess, (draft, { payload }) => {
       normalize(draft, payload.round);
+    });
+
+    builder.addCase(RoundAction.notifyRoundUpdated, (draft, { payload }) => {
+      normalize(draft, payload);
     });
   },
 });

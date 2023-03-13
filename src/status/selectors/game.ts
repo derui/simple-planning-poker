@@ -2,7 +2,6 @@ import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import * as Loadable from "@/utils/loadable";
 import * as Game from "@/domains/game";
-import * as Round from "@/domains/round";
 import * as UserHand from "@/domains/user-hand";
 
 const selectSelf = (state: RootState) => state;
@@ -79,19 +78,19 @@ export const selectGameCreatingStatus = function selectGameCreatingStatus() {
  * select player hand that did current player
  */
 export const selectPlayerHandedCard = function selectPlayerHandedCard() {
-  return createDraftSafeSelector([selectCurrentGame, selectCurrentUser], (game, user): PlayerHandInfo => {
-    if (!game || !user) {
+  return createDraftSafeSelector([selectRound, selectCurrentUser], ({ instance: round }, user): PlayerHandInfo => {
+    if (!round || !user) {
       return { hand: UserHand.unselected(), cardIndex: -1 };
     }
 
-    const hand = game.round.hands[user.id];
+    const hand = round.hands[user.id];
     if (!hand) {
       return { hand: UserHand.unselected(), cardIndex: -1 };
     }
 
     let cardIndex = -1;
     if (UserHand.isHanded(hand)) {
-      cardIndex = game.cards.findIndex((v) => v === hand.card);
+      cardIndex = round.cards[hand.card].order;
     }
 
     return { hand, cardIndex };
@@ -117,12 +116,12 @@ export const selectCurrentGameInvitationLink = function selectCurrentGameInvitat
  * select flag to be able to hold new round
  */
 export const selectCanShowDown = function selectCanShowDown() {
-  return createDraftSafeSelector(selectCurrentGame, (currentGame): boolean => {
-    if (!currentGame) {
+  return createDraftSafeSelector(selectRound, ({ instance }): boolean => {
+    if (!instance) {
       return false;
     }
 
-    return Round.canShowDown(currentGame.round);
+    return instance.state === "ShowDownPrepared";
   });
 };
 
@@ -132,20 +131,20 @@ interface RoundResultInfo {
 }
 
 export const selectRoundResult = function selectRoundResult() {
-  return createDraftSafeSelector(selectCurrentGame, (currentGame): Loadable.T<RoundResultInfo> => {
-    if (!currentGame) {
+  return createDraftSafeSelector(selectRound, ({ instance: round }): Loadable.T<RoundResultInfo> => {
+    if (!round) {
       return Loadable.loading();
     }
 
-    if (!Round.isFinishedRound(currentGame.round)) {
+    if (round.state !== "Finished") {
       return Loadable.error();
     }
 
-    const average = Round.calculateAverage(currentGame.round);
+    const average = round.averagePoint;
 
     const handMap = new Map<number, number>();
 
-    Object.values(currentGame.round.hands).forEach((v) => {
+    Object.values(round.hands).forEach((v) => {
       if (UserHand.isHanded(v)) {
         const count = handMap.get(v.card) ?? 1;
         handMap.set(v.card, count);

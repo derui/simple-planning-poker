@@ -1,6 +1,7 @@
 import { test, expect, describe } from "vitest";
 import { createPureStore } from "../store";
-import { notifyGameChanges, openGameSuccess } from "../actions/game";
+import { openGameSuccess } from "../actions/game";
+import { notifyRoundUpdated } from "../actions/round";
 import * as s from "./game";
 import * as Loadable from "@/utils/loadable";
 import * as Game from "@/domains/game";
@@ -152,7 +153,7 @@ describe("select round result", () => {
     game = Game.acceptPlayerHand(game, game.joinedPlayers[0].user, UserHand.handed(game.cards[1]));
     game = Game.acceptPlayerHand(game, game.joinedPlayers[1].user, UserHand.handed(game.cards[2]));
     game = Game.showDown(game, new Date())[0];
-    store.dispatch(notifyGameChanges(game));
+    store.dispatch(notifyRoundUpdated(game.round));
 
     const ret = s.selectRoundResult()(store.getState());
 

@@ -30,6 +30,7 @@ test("get round as open game", () => {
       [game.owner]: UserMode.normal,
     },
     state: "NotPrepared",
+    averagePoint: 0,
   });
 });
 
@@ -51,6 +52,7 @@ test("get round after new round", () => {
       [game.owner]: UserMode.normal,
     },
     state: "NotPrepared",
+    averagePoint: 0,
   });
 });
 
@@ -75,5 +77,6 @@ test("should finished with finished", () => {
       [game.owner]: UserMode.normal,
     },
     state: "ShowDownPrepared",
+    averagePoint: 0,
   });
 });
