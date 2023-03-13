@@ -1,9 +1,10 @@
 import { expect, test, describe } from "vitest";
-import { firstValueFrom, NEVER, of } from "rxjs";
+import { firstValueFrom, lastValueFrom, NEVER, of, take } from "rxjs";
 import { StateObservable } from "redux-observable";
 import sinon from "sinon";
 import { createPureStore } from "../store";
 import { signInSuccess } from "../actions/signin";
+import { noopOnEpic } from "../actions/common";
 import { roundEpic } from "./round";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
@@ -328,5 +329,65 @@ describe("show down", () => {
     expect(fake.lastCall.firstArg).toEqual({
       gameId: game.id,
     });
+  });
+});
+
+describe("observe round", () => {
+  test("get noop if any changes does not comes from observer", async () => {
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register("roundObserver", {
+      subscribe() {},
+      unsubscribe() {},
+    });
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+
+    const action$ = of(GameAction.openGameSuccess({ game, players: [] }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.observeOpenedGame(action$, state$, null));
+
+    expect(ret).toEqual(noopOnEpic());
+  });
+
+  test("notify round change", async () => {
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register("roundObserver", {
+      subscribe(_id, _callback) {
+        _callback(game.round);
+      },
+      unsubscribe() {},
+    });
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+
+    const action$ = of(GameAction.openGameSuccess({ game, players: [] }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await lastValueFrom(epics.observeOpenedGame(action$, state$, null).pipe(take(2)));
+
+    expect(ret).toEqual(RoundAction.notifyRoundUpdated(game.round));
   });
 });

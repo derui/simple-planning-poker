@@ -23,3 +23,6 @@ export const changeUserModeSuccess = createAction<Round.T>(`${prefix}:changeUser
 export const showDown = createAction(`${prefix}:showDown`);
 export const showDownSuccess = createAction<Round.T>(`${prefix}:showDownSuccess`);
 export const showDownFailed = createAction<{ reason: string }>(`${prefix}:showDownFailed`);
+
+// notify round update(private action. DO NOT DISPATCH THESE ACTIONS FROM COMPONENTS)
+export const notifyRoundUpdated = createAction<Round.T>(`${prefix}:notifyRoundUpdated`);
