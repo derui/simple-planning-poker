@@ -1,12 +1,10 @@
 import { child, Database, get, ref, update } from "firebase/database";
-import { serialize, deserialize, Serialized } from "./user-hand-converter";
+import { serialize, Serialized } from "./user-hand-converter";
 import * as resolver from "./round-ref-resolver";
+import { deserializeFrom } from "./round-database-deserializer";
 import * as Round from "@/domains/round";
-import * as StoryPoint from "@/domains/story-point";
-import * as SelectableCards from "@/domains/selectable-cards";
 import * as User from "@/domains/user";
 import { RoundRepository } from "@/domains/round-repository";
-import { filterUndefined } from "@/utils/basic";
 import { UserMode } from "@/domains/game-player";
 
 /**
@@ -50,47 +48,6 @@ export class RoundRepositoryImpl implements RoundRepository {
     }
     const snapshot = await get(child(ref(this.database, "rounds"), id));
 
-    const val = snapshot.val();
-    if (!val) {
-      return null;
-    }
-
-    const count = val.count as number;
-    const cards = val.cards as number[];
-    const hands = val.userHands as { [key: User.Id]: Serialized } | undefined;
-    const finishedAt = val.finishedAt as string | undefined;
-    const joinedPlayers = (val.joinedPlayers as Record<User.Id, UserMode> | undefined) ?? {};
-
-    const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
-    const deserializedHands = hands
-      ? Object.entries(hands)
-          .map(([k, hand]) => {
-            if (!hand) {
-              return undefined;
-            }
-            return {
-              user: User.createId(k),
-              hand: deserialize(hand),
-            };
-          })
-          .filter(filterUndefined)
-      : [];
-
-    if (finishedAt) {
-      return Round.finishedRoundOf({
-        id,
-        count,
-        finishedAt,
-        hands: deserializedHands,
-      });
-    }
-
-    return Round.roundOf({
-      id,
-      count,
-      selectableCards,
-      hands: deserializedHands,
-      joinedPlayers: Object.entries(joinedPlayers).map(([k, v]) => ({ user: User.createId(k), mode: v })),
-    });
+    return deserializeFrom(id, snapshot);
   }
 }
