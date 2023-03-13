@@ -2,7 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { act } from "react-dom/test-utils";
+import sinon from "sinon";
 import { UserInfoContainer } from "./user-info-container";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
@@ -13,6 +13,7 @@ import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { changeNameSuccess } from "@/status/actions/user";
 
 afterEach(cleanup);
+afterEach(sinon.reset);
 
 test("should not open initial", () => {
   const store = createPureStore();
@@ -98,9 +99,9 @@ test("should update data after success", async () => {
   await userEvent.type(screen.getByTestId("updater/nameEditorInput"), " add");
   await userEvent.click(screen.getByTestId("updater/submit"));
 
-  act(() => {
-    store.dispatch(changeNameSuccess(User.changeName(user, "name add")[0]));
-  });
+  store.dispatch(changeNameSuccess(User.changeName(user, "name add")[0]));
+
+  await sinon.useFakeTimers().nextAsync();
 
   expect(screen.getByTestId("name").textContent).toMatch(/name add/);
 });
