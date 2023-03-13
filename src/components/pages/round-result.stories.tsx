@@ -6,12 +6,13 @@ import { Provider } from "react-redux";
 import { RoundResultPage } from "./round-result";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
-import { openGameSuccess, showDownSuccess } from "@/status/actions/game";
+import { openGameSuccess } from "@/status/actions/game";
 import { randomGame, randomUser } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
 import * as Game from "@/domains/game";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { giveUp, handed } from "@/domains/user-hand";
+import { showDownSuccess } from "@/status/actions/round";
 
 install(twind);
 
@@ -55,7 +56,7 @@ export const Loaded: Story = {
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
     game = Game.acceptPlayerHand(game, owner.id, giveUp());
     game = Game.acceptPlayerHand(game, users[0].id, handed(game.cards[0]));
-    store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0]));
+    store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0].round));
 
     return (
       <Provider store={store}>
