@@ -9,6 +9,8 @@ import * as UserHand from "@/domains/user-hand";
 import * as SelectableCards from "@/domains/selectable-cards";
 import { UserMode } from "@/domains/game-player";
 
+type State = "NotPrepared" | "Finished" | "ShowDownPrepared";
+
 interface RoundState {
   // current round that opened game
   instance?: {
@@ -17,7 +19,7 @@ interface RoundState {
     count: number;
     hands: Record<User.Id, UserHand.T>;
     joinedPlayers: Record<User.Id, UserMode>;
-    finished: boolean;
+    state: State;
   };
 }
 
@@ -43,7 +45,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
         accum[obj.user] = obj.mode;
         return accum;
       }, {}),
-      finished: Round.isFinishedRound(round),
+      state: Round.isFinishedRound(round) ? "Finished" : Round.canShowDown(round) ? "ShowDownPrepared" : "NotPrepared",
     };
   } else {
     draft.instance.id = round.id;
@@ -58,7 +60,12 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
       accum[obj.user] = obj.mode;
       return accum;
     }, {});
-    draft.instance.finished = Round.isFinishedRound(round);
+
+    draft.instance.state = Round.isFinishedRound(round)
+      ? "Finished"
+      : Round.canShowDown(round)
+      ? "ShowDownPrepared"
+      : "NotPrepared";
   }
 };
 
