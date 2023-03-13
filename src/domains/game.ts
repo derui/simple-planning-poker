@@ -98,6 +98,7 @@ export const create = ({
         selectableCards: cards,
         count: 1,
         hands: [],
+        joinedPlayers: Array.from(distinctedPlayers.values()),
       }),
     finishedRounds,
   };
@@ -132,7 +133,12 @@ export const newRound = function newRound(game: T): [T, DomainEvent] {
   }
 
   const newObj = produce(game, (draft) => {
-    draft.round = Round.roundOf({ id: Round.createId(), count: game.round.count + 1, selectableCards: game.cards });
+    draft.round = Round.roundOf({
+      id: Round.createId(),
+      count: game.round.count + 1,
+      selectableCards: game.cards,
+      joinedPlayers: game.joinedPlayers,
+    });
 
     draft.finishedRounds.push(game.round.id);
   });

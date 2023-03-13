@@ -7,6 +7,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as User from "@/domains/user";
 import { RoundRepository } from "@/domains/round-repository";
 import { filterUndefined } from "@/utils/basic";
+import { UserMode } from "@/domains/game-player";
 
 /**
  * Implementation of `RoundRepository`
@@ -26,6 +27,11 @@ export class RoundRepositoryImpl implements RoundRepository {
       },
       {}
     );
+    updates[resolver.joinedPlayers(round.id)] = round.joinedPlayers.reduce<Record<User.Id, UserMode>>((accum, obj) => {
+      accum[obj.user] = obj.mode;
+
+      return accum;
+    }, {});
 
     if (Round.isRound(round)) {
       updates[resolver.cards(round.id)] = round.selectableCards;
@@ -53,6 +59,7 @@ export class RoundRepositoryImpl implements RoundRepository {
     const cards = val.cards as number[];
     const hands = val.userHands as { [key: User.Id]: Serialized } | undefined;
     const finishedAt = val.finishedAt as string | undefined;
+    const joinedPlayers = (val.joinedPlayers as Record<User.Id, UserMode> | undefined) ?? {};
 
     const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
     const deserializedHands = hands
@@ -83,6 +90,7 @@ export class RoundRepositoryImpl implements RoundRepository {
       count,
       selectableCards,
       hands: deserializedHands,
+      joinedPlayers: Object.entries(joinedPlayers).map(([k, v]) => ({ user: User.createId(k), mode: v })),
     });
   }
 }

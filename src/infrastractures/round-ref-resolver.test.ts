@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { cards, count, finished, finishedAt, userHands } from "./round-ref-resolver";
+import { cards, count, finished, finishedAt, joinedPlayers, userHands } from "./round-ref-resolver";
 import { createId } from "@/domains/round";
 
 test("get count", () => {
@@ -30,4 +30,10 @@ test("finished at", () => {
   const ret = finishedAt(createId("id"));
 
   expect(ret).toBe("/rounds/id/finishedAt");
+});
+
+test("joined player", () => {
+  const ret = joinedPlayers(createId("id"));
+
+  expect(ret).toBe("/rounds/id/joinedPlayers");
 });

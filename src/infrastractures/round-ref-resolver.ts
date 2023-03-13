@@ -19,3 +19,7 @@ export const finished = function finished(id: Id) {
 export const finishedAt = function finishedAt(id: Id) {
   return `/rounds/${id}/finishedAt`;
 };
+
+export const joinedPlayers = function joinedPlayers(id: Id) {
+  return `/rounds/${id}/joinedPlayers`;
+};

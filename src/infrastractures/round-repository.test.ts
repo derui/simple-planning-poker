@@ -8,6 +8,7 @@ import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as UserHand from "@/domains/user-hand";
 import { parseDateTime } from "@/domains/type";
+import { UserMode } from "@/domains/game-player";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -44,6 +45,12 @@ test("should be able to save and find a round", async () => {
       { user: User.createId("user3"), hand: UserHand.giveUp() },
       { user: User.createId("user4"), hand: UserHand.unselected() },
     ],
+    joinedPlayers: [
+      { user: User.createId("user1"), mode: UserMode.normal },
+      { user: User.createId("user2"), mode: UserMode.normal },
+      { user: User.createId("user3"), mode: UserMode.normal },
+      { user: User.createId("user4"), mode: UserMode.inspector },
+    ],
   });
 
   const repository = new RoundRepositoryImpl(database);
@@ -64,6 +71,14 @@ test("should be able to save and find a round", async () => {
     ])
   );
   expect(instance?.selectableCards).toEqual(round.selectableCards);
+  expect(instance?.joinedPlayers).toEqual(
+    expect.arrayContaining([
+      { user: User.createId("user1"), mode: UserMode.normal },
+      { user: User.createId("user2"), mode: UserMode.normal },
+      { user: User.createId("user3"), mode: UserMode.normal },
+      { user: User.createId("user4"), mode: UserMode.inspector },
+    ])
+  );
 });
 
 test("should be able to save and find a finished round", async () => {
