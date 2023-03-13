@@ -22,23 +22,22 @@ export const Normal: Story = {
     hands: [
       {
         displayValue: "1",
-        selected: true,
+        state: "notSelected",
         userMode: UserMode.normal,
         userName: "user1",
       },
       {
         displayValue: "",
-        selected: false,
+        state: "handed",
         userMode: UserMode.normal,
         userName: "user2",
       },
       {
         displayValue: "",
-        selected: false,
+        state: "result",
         userMode: UserMode.inspector,
         userName: "user3",
       },
     ],
-    opened: false,
   },
 };

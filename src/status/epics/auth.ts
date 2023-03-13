@@ -57,12 +57,12 @@ const observeUser = function observeUser(
   return switchMap((payload: SignIn.AuthenticationSuccess) => {
     const observer = registrar.resolve("userObserver");
 
-    return new Observable((subscriber) => {
+    return new Observable<Action>((subscriber) => {
+      subscriber.next(noopOnEpic());
+
       observer.subscribe(payload.user.id, (user) => {
         subscriber.next(notifyOtherUserChanged(user));
       });
-
-      subscriber.next(noopOnEpic());
     });
   });
 };

@@ -29,7 +29,7 @@ export const selectUserHandInfos = function selectUserHandInfos() {
       return Loadable.loading();
     }
 
-    const opened = round.finished;
+    const opened = round.state === "Finished";
 
     const hands = Object.entries(round.joinedPlayers)
       .map(([userId, mode]) => {

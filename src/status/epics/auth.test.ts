@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { firstValueFrom, NEVER, of } from "rxjs";
+import { firstValueFrom, lastValueFrom, NEVER, of, take } from "rxjs";
 import { StateObservable } from "redux-observable";
 import sinon from "sinon";
 import { createPureStore } from "../store";
@@ -183,7 +183,7 @@ describe("observe user after tryAuthenticate", () => {
     const action$ = of(SignInAction.tryAuthenticateSuccess({ user, joinedGames: {} }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.observeUserAfterTryAuthenticate(action$, state$, null));
+    const ret = await firstValueFrom(epics.observeUserAfterTryAuthenticate(action$, state$, null).pipe(take(1)));
 
     expect(ret).toEqual(noopOnEpic());
     expect(subscribe.lastCall.firstArg).toBe(user.id);
@@ -225,8 +225,8 @@ describe("observe user after tryAuthenticate", () => {
     const action$ = of(SignInAction.tryAuthenticateSuccess({ user, joinedGames: {} }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret$ = epics.observeUserAfterTryAuthenticate(action$, state$, null);
-    const ret = await firstValueFrom(ret$);
+    const ret$ = epics.observeUserAfterTryAuthenticate(action$, state$, null).pipe(take(2));
+    const ret = await lastValueFrom(ret$);
 
     expect(ret).toEqual(notifyOtherUserChanged(changed));
   });

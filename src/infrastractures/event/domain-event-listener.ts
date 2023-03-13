@@ -1,4 +1,4 @@
-import { DomainEvent, DomainEvent } from "@/domains/event";
+import { DomainEvent } from "@/domains/event";
 
 // listener interface for domain events
 export interface DomainEventListener {

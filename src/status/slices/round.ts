@@ -15,7 +15,7 @@ interface RoundState {
   // current round that opened game
   instance?: {
     id: Round.Id;
-    cards: Record<number, { card: Card.T; order: number }>;
+    cards: Record<Card.T, { card: Card.T; order: number }>;
     count: number;
     hands: Record<User.Id, UserHand.T>;
     joinedPlayers: Record<User.Id, UserMode>;
@@ -36,8 +36,8 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
     draft.instance = {
       id: round.id,
       cards:
-        cards?.reduce<Record<number, { card: Card.T; order: number }>>((accum, card, index) => {
-          accum[index] = { card, order: index };
+        cards?.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
+          accum[card] = { card, order: index };
           return accum;
         }, {}) ?? {},
       count: round.count,
@@ -52,8 +52,8 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
   } else {
     draft.instance.id = round.id;
     draft.instance.cards =
-      cards?.reduce<Record<number, { card: Card.T; order: number }>>((accum, card, index) => {
-        accum[index] = { card, order: index };
+      cards?.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
+        accum[card] = { card, order: index };
         return accum;
       }, {}) ?? {};
     draft.instance.count = round.count;

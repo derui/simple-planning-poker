@@ -24,8 +24,7 @@ export function App() {
   const LaziedCreateGamePage = React.lazy(() => lazyImport(import("./components/pages/create-game")));
   const LaziedSelectGamePage = React.lazy(() => lazyImport(import("./components/pages/select-game")));
   const LaziedJoinPage = React.lazy(() => lazyImport(import("./components/pages/join-game")));
-  const LaziedSignInPagen = React.lazy(() => lazyImport(import("./components/pages/signin")));
-  const LaziedSignUpPage = React.lazy(() => lazyImport(import("./components/pages/signup")));
+  const LaziedSignInPage = React.lazy(() => lazyImport(import("./components/pages/signin")));
 
   return (
     <>
@@ -71,8 +70,8 @@ export function App() {
               </PrivateRoute>
             }
           ></Route>
-          <Route path="/signin" element={<LaziedSignInPagen />}></Route>
-          <Route path="/signup" element={<LaziedSignUpPage />}></Route>
+          <Route path="/signin" element={<LaziedSignInPage method="signIn" />}></Route>
+          <Route path="/signup" element={<LaziedSignInPage method="signUp" />}></Route>
         </Routes>
       </BrowserRouter>
     </>

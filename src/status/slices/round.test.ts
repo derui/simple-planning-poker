@@ -22,8 +22,8 @@ test("get round as open game", () => {
     id: game.round.id,
     hands: {},
     cards: {
-      [0]: { card: cards[0], order: 0 },
-      [1]: { card: cards[1], order: 1 },
+      1: { card: cards[0], order: 0 },
+      2: { card: cards[1], order: 1 },
     },
     count: 1,
     joinedPlayers: {
@@ -44,8 +44,8 @@ test("get round after new round", () => {
     id: game.round.id,
     hands: {},
     cards: {
-      [0]: { card: cards[0], order: 0 },
-      [1]: { card: cards[1], order: 1 },
+      1: { card: cards[0], order: 0 },
+      2: { card: cards[1], order: 1 },
     },
     count: 1,
     joinedPlayers: {
@@ -69,8 +69,8 @@ test("should finished with finished", () => {
       [game.owner]: handed(cards[0]),
     },
     cards: {
-      [0]: { card: cards[0], order: 0 },
-      [1]: { card: cards[1], order: 1 },
+      1: { card: cards[0], order: 0 },
+      2: { card: cards[1], order: 1 },
     },
     count: 1,
     joinedPlayers: {
