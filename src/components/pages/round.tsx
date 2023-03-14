@@ -30,7 +30,7 @@ function CardHolderContainer() {
   useEffect(() => {
     if (isFinished(roundStatus) && roundStatus[0].state === "Finished") {
       navigate(
-        generatePath("/games/:gameId/rounds/:roundId/result", { gameId: params.gameId!, roundId: roundStatus[0].id })
+        generatePath("/game/:gameId/round/:roundId/result", { gameId: params.gameId!, roundId: roundStatus[0].id })
       );
     }
   }, [roundStatus]);

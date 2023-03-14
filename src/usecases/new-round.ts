@@ -6,7 +6,10 @@ export interface NewRoundUseCaseInput {
   gameId: Game.Id;
 }
 
-export type NewRoundUseCaseOutput = "success" | "notFoundGame" | "canNotStartNewRound";
+export type NewRoundUseCaseOutput =
+  | { kind: "success"; game: Game.T }
+  | { kind: "notFoundGame" }
+  | { kind: "canNotStartNewRound" };
 
 export class NewRoundUseCase implements UseCase<NewRoundUseCaseInput, Promise<NewRoundUseCaseOutput>> {
   constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
@@ -14,7 +17,7 @@ export class NewRoundUseCase implements UseCase<NewRoundUseCaseInput, Promise<Ne
   async execute(input: NewRoundUseCaseInput): Promise<NewRoundUseCaseOutput> {
     const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
-      return "notFoundGame";
+      return { kind: "notFoundGame" };
     }
 
     try {
@@ -23,11 +26,11 @@ export class NewRoundUseCase implements UseCase<NewRoundUseCaseInput, Promise<Ne
       this.dispatcher.dispatch(event);
       this.gameRepository.save(newGame);
 
-      return "success";
+      return { kind: "success", game: newGame };
     } catch (e) {
       console.error(e);
 
-      return "canNotStartNewRound";
+      return { kind: "canNotStartNewRound" };
     }
   }
 }

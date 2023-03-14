@@ -26,13 +26,11 @@ interface RoundState {
 const initialState = {} as RoundState satisfies RoundState;
 
 const normalize = function normalize(draft: WritableDraft<RoundState>, round: Round.T) {
-  const cards = Round.isRound(round) ? round.cards : undefined;
-
   if (!draft.instance) {
     draft.instance = {
       id: round.id,
       cards:
-        cards?.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
+        round.cards.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
           accum[card] = { card, order: index };
           return accum;
         }, {}) ?? {},
@@ -48,7 +46,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
   } else {
     draft.instance.id = round.id;
     draft.instance.cards =
-      cards?.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
+      round.cards.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
         accum[card] = { card, order: index };
         return accum;
       }, {}) ?? {};

@@ -22,6 +22,7 @@ import {
   createMockedUserRepository,
 } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
+import { NewRoundUseCase } from "@/usecases/new-round";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -223,5 +224,41 @@ describe("observe game", () => {
     const ret = await lastValueFrom(epics.observeOpenedGame(action$, state$, null).pipe(take(2)));
 
     expect(ret).toEqual(GameAction.notifyGameChanges(game));
+  });
+});
+
+describe("new round", () => {
+  test("new round", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      joinedPlayers: [],
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves({ kind: "success", game: game });
+    registrar.register("newRoundUseCase", {
+      execute: fake as any,
+    } as NewRoundUseCase);
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+
+    const action$ = of(GameAction.newRound());
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.newRound(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.newRoundSuccess(game));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.firstArg).toEqual({
+      gameId: game.id,
+    });
   });
 });

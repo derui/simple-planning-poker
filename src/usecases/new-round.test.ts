@@ -25,7 +25,7 @@ test("should return error if game is not found", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual("notFoundGame");
+  expect(ret.kind).toEqual("notFoundGame");
 });
 
 test("should save game showed down", async () => {
@@ -61,7 +61,7 @@ test("should save game showed down", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual("success");
+  expect(ret.kind).toEqual("success");
 });
 
 test("should dispatch NewRound event", async () => {

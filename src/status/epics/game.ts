@@ -7,7 +7,7 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
 
-type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame";
+type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "newRound";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -161,6 +161,40 @@ export const gameEpic = (
                 return GameAction.createGameFailure({ reason: "Story point must be greater than 0" });
               case "invalidStoryPoints":
                 return GameAction.createGameFailure({ reason: "Need least 1 point to create game" });
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  newRound: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.newRound.match),
+      switchMap(() => {
+        const {
+          game: { currentGame },
+        } = state$.value;
+
+        if (!currentGame) {
+          return of(GameAction.somethingFailure("Can not show down with nullish"));
+        }
+
+        const useCase = registrar.resolve("newRoundUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: currentGame.id,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.newRoundSuccess(output.game);
+              case "notFoundGame":
+                return GameAction.newRoundFailure({ reason: "can not find game" });
+              case "canNotStartNewRound":
+                return GameAction.newRoundFailure({ reason: "can not start new round" });
             }
           })
         );
