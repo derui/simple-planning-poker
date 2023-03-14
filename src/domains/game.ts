@@ -178,6 +178,7 @@ export const joinUser = function joinUser(game: T, user: User.Id, invitation: In
 
   const newObj = produce(game, (draft) => {
     draft.joinedPlayers.push({ user, mode: GamePlayer.UserMode.normal });
+    draft.round = Round.joinPlayer(draft.round, user);
   });
 
   const event: UserJoined = {

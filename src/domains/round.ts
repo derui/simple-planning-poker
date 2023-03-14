@@ -3,6 +3,7 @@ import * as UserHand from "./user-hand";
 import * as User from "./user";
 import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
+import * as GamePlayer from "./game-player";
 import { Branded, DateTime, dateTimeToString } from "./type";
 import { DomainEvent, DOMAIN_EVENTS } from "./event";
 import { UserMode } from "./game-player";
@@ -28,7 +29,7 @@ interface CommonRound {
   readonly id: Id;
   readonly count: number;
   readonly hands: Record<User.Id, UserHand.T>;
-  readonly joinedPlayers: { user: User.Id; mode: UserMode }[];
+  readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
 }
 

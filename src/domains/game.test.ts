@@ -161,10 +161,15 @@ describe("join user", () => {
 
     const [changed, event] = joinUser(game, User.createId("new"), makeInvitation(game));
 
-    expect(changed.joinedPlayers.find((v) => v.user === User.createId("new"))).toEqual({
-      user: User.createId("new"),
-      mode: GamePlayer.UserMode.normal,
-    });
+    expect(changed.joinedPlayers).toEqual(
+      expect.arrayContaining([
+        { user: User.createId("user"), mode: GamePlayer.UserMode.normal },
+        {
+          user: User.createId("new"),
+          mode: GamePlayer.UserMode.normal,
+        },
+      ])
+    );
     expect(event).toEqual({
       kind: DOMAIN_EVENTS.UserJoined,
       gameId: game.id,
