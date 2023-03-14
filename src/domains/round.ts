@@ -195,6 +195,21 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
   return average as CalculatedStoryPoint;
 };
 
+/**
+ * join player into current round.
+ */
+export const joinPlayer = function joinPlayer(round: T, player: User.Id) {
+  if (round._tag !== _round) {
+    return round;
+  }
+
+  const ret = produce(round, (draft) => {
+    draft.joinedPlayers.push({ user: player, mode: UserMode.normal });
+  });
+
+  return ret;
+};
+
 // simple guards
 export const isRound = function isRound(obj: T): obj is Round {
   return obj._tag === _round;

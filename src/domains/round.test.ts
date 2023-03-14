@@ -10,6 +10,7 @@ import {
   isRound,
   isFinishedRound,
   canShowDown,
+  joinPlayer,
 } from "./round";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -217,5 +218,37 @@ describe("guards", () => {
 
     expect(isFinishedRound(round)).toBe(false);
     expect(isFinishedRound(finished)).toBe(true);
+  });
+});
+
+describe("join player", () => {
+  test("can not join player into finished round", () => {
+    const round = finishedRoundOf({
+      id: createId("id"),
+      cards: cards,
+      count: 1,
+      hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+      finishedAt: "2022-01-01T00:01:02",
+    });
+
+    const ret = joinPlayer(round, User.createId("foo"));
+
+    expect(ret).toBe(round);
+  });
+
+  test("join player into round", () => {
+    const round = roundOf({
+      id: createId("id"),
+      cards: cards,
+      count: 1,
+      hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+      joinedPlayers: [{ user: User.createId("id"), mode: UserMode.normal }],
+    });
+
+    const ret = joinPlayer(round, User.createId("foo"));
+
+    expect(ret).not.toBe(round);
+    expect(ret.joinedPlayers).toContainEqual({ user: User.createId("foo"), mode: UserMode.normal });
+    expect(ret.joinedPlayers).toContainEqual({ user: User.createId("id"), mode: UserMode.normal });
   });
 });
