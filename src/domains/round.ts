@@ -205,12 +205,53 @@ export const joinPlayer = function joinPlayer(round: T, player: User.Id) {
   }
 
   const ret = produce(round, (draft) => {
+    if (draft.joinedPlayers.some((v) => v.user === player)) {
+      return;
+    }
+
     draft.joinedPlayers.push(
       GamePlayer.create({ type: GamePlayer.PlayerType.player, user: player, mode: UserMode.normal })
     );
   });
 
   return ret;
+};
+
+/**
+ * change user mode in round.
+ */
+export const changeUserMode = function changeUserMode(round: Round, user: User.Id, mode: GamePlayer.UserMode): T {
+  const joinedUser = round.joinedPlayers.find((v) => v.user === user);
+
+  if (!joinedUser) {
+    throw new Error("The user didn't join game");
+  }
+
+  return produce(round, (draft) => {
+    const map = new Map(draft.joinedPlayers.map((v) => [v.user, v]));
+    const target = map.get(user);
+
+    if (!target) {
+      map.set(user, GamePlayer.create({ type: GamePlayer.PlayerType.player, user, mode }));
+    } else {
+      map.set(user, { ...target, mode });
+    }
+
+    draft.joinedPlayers = Array.from(map.values());
+  });
+};
+
+/**
+ * An user leave from this round
+ */
+export const acceptLeaveFrom = function acceptLeaveFrom(round: Round, user: User.Id): T {
+  if (round.joinedPlayers.every((v) => v.user !== user)) {
+    return round;
+  }
+
+  return produce(round, (draft) => {
+    draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
+  });
 };
 
 // simple guards

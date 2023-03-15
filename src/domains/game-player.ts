@@ -38,6 +38,16 @@ export const create = ({
   };
 };
 
+export const createOwner = function createOwner({
+  user,
+  mode = UserMode.normal,
+}: {
+  user: User.Id;
+  mode?: UserMode;
+}): T {
+  return create({ type: PlayerType.owner, user, mode });
+};
+
 export const changeUserMode = (player: T, newMode: UserMode): T => {
   return produce(player, (draft) => {
     draft.mode = newMode;

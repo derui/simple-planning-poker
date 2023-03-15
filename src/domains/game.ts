@@ -18,7 +18,6 @@ export const createId = function createGameId(v?: string) {
 export interface T {
   readonly id: Id;
   readonly name: string;
-  readonly joinedPlayers: GamePlayer.T[];
   readonly owner: User.Id;
   readonly cards: SelectableCards.T;
   readonly round: Round.T;
@@ -57,7 +56,6 @@ export interface UserJoined extends DomainEvent {
 export const create = ({
   id,
   name,
-  joinedPlayers,
   cards,
   owner,
   round,
@@ -65,15 +63,17 @@ export const create = ({
 }: {
   id: Id;
   name: string;
-  joinedPlayers: GamePlayer.T[];
   owner: User.Id;
   cards: SelectableCards.T;
   round?: Round.T;
   finishedRounds: Round.Id[];
 }): [T, DomainEvent] => {
-  const distinctedPlayers = new Map(joinedPlayers.map((v) => [v.user, v]));
-  if (!distinctedPlayers.has(owner)) {
-    distinctedPlayers.set(owner, { user: owner, mode: GamePlayer.UserMode.normal });
+  const distinctedPlayers = new Map();
+  if (!round) {
+    distinctedPlayers.set(
+      owner,
+      GamePlayer.create({ type: GamePlayer.PlayerType.owner, user: owner, mode: GamePlayer.UserMode.normal })
+    );
   }
 
   const event: GameCreated = {
@@ -90,7 +90,6 @@ export const create = ({
     name,
     cards,
     owner,
-    joinedPlayers: Array.from(distinctedPlayers.values()),
     round:
       round ??
       Round.roundOf({
@@ -137,7 +136,7 @@ export const newRound = function newRound(game: T): [T, DomainEvent] {
       id: Round.createId(),
       count: game.round.count + 1,
       cards: game.cards,
-      joinedPlayers: game.joinedPlayers,
+      joinedPlayers: game.round.joinedPlayers,
     });
 
     draft.finishedRounds.push(game.round.id);
@@ -153,31 +152,26 @@ export const newRound = function newRound(game: T): [T, DomainEvent] {
 };
 
 export const declarePlayerAs = function declarePlayerAs(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
-  const joinedUser = game.joinedPlayers.find((v) => v.user === user);
-
-  if (!joinedUser) {
-    throw new Error("The user didn't join game");
+  const round = game.round;
+  if (!Round.isRound(round)) {
+    return game;
   }
 
   return produce(game, (draft) => {
-    const map = new Map(draft.joinedPlayers.map((v) => [v.user, v]));
-    map.set(user, { user, mode });
-
-    draft.joinedPlayers = Array.from(map.values());
+    draft.round = Round.changeUserMode(round, user, mode);
   });
 };
 
-export const joinUser = function joinUser(game: T, user: User.Id, invitation: Invitation.T): [T, DomainEvent] {
+export const joinUserAsPlayer = function joinUserAsPlayer(
+  game: T,
+  user: User.Id,
+  invitation: Invitation.T
+): [T, DomainEvent] {
   if (invitation !== makeInvitation(game)) {
     throw new Error("This signature is invalid");
   }
 
-  if (game.joinedPlayers.some((v) => v.user === user)) {
-    throw new Error("A player already joined");
-  }
-
   const newObj = produce(game, (draft) => {
-    draft.joinedPlayers.push({ user, mode: GamePlayer.UserMode.normal });
     draft.round = Round.joinPlayer(draft.round, user);
   });
 
@@ -191,15 +185,16 @@ export const joinUser = function joinUser(game: T, user: User.Id, invitation: In
 };
 
 /**
- * An user leave from this game
+ * An user leave from this round
  */
 export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): T {
-  if (game.joinedPlayers.every((v) => v.user !== user)) {
+  const round = game.round;
+  if (!Round.isRound(round)) {
     return game;
   }
 
   return produce(game, (draft) => {
-    draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
+    draft.round = Round.acceptLeaveFrom(round, user);
   });
 };
 

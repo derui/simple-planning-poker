@@ -8,7 +8,7 @@ import {
   declarePlayerAs,
   GameCreated,
   isShowedDown,
-  joinUser,
+  joinUserAsPlayer,
   makeInvitation,
   newRound,
   NewRoundStarted,
@@ -30,7 +30,6 @@ test("get aggregate and event when game created ", () => {
   const [game, event] = create({
     id: createId("id"),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
@@ -41,8 +40,10 @@ test("get aggregate and event when game created ", () => {
   expect((event as GameCreated).createdBy).toBe(User.createId("user"));
   expect((event as GameCreated).name).toBe("name");
   expect(game.name).toBe("name");
-  expect(game.joinedPlayers).toHaveLength(1);
-  expect(game.joinedPlayers).toEqual([{ user: User.createId("user"), mode: GamePlayer.UserMode.normal }]);
+  expect(game.round.joinedPlayers).toHaveLength(1);
+  expect(game.round.joinedPlayers).toEqual([
+    GamePlayer.createOwner({ user: User.createId("user"), mode: GamePlayer.UserMode.normal }),
+  ]);
   expect(game.owner).toEqual(User.createId("user"));
   expect(game.round.count).toBe(1);
   expect(game.round.hands).toEqual({});
@@ -53,7 +54,6 @@ test("newRound should throw error when round is not finished", () => {
   const [game] = create({
     id: createId("id"),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
@@ -78,7 +78,6 @@ test("newRound should make new round", () => {
   const [game] = create({
     id: createId("id"),
     name: "name",
-    joinedPlayers: [],
     round: finishedRound,
     owner: User.createId("user"),
     finishedRounds: [],
@@ -98,7 +97,6 @@ describe("game name", () => {
   const [game] = create({
     id: createId("id"),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
@@ -121,7 +119,6 @@ describe("declare player mode to", () => {
     const [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
@@ -129,14 +126,19 @@ describe("declare player mode to", () => {
 
     const changed = declarePlayerAs(game, User.createId("user"), GamePlayer.UserMode.inspector);
 
-    expect(changed.joinedPlayers[0]).toEqual({ user: User.createId("user"), mode: GamePlayer.UserMode.inspector });
+    expect(changed.round.joinedPlayers[0]).toEqual(
+      GamePlayer.create({
+        type: GamePlayer.PlayerType.owner,
+        user: User.createId("user"),
+        mode: GamePlayer.UserMode.inspector,
+      })
+    );
   });
 
   test("should throw error if not joined user", () => {
     const [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
@@ -153,21 +155,25 @@ describe("join user", () => {
     const [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
 
-    const [changed, event] = joinUser(game, User.createId("new"), makeInvitation(game));
+    const [changed, event] = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game));
 
-    expect(changed.joinedPlayers).toEqual(
+    expect(changed.round.joinedPlayers).toEqual(
       expect.arrayContaining([
-        { user: User.createId("user"), mode: GamePlayer.UserMode.normal },
-        {
+        GamePlayer.create({
+          type: GamePlayer.PlayerType.owner,
+          user: User.createId("user"),
+          mode: GamePlayer.UserMode.normal,
+        }),
+        GamePlayer.create({
+          type: GamePlayer.PlayerType.player,
           user: User.createId("new"),
           mode: GamePlayer.UserMode.normal,
-        },
+        }),
       ])
     );
     expect(event).toEqual({
@@ -181,30 +187,29 @@ describe("join user", () => {
     const [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
 
     expect(() => {
-      joinUser(game, User.createId("new"), "invitation" as Invitation.T);
+      joinUserAsPlayer(game, User.createId("new"), "invitation" as Invitation.T);
     }).toThrowError(/signature is invalid/);
   });
 
-  test("should throw error if user is already joined", () => {
-    const [game] = create({
+  test("do not anything if a user already joined", () => {
+    let [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
+    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
-    expect(() => {
-      joinUser(game, User.createId("new"), makeInvitation(game));
-    }).toThrowError(/already joined/);
+    expect(joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0].round.joinedPlayers).toEqual(
+      game.round.joinedPlayers
+    );
   });
 });
 
@@ -213,7 +218,6 @@ describe("leave", () => {
     const [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
@@ -225,21 +229,21 @@ describe("leave", () => {
   });
 
   test("remove user that want to leave from game", () => {
-    const [game] = create({
+    let [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
+    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
     const ret = acceptLeaveFrom(game, User.createId("new"));
 
     expect(isShowedDown(ret)).toBe(false);
     expect(ret).not.toBe(game);
-    expect(ret.joinedPlayers).toHaveLength(1);
-    expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
+    expect(ret.round.joinedPlayers).toHaveLength(1);
+    expect(ret.round.joinedPlayers[0].user).toBe(User.createId("user"));
   });
 });
 

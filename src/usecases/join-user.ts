@@ -35,7 +35,7 @@ export class JoinUserUseCase implements UseCase<JoinUserUseCaseInput, Promise<Jo
     }
 
     try {
-      const [newGame, event] = Game.joinUser(game, user.id, input.signature);
+      const [newGame, event] = Game.joinUserAsPlayer(game, user.id, input.signature);
       await this.gameRepository.save(newGame);
 
       this.dispatcher.dispatch(event);
