@@ -124,7 +124,6 @@ export const randomGame = function randomGame(args: Partial<Parameters<typeof Ga
     cards: args.cards ?? randomCards(),
     owner: args.owner ?? User.createId(),
     finishedRounds: args.finishedRounds ?? [],
-    joinedPlayers: args.joinedPlayers ?? [],
     name: args.name ?? "random game",
     round: args.round,
   })[0];

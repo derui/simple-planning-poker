@@ -6,7 +6,6 @@ import { GameRepositoryImpl } from "./game-repository";
 import { RoundRepositoryImpl } from "./round-repository";
 import { joinedGames } from "./user-ref-resolver";
 import * as Game from "@/domains/game";
-import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
@@ -35,14 +34,14 @@ afterEach(async () => {
 
 test("should be able to save and find a game", async () => {
   // Arrange
-  const [game] = Game.create({
+  let [game] = Game.create({
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    joinedPlayers: [GamePlayer.create({ user: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });
+  game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];
 
   const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 
@@ -53,7 +52,7 @@ test("should be able to save and find a game", async () => {
   // Assert
   expect(instance?.id).toEqual(game.id);
   expect(instance?.name).toEqual(game.name);
-  expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
+  expect(instance?.round?.joinedPlayers).toEqual(game?.round?.joinedPlayers);
   expect(instance?.cards).toEqual(game.cards);
   expect(instance?.round).toEqual(game.round);
   expect(instance?.finishedRounds).toEqual(game.finishedRounds);
@@ -72,14 +71,14 @@ test("should not be able find a game if it did not save before", async () => {
 
 test("should save invitation in key", async () => {
   // Arrange
-  const [game] = Game.create({
+  let [game] = Game.create({
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    joinedPlayers: [GamePlayer.create({ user: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });
+  game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];
 
   const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 

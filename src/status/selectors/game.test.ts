@@ -10,7 +10,6 @@ import * as Cards from "@/domains/selectable-cards";
 import * as User from "@/domains/user";
 import * as StoryPoint from "@/domains/story-point";
 import { randomGame } from "@/test-lib";
-import { UserMode } from "@/domains/game-player";
 
 describe("select current game name", () => {
   test("should return loading when game not set", () => {
@@ -143,15 +142,13 @@ describe("select round result", () => {
   test("return error if game is not round finished", () => {
     const store = createPureStore();
     let game = randomGame({
-      joinedPlayers: [
-        { user: User.createId(), mode: UserMode.normal },
-        { user: User.createId(), mode: UserMode.normal },
-      ],
       cards: Cards.create([1, 2, 3, 5].map(StoryPoint.create)),
     });
+    game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
+    game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
     store.dispatch(openGameSuccess({ game, players: [] }));
-    game = Game.acceptPlayerHand(game, game.joinedPlayers[0].user, UserHand.handed(game.cards[1]));
-    game = Game.acceptPlayerHand(game, game.joinedPlayers[1].user, UserHand.handed(game.cards[2]));
+    game = Game.acceptPlayerHand(game, game.round.joinedPlayers[0].user, UserHand.handed(game.cards[1]));
+    game = Game.acceptPlayerHand(game, game.round.joinedPlayers[1].user, UserHand.handed(game.cards[2]));
     game = Game.showDown(game, new Date())[0];
     store.dispatch(notifyRoundUpdated(game.round));
 

@@ -31,7 +31,6 @@ describe("leave game", () => {
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -65,7 +64,6 @@ describe("join game", () => {
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -98,7 +96,6 @@ describe("open game", () => {
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -132,7 +129,6 @@ describe("create game", () => {
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -172,7 +168,6 @@ describe("observe game", () => {
     let [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -200,7 +195,6 @@ describe("observe game", () => {
     let [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
@@ -232,7 +226,6 @@ describe("new round", () => {
     const [game] = Game.create({
       id: Game.createId(),
       name: "name",
-      joinedPlayers: [],
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,

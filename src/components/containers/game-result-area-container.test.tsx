@@ -8,8 +8,8 @@ import { createPureStore } from "@/status/store";
 import { newRound, openGameSuccess } from "@/status/actions/game";
 import { randomGame } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
-import { UserMode } from "@/domains/game-player";
 import { notifyOtherUserChanged } from "@/status/actions/user";
+import { joinUserAsPlayer, makeInvitation } from "@/domains/game";
 
 afterEach(cleanup);
 
@@ -17,7 +17,8 @@ test("should not open initial", () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "name" });
   const player = User.create({ id: User.createId(), name: "player" });
-  const game = randomGame({ owner: user.id, joinedPlayers: [{ user: player.id, mode: UserMode.normal }] });
+  let game = randomGame({ owner: user.id });
+  game = joinUserAsPlayer(game, player.id, makeInvitation(game))[0];
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(notifyOtherUserChanged(player));

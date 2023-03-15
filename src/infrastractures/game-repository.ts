@@ -20,9 +20,7 @@ export class GameRepositoryImpl implements GameRepository {
     updates[resolver.cards(game.id)] = game.cards;
     updates[resolver.round(game.id)] = game.round.id;
     updates[resolver.finishedRounds(game.id)] = game.finishedRounds;
-    updates[resolver.users(game.id)] = Object.fromEntries(
-      game.joinedPlayers.map((v) => [v.user, { mode: v.mode, gameOwner: v.user === game.owner }])
-    );
+    updates[resolver.owner(game.id)] = game.owner;
 
     const invitation = Game.makeInvitation(game);
     updates[`/invitations/${invitation}`] = game.id;
@@ -59,18 +57,9 @@ export class GameRepositoryImpl implements GameRepository {
 
     const name = val.name as string;
     const cards = val.cards as number[];
-    const users = val.users as { [key: string]: any } | undefined;
     const roundId = val.round as Round.Id;
     const finishedRounds = (val.finishedRounds ?? []) as Round.Id[];
-    const serializeJoinedPlayers = Object.entries(users || {}).map(([key, v]) => ({
-      user: User.createId(key),
-      mode: v.mode,
-    }));
-    const owner = Object.entries(users || {}).find(([, v]) => v.gameOwner);
-
-    if (!owner) {
-      return undefined;
-    }
+    const owner = val.owner as string;
 
     const round = await this.roundRepository.findBy(roundId);
     if (!round) {
@@ -81,8 +70,7 @@ export class GameRepositoryImpl implements GameRepository {
     const [game] = Game.create({
       id,
       name,
-      joinedPlayers: serializeJoinedPlayers,
-      owner: User.createId(owner[0]),
+      owner: User.createId(owner),
       cards: selectableCards,
       round,
       finishedRounds,

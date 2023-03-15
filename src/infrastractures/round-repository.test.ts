@@ -7,6 +7,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as UserHand from "@/domains/user-hand";
+import * as GamePlayer from "@/domains/game-player";
 import { parseDateTime } from "@/domains/type";
 import { UserMode } from "@/domains/game-player";
 
@@ -46,10 +47,10 @@ test("should be able to save and find a round", async () => {
       { user: User.createId("user4"), hand: UserHand.unselected() },
     ],
     joinedPlayers: [
-      { user: User.createId("user1"), mode: UserMode.normal },
-      { user: User.createId("user2"), mode: UserMode.normal },
-      { user: User.createId("user3"), mode: UserMode.normal },
-      { user: User.createId("user4"), mode: UserMode.inspector },
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user2"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user3"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user4"), mode: UserMode.inspector }),
     ],
   });
 
@@ -73,10 +74,10 @@ test("should be able to save and find a round", async () => {
   expect(instance?.cards).toEqual(round.cards);
   expect(instance?.joinedPlayers).toEqual(
     expect.arrayContaining([
-      { user: User.createId("user1"), mode: UserMode.normal },
-      { user: User.createId("user2"), mode: UserMode.normal },
-      { user: User.createId("user3"), mode: UserMode.normal },
-      { user: User.createId("user4"), mode: UserMode.inspector },
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user2"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user3"), mode: UserMode.normal }),
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user4"), mode: UserMode.inspector }),
     ])
   );
 });

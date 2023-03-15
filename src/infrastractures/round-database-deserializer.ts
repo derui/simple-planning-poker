@@ -5,7 +5,7 @@ import * as StoryPoint from "@/domains/story-point";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as User from "@/domains/user";
 import { filterUndefined } from "@/utils/basic";
-import { UserMode } from "@/domains/game-player";
+import { PlayerType, UserMode } from "@/domains/game-player";
 
 /**
  * deserialize from firebase's snapshot
@@ -20,7 +20,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
   const cards = val.cards as number[];
   const hands = val.userHands as { [key: User.Id]: Serialized } | undefined;
   const finishedAt = val.finishedAt as string | undefined;
-  const joinedPlayers = (val.joinedPlayers as Record<User.Id, UserMode> | undefined) ?? {};
+  const joinedPlayers = (val.joinedPlayers as Record<User.Id, { type: PlayerType; mode: UserMode }> | undefined) ?? {};
 
   const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
   const deserializedHands = hands
@@ -52,6 +52,6 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
     count,
     cards: selectableCards,
     hands: deserializedHands,
-    joinedPlayers: Object.entries(joinedPlayers).map(([k, v]) => ({ user: User.createId(k), mode: v })),
+    joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({ type, user: User.createId(k), mode })),
   });
 };

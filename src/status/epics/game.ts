@@ -113,7 +113,7 @@ export const gameEpic = (
               return of([game, []] as const);
             }
 
-            const users = userRepository.listIn(game.joinedPlayers.map((v) => v.user));
+            const users = userRepository.listIn(game.round.joinedPlayers.map((v) => v.user));
 
             return from(users).pipe(map((users) => [game, users] as const));
           }),
@@ -122,7 +122,7 @@ export const gameEpic = (
               return GameAction.openGameFailure({ reason: "Can not find game" });
             }
 
-            if (!output.joinedPlayers.some((v) => v.user === currentUser.id)) {
+            if (!output.round.joinedPlayers.some((v) => v.user === currentUser.id)) {
               return GameAction.openGameFailure({ reason: "Current user did not join the game" });
             }
 

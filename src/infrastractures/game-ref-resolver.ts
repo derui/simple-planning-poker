@@ -8,8 +8,8 @@ export const cards = function cards(id: Id) {
   return `/games/${id}/cards`;
 };
 
-export const users = function users(id: Id) {
-  return `/games/${id}/users`;
+export const owner = function owner(id: Id) {
+  return `/games/${id}/owner`;
 };
 
 export const round = function round(id: Id) {
