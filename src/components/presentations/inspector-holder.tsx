@@ -15,7 +15,7 @@ const styles = {
     "rounded",
     "items-center"
   ),
-  message: classNames("text-500", "text-gray"),
+  message: classNames("font-medium", "text-gray"),
 };
 
 // eslint-disable-next-line func-style
