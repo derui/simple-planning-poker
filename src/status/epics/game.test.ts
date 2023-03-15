@@ -39,7 +39,7 @@ describe("leave game", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.declarePlayerTo(game, user.id, UserMode.inspector);
+    const expected = Game.declarePlayerAs(game, user.id, UserMode.inspector);
     registrar.register(
       "leaveGameUseCase",
       createMockedLeaveGameUseCase({

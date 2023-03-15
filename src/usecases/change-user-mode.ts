@@ -21,7 +21,7 @@ export class ChangeUserModeUseCase implements UseCase<ChangeUserModeInput, Promi
       return { kind: "notFound" };
     }
 
-    const newGame = Game.declarePlayerTo(game, input.userId, input.mode);
+    const newGame = Game.declarePlayerAs(game, input.userId, input.mode);
     await this.gameRepository.save(newGame);
 
     return { kind: "success", game: newGame };

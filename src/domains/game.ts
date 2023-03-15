@@ -152,7 +152,7 @@ export const newRound = function newRound(game: T): [T, DomainEvent] {
   return [newObj, event];
 };
 
-export const declarePlayerTo = function declarePlayerTo(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
+export const declarePlayerAs = function declarePlayerAs(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
   const joinedUser = game.joinedPlayers.find((v) => v.user === user);
 
   if (!joinedUser) {

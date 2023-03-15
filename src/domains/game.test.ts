@@ -5,7 +5,7 @@ import {
   changeName,
   create,
   createId,
-  declarePlayerTo,
+  declarePlayerAs,
   GameCreated,
   isShowedDown,
   joinUser,
@@ -127,7 +127,7 @@ describe("declare player mode to", () => {
       cards,
     });
 
-    const changed = declarePlayerTo(game, User.createId("user"), GamePlayer.UserMode.inspector);
+    const changed = declarePlayerAs(game, User.createId("user"), GamePlayer.UserMode.inspector);
 
     expect(changed.joinedPlayers[0]).toEqual({ user: User.createId("user"), mode: GamePlayer.UserMode.inspector });
   });
@@ -143,7 +143,7 @@ describe("declare player mode to", () => {
     });
 
     expect(() => {
-      declarePlayerTo(game, User.createId("not found"), GamePlayer.UserMode.inspector);
+      declarePlayerAs(game, User.createId("not found"), GamePlayer.UserMode.inspector);
     }).toThrowError(/The user didn't join game/);
   });
 });
