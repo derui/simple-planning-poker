@@ -75,7 +75,7 @@ export const roundOf = function roundOf({
   cards: SelectableCards.T;
   count: number;
   hands?: PlayerHand[];
-  joinedPlayers?: { user: User.Id; mode: UserMode }[];
+  joinedPlayers?: GamePlayer.T[];
 }): Round {
   return {
     _tag: _round,
@@ -103,7 +103,7 @@ export const finishedRoundOf = function finishedRoundOf({
   count: number;
   finishedAt: DateTime;
   hands: PlayerHand[];
-  joinedPlayers?: { user: User.Id; mode: UserMode }[];
+  joinedPlayers?: GamePlayer.T[];
 }): FinishedRound {
   return {
     _tag: _finishedRound,
@@ -205,7 +205,9 @@ export const joinPlayer = function joinPlayer(round: T, player: User.Id) {
   }
 
   const ret = produce(round, (draft) => {
-    draft.joinedPlayers.push({ user: player, mode: UserMode.normal });
+    draft.joinedPlayers.push(
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: player, mode: UserMode.normal })
+    );
   });
 
   return ret;

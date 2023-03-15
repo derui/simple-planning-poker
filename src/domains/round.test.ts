@@ -17,9 +17,9 @@ import * as StoryPoint from "./story-point";
 import * as User from "./user";
 import * as UserHand from "./user-hand";
 import * as Card from "./card";
+import * as GamePlayer from "./game-player";
 import { DOMAIN_EVENTS } from "./event";
 import { dateTimeToString as formatToDateTime } from "./type";
-import { UserMode } from "./game-player";
 
 const cards = SelectableCards.create([StoryPoint.create(2), StoryPoint.create(3)]);
 
@@ -28,14 +28,26 @@ test("get round", () => {
     id: createId("id"),
     count: 1,
     cards: cards,
-    joinedPlayers: [{ user: User.createId("id"), mode: UserMode.normal }],
+    joinedPlayers: [
+      GamePlayer.create({
+        type: GamePlayer.PlayerType.player,
+        user: User.createId("id"),
+        mode: GamePlayer.UserMode.normal,
+      }),
+    ],
   });
 
   expect(ret.hands).toEqual({});
   expect(ret.id).toBe(createId("id"));
   expect(ret.count).toBe(1);
   expect(ret.cards).toEqual(cards);
-  expect(ret.joinedPlayers).toEqual([{ user: User.createId("id"), mode: UserMode.normal }]);
+  expect(ret.joinedPlayers).toEqual([
+    GamePlayer.create({
+      type: GamePlayer.PlayerType.player,
+      user: User.createId("id"),
+      mode: GamePlayer.UserMode.normal,
+    }),
+  ]);
 });
 
 test("get finished round", () => {
@@ -242,13 +254,27 @@ describe("join player", () => {
       cards: cards,
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
-      joinedPlayers: [{ user: User.createId("id"), mode: UserMode.normal }],
+      joinedPlayers: [
+        GamePlayer.create({
+          type: GamePlayer.PlayerType.player,
+          user: User.createId("id"),
+          mode: GamePlayer.UserMode.normal,
+        }),
+      ],
     });
 
     const ret = joinPlayer(round, User.createId("foo"));
 
     expect(ret).not.toBe(round);
-    expect(ret.joinedPlayers).toContainEqual({ user: User.createId("foo"), mode: UserMode.normal });
-    expect(ret.joinedPlayers).toContainEqual({ user: User.createId("id"), mode: UserMode.normal });
+    expect(ret.joinedPlayers).toContainEqual({
+      type: GamePlayer.PlayerType.player,
+      user: User.createId("foo"),
+      mode: GamePlayer.UserMode.normal,
+    });
+    expect(ret.joinedPlayers).toContainEqual({
+      type: GamePlayer.PlayerType.player,
+      user: User.createId("id"),
+      mode: GamePlayer.UserMode.normal,
+    });
   });
 });
