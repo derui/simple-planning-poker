@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { install } from "@twind/core";
 
 import { Provider } from "react-redux";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import { RoundResultPage } from "./round-result";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
@@ -29,9 +30,19 @@ export const Loading: Story = {
   render() {
     const store = createPureStore();
 
+    const route = createMemoryRouter(
+      [
+        {
+          path: "/:gameId",
+          element: <RoundResultPage />,
+        },
+      ],
+      { initialEntries: ["/12345"] }
+    );
+
     return (
       <Provider store={store}>
-        <RoundResultPage />
+        <RouterProvider router={route} />
       </Provider>
     );
   },
@@ -58,9 +69,19 @@ export const Loaded: Story = {
     game = Game.acceptPlayerHand(game, users[0].id, handed(game.cards[0]));
     store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0].round));
 
+    const route = createMemoryRouter(
+      [
+        {
+          path: "/:gameId",
+          element: <RoundResultPage />,
+        },
+      ],
+      { initialEntries: [`/${game.id}`] }
+    );
+
     return (
       <Provider store={store}>
-        <RoundResultPage />
+        <RouterProvider router={route} />
       </Provider>
     );
   },
