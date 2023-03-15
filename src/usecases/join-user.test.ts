@@ -69,7 +69,6 @@ test("should save game that user joined in", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("owner"),
-    joinedPlayers: [],
     finishedRounds: [],
   })[0];
 
@@ -107,7 +106,6 @@ test("should dispatch event to be joined by user", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("owner"),
-    joinedPlayers: [],
     finishedRounds: [],
   })[0];
 

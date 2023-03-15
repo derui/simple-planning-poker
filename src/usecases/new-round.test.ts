@@ -34,7 +34,6 @@ test("should save game showed down", async () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId(),
     round: Round.finishedRoundOf({
       id: Round.createId(),
@@ -69,7 +68,6 @@ test("should dispatch NewRound event", async () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId(),
     finishedRounds: [],
     cards,

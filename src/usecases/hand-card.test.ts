@@ -39,7 +39,6 @@ test("should save player with card selected by user", async () => {
   let [game] = Game.create({
     id: input.gameId,
     name: "name",
-    joinedPlayers: [],
     owner: input.userId,
     finishedRounds: [],
     cards: CARDS,

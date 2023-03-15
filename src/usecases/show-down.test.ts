@@ -35,7 +35,6 @@ test("should save game showed down", async () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId(),
     finishedRounds: [],
     cards: CARDS,
@@ -68,7 +67,6 @@ test("should return error if the game can not show down", async () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId(),
     finishedRounds: [],
     cards: CARDS,
@@ -96,7 +94,6 @@ test("should dispatch ShowedDown event", async () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "name",
-    joinedPlayers: [],
     owner: User.createId(),
     finishedRounds: [],
     cards: CARDS,

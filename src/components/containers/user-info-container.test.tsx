@@ -21,7 +21,6 @@ test("should not open initial", () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "game",
-    joinedPlayers: [],
     finishedRounds: [],
     owner: user.id,
     cards: randomCards(),

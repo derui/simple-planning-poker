@@ -11,7 +11,6 @@ import { randomGame } from "@/test-lib";
 const [GAME] = Game.create({
   id: Game.createId(),
   name: "name",
-  joinedPlayers: [],
   cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   owner: User.createId(),
   finishedRounds: [],

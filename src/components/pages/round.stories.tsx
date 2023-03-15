@@ -9,8 +9,8 @@ import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomGame, randomUser } from "@/test-lib";
-import { UserMode } from "@/domains/game-player";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
+import { joinUserAsPlayer, makeInvitation } from "@/domains/game";
 
 install(twind);
 
@@ -43,9 +43,15 @@ export const Loaded: Story = {
 
     const users = [randomUser({}), randomUser({})];
     const owner = randomUser({});
+
+    let game = randomGame({ owner: owner.id });
+    users.forEach((user) => {
+      game = joinUserAsPlayer(game, user.id, makeInvitation(game))[0];
+    });
+
     store.dispatch(
       openGameSuccess({
-        game: randomGame({ owner: owner.id, joinedPlayers: users.map((v) => ({ user: v.id, mode: UserMode.normal })) }),
+        game,
         players: users,
       })
     );

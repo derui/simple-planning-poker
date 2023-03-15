@@ -252,12 +252,11 @@ describe("show down", () => {
     let [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
-
+    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
     game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
     game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
     const ret = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
@@ -272,12 +271,12 @@ describe("show down", () => {
     let [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
     });
 
+    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
     game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
     game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
     const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
@@ -292,7 +291,6 @@ describe("show down", () => {
     let [game] = create({
       id: createId("id"),
       name: "name",
-      joinedPlayers: [{ user: User.createId("new"), mode: GamePlayer.UserMode.normal }],
       owner: User.createId("user"),
       finishedRounds: [],
       cards,

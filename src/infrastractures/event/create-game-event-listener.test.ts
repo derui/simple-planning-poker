@@ -39,7 +39,6 @@ test("should add joined user as owner", async () => {
     id: Game.createId(),
     name: "test",
     owner: owner.id,
-    joinedPlayers: [],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });
