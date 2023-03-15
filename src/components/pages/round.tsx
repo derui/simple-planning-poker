@@ -6,6 +6,7 @@ import { GameHeaderContainer } from "../containers/game-header-container";
 import { GameAreaContainer } from "../containers/game-area-container";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
+import { InspectorHolder } from "../presentations/inspector-holder";
 import { selectCards, selectPlayerHandedCard, selectRoundStatus } from "@/status/selectors/game";
 import { isFinished } from "@/utils/loadable";
 import { handCard } from "@/status/actions/round";
@@ -47,7 +48,7 @@ function CardHolderContainer() {
   }
 
   if (userMode[0].userMode === UserMode.inspector) {
-    return <div></div>;
+    return <InspectorHolder />;
   }
 
   const handleSelectCard = (index: number) => dispatch(handCard({ cardIndex: index }));
