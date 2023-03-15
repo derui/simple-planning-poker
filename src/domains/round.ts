@@ -68,14 +68,14 @@ export const roundOf = function roundOf({
   id,
   cards,
   count,
+  joinedPlayers,
   hands = [],
-  joinedPlayers = [],
 }: {
   id: Id;
   cards: SelectableCards.T;
   count: number;
   hands?: PlayerHand[];
-  joinedPlayers?: GamePlayer.T[];
+  joinedPlayers: GamePlayer.T[];
 }): Round {
   return {
     _tag: _round,
@@ -96,14 +96,14 @@ export const finishedRoundOf = function finishedRoundOf({
   count,
   hands,
   finishedAt,
-  joinedPlayers = [],
+  joinedPlayers,
 }: {
   id: Id;
   cards: SelectableCards.T;
   count: number;
   finishedAt: DateTime;
   hands: PlayerHand[];
-  joinedPlayers?: GamePlayer.T[];
+  joinedPlayers: GamePlayer.T[];
 }): FinishedRound {
   return {
     _tag: _finishedRound,

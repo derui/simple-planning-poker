@@ -41,6 +41,7 @@ test("should save game showed down", async () => {
       cards,
       count: 1,
       finishedAt: dateTimeToString(new Date()),
+      joinedPlayers: [],
     }),
     finishedRounds: [],
     cards,

@@ -44,6 +44,11 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
       finishedAt,
       cards: selectableCards,
       hands: deserializedHands,
+      joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({
+        type,
+        user: User.createId(k),
+        mode,
+      })),
     });
   }
 

@@ -71,6 +71,7 @@ test("newRound should make new round", () => {
       count: 2,
       cards: cards,
       hands: [{ user: User.createId("user"), hand: UserHand.giveUp() }],
+      joinedPlayers: [],
     }),
     new Date()
   );

@@ -52,7 +52,7 @@ test("get round", () => {
 
 test("get finished round", () => {
   const now = formatToDateTime(new Date());
-  const ret = finishedRoundOf({ id: createId("id"), count: 1, cards, finishedAt: now, hands: [] });
+  const ret = finishedRoundOf({ id: createId("id"), count: 1, cards, finishedAt: now, hands: [], joinedPlayers: [] });
 
   expect(ret.hands).toEqual({});
   expect(ret.finishedAt).toBe(now);
@@ -61,7 +61,7 @@ test("get finished round", () => {
 });
 
 test("round can accept user hand", () => {
-  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards, joinedPlayers: [] });
   const changed = takePlayerCard(round, User.createId("id"), cards[0]);
 
   expect(round).not.toBe(changed);
@@ -71,7 +71,7 @@ test("round can accept user hand", () => {
 });
 
 test("update hand if user already take their hand before", () => {
-  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards, joinedPlayers: [] });
   let changed = takePlayerCard(round, User.createId("id"), cards[0]);
   changed = takePlayerCard(changed, User.createId("id"), cards[1]);
 
@@ -79,7 +79,7 @@ test("update hand if user already take their hand before", () => {
 });
 
 test("throw error when a card user took is not contained selectable cards", () => {
-  const round = roundOf({ id: createId("id"), count: 1, cards: cards });
+  const round = roundOf({ id: createId("id"), count: 1, cards: cards, joinedPlayers: [] });
 
   expect(() => {
     takePlayerCard(round, User.createId("id"), Card.create(StoryPoint.create(5)));
@@ -92,6 +92,7 @@ test("round can accept user giveup", () => {
     count: 1,
     cards: cards,
     hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+    joinedPlayers: [],
   });
   round = acceptPlayerToGiveUp(round, User.createId("id2"));
 
@@ -109,6 +110,7 @@ test("give upped user can take other hand", () => {
     count: 1,
     cards: cards,
     hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+    joinedPlayers: [],
   });
   round = takePlayerCard(round, User.createId("id"), cards[0]);
 
@@ -122,6 +124,7 @@ describe("show down", () => {
       count: 1,
       cards: cards,
       hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+      joinedPlayers: [],
     });
 
     const now = new Date();
@@ -141,7 +144,7 @@ describe("show down", () => {
   });
 
   test("can not finish round that has no hand", () => {
-    const round = roundOf({ id: createId("id"), count: 1, cards: cards, hands: [] });
+    const round = roundOf({ id: createId("id"), count: 1, cards: cards, hands: [], joinedPlayers: [] });
 
     expect(canShowDown(round)).toBe(false);
     expect(() => showDown(round, new Date())).toThrowError();
@@ -155,6 +158,7 @@ describe("calculate average", () => {
       count: 1,
       cards: cards,
       hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+      joinedPlayers: [],
     });
 
     const [finished] = showDown(round, new Date());
@@ -174,6 +178,7 @@ describe("calculate average", () => {
         { user: User.createId("id2"), hand: UserHand.unselected() },
         { user: User.createId("id3"), hand: UserHand.giveUp() },
       ],
+      joinedPlayers: [],
     });
 
     const [finished] = showDown(round, new Date());
@@ -193,6 +198,7 @@ describe("calculate average", () => {
         { user: User.createId("id2"), hand: UserHand.handed(cards[1]) },
         { user: User.createId("id3"), hand: UserHand.handed(cards[0]) },
       ],
+      joinedPlayers: [],
     });
 
     const [finished] = showDown(round, new Date());
@@ -210,6 +216,7 @@ describe("guards", () => {
       cards: cards,
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
+      joinedPlayers: [],
     });
 
     const [finished] = showDown(round, new Date());
@@ -224,6 +231,7 @@ describe("guards", () => {
       cards: cards,
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
+      joinedPlayers: [],
     });
 
     const [finished] = showDown(round, new Date());
@@ -241,6 +249,7 @@ describe("join player", () => {
       count: 1,
       hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
       finishedAt: "2022-01-01T00:01:02",
+      joinedPlayers: [],
     });
 
     const ret = joinPlayer(round, User.createId("foo"));

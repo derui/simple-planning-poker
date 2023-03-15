@@ -95,6 +95,7 @@ test("should be able to save and find a finished round", async () => {
       { user: User.createId("user3"), hand: UserHand.giveUp() },
       { user: User.createId("user4"), hand: UserHand.unselected() },
     ],
+    joinedPlayers: [],
   });
   const [finished] = R.showDown(round, parseDateTime("2023-02-25T00:01:01.000Z"));
 
