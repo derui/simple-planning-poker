@@ -86,14 +86,12 @@ export function GameAreaContainer() {
         <div className={styles.gridContainer}>
           <div className="col-span-full row-start-1"></div>
           <div className="col-start-2 row-start-2 flex items-center">
-            {" "}
             <Skeleton testid="upper-loading" />
           </div>
           <div className={styles.tableLoading}>
             <Skeleton testid="table-loading" />
           </div>
           <div className="col-start-2 row-start-4 flex items-center">
-            {" "}
             <Skeleton testid="lower-loading" />
           </div>
           <div className="row-start-5 col-span-full"></div>
@@ -111,7 +109,6 @@ export function GameAreaContainer() {
       <div className={styles.gridContainer}>
         <div className="col-span-full row-start-1"></div>
         <div className="col-start-2 row-start-2">
-          {" "}
           <PlayerHands hands={upper} testid="upper" />
         </div>
         <div className={styles.table}>{button}</div>

@@ -11,6 +11,8 @@ import { isFinished } from "@/utils/loadable";
 import { handCard } from "@/status/actions/round";
 import { openGame } from "@/status/actions/game";
 import * as Game from "@/domains/game";
+import { selectUserInfo } from "@/status/selectors/user";
+import { UserMode } from "@/domains/game-player";
 
 const styles = {
   root: classNames("flex", "flex-col", "h-full"),
@@ -24,6 +26,7 @@ function CardHolderContainer() {
   const cards = useAppSelector(selectCards());
   const roundStatus = useAppSelector(selectRoundStatus());
   const playerHand = useAppSelector(selectPlayerHandedCard());
+  const userMode = useAppSelector(selectUserInfo());
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -35,12 +38,16 @@ function CardHolderContainer() {
     }
   }, [roundStatus]);
 
-  if (!isFinished(cards) || !isFinished(roundStatus)) {
+  if (!isFinished(cards) || !isFinished(roundStatus) || !isFinished(userMode)) {
     return (
       <div className={styles.cardHolder}>
         <Skeleton />
       </div>
     );
+  }
+
+  if (userMode[0].userMode === UserMode.inspector) {
+    return <div></div>;
   }
 
   const handleSelectCard = (index: number) => dispatch(handCard({ cardIndex: index }));
