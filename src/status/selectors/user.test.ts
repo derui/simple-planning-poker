@@ -21,7 +21,6 @@ test("should return current user info ", () => {
     id: Game.createId(),
     name: "test",
     owner: user.id,
-    joinedPlayers: [],
     finishedRounds: [],
     cards: CARDS,
   });
@@ -50,7 +49,6 @@ test("should not return value when the user was not joined before", () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("2"),
-    joinedPlayers: [],
     finishedRounds: [],
     cards: CARDS,
   });

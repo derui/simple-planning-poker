@@ -3,7 +3,6 @@ import sinon from "sinon";
 import { LeaveGameUseCase } from "./leave-game";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
-import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import { createMockedGameRepository } from "@/test-lib";
@@ -32,14 +31,14 @@ test("should return success if user leaved from a game", async () => {
     gameId,
     userId: user.id,
   };
-  const game = Game.create({
+  let game = Game.create({
     id: gameId,
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("id"),
-    joinedPlayers: [{ user: user.id, mode: GamePlayer.UserMode.normal }],
     finishedRounds: [],
   })[0];
+  game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
 
   const save = sinon.fake();
   const gameRepository = createMockedGameRepository({
@@ -54,5 +53,4 @@ test("should return success if user leaved from a game", async () => {
   // Assert
   expect(ret).toEqual({ kind: "success", game: save.lastCall.lastArg });
   expect(save.callCount).toBe(1);
-  expect(save.lastCall.lastArg.joinedPlayers).toHaveLength(1);
 });

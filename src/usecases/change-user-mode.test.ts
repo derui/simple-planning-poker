@@ -41,7 +41,6 @@ test("should save game", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: userId,
-    joinedPlayers: [],
     finishedRounds: [],
   })[0];
 
@@ -58,10 +57,4 @@ test("should save game", async () => {
   // Assert
   expect(ret.kind).toBe("success");
   expect(save.callCount).toBe(1);
-  expect(save.lastCall.firstArg.joinedPlayers).toEqual([
-    {
-      user: userId,
-      mode: GamePlayer.UserMode.inspector,
-    },
-  ]);
 });

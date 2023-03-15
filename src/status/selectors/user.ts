@@ -6,10 +6,10 @@ import * as Loadable from "@/utils/loadable";
 
 const selectSelf = (state: RootState) => state;
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
-const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game);
 const selectCurrentUser = createDraftSafeSelector(selectUser, (state) => state.currentUser);
 const selectCurrentUserJoinedGames = createDraftSafeSelector(selectUser, (state) => state.currentUserJoinedGames);
-const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.currentGame);
+const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
+const selectCurrentRound = createDraftSafeSelector(selectRound, (state) => state.instance);
 
 export interface UserInfo {
   userName: string;
@@ -21,13 +21,13 @@ export interface UserInfo {
  */
 export const selectUserInfo = function selectUserInfo() {
   return createDraftSafeSelector(
-    [selectCurrentUser, selectCurrentGame],
-    (currentUser, currentGame): Loadable.T<UserInfo> => {
-      if (!currentUser || !currentGame) {
+    [selectCurrentUser, selectCurrentRound],
+    (currentUser, round): Loadable.T<UserInfo> => {
+      if (!currentUser || !round) {
         return Loadable.loading();
       }
 
-      const userMode = currentGame.joinedPlayers.find((v) => v.user === currentUser.id)?.mode;
+      const userMode = round.joinedPlayers[currentUser.id];
       if (!userMode) {
         return Loadable.error();
       }
