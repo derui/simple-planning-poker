@@ -39,7 +39,7 @@ test("should be able to save and find a game", async () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    joinedPlayers: [GamePlayer.create({ userId: User.createId("id"), mode: GamePlayer.UserMode.normal })],
+    joinedPlayers: [GamePlayer.create({ user: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });
@@ -76,7 +76,7 @@ test("should save invitation in key", async () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    joinedPlayers: [GamePlayer.create({ userId: User.createId("id"), mode: GamePlayer.UserMode.normal })],
+    joinedPlayers: [GamePlayer.create({ user: User.createId("id"), mode: GamePlayer.UserMode.normal })],
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });

@@ -7,7 +7,14 @@ export const UserMode = {
 } as const;
 export type UserMode = (typeof UserMode)[keyof typeof UserMode];
 
+export const PlayerType = {
+  player: "player",
+  owner: "owner",
+} as const;
+export type PlayerType = (typeof PlayerType)[keyof typeof PlayerType];
+
 export interface T {
+  readonly type: PlayerType;
   readonly user: User.Id;
   readonly mode: UserMode;
 }
@@ -15,10 +22,19 @@ export interface T {
 /**
    create user from id and name
  */
-export const create = ({ userId, mode = UserMode.normal }: { userId: User.Id; mode?: UserMode }): T => {
+export const create = ({
+  type,
+  user,
+  mode = UserMode.normal,
+}: {
+  type: PlayerType;
+  user: User.Id;
+  mode?: UserMode;
+}): T => {
   return {
-    user: userId,
-    mode: mode,
+    type,
+    user,
+    mode,
   };
 };
 
