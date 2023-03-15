@@ -88,6 +88,7 @@ test("newRound should make new round", () => {
 
   expect(updated.round.id).not.toBe(finishedRound.id);
   expect(updated.round.count).toBe(3);
+  expect(updated.round.joinedPlayers).toEqual(game.round.joinedPlayers);
   expect(updated.finishedRounds[0]).toBe(finishedRound.id);
   expect((event as NewRoundStarted).gameId).toBe(game.id);
   expect((event as NewRoundStarted).roundId).toBe(updated.round.id);
