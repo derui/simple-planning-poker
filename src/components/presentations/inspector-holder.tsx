@@ -10,7 +10,7 @@ const styles = {
     "justify-center",
     "px-3",
     "py-2",
-    "h-32",
+    "h-36",
     "bg-lightgray/25",
     "rounded",
     "items-center"

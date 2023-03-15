@@ -9,7 +9,7 @@ interface Props extends BaseProps {
 }
 
 const styles = {
-  root: classNames("flex", "flex-auto", "justify-center", "px-3", "py-2", "h-32", "items-end"),
+  root: classNames("flex", "flex-auto", "justify-center", "px-3", "py-2", "h-36", "items-end"),
 };
 
 const createCard = (
