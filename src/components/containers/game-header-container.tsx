@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useNavigate } from "react-router";
 import { GameInfo } from "../presentations/game-info";
 import { InvitationLink } from "../presentations/invitation-link";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -23,6 +24,7 @@ export function GameHeaderContainer(props: Props) {
   const invitation = useAppSelector(selectCurrentGameInvitationLink());
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   if (!isFinished(gameName) || !isFinished(invitation)) {
     return (
@@ -32,7 +34,10 @@ export function GameHeaderContainer(props: Props) {
     );
   }
 
-  const handleLeaveGame = () => dispatch(leaveGame());
+  const handleLeaveGame = () => {
+    dispatch(leaveGame());
+    navigate("/game");
+  };
 
   return (
     <div className={styles.root} data-testid={gen("root")}>
