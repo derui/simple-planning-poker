@@ -50,7 +50,7 @@ const styles = {
       "m-3",
       "relative"
     ),
-    count: classNames("text-black", "align-center", "absolute", "bottom-0"),
+    count: classNames("text-gray", "align-center", "absolute", "bottom-0"),
   },
 };
 
