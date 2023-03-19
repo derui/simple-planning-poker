@@ -31,16 +31,11 @@ import { routes } from "./routes/root";
 import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
 import { RoundObserverImpl } from "./infrastractures/round-observer";
 
-let _firebaseConfig = firebaseConfig;
-if (process.env.CI) {
-  _firebaseConfig = { ...firebaseConfig, projectId: new URLSearchParams(location.search).get("projectId") || "" };
-  console.dir(_firebaseConfig);
-}
-
-const firebaseApp = initializeApp(_firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 const database = getDatabase(firebaseApp);
 const auth = getAuth(firebaseApp);
+
 if (location.hostname === "localhost") {
   connectDatabaseEmulator(database, "localhost", 9000);
   connectAuthEmulator(auth, "http://localhost:9099");

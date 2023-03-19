@@ -1,5 +1,4 @@
 import { test as base, type Page } from "@playwright/test";
-import { initializeApp } from "firebase/app";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { v4 } from "uuid";
 
@@ -7,9 +6,7 @@ export const test = base.extend<{ initializedProjectId: string; newPageOnNewCont
   initializedProjectId: async ({}, use) => {
     const projectId = v4();
 
-    const firebaseApp = initializeApp({ projectId, apiKey: "api" });
-
-    const database = getDatabase(firebaseApp);
+    const database = getDatabase();
     connectDatabaseEmulator(database, "localhost", 9000);
 
     await use(projectId);
