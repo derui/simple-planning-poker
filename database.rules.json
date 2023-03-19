@@ -4,7 +4,7 @@
       ".read": "auth != null",
       ".write": "auth != null"
     },
-    "gamePlayers": {
+    "rounds": {
       ".read": "auth != null",
       ".write": "auth != null"
     },
