@@ -28,6 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.7",
+    "@playwright/test": "^1.31.2",
     "@storybook/addon-controls": "7.0.0-beta.61",
     "@storybook/cli": "7.0.0-beta.61",
     "@storybook/react": "^7.0.0-beta.61",
@@ -58,6 +59,7 @@
     "firebase-tools": "^11.23.1",
     "hygen": "^6.2.11",
     "jsdom": "^21.1.0",
+    "playwright": "^1.31.2",
     "prettier": "^2.8.4",
     "sinon": "^15.0.1",
     "storybook": "7.0.0-beta.61",
