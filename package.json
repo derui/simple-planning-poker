@@ -8,7 +8,7 @@
     "start:vite": "vite",
     "start:tsc": "tsc --watch",
     "start": "concurrently --handle-input \"pnpm:copy-assets\" \"pnpm:start:*\"",
-    "ci": "CI=true firebase emulators:exec --import ./misc/ci --ui 'npx vite'",
+    "ci": "CI=true firebase emulators:exec --ui 'npx vite'",
     "start:emulators": "firebase emulators:start --import ./misc/local",
     "build:bundle": "NODE_ENV=production vite build",
     "copy-assets": "cpx 'assets/**' dist/static/",

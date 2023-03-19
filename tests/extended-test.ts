@@ -1,17 +1,7 @@
+import * as fs from "node:fs";
 import { test as base, type Page } from "@playwright/test";
-import { connectDatabaseEmulator, getDatabase } from "firebase/database";
-import { v4 } from "uuid";
 
-export const test = base.extend<{ initializedProjectId: string; newPageOnNewContext: Page }>({
-  initializedProjectId: async ({}, use) => {
-    const projectId = v4();
-
-    const database = getDatabase();
-    connectDatabaseEmulator(database, "localhost", 9000);
-
-    await use(projectId);
-  },
-
+export const test = base.extend<{ newPageOnNewContext: Page; resetFirebase: () => void }>({
   newPageOnNewContext: async ({ browser }, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -20,6 +10,19 @@ export const test = base.extend<{ initializedProjectId: string; newPageOnNewCont
 
     await page.close();
     await context.close();
+  },
+  resetFirebase: async ({ request }, use) => {
+    await use(() => {});
+
+    const firebaserc = JSON.parse(fs.readFileSync("./.firebaserc"));
+
+    await request.delete(`http://localhost:9099/emulator/v1/projects/${firebaserc.projects.default}/accounts`, {
+      headers: { authorization: "Bearer owner" },
+    });
+
+    await request.put("http://localhost:9000/.json?ns=local-default-rtdb", {
+      data: JSON.parse(fs.readFileSync("./misc/ci/database_export/local-default-rtdb.json")),
+    });
   },
 });
 

@@ -29,7 +29,8 @@
     },
     "rootDirs": [
       "src/"
-    ]
+    ],
+    "types": ["node"]
   },
   "include": [
     "src/**/*.ts",
