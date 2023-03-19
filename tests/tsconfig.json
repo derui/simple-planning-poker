@@ -19,7 +19,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "outDir": "generated"
+    "outDir": "generated",
+    "types": ["node"]
   },
   "include": [
     "*.ts",
