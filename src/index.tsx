@@ -31,7 +31,12 @@ import { routes } from "./routes/root";
 import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
 import { RoundObserverImpl } from "./infrastractures/round-observer";
 
-const firebaseApp = initializeApp(firebaseConfig);
+let _firebaseConfig = firebaseConfig;
+if (process.env.CI) {
+  _firebaseConfig = { ...firebaseConfig, projectId: new URLSearchParams(location.search).get("projectId") || "" };
+}
+
+const firebaseApp = initializeApp(_firebaseConfig);
 
 const database = getDatabase(firebaseApp);
 const auth = getAuth(firebaseApp);
