@@ -34,6 +34,7 @@ import { RoundObserverImpl } from "./infrastractures/round-observer";
 let _firebaseConfig = firebaseConfig;
 if (process.env.CI) {
   _firebaseConfig = { ...firebaseConfig, projectId: new URLSearchParams(location.search).get("projectId") || "" };
+  console.dir(_firebaseConfig);
 }
 
 const firebaseApp = initializeApp(_firebaseConfig);

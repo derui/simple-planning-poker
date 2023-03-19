@@ -45,12 +45,14 @@ export class FirebaseAuthenticator implements Authenticator {
   }
 
   private async checkToAllowSigningUserWith(email: string) {
-    const definedUser = await get(ref(this.database, "defined-users"));
-    const mails = (definedUser.val() as string[] | null) || [];
-    const existsMail = mails.some((v) => v === email);
+    if (!process.env.CI) {
+      const definedUser = await get(ref(this.database, "defined-users"));
+      const mails = (definedUser.val() as string[] | null) || [];
+      const existsMail = mails.some((v) => v === email);
 
-    if (!existsMail) {
-      throw new Error("Do not allow login the email");
+      if (!existsMail) {
+        throw new Error("Do not allow login the email");
+      }
     }
   }
 
