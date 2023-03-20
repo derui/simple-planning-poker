@@ -32,8 +32,7 @@ test("render", () => {
     </Provider>
   );
 
-  expect(screen.queryAllByTestId("upper/hand/root")).toHaveLength(1);
-  expect(screen.queryAllByTestId("lower/hand/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("hands/hand/root")).toHaveLength(2);
 });
 
 test("should dsiplay skeleton when loading", () => {

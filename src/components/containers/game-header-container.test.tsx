@@ -1,6 +1,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router";
 import { GameHeaderContainer } from "./game-header-container";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
@@ -27,7 +28,9 @@ test("should not open initial", () => {
 
   render(
     <Provider store={store}>
-      <GameHeaderContainer />
+      <MemoryRouter>
+        <GameHeaderContainer />
+      </MemoryRouter>
     </Provider>
   );
 
@@ -41,7 +44,9 @@ test("should display skeleton if game or user do not initialized", async () => {
 
   render(
     <Provider store={store}>
-      <GameHeaderContainer />
+      <MemoryRouter>
+        <GameHeaderContainer />
+      </MemoryRouter>
     </Provider>
   );
 

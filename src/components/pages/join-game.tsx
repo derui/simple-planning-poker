@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { useParams } from "react-router";
+import { generatePath, useNavigate, useParams } from "react-router";
 import classNames from "classnames";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { Loader } from "../presentations/loader";
 import { Overlay } from "../presentations/overlay";
 import * as Invitation from "@/domains/invitation";
 import { joinGame } from "@/status/actions/game";
+import { selectCurrentGameId, selectCurrentRoundId } from "@/status/selectors/game";
 
 const styles = {
   dialog: classNames(
@@ -26,12 +27,21 @@ const styles = {
 export function JoinGamePage() {
   const param = useParams<{ signature: string }>();
   const dispatch = useAppDispatch();
+  const currentRoundId = useAppSelector(selectCurrentRoundId());
+  const currentGameId = useAppSelector(selectCurrentGameId());
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (param.signature) {
       dispatch(joinGame(param.signature as Invitation.T));
     }
   }, [param.signature]);
+
+  useEffect(() => {
+    if (currentGameId && currentRoundId) {
+      navigate(generatePath("/game/:gameId/round/:roundId", { gameId: currentGameId, roundId: currentRoundId }));
+    }
+  }, [currentRoundId, currentGameId]);
 
   return (
     <div data-testid="root">
