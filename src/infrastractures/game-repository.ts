@@ -1,16 +1,13 @@
 import { child, Database, get, ref, update } from "firebase/database";
 import * as resolver from "./game-ref-resolver";
 import * as UserRefResolver from "./user-ref-resolver";
+import { deserializeFrom } from "./game-snapshot-deserializer";
 import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
-import * as StoryPoint from "@/domains/story-point";
-import * as Round from "@/domains/round";
 import * as User from "@/domains/user";
-import * as SelectableCards from "@/domains/selectable-cards";
 import * as Invitation from "@/domains/invitation";
 
 import { RoundRepository } from "@/domains/round-repository";
-import { PlayerType, UserMode } from "@/domains/game-player";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: Database, private roundRepository: RoundRepository) {}
@@ -57,40 +54,9 @@ export class GameRepositoryImpl implements GameRepository {
     }
     const snapshot = await get(child(ref(this.database, "games"), id));
 
-    const val = snapshot.val();
-    if (!val) {
-      return undefined;
-    }
+    const game = await deserializeFrom(id, snapshot, this.roundRepository);
 
-    const name = val.name as string;
-    const cards = val.cards as number[];
-    const roundId = val.round as Round.Id;
-    const finishedRounds = (val.finishedRounds ?? []) as Round.Id[];
-    const owner = val.owner as string;
-    const joinedPlayers =
-      (val.joinedPlayers as Record<User.Id, { type: PlayerType; mode: UserMode }> | undefined) ?? {};
-
-    const round = await this.roundRepository.findBy(roundId);
-    if (!round) {
-      return undefined;
-    }
-
-    const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
-    const [game] = Game.create({
-      id,
-      name,
-      owner: User.createId(owner),
-      cards: selectableCards,
-      round,
-      joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({
-        type,
-        user: User.createId(k),
-        mode,
-      })),
-      finishedRounds,
-    });
-
-    return game;
+    return game ? game : undefined;
   }
 
   async listUserJoined(user: User.Id): Promise<{ id: Game.Id; name: string }[]> {
