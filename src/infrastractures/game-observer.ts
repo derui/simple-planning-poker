@@ -1,4 +1,4 @@
-import { Database, ref, onValue, Unsubscribe } from "firebase/database";
+import { Database, ref, onValue, Unsubscribe, DataSnapshot } from "firebase/database";
 import { GameObserver } from "./observer";
 import { T, Id } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
@@ -12,7 +12,7 @@ export class GameObserverImpl implements GameObserver {
     this.unsubscribe();
 
     this.subscribingGameId = gameId;
-    const _subscriber = async () => {
+    const _subscriber: (data: DataSnapshot) => void = async () => {
       const game = await this.gameRepository.findBy(gameId);
       if (!game) {
         return;
@@ -21,12 +21,14 @@ export class GameObserverImpl implements GameObserver {
       subscriber(game);
     };
 
-    this._unsubscribe = onValue(ref(this.database, `games/${gameId}`), _subscriber);
+    this._unsubscribe = onValue(ref(this.database, `games/${gameId}/`), _subscriber);
   }
 
   unsubscribe(): void {
     if (this._unsubscribe && this.subscribingGameId) {
       this._unsubscribe();
+      this._unsubscribe = null;
+      this.subscribingGameId = null;
     }
   }
 }

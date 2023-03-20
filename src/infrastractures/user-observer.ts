@@ -9,6 +9,7 @@ export class UserObserverImpl implements UserObserver {
   constructor(private database: Database, private userRepository: UserRepository) {}
   unsubscribe(): void {
     this._subscriptions.forEach((f) => f());
+    this._subscriptions = new Map();
   }
 
   subscribe(userId: Id, subscriber: (user: T) => void) {

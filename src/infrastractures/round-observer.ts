@@ -27,6 +27,8 @@ export class RoundObserverImpl implements RoundObserver {
   unsubscribe(): void {
     if (this._unsubscriber && this._subscribingRoundId) {
       this._unsubscriber();
+      this._unsubscriber = null;
+      this._subscribingRoundId = null;
     }
   }
 }
