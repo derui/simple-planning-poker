@@ -78,7 +78,7 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
   await expect(other.getByTestId("hands/test@example.com/card")).toBeVisible();
 });
 
-test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
   resetFirebase();
 
   // sign up main
@@ -109,6 +109,8 @@ test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) 
   await page.getByTestId("invitation/opener").click();
   const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
   await other.goto(joinUrl);
+  await expect(page.getByTestId("hands/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("hands/test2@example.com/card")).toBeVisible();
 
   // hand
   await page.getByText("3", { exact: true }).click();
@@ -144,4 +146,19 @@ test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) 
 
   await expect(page.getByTestId("average")).toContainText("Score3");
   await expect(other.getByTestId("average")).toContainText("Score3");
+
+  // start next round.
+  await nextRoundButton.click();
+  await expect(nextRoundButton).toBeHidden();
+  await expect(nextRoundButtonOnOtherPage).toBeHidden();
+
+  await expect(page.getByTestId("hands/test@example.com/card")).toBeEmpty();
+  await expect(page.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("hands/test@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+
+  for (let card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
+    await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
+    await expect(other.getByText(`${card}`, { exact: true })).toBeVisible();
+  }
 });
