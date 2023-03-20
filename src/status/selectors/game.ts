@@ -78,7 +78,7 @@ export const selectGameCreatingStatus = function selectGameCreatingStatus() {
  * select player hand that did current player
  */
 export const selectPlayerHandedCard = function selectPlayerHandedCard() {
-  return createDraftSafeSelector([selectRound, selectCurrentUser], ({ instance: round }, user): PlayerHandInfo => {
+  return createDraftSafeSelector(selectRound, selectCurrentUser, ({ instance: round }, user): PlayerHandInfo => {
     if (!round || !user) {
       return { hand: UserHand.unselected(), cardIndex: -1 };
     }

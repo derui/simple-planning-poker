@@ -20,21 +20,18 @@ export interface UserInfo {
  * return UserInfo in current game with current user
  */
 export const selectUserInfo = function selectUserInfo() {
-  return createDraftSafeSelector(
-    [selectCurrentUser, selectCurrentRound],
-    (currentUser, round): Loadable.T<UserInfo> => {
-      if (!currentUser || !round) {
-        return Loadable.loading();
-      }
-
-      const userMode = round.joinedPlayers[currentUser.id];
-      if (!userMode) {
-        return Loadable.error();
-      }
-
-      return Loadable.finished({ userName: currentUser.name, userMode });
+  return createDraftSafeSelector(selectCurrentUser, selectCurrentRound, (currentUser, round): Loadable.T<UserInfo> => {
+    if (!currentUser || !round) {
+      return Loadable.loading();
     }
-  );
+
+    const userMode = round.joinedPlayers[currentUser.id];
+    if (!userMode) {
+      return Loadable.error();
+    }
+
+    return Loadable.finished({ userName: currentUser.name, userMode });
+  });
 };
 
 interface JoinedGameModel {
