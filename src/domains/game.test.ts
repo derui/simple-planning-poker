@@ -227,7 +227,7 @@ describe("leave", () => {
 
     const ret = acceptLeaveFrom(game, User.createId("not found"));
 
-    expect(ret).toBe(game);
+    expect(ret).toEqual(game);
   });
 
   test("remove user that want to leave from game", () => {
@@ -244,6 +244,7 @@ describe("leave", () => {
 
     expect(isShowedDown(ret)).toBe(false);
     expect(ret).not.toBe(game);
+    expect(ret.joinedPlayers.map((v) => v.user)).not.toContainEqual(User.createId("new"));
     expect(ret.round.joinedPlayers).toHaveLength(1);
     expect(ret.round.joinedPlayers[0].user).toBe(User.createId("user"));
   });

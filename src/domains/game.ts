@@ -19,6 +19,7 @@ export interface T {
   readonly id: Id;
   readonly name: string;
   readonly owner: User.Id;
+  readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
   readonly round: Round.T;
   readonly finishedRounds: Round.Id[];
@@ -64,15 +65,17 @@ export const create = ({
   owner,
   round,
   finishedRounds,
+  joinedPlayers,
 }: {
   id: Id;
   name: string;
   owner: User.Id;
   cards: SelectableCards.T;
+  joinedPlayers?: GamePlayer.T[];
   round?: Round.T;
   finishedRounds: Round.Id[];
 }): [T, DomainEvent] => {
-  const distinctedPlayers = new Map();
+  const distinctedPlayers = new Map<User.Id, any>();
   if (!round) {
     distinctedPlayers.set(
       owner,
@@ -94,6 +97,7 @@ export const create = ({
     name,
     cards,
     owner,
+    joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
     round:
       round ??
       Round.roundOf({
@@ -176,6 +180,9 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   }
 
   const newObj = produce(game, (draft) => {
+    draft.joinedPlayers.push(
+      GamePlayer.create({ type: GamePlayer.PlayerType.player, user, mode: GamePlayer.UserMode.normal })
+    );
     draft.round = Round.joinPlayer(draft.round, user);
   });
 
@@ -193,12 +200,12 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
  */
 export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): T {
   const round = game.round;
-  if (!Round.isRound(round)) {
-    return game;
-  }
-
   return produce(game, (draft) => {
-    draft.round = Round.acceptLeaveFrom(round, user);
+    draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
+
+    if (Round.isRound(round)) {
+      draft.round = Round.acceptLeaveFrom(round, user);
+    }
   });
 };
 
