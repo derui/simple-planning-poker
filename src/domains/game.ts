@@ -53,6 +53,10 @@ export interface UserJoined extends DomainEvent {
   userId: User.Id;
 }
 
+export const isUserJoined = function isUserJoined(event: DomainEvent): event is UserJoined {
+  return event.kind === "UserJoined";
+};
+
 export const create = ({
   id,
   name,

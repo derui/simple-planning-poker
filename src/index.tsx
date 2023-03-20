@@ -30,6 +30,7 @@ import { tryAuthenticate } from "./status/actions/signin";
 import { routes } from "./routes/root";
 import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
 import { RoundObserverImpl } from "./infrastractures/round-observer";
+import { JoinUserEventListener } from "./infrastractures/event/join-user-event-listener";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -44,7 +45,10 @@ if (location.hostname === "localhost") {
 const gameRepository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 const userRepository = new UserRepositoryImpl(database);
 
-const dispatcher = new EventDispatcherImpl([new CreateGameEventListener(database)]);
+const dispatcher = new EventDispatcherImpl([
+  new CreateGameEventListener(database),
+  new JoinUserEventListener(database),
+]);
 
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
 registrar.register("userRepository", userRepository);
