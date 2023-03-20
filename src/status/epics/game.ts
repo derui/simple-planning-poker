@@ -101,7 +101,7 @@ export const gameEpic = (
         const currentUser = user.currentUser;
 
         if (!currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
+          return of(GameAction.somethingFailure("Can not open game"));
         }
 
         const repository = registrar.resolve("gameRepository");

@@ -54,20 +54,21 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   // expect game pages
   await expect(page.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(page.getByTestId("upper/hand/root")).toHaveText("test@example.com");
+  await expect(page.getByTestId("hands/hand/root")).toHaveText("test@example.com");
 
   for (let card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
   }
 
-  // join game from other
+  // join game with other
   await page.getByTestId("invitation/opener").click();
   const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
   await other.goto(joinUrl);
 
-  await expect(other.getByText(/Joining to the game/)).toBeVisible();
-
   await expect(other).toHaveURL(page.url());
   await expect(other.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(other.getByTestId("lower/hand/root")).toHaveText("test2@example.com");
+  await expect(other.getByTestId("hands/hand/root").getByText("test2@example.com")).toBeVisible();
+
+  // update joined user in other page
+  await expect(page.getByTestId("hands/hand/root").getByText("test2@example.com")).toBeVisible();
 });

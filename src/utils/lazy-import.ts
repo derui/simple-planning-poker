@@ -1,4 +1,4 @@
-export default async function lazyImport<T>(mod: Promise<T>, delay = 500) {
+export default async function lazyImport<T>(mod: Promise<T>, delay = 250) {
   let t: any;
 
   return await Promise.all([
