@@ -19,6 +19,7 @@ import {
   createMockedGameRepository,
   createMockedJoinUserUseCase,
   createMockedLeaveGameUseCase,
+  createMockedRoundObserver,
   createMockedUserObserver,
   createMockedUserRepository,
 } from "@/test-lib";
@@ -176,6 +177,7 @@ describe("observe game", () => {
     game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
+    registrar.register("roundObserver", createMockedRoundObserver());
     registrar.register("userObserver", createMockedUserObserver());
     registrar.register("gameObserver", {
       subscribe() {},
@@ -205,6 +207,7 @@ describe("observe game", () => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());
+    registrar.register("roundObserver", createMockedRoundObserver());
     registrar.register("gameObserver", {
       subscribe(_id, _callback) {
         _callback(game);
