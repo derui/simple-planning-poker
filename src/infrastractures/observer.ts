@@ -15,5 +15,10 @@ export interface RoundObserver {
 }
 
 export interface UserObserver {
-  subscribe(id: User.Id, subscriber: (user: User.T) => void): () => void;
+  subscribe(id: User.Id, subscriber: (user: User.T) => void): void;
+
+  /**
+   * unsubscribe *all* subscriptions.
+   */
+  unsubscribe(): void;
 }

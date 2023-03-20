@@ -1,12 +1,22 @@
-import { Database, onValue, ref } from "firebase/database";
+import { Database, onValue, ref, type Unsubscribe } from "firebase/database";
 import { UserObserver } from "./observer";
 import { T, Id } from "@/domains/user";
 import { UserRepository } from "@/domains/user-repository";
 
 export class UserObserverImpl implements UserObserver {
-  constructor(private database: Database, private userRepository: UserRepository) {}
+  private _subscriptions = new Map<Id, Unsubscribe>();
 
-  subscribe(userId: Id, subscriber: (user: T) => void): () => void {
+  constructor(private database: Database, private userRepository: UserRepository) {}
+  unsubscribe(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  subscribe(userId: Id, subscriber: (user: T) => void) {
+    const oldSubscription = this._subscriptions.get(userId);
+    if (oldSubscription) {
+      oldSubscription();
+    }
+
     const callback = async () => {
       const user = await this.userRepository.findBy(userId);
       if (!user) {
@@ -19,6 +29,6 @@ export class UserObserverImpl implements UserObserver {
     const key = `users/${userId}`;
     const unsubscribe = onValue(ref(this.database, key), callback);
 
-    return unsubscribe;
+    this._subscriptions.set(userId, unsubscribe);
   }
 }
