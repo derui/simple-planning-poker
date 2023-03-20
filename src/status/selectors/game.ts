@@ -10,6 +10,7 @@ const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.c
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectCurrentUser = createDraftSafeSelector(selectUser, (state) => state.currentUser);
 const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
+const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => state.instance);
 
 /**
  * return current game id if it was loaded.
@@ -24,8 +25,8 @@ export const selectCurrentGameId = function selectCurrentGameId() {
  * return current round id if it was loaded.
  */
 export const selectCurrentRoundId = function selectCurrentRoundId() {
-  return createDraftSafeSelector(selectRound, (round) => {
-    return round.instance?.id;
+  return createDraftSafeSelector(selectRoundInstance, (round) => {
+    return round?.id;
   });
 };
 
@@ -78,7 +79,7 @@ export const selectGameCreatingStatus = function selectGameCreatingStatus() {
  * select player hand that did current player
  */
 export const selectPlayerHandedCard = function selectPlayerHandedCard() {
-  return createDraftSafeSelector(selectRound, selectCurrentUser, ({ instance: round }, user): PlayerHandInfo => {
+  return createDraftSafeSelector(selectRoundInstance, selectCurrentUser, (round, user): PlayerHandInfo => {
     if (!round || !user) {
       return { hand: UserHand.unselected(), cardIndex: -1 };
     }
@@ -116,7 +117,7 @@ export const selectCurrentGameInvitationLink = function selectCurrentGameInvitat
  * select flag to be able to hold new round
  */
 export const selectCanShowDown = function selectCanShowDown() {
-  return createDraftSafeSelector(selectRound, ({ instance }): boolean => {
+  return createDraftSafeSelector(selectRoundInstance, (instance): boolean => {
     if (!instance) {
       return false;
     }
@@ -131,7 +132,7 @@ interface RoundResultInfo {
 }
 
 export const selectRoundResult = function selectRoundResult() {
-  return createDraftSafeSelector(selectRound, ({ instance: round }): Loadable.T<RoundResultInfo> => {
+  return createDraftSafeSelector(selectRoundInstance, (round): Loadable.T<RoundResultInfo> => {
     if (!round) {
       return Loadable.loading();
     }
@@ -162,11 +163,11 @@ export const selectRoundResult = function selectRoundResult() {
  * return status of round
  */
 export const selectRoundStatus = function selectRoundStatus() {
-  return createDraftSafeSelector(selectRound, (round) => {
-    if (!round.instance) {
+  return createDraftSafeSelector(selectRoundInstance, (round) => {
+    if (!round) {
       return Loadable.loading();
     }
 
-    return Loadable.finished({ id: round.instance.id, state: round.instance.state });
+    return Loadable.finished({ id: round.id, state: round.state });
   });
 };

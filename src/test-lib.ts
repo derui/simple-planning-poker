@@ -11,7 +11,7 @@ import { HandCardUseCase } from "./usecases/hand-card";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { ShowDownUseCase } from "./usecases/show-down";
-import { RoundObserver, UserObserver } from "./infrastractures/observer";
+import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as Game from "@/domains/game";
@@ -103,6 +103,13 @@ export const createMockedUserObserver = function createMockedUserObserver(mock: 
     subscribe: mock.subscribe ?? sinon.fake(),
     unsubscribe: mock.unsubscribe ?? sinon.fake(),
   } as UserObserver;
+};
+
+export const createMockedGameObserver = function createMockedGameObserver(mock: Partial<GameObserver> = {}) {
+  return {
+    subscribe: mock.subscribe ?? sinon.fake(),
+    unsubscribe: mock.unsubscribe ?? sinon.fake(),
+  } as GameObserver;
 };
 
 export const createMockedRoundObserver = function createMockedRoundObserver(mock: Partial<RoundObserver> = {}) {

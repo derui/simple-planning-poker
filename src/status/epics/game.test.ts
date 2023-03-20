@@ -13,9 +13,11 @@ import * as User from "@/domains/user";
 import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as GameAction from "@/status/actions/game";
+import * as RoundAction from "@/status/actions/round";
 import * as UserHand from "@/domains/user-hand";
 import {
   createMockedCreateGameUseCase,
+  createMockedGameObserver,
   createMockedGameRepository,
   createMockedJoinUserUseCase,
   createMockedLeaveGameUseCase,
@@ -224,6 +226,37 @@ describe("observe game", () => {
     const ret = await lastValueFrom(epics.observeOpenedGame(action$, state$, null).pipe(take(2)));
 
     expect(ret).toEqual(GameAction.notifyGameChanges(game));
+  });
+
+  test("notify round change", async () => {
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+    });
+    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register("userObserver", createMockedUserObserver());
+    registrar.register("gameObserver", createMockedGameObserver());
+    registrar.register("roundObserver", {
+      subscribe(_id, _callback) {
+        _callback(game.round);
+      },
+      unsubscribe() {},
+    });
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+
+    const action$ = of(GameAction.openGameSuccess({ game, players: [] }));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await lastValueFrom(epics.observeOpenedGame(action$, state$, null).pipe(take(2)));
+
+    expect(ret).toEqual(RoundAction.notifyRoundUpdated(game.round));
   });
 });
 

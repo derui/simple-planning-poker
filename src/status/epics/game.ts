@@ -41,6 +41,16 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
 
         subscriber.next(GameAction.notifyGameChanges(game));
       });
+
+      payload.game.joinedPlayers.forEach((_user) => {
+        userObserver.subscribe(_user.user, (user) => {
+          subscriber.next(UserAction.notifyOtherUserChanged(user));
+        });
+      });
+
+      roundObserver.subscribe(payload.game.round.id, (round) => {
+        subscriber.next(RoundAction.notifyRoundUpdated(round));
+      });
     });
   });
 };

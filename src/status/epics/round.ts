@@ -1,36 +1,19 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
-import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction, Observable } from "rxjs";
+import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction } from "rxjs";
 import type { RootState } from "../store";
-import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
-import * as GameAction from "@/status/actions/game";
 import * as UserHand from "@/domains/user-hand";
-import * as Round from "@/domains/round";
 
-type Epics = "giveUp" | "handCard" | "changeUserMode" | "showDown" | "observeOpenedGame" | "observeNewRound";
+type Epics = "giveUp" | "handCard" | "changeUserMode" | "showDown";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
 
   return source.pipe(startWith(RoundAction.somethingFailure("failed with exception")));
 });
-
-const observeRound = function observeRound(registrar: DependencyRegistrar<Dependencies>) {
-  return switchMap((payload: Round.T) => {
-    const roundObserver = registrar.resolve("roundObserver");
-
-    return new Observable((subscriber) => {
-      subscriber.next(noopOnEpic());
-
-      roundObserver.subscribe(payload.id, (round) => {
-        subscriber.next(RoundAction.notifyRoundUpdated(round));
-      });
-    });
-  });
-};
 
 export const roundEpic = (
   registrar: DependencyRegistrar<Dependencies>
@@ -162,22 +145,6 @@ export const roundEpic = (
           })
         );
       }),
-      commonCatchError
-    ),
-
-  observeOpenedGame: (action$) =>
-    action$.pipe(
-      filter(GameAction.openGameSuccess.match),
-      map((v) => v.payload.game.round),
-      observeRound(registrar),
-      commonCatchError
-    ),
-
-  observeNewRound: (action$) =>
-    action$.pipe(
-      filter(GameAction.newRoundSuccess.match),
-      map((v) => v.payload.round),
-      observeRound(registrar),
       commonCatchError
     ),
 });
