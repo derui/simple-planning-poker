@@ -6,6 +6,7 @@ import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
+import * as RoundAction from "@/status/actions/round";
 import * as UserAction from "@/status/actions/user";
 
 type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "newRound";
@@ -20,6 +21,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
   return switchMap((payload: GameAction.OpenedGamePayload) => {
     const gameObserver = registrar.resolve("gameObserver");
     const userObserver = registrar.resolve("userObserver");
+    const roundObserver = registrar.resolve("roundObserver");
 
     return new Observable((subscriber) => {
       subscriber.next(noopOnEpic());
@@ -33,13 +35,11 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
           });
         });
 
-        subscriber.next(GameAction.notifyGameChanges(game));
-      });
-
-      payload.game.joinedPlayers.forEach((_user) => {
-        userObserver.subscribe(_user.user, (user) => {
-          subscriber.next(UserAction.notifyOtherUserChanged(user));
+        roundObserver.subscribe(game.round.id, (round) => {
+          subscriber.next(RoundAction.notifyRoundUpdated(round));
         });
+
+        subscriber.next(GameAction.notifyGameChanges(game));
       });
     });
   });

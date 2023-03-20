@@ -23,8 +23,9 @@ export class NewRoundUseCase implements UseCase<NewRoundUseCaseInput, Promise<Ne
     try {
       const [newGame, event] = Game.newRound(game);
 
+      await this.gameRepository.save(newGame);
+
       this.dispatcher.dispatch(event);
-      this.gameRepository.save(newGame);
 
       return { kind: "success", game: newGame };
     } catch (e) {

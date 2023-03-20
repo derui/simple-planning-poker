@@ -8,8 +8,10 @@ import { filterUndefined } from "@/utils/basic";
 import * as Loadable from "@/utils/loadable";
 
 const selectSelf = (state: RootState) => state;
-const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round.instance);
-const selectUsers = createDraftSafeSelector(selectSelf, (state) => state.user.users);
+const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
+const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => state.instance);
+const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
+const selectUsers = createDraftSafeSelector(selectUser, (state) => state.users);
 
 export type UserHandState = "notSelected" | "handed" | "result";
 
@@ -24,7 +26,7 @@ export interface UserHandInfo {
  * return UserInfo in current game with current user
  */
 export const selectUserHandInfos = function selectUserHandInfos() {
-  return createDraftSafeSelector([selectRound, selectUsers], (round, users): Loadable.T<UserHandInfo[]> => {
+  return createDraftSafeSelector(selectRoundInstance, selectUsers, (round, users): Loadable.T<UserHandInfo[]> => {
     if (!round) {
       return Loadable.loading();
     }
