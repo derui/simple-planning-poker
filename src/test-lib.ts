@@ -101,6 +101,7 @@ export const createMockedAuthenticator = function createMockedAuthenticator(mock
 export const createMockedUserObserver = function createMockedUserObserver(mock: Partial<UserObserver> = {}) {
   return {
     subscribe: mock.subscribe ?? sinon.fake(),
+    unsubscribe: mock.unsubscribe ?? sinon.fake(),
   } as UserObserver;
 };
 

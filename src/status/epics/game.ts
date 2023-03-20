@@ -6,6 +6,7 @@ import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
+import * as UserAction from "@/status/actions/user";
 
 type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "newRound";
 
@@ -18,12 +19,27 @@ const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) =
 const observeGame = function observeGame(registrar: DependencyRegistrar<Dependencies>) {
   return switchMap((payload: GameAction.OpenedGamePayload) => {
     const gameObserver = registrar.resolve("gameObserver");
+    const userObserver = registrar.resolve("userObserver");
 
     return new Observable((subscriber) => {
       subscriber.next(noopOnEpic());
 
       gameObserver.subscribe(payload.game.id, (game) => {
+        userObserver.unsubscribe();
+
+        game.joinedPlayers.forEach((_user) => {
+          userObserver.subscribe(_user.user, (user) => {
+            subscriber.next(UserAction.notifyOtherUserChanged(user));
+          });
+        });
+
         subscriber.next(GameAction.notifyGameChanges(game));
+      });
+
+      payload.game.joinedPlayers.forEach((_user) => {
+        userObserver.subscribe(_user.user, (user) => {
+          subscriber.next(UserAction.notifyOtherUserChanged(user));
+        });
       });
     });
   });
