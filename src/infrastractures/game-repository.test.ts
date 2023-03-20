@@ -41,7 +41,7 @@ test("should be able to save and find a game", async () => {
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
   });
-  game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];
+  game = Game.joinUserAsPlayer(game, User.createId("other"), Game.makeInvitation(game))[0];
 
   const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
 
@@ -56,6 +56,7 @@ test("should be able to save and find a game", async () => {
   expect(instance?.cards).toEqual(game.cards);
   expect(instance?.round).toEqual(game.round);
   expect(instance?.finishedRounds).toEqual(game.finishedRounds);
+  expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
 });
 
 test("should not be able find a game if it did not save before", async () => {

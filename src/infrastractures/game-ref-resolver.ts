@@ -19,3 +19,7 @@ export const round = function round(id: Id) {
 export const finishedRounds = function finishedRounds(id: Id) {
   return `/games/${id}/finishedRounds`;
 };
+
+export const joinedPlayers = function joinedPlayers(id: Id) {
+  return `/games/${id}/joinedPlayers`;
+};

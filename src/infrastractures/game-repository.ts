@@ -10,6 +10,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as Invitation from "@/domains/invitation";
 
 import { RoundRepository } from "@/domains/round-repository";
+import { PlayerType, UserMode } from "@/domains/game-player";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: Database, private roundRepository: RoundRepository) {}
@@ -21,6 +22,12 @@ export class GameRepositoryImpl implements GameRepository {
     updates[resolver.round(game.id)] = game.round.id;
     updates[resolver.finishedRounds(game.id)] = game.finishedRounds;
     updates[resolver.owner(game.id)] = game.owner;
+    updates[resolver.joinedPlayers(game.id)] = game.joinedPlayers.reduce<Record<any, any>>((accum, val) => {
+      const { user, ...rest } = val;
+      accum[user] = rest;
+
+      return accum;
+    }, {});
 
     const invitation = Game.makeInvitation(game);
     updates[`/invitations/${invitation}`] = game.id;
@@ -60,6 +67,8 @@ export class GameRepositoryImpl implements GameRepository {
     const roundId = val.round as Round.Id;
     const finishedRounds = (val.finishedRounds ?? []) as Round.Id[];
     const owner = val.owner as string;
+    const joinedPlayers =
+      (val.joinedPlayers as Record<User.Id, { type: PlayerType; mode: UserMode }> | undefined) ?? {};
 
     const round = await this.roundRepository.findBy(roundId);
     if (!round) {
@@ -73,6 +82,11 @@ export class GameRepositoryImpl implements GameRepository {
       owner: User.createId(owner),
       cards: selectableCards,
       round,
+      joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({
+        type,
+        user: User.createId(k),
+        mode,
+      })),
       finishedRounds,
     });
 
