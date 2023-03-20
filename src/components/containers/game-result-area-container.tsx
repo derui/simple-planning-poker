@@ -99,11 +99,11 @@ export function GameResultAreaContainer() {
       <div className={styles.gridContainer}>
         <div className="row-start-1 col-span-full"></div>
         <div className="row-start-2 col-start-2">
-          <PlayerHands hands={upper} testid="upper" />
+          <PlayerHands hands={upper} testid="hands" />
         </div>
         <div className={styles.table}>{button}</div>
         <div className="row-start-4 col-start-2">
-          <PlayerHands hands={lower} testid="lower" />
+          <PlayerHands hands={lower} testid="hands" />
         </div>
         <div className="row-start-5 col-span-full"></div>
       </div>

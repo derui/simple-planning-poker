@@ -54,7 +54,7 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   // expect game pages
   await expect(page.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(page.getByTestId("hands/hand/root")).toHaveText("test@example.com");
+  await expect(page.getByTestId("hands/test@example.com/root")).toHaveText("test@example.com");
 
   for (let card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
@@ -67,8 +67,81 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   await expect(other).toHaveURL(page.url());
   await expect(other.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(other.getByTestId("hands/hand/root").getByText("test2@example.com")).toBeVisible();
+  await expect(other.getByTestId("hands/test2@example.com/root")).toBeVisible();
 
   // update joined user in other page
-  await expect(page.getByTestId("hands/hand/root").getByText("test2@example.com")).toBeVisible();
+  await expect(page.getByTestId("hands/test2@example.com/root")).toBeVisible();
+
+  // selecting hand synchronize each page
+  await page.getByText("3", { exact: true }).click();
+  await expect(page.getByTestId("hands/test@example.com/card")).toHaveAttribute("data-state", "handed");
+  await expect(other.getByTestId("hands/test@example.com/card")).toBeVisible();
+});
+
+test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+  resetFirebase();
+
+  // sign up main
+  await page.goto(`/`);
+  await page.getByText("Sign up").click();
+  await signIn(page, "test@example.com", "password");
+
+  // sign up other
+  await other.goto(`/`);
+  await other.getByText("Sign up").click();
+  await signIn(other, "test2@example.com", "password");
+
+  // create game
+  await page.getByRole("button", { name: "Create Game" }).click();
+  const submit = page.getByRole("button", { name: "Submit" });
+
+  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+
+  await submit.click();
+
+  // move to select game page
+  const link = page.getByRole("link", { name: "CI sample" });
+
+  // open game
+  await link.click();
+
+  // join game with other
+  await page.getByTestId("invitation/opener").click();
+  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.goto(joinUrl);
+
+  // hand
+  await page.getByText("3", { exact: true }).click();
+
+  // show down
+  const showDownButton = page.getByRole("button", { name: "Show down!" });
+  const showDownButtonOnOtherPage = other.getByRole("button", { name: "Show down!" });
+  await expect(showDownButton).toBeVisible();
+  await expect(showDownButton).toBeEnabled();
+  await expect(showDownButtonOnOtherPage).toBeVisible();
+  await expect(showDownButtonOnOtherPage).toBeEnabled();
+
+  await showDownButton.click();
+
+  // invisible show down button
+  await expect(showDownButton).toBeHidden();
+  await expect(showDownButtonOnOtherPage).toBeHidden();
+
+  // show result
+  const nextRoundButton = page.getByRole("button", { name: "Start next round" });
+  const nextRoundButtonOnOtherPage = other.getByRole("button", { name: "Start next round" });
+
+  await expect(nextRoundButton).toBeEnabled();
+  await expect(nextRoundButtonOnOtherPage).toBeEnabled();
+
+  await expect(page.getByTestId("hands/test@example.com/card")).toHaveText("3");
+  await expect(page.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("hands/test@example.com/card")).toHaveText("3");
+  await expect(other.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+
+  await expect(page.getByTestId("resultCard")).toContainText("3");
+  await expect(other.getByTestId("resultCard")).toContainText("3");
+
+  await expect(page.getByTestId("average")).toContainText("Score3");
+  await expect(other.getByTestId("average")).toContainText("Score3");
 });

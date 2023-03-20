@@ -16,7 +16,7 @@ export function PlayerHands({ hands, testid }: Props) {
   const gen = generateTestId(testid);
 
   const createUserHand = (props: UserHandInfo, index: number) => {
-    return <PlayerHand key={index} testid={gen("hand")} {...props} />;
+    return <PlayerHand key={index} testid={gen(props.userName)} {...props} />;
   };
 
   return (

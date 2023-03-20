@@ -18,7 +18,7 @@ test("display a hand", async () => {
   ];
   render(<PlayerHands hands={hands} />);
 
-  expect(screen.queryAllByTestId("hand/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("name/root")).toHaveLength(1);
 });
 
 test("display three hands", async () => {
@@ -29,7 +29,6 @@ test("display three hands", async () => {
   ] satisfies UserHandInfo[];
   render(<PlayerHands hands={hands} />);
 
-  expect(screen.queryAllByTestId("hand/root")).toHaveLength(3);
   expect(screen.queryByText("name")).not.toBeNull();
   expect(screen.queryByText("name2")).not.toBeNull();
   expect(screen.queryByText("name3")).not.toBeNull();
