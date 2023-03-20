@@ -8,7 +8,7 @@ export class UserObserverImpl implements UserObserver {
 
   constructor(private database: Database, private userRepository: UserRepository) {}
   unsubscribe(): void {
-    throw new Error("Method not implemented.");
+    this._subscriptions.forEach((f) => f());
   }
 
   subscribe(userId: Id, subscriber: (user: T) => void) {
