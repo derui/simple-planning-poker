@@ -1,6 +1,6 @@
-import { GameObserver, RoundObserver, UserObserver } from "./contexts/observer";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
+import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
 import { Authenticator } from "./status/type";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";

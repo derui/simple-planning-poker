@@ -1,6 +1,6 @@
 import { Database, ref, onValue, Unsubscribe, DataSnapshot } from "firebase/database";
 import { deserializeFrom } from "./round-database-deserializer";
-import { RoundObserver } from "@/contexts/observer";
+import { RoundObserver } from "./observer";
 import { T, Id } from "@/domains/round";
 
 export class RoundObserverImpl implements RoundObserver {

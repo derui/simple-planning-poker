@@ -1,5 +1,5 @@
 import { Database, ref, onValue, Unsubscribe } from "firebase/database";
-import { GameObserver } from "@/contexts/observer";
+import { GameObserver } from "./observer";
 import { T, Id } from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 

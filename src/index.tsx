@@ -11,7 +11,6 @@ import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
 import { HandCardUseCase } from "./usecases/hand-card";
 import { ShowDownUseCase } from "./usecases/show-down";
-import { gameObserverContext } from "./contexts/observer";
 import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
 import { JoinUserUseCase } from "./usecases/join-user";
@@ -79,8 +78,6 @@ const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 root.render(
   <Provider store={store}>
-    <gameObserverContext.Provider value={new GameObserverImpl(database, gameRepository)}>
-      <RouterProvider router={routes} />
-    </gameObserverContext.Provider>
+    <RouterProvider router={routes} />
   </Provider>
 );
