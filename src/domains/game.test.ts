@@ -1,18 +1,16 @@
 import { test, expect, describe } from "vitest";
 import {
   acceptLeaveFrom,
-  acceptPlayerEstimation,
+  applyNewRound,
   changeName,
   create,
   createId,
   declarePlayerAs,
   GameCreated,
-  isShowedDown,
   joinUserAsPlayer,
   makeInvitation,
   newRound,
   NewRoundStarted,
-  showDown,
 } from "./game";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -22,7 +20,7 @@ import * as UserEstimation from "./user-estimation";
 import * as GamePlayer from "./game-player";
 import * as Invitation from "./invitation";
 import { DOMAIN_EVENTS } from "./event";
-import { parseDateTime } from "./type";
+import { randomGame } from "@/test-lib";
 
 const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -33,6 +31,7 @@ test("get aggregate and event when game created ", () => {
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
+    round: Round.createId(),
   });
 
   expect(game.id).toBe(createId("id"));
@@ -40,38 +39,20 @@ test("get aggregate and event when game created ", () => {
   expect((event as GameCreated).createdBy).toBe(User.createId("user"));
   expect((event as GameCreated).name).toBe("name");
   expect(game.name).toBe("name");
-  expect(game.round.joinedPlayers).toHaveLength(1);
-  expect(game.round.joinedPlayers).toEqual([
+  expect(game.joinedPlayers).toHaveLength(1);
+  expect(game.joinedPlayers).toEqual([
     GamePlayer.createOwner({ user: User.createId("user"), mode: GamePlayer.UserMode.normal }),
   ]);
   expect(game.owner).toEqual(User.createId("user"));
-  expect(game.round.count).toBe(1);
-  expect(game.round.estimations).toEqual({});
   expect(game.finishedRounds).toHaveLength(0);
 });
 
-test("newRound should throw error when round is not finished", () => {
-  const [game] = create({
-    id: createId("id"),
-    name: "name",
-    owner: User.createId("user"),
-    finishedRounds: [],
-    cards,
-  });
-
-  expect(() => {
-    newRound(game);
-  }).toThrowError(/is not finished yet/);
-});
-
-test("newRound should make new round", () => {
+test("apply new round", () => {
   const [finishedRound] = Round.showDown(
     Round.roundOf({
       id: Round.createId(),
-      count: 2,
       cards: cards,
       estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUp() }],
-      joinedPlayers: [],
     }),
     new Date()
   );
@@ -79,20 +60,16 @@ test("newRound should make new round", () => {
   const [game] = create({
     id: createId("id"),
     name: "name",
-    round: finishedRound,
+    round: finishedRound.id,
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
   });
 
-  const [updated, event] = newRound(game);
+  const updated = applyNewRound(game, Round.createId());
 
-  expect(updated.round.id).not.toBe(finishedRound.id);
-  expect(updated.round.count).toBe(3);
-  expect(updated.round.joinedPlayers).toEqual(game.round.joinedPlayers);
+  expect(updated).not.toBe(finishedRound.id);
   expect(updated.finishedRounds[0]).toBe(finishedRound.id);
-  expect((event as NewRoundStarted).gameId).toBe(game.id);
-  expect((event as NewRoundStarted).roundId).toBe(updated.round.id);
 });
 
 describe("game name", () => {
@@ -102,6 +79,7 @@ describe("game name", () => {
     owner: User.createId("user"),
     finishedRounds: [],
     cards,
+    round: Round.createId(),
   });
 
   test("can change name of game", () => {
@@ -124,11 +102,12 @@ describe("declare player mode to", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
 
     const changed = declarePlayerAs(game, User.createId("user"), GamePlayer.UserMode.inspector);
 
-    expect(changed.round.joinedPlayers[0]).toEqual(
+    expect(changed.joinedPlayers[0]).toEqual(
       GamePlayer.create({
         type: GamePlayer.PlayerType.owner,
         user: User.createId("user"),
@@ -144,11 +123,12 @@ describe("declare player mode to", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
 
-    expect(() => {
-      declarePlayerAs(game, User.createId("not found"), GamePlayer.UserMode.inspector);
-    }).toThrowError(/The user didn't join game/);
+    const ret = declarePlayerAs(game, User.createId("not found"), GamePlayer.UserMode.inspector);
+
+    expect(ret).toEqual(game);
   });
 });
 
@@ -160,11 +140,12 @@ describe("join user", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
 
     const [changed, event] = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game));
 
-    expect(changed.round.joinedPlayers).toEqual(
+    expect(changed.joinedPlayers).toEqual(
       expect.arrayContaining([
         GamePlayer.create({
           type: GamePlayer.PlayerType.owner,
@@ -192,6 +173,7 @@ describe("join user", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
 
     expect(() => {
@@ -206,11 +188,12 @@ describe("join user", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
-    expect(joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0].round.joinedPlayers).toEqual(
-      game.round.joinedPlayers
+    expect(joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0].joinedPlayers).toEqual(
+      game.joinedPlayers
     );
   });
 });
@@ -223,6 +206,7 @@ describe("leave", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
 
     const ret = acceptLeaveFrom(game, User.createId("not found"));
@@ -237,70 +221,27 @@ describe("leave", () => {
       owner: User.createId("user"),
       finishedRounds: [],
       cards,
+      round: Round.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
     const ret = acceptLeaveFrom(game, User.createId("new"));
 
-    expect(isShowedDown(ret)).toBe(false);
     expect(ret).not.toBe(game);
     expect(ret.joinedPlayers.map((v) => v.user)).not.toContainEqual(User.createId("new"));
-    expect(ret.round.joinedPlayers).toHaveLength(1);
-    expect(ret.round.joinedPlayers[0].user).toBe(User.createId("user"));
+    expect(ret.joinedPlayers).toHaveLength(1);
+    expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
   });
 });
 
-describe("show down", () => {
-  test("should be able to show down the round", () => {
-    let [game] = create({
-      id: createId("id"),
-      name: "name",
-      owner: User.createId("user"),
-      finishedRounds: [],
-      cards,
-    });
-    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerEstimation(game, User.createId("user"), UserEstimation.giveUp());
-    game = acceptPlayerEstimation(game, User.createId("new"), UserEstimation.estimated(cards[0]));
-    const ret = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
+describe("new round", () => {
+  test("get new round", () => {
+    const game = randomGame({});
 
-    expect(ret[0]).not.toBe(game);
-    expect(Round.isFinishedRound(ret[0].round)).toBe(true);
-    expect(ret[0].finishedRounds).toEqual([]);
-    expect(ret[1].kind).toBe(DOMAIN_EVENTS.RoundFinished);
-  });
+    const [changed, event] = newRound(game);
 
-  test("throw error if round already finished", () => {
-    let [game] = create({
-      id: createId("id"),
-      name: "name",
-      owner: User.createId("user"),
-      finishedRounds: [],
-      cards,
-    });
-
-    game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerEstimation(game, User.createId("user"), UserEstimation.giveUp());
-    game = acceptPlayerEstimation(game, User.createId("new"), UserEstimation.estimated(cards[0]));
-    const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
-
-    expect(isShowedDown(finished)).toBe(true);
-    expect(() => {
-      showDown(finished, new Date());
-    }).toThrowError(/should start new round/);
-  });
-
-  test("throw error if round can not finished", () => {
-    let [game] = create({
-      id: createId("id"),
-      name: "name",
-      owner: User.createId("user"),
-      finishedRounds: [],
-      cards,
-    });
-
-    expect(() => {
-      showDown(game, new Date());
-    }).toThrowError(/Can not finish round/);
+    expect(changed.cards).toEqual(game.cards);
+    expect((event as NewRoundStarted).gameId).toBe(game.id);
+    expect((event as NewRoundStarted).roundId).toBe(changed.id);
   });
 });

@@ -6,6 +6,7 @@ import * as User from "@/domains/user";
 import * as Invitation from "@/domains/invitation";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
+import * as Round from "@/domains/round";
 import { createMockedDispatcher, createMockedGameRepository, createMockedUserRepository } from "@/test-lib";
 import { DOMAIN_EVENTS } from "@/domains/event";
 
@@ -70,6 +71,7 @@ test("should save game that user joined in", async () => {
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("owner"),
     finishedRounds: [],
+    round: Round.createId(),
   })[0];
 
   const dispatcher = createMockedDispatcher();
@@ -107,6 +109,7 @@ test("should dispatch event to be joined by user", async () => {
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("owner"),
     finishedRounds: [],
+    round: Round.createId(),
   })[0];
 
   const dispatch = sinon.fake();

@@ -3,6 +3,7 @@ import sinon from "sinon";
 import { LeaveGameUseCase } from "./leave-game";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import { createMockedGameRepository } from "@/test-lib";
@@ -20,7 +21,7 @@ test("should return error if user not found", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "notFoundGame" });
+  expect(ret).toEqual({ kind: "notFound" });
 });
 
 test("should return success if user leaved from a game", async () => {
@@ -37,6 +38,7 @@ test("should return success if user leaved from a game", async () => {
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("id"),
     finishedRounds: [],
+    round: Round.createId(),
   })[0];
   game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
 

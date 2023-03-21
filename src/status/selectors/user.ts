@@ -8,8 +8,8 @@ const selectSelf = (state: RootState) => state;
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectCurrentUser = createDraftSafeSelector(selectUser, (state) => state.currentUser);
 const selectCurrentUserJoinedGames = createDraftSafeSelector(selectUser, (state) => state.currentUserJoinedGames);
-const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
-const selectCurrentRound = createDraftSafeSelector(selectRound, (state) => state.instance);
+const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game);
+const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.currentGame);
 
 export interface UserInfo {
   userName: string;
@@ -21,13 +21,13 @@ export interface UserInfo {
  */
 export const selectUserInfo = createDraftSafeSelector(
   selectCurrentUser,
-  selectCurrentRound,
+  selectCurrentGame,
   (currentUser, round): Loadable.T<UserInfo> => {
     if (!currentUser || !round) {
       return Loadable.loading();
     }
 
-    const userMode = round.joinedPlayers[currentUser.id];
+    const userMode = round.joinedPlayers.find((v) => v.user === currentUser.id)?.mode;
     if (!userMode) {
       return Loadable.error();
     }

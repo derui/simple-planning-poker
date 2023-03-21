@@ -2,14 +2,15 @@ import { test, expect } from "vitest";
 import { createPureStore } from "../store";
 import { openGameSuccess } from "../actions/game";
 import { tryAuthenticateSuccess } from "../actions/signin";
-import { estimateSuccess } from "../actions/round";
+import { estimateSuccess, notifyRoundUpdated } from "../actions/round";
 import * as s from "./user-estimation";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
-import * as UserEstimation from "@/domains/user-estimation";
-import { randomGame } from "@/test-lib";
+import * as Round from "@/domains/round";
+import { randomGame, randomRound } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
 import { isLoading } from "@/utils/loadable";
+import { estimated, giveUp } from "@/domains/user-estimation";
 
 test("return undefined if game not opened", () => {
   const store = createPureStore();
@@ -23,9 +24,11 @@ test("return one estimation from the game contains only owner", () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "owner" });
   const game = randomGame({ owner: user.id });
+  const round = randomRound({ cards: game.cards, id: game.round });
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
+  store.dispatch(notifyRoundUpdated(round));
 
   const ret = s.selectUserEstimationInfos(store.getState());
 
@@ -45,12 +48,12 @@ test("return estimations with estimated user", () => {
   const otherUser = User.create({ id: User.createId(), name: "other" });
   let game = randomGame({ owner: user.id });
   game = Game.joinUserAsPlayer(game, otherUser.id, Game.makeInvitation(game))[0];
+  const round = randomRound({ cards: game.cards, id: game.round });
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(
-    estimateSuccess(Game.acceptPlayerEstimation(game, otherUser.id, UserEstimation.estimated(game.cards[0])).round)
-  );
+  store.dispatch(notifyRoundUpdated(round));
+  store.dispatch(estimateSuccess(Round.takePlayerEstimation(round, otherUser.id, estimated(game.cards[0]))));
 
   const [ret] = s.selectUserEstimationInfos(store.getState());
 
@@ -75,10 +78,12 @@ test("give up estimation", () => {
   const otherUser = User.create({ id: User.createId(), name: "other" });
   let game = randomGame({ owner: user.id });
   game = Game.joinUserAsPlayer(game, otherUser.id, Game.makeInvitation(game))[0];
+  const round = randomRound({ cards: game.cards, id: game.round });
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(estimateSuccess(Game.acceptPlayerEstimation(game, otherUser.id, UserEstimation.giveUp()).round));
+  store.dispatch(notifyRoundUpdated(round));
+  store.dispatch(estimateSuccess(Round.takePlayerEstimation(round, otherUser.id, giveUp())));
 
   const [ret] = s.selectUserEstimationInfos(store.getState());
 

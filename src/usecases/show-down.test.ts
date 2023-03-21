@@ -1,13 +1,13 @@
 import { test, expect } from "vitest";
 import sinon from "sinon";
 import { ShowDownUseCase } from "./show-down";
-import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as UserEstimation from "@/domains/user-estimation";
 
-import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
+import { createMockedDispatcher, createMockedRoundRepository, randomRound } from "@/test-lib";
 import { DOMAIN_EVENTS } from "@/domains/event";
 
 const CARDS = SelectableCards.create([StoryPoint.create(1)]);
@@ -15,9 +15,9 @@ const CARDS = SelectableCards.create([StoryPoint.create(1)]);
 test("should return error if game is not found", async () => {
   // Arrange
   const input = {
-    gameId: Game.createId(),
+    roundId: Round.createId(),
   };
-  const repository = createMockedGameRepository();
+  const repository = createMockedRoundRepository();
   const dispatcher = createMockedDispatcher();
 
   const useCase = new ShowDownUseCase(dispatcher, repository);
@@ -31,22 +31,16 @@ test("should return error if game is not found", async () => {
 
 test("should save game showed down", async () => {
   // Arrange
+  const owner = User.createId();
+  const round = randomRound({ cards: CARDS });
 
-  const [game] = Game.create({
-    id: Game.createId(),
-    name: "name",
-    owner: User.createId(),
-    finishedRounds: [],
-    cards: CARDS,
-  });
-
-  const changed = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
+  const changed = Round.takePlayerEstimation(round, owner, UserEstimation.giveUp());
 
   const input = {
-    gameId: game.id,
+    roundId: round.id,
   };
   const save = sinon.fake.resolves(undefined);
-  const repository = createMockedGameRepository({
+  const repository = createMockedRoundRepository({
     findBy: sinon.fake.resolves(changed),
     save,
   });
@@ -58,25 +52,18 @@ test("should save game showed down", async () => {
   const ret = await useCase.execute(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
+  expect(ret).toEqual({ kind: "success", round: save.lastCall.firstArg });
 });
 
-test("should return error if the game can not show down", async () => {
+test("should return error if the round can not show down", async () => {
   // Arrange
-
-  const [game] = Game.create({
-    id: Game.createId(),
-    name: "name",
-    owner: User.createId(),
-    finishedRounds: [],
-    cards: CARDS,
-  });
+  const round = randomRound({ cards: CARDS });
 
   const input = {
-    gameId: game.id,
+    roundId: round.id,
   };
-  const repository = createMockedGameRepository({
-    findBy: sinon.fake.resolves(game),
+  const repository = createMockedRoundRepository({
+    findBy: sinon.fake.resolves(round),
   });
   const dispatcher = createMockedDispatcher();
 
@@ -91,19 +78,14 @@ test("should return error if the game can not show down", async () => {
 
 test("should dispatch ShowedDown event", async () => {
   // Arrange
-  const [game] = Game.create({
-    id: Game.createId(),
-    name: "name",
-    owner: User.createId(),
-    finishedRounds: [],
-    cards: CARDS,
-  });
-  const changed = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
+  const owner = User.createId();
+  const round = randomRound({ cards: CARDS });
+  const changed = Round.takePlayerEstimation(round, owner, UserEstimation.giveUp());
 
   const input = {
-    gameId: game.id,
+    roundId: round.id,
   };
-  const repository = createMockedGameRepository({
+  const repository = createMockedRoundRepository({
     findBy: sinon.fake.resolves(changed),
   });
   const dispatch = sinon.fake();

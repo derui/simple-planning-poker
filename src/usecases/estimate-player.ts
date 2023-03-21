@@ -1,36 +1,36 @@
 import { UseCase } from "./base";
 import * as User from "@/domains/user";
-import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as UserEstimation from "@/domains/user-estimation";
-import { GameRepository } from "@/domains/game-repository";
+import { RoundRepository } from "@/domains/round-repository";
 
 export interface EstimatePlayerUseCaseInput {
   userId: User.Id;
-  gameId: Game.Id;
+  roundId: Round.Id;
   userEstimation: UserEstimation.T;
 }
 
 export type EstimatePlayerUseCaseOutput =
-  | { kind: "success"; game: Game.T }
-  | { kind: "notFoundGame" }
+  | { kind: "success"; round: Round.T }
+  | { kind: "notFound" }
   | { kind: "EstimatePlayerFailed" };
 
 export class EstimatePlayerUseCase
   implements UseCase<EstimatePlayerUseCaseInput, Promise<EstimatePlayerUseCaseOutput>>
 {
-  constructor(private gameRepository: GameRepository) {}
+  constructor(private roundRepository: RoundRepository) {}
 
   async execute(input: EstimatePlayerUseCaseInput): Promise<EstimatePlayerUseCaseOutput> {
-    const game = await this.gameRepository.findBy(input.gameId);
-    if (!game) {
-      return { kind: "notFoundGame" };
+    const round = await this.roundRepository.findBy(input.roundId);
+    if (!round) {
+      return { kind: "notFound" };
     }
 
     try {
-      const newGame = Game.acceptPlayerEstimation(game, input.userId, input.userEstimation);
-      this.gameRepository.save(newGame);
+      const newGame = Round.takePlayerEstimation(round, input.userId, input.userEstimation);
+      await this.roundRepository.save(newGame);
 
-      return { kind: "success", game: newGame };
+      return { kind: "success", round: newGame };
     } catch (e) {
       console.error(e);
 

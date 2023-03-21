@@ -1,6 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as Round from "@/domains/round";
-import { UserMode } from "@/domains/game-player";
 
 const prefix = "round";
 
@@ -14,10 +13,6 @@ export const giveUpSuccess = createAction<Round.T>(`${prefix}:giveUpSuccess`);
 // estimate
 export const estimate = createAction<{ cardIndex: number }>(`${prefix}:estimate`);
 export const estimateSuccess = createAction<Round.T>(`${prefix}:estimateSuccess`);
-
-// change user mode
-export const changeUserMode = createAction<UserMode>(`${prefix}:changeUserMode`);
-export const changeUserModeSuccess = createAction<Round.T>(`${prefix}:changeUserModeSuccess`);
 
 // new round
 export const showDown = createAction(`${prefix}:showDown`);

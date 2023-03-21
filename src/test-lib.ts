@@ -12,10 +12,12 @@ import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
+import { RoundRepository } from "./domains/round-repository";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 
 export const createMockedDispatcher = (mock: Partial<EventDispatcher> = {}) => {
   return {
@@ -29,6 +31,13 @@ export const createMockedGameRepository = (mock: Partial<GameRepository> = {}): 
     findBy: mock.findBy ?? sinon.fake(),
     findByInvitation: mock.findByInvitation ?? sinon.fake(),
     listUserJoined: mock.listUserJoined ?? sinon.fake.resolves([]),
+  };
+};
+
+export const createMockedRoundRepository = (mock: Partial<RoundRepository> = {}): RoundRepository => {
+  return {
+    save: mock.save ?? sinon.fake(),
+    findBy: mock.findBy ?? sinon.fake(),
   };
 };
 
@@ -142,8 +151,19 @@ export const randomGame = function randomGame(args: Partial<Parameters<typeof Ga
     owner: args.owner ?? User.createId(),
     finishedRounds: args.finishedRounds ?? [],
     name: args.name ?? "random game",
-    round: args.round,
+    round: args.round ?? Round.createId(),
   })[0];
+};
+
+/**
+ * create random round for test usage
+ */
+export const randomRound = function randomRound(args: Partial<Parameters<typeof Round.roundOf>[0]> = {}): Round.T {
+  return Round.roundOf({
+    id: args.id ?? Round.createId(),
+    cards: args.cards ?? randomCards(),
+    estimations: args.estimations ?? [],
+  });
 };
 
 /**

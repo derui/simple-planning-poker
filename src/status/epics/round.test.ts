@@ -8,18 +8,13 @@ import { roundEpic } from "./round";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as User from "@/domains/user";
 import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as RoundAction from "@/status/actions/round";
-import * as GameAction from "@/status/actions/game";
 import * as UserEstimation from "@/domains/user-estimation";
-import {
-  createMockedChangeUserModeUseCase,
-  createMockedEstimatePlayerUseCase,
-  createMockedShowDownUseCase,
-} from "@/test-lib";
-import { UserMode } from "@/domains/game-player";
+import { createMockedEstimatePlayerUseCase, createMockedShowDownUseCase, randomGame, randomRound } from "@/test-lib";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -38,18 +33,11 @@ describe("giveUp", () => {
   });
 
   test("should error if user is not set", async () => {
-    const owner = User.create({ id: User.createId(), name: "name" });
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: owner.id,
-      finishedRounds: [],
-      cards: CARDS,
-    });
+    const round = randomRound();
     const registrar = createDependencyRegistrar<Dependencies>();
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [owner] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
 
     const action$ = of(RoundAction.giveUp());
     const state$ = new StateObservable(NEVER, store.getState());
@@ -61,26 +49,21 @@ describe("giveUp", () => {
 
   test("get changed game", async () => {
     const user = User.create({ id: User.createId(), name: "foo" });
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: user.id,
-      finishedRounds: [],
-      cards: CARDS,
-    });
+    let round = randomRound({ cards: CARDS });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerEstimation(game, user.id, UserEstimation.giveUp());
+    const expected = Round.takePlayerEstimation(round, user.id, UserEstimation.giveUp());
+
     registrar.register(
       "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
-        execute: sinon.fake.resolves({ kind: "success", game: expected }),
+        execute: sinon.fake.resolves({ kind: "success", round: expected }),
       })
     );
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
     store.dispatch(signInSuccess({ user }));
 
     const action$ = of(RoundAction.giveUp());
@@ -88,18 +71,12 @@ describe("giveUp", () => {
 
     const ret = await firstValueFrom(epics.giveUp(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.giveUpSuccess(expected.round));
+    expect(ret).toEqual(RoundAction.giveUpSuccess(expected));
   });
 
   test("should get error", async () => {
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
-    const user = User.create({ id: game.owner, name: "foo" });
+    const user = User.create({ id: User.createId(), name: "foo" });
+    const round = randomRound({ cards: CARDS });
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register(
@@ -111,7 +88,7 @@ describe("giveUp", () => {
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
     store.dispatch(signInSuccess({ user }));
 
     const action$ = of(RoundAction.giveUp());
@@ -123,7 +100,7 @@ describe("giveUp", () => {
   });
 });
 
-describe("hand card", () => {
+describe("estimate", () => {
   test("should error if game is not opened", async () => {
     const registrar = createDependencyRegistrar<Dependencies>();
     const epics = roundEpic(registrar);
@@ -138,49 +115,36 @@ describe("hand card", () => {
   });
 
   test("should error if user is not set", async () => {
-    const user = User.create({ id: User.createId(), name: "name" });
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
     const registrar = createDependencyRegistrar<Dependencies>();
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    const round = randomRound({ cards: CARDS });
 
     const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
   });
 
-  test("get changed game", async () => {
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
-    const user = User.create({ id: game.owner, name: "foo" });
+  test("get changed round", async () => {
+    const round = randomRound({ cards: CARDS });
+    const user = User.create({ id: User.createId(), name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerEstimation(game, user.id, UserEstimation.estimated(CARDS[1]));
+    const expected = Round.takePlayerEstimation(round, user.id, UserEstimation.estimated(CARDS[1]));
     registrar.register(
       "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
-        execute: sinon.fake.resolves({ kind: "success", game: expected }),
+        execute: sinon.fake.resolves({ kind: "success", round: expected }),
       })
     );
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(expected));
     store.dispatch(signInSuccess({ user }));
 
     const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
@@ -188,17 +152,12 @@ describe("hand card", () => {
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.estimateSuccess(expected.round));
+    expect(ret).toEqual(RoundAction.estimateSuccess(expected));
   });
 
   test("should get error if index is invalid", async () => {
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
+    const round = randomRound({ cards: CARDS });
+    const game = randomGame({ round: round.id });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
@@ -206,7 +165,7 @@ describe("hand card", () => {
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
     store.dispatch(signInSuccess({ user }));
 
     const action$ = of(RoundAction.estimate({ cardIndex: 5 }));
@@ -218,13 +177,8 @@ describe("hand card", () => {
   });
 
   test("should get error", async () => {
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
+    const round = randomRound({ cards: CARDS });
+    const game = randomGame({ round: round.id });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
@@ -237,7 +191,7 @@ describe("hand card", () => {
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
     store.dispatch(signInSuccess({ user }));
 
     const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
@@ -249,54 +203,22 @@ describe("hand card", () => {
   });
 });
 
-describe("change user mode", () => {
-  test("get mode changed", async () => {
-    const [game] = Game.create({
-      id: Game.createId(),
-      name: "name",
-      owner: User.createId(),
-      finishedRounds: [],
-      cards: CARDS,
-    });
-    const user = User.create({ id: game.owner, name: "foo" });
-    const registrar = createDependencyRegistrar<Dependencies>();
-
-    const expected = Game.declarePlayerAs(game, user.id, UserMode.inspector);
-    registrar.register(
-      "changeUserModeUseCase",
-      createMockedChangeUserModeUseCase({
-        execute: sinon.fake.resolves({ kind: "success", game: expected }),
-      })
-    );
-
-    const epics = roundEpic(registrar);
-    const store = createPureStore();
-    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
-    store.dispatch(signInSuccess({ user }));
-
-    const action$ = of(RoundAction.changeUserMode(UserMode.inspector));
-    const state$ = new StateObservable(NEVER, store.getState());
-
-    const ret = await firstValueFrom(epics.changeUserMode(action$, state$, null));
-
-    expect(ret).toEqual(RoundAction.changeUserModeSuccess(expected.round));
-  });
-});
-
 describe("show down", () => {
-  test("create game", async () => {
+  test("handle event", async () => {
+    let round = randomRound({ cards: CARDS });
     let [game] = Game.create({
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
+    round = Round.takePlayerEstimation(round, game.owner, UserEstimation.giveUp());
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const fake = sinon.fake.resolves({ kind: "success", game: game });
+    const fake = sinon.fake.resolves({ kind: "success", round: round });
     registrar.register(
       "showDownUseCase",
       createMockedShowDownUseCase({
@@ -307,17 +229,17 @@ describe("show down", () => {
     const epics = roundEpic(registrar);
     const store = createPureStore();
     store.dispatch(signInSuccess({ user }));
-    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
 
     const action$ = of(RoundAction.showDown());
     const state$ = new StateObservable(NEVER, store.getState());
 
     const ret = await firstValueFrom(epics.showDown(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.showDownSuccess(game.round));
+    expect(ret).toEqual(RoundAction.showDownSuccess(round));
     expect(fake.callCount).toBe(1);
     expect(fake.lastCall.firstArg).toEqual({
-      gameId: game.id,
+      roundId: round.id,
     });
   });
 });

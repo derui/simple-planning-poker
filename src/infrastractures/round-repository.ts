@@ -5,7 +5,6 @@ import { deserializeFrom } from "./round-database-deserializer";
 import * as Round from "@/domains/round";
 import * as User from "@/domains/user";
 import { RoundRepository } from "@/domains/round-repository";
-import { PlayerType, UserMode } from "@/domains/game-player";
 
 /**
  * Implementation of `RoundRepository`
@@ -15,7 +14,6 @@ export class RoundRepositoryImpl implements RoundRepository {
 
   async save(round: Round.T): Promise<void> {
     const updates: { [key: string]: any } = {};
-    updates[resolver.count(round.id)] = round.count;
     updates[resolver.finished(round.id)] = Round.isFinishedRound(round);
     updates[resolver.userEstimations(round.id)] = Object.entries(round.estimations).reduce<Record<User.Id, Serialized>>(
       (accum, [key, value]) => {
@@ -25,13 +23,6 @@ export class RoundRepositoryImpl implements RoundRepository {
       },
       {}
     );
-    updates[resolver.joinedPlayers(round.id)] = round.joinedPlayers.reduce<
-      Record<User.Id, { mode: UserMode; type: PlayerType }>
-    >((accum, obj) => {
-      accum[obj.user] = { mode: obj.mode, type: obj.type };
-
-      return accum;
-    }, {});
 
     if (Round.isRound(round)) {
       updates[resolver.cards(round.id)] = round.cards;

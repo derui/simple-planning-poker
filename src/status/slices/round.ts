@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/internal";
-import { newRoundSuccess, openGameSuccess } from "../actions/game";
 import * as RoundAction from "../actions/round";
 import * as Round from "@/domains/round";
 import * as Card from "@/domains/card";
 import * as User from "@/domains/user";
 import * as UserEstimation from "@/domains/user-estimation";
-import { UserMode } from "@/domains/game-player";
 
 type State = "NotPrepared" | "Finished" | "ShowDownPrepared";
 
@@ -15,9 +13,7 @@ interface RoundState {
   instance?: {
     id: Round.Id;
     cards: Record<Card.T, { card: Card.T; order: number }>;
-    count: number;
     estimations: Record<User.Id, UserEstimation.T>;
-    joinedPlayers: Record<User.Id, UserMode>;
     state: State;
     averagePoint: number;
   };
@@ -34,12 +30,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
           accum[card] = { card, order: index };
           return accum;
         }, {}) ?? {},
-      count: round.count,
       estimations: round.estimations,
-      joinedPlayers: round.joinedPlayers.reduce<Record<User.Id, UserMode>>((accum, obj) => {
-        accum[obj.user] = obj.mode;
-        return accum;
-      }, {}),
       state: Round.isFinishedRound(round) ? "Finished" : Round.canShowDown(round) ? "ShowDownPrepared" : "NotPrepared",
       averagePoint: Round.isFinishedRound(round) ? Round.calculateAverage(round) : 0,
     };
@@ -50,12 +41,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
         accum[card] = { card, order: index };
         return accum;
       }, {}) ?? {};
-    draft.instance.count = round.count;
     draft.instance.estimations = round.estimations;
-    draft.instance.joinedPlayers = round.joinedPlayers.reduce<Record<User.Id, UserMode>>((accum, obj) => {
-      accum[obj.user] = obj.mode;
-      return accum;
-    }, {});
 
     draft.instance.state = Round.isFinishedRound(round)
       ? "Finished"
@@ -72,10 +58,6 @@ const slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(openGameSuccess, (draft, { payload }) => {
-      normalize(draft, payload.game.round);
-    });
-
     builder.addCase(RoundAction.estimateSuccess, (draft, { payload }) => {
       if (!draft.instance) {
         return;
@@ -92,24 +74,12 @@ const slice = createSlice({
       normalize(draft, payload);
     });
 
-    builder.addCase(RoundAction.changeUserModeSuccess, (draft, { payload }) => {
-      if (!draft.instance) {
-        return;
-      }
-
-      normalize(draft, payload);
-    });
-
     builder.addCase(RoundAction.showDownSuccess, (draft, { payload }) => {
       if (!draft.instance) {
         return;
       }
 
       normalize(draft, payload);
-    });
-
-    builder.addCase(newRoundSuccess, (draft, { payload }) => {
-      normalize(draft, payload.round);
     });
 
     builder.addCase(RoundAction.notifyRoundUpdated, (draft, { payload }) => {

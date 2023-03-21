@@ -6,10 +6,13 @@ import { GameResultAreaContainer } from "./game-result-area-container";
 import * as User from "@/domains/user";
 import { createPureStore } from "@/status/store";
 import { newRound, openGameSuccess } from "@/status/actions/game";
-import { randomGame } from "@/test-lib";
+import { randomGame, randomRound } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { notifyOtherUserChanged } from "@/status/actions/user";
 import { joinUserAsPlayer, makeInvitation } from "@/domains/game";
+import { notifyRoundUpdated } from "@/status/actions/round";
+import { takePlayerEstimation } from "@/domains/round";
+import { giveUp } from "@/domains/user-estimation";
 
 afterEach(cleanup);
 
@@ -20,9 +23,12 @@ test("should not open initial", () => {
   let game = randomGame({ owner: user.id });
   game = joinUserAsPlayer(game, player.id, makeInvitation(game))[0];
 
+  const round = randomRound({ id: game.round });
+
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(notifyOtherUserChanged(player));
   store.dispatch(openGameSuccess({ game, players: [user, player] }));
+  store.dispatch(notifyRoundUpdated(round));
 
   render(
     <Provider store={store}>
@@ -56,9 +62,11 @@ test("dispatch new round event", async () => {
 
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "name" });
+  const round = randomRound();
 
   store.dispatch(tryAuthenticateSuccess({ user }));
-  store.dispatch(openGameSuccess({ game: randomGame({ owner: user.id }), players: [user] }));
+  store.dispatch(openGameSuccess({ game: randomGame({ owner: user.id, round: round.id }), players: [user] }));
+  store.dispatch(notifyRoundUpdated(takePlayerEstimation(round, user.id, giveUp())));
 
   render(
     <Provider store={store}>

@@ -7,7 +7,6 @@ import {
   leaveGame,
   joinGame,
   openGame,
-  newRoundSuccess,
   createGame,
   createGameSuccess,
   createGameFailure,
@@ -49,7 +48,6 @@ const slice = createSlice({
     builder.addCase(joinGame, loading);
     builder.addCase(openGame, loading);
     builder.addCase(notifyGameChanges, updateCurrentGame);
-    builder.addCase(newRoundSuccess, updateCurrentGame);
     builder.addCase(openGameSuccess, (draft, { payload }) => {
       draft.currentGame = payload.game;
       draft.loading = false;

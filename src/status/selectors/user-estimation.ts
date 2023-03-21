@@ -12,6 +12,7 @@ const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
 const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => state.instance);
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectUsers = createDraftSafeSelector(selectUser, (state) => state.users);
+const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game.currentGame);
 
 export type UserEstimationState = "notSelected" | "estimated" | "result";
 
@@ -28,15 +29,16 @@ export interface UserEstimationInfo {
 export const selectUserEstimationInfos = createDraftSafeSelector(
   selectRoundInstance,
   selectUsers,
-  (round, users): Loadable.T<UserEstimationInfo[]> => {
-    if (!round) {
+  selectGame,
+  (round, users, game): Loadable.T<UserEstimationInfo[]> => {
+    if (!round || !game) {
       return Loadable.loading();
     }
 
     const opened = round.state === "Finished";
 
-    const estimations = Object.entries(round.joinedPlayers)
-      .map(([userId, mode]) => {
+    const estimations = game.joinedPlayers
+      .map(({ user: userId, mode }) => {
         const user = users[userId as User.Id];
 
         if (!user) return;

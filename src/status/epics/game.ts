@@ -9,7 +9,7 @@ import * as GameAction from "@/status/actions/game";
 import * as RoundAction from "@/status/actions/round";
 import * as UserAction from "@/status/actions/user";
 
-type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "newRound";
+type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "changeUserMode" | "newRound";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -35,7 +35,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
           });
         });
 
-        roundObserver.subscribe(game.round.id, (round) => {
+        roundObserver.subscribe(game.round, (round) => {
           subscriber.next(RoundAction.notifyRoundUpdated(round));
         });
 
@@ -48,7 +48,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
         });
       });
 
-      roundObserver.subscribe(payload.game.round.id, (round) => {
+      roundObserver.subscribe(payload.game.round, (round) => {
         subscriber.next(RoundAction.notifyRoundUpdated(round));
       });
     });
@@ -139,7 +139,7 @@ export const gameEpic = (
               return of([game, []] as const);
             }
 
-            const users = userRepository.listIn(game.round.joinedPlayers.map((v) => v.user));
+            const users = userRepository.listIn(game.joinedPlayers.map((v) => v.user));
 
             return from(users).pipe(map((users) => [game, users] as const));
           }),
@@ -148,7 +148,7 @@ export const gameEpic = (
               return GameAction.openGameFailure({ reason: "Can not find game" });
             }
 
-            if (!output.round.joinedPlayers.some((v) => v.user === currentUser.id)) {
+            if (!output.joinedPlayers.some((v) => v.user === currentUser.id)) {
               return GameAction.openGameFailure({ reason: "Current user did not join the game" });
             }
 
@@ -194,6 +194,37 @@ export const gameEpic = (
       commonCatchError
     ),
 
+  changeUserMode: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.changeUserMode.match),
+      switchMap(({ payload }) => {
+        const { game, user } = state$.value;
+
+        if (!game.currentGame || !user.currentUser) {
+          return of(RoundAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("changeUserModeUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: game.currentGame.id,
+            userId: user.currentUser.id,
+            mode: payload,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.changeUserModeSuccess(output.game);
+              default:
+                return GameAction.somethingFailure(output.kind);
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
   newRound: (action$, state$) =>
     action$.pipe(
       filter(GameAction.newRound.match),
@@ -203,7 +234,7 @@ export const gameEpic = (
         } = state$.value;
 
         if (!currentGame) {
-          return of(GameAction.somethingFailure("Can not show down with nullish"));
+          return of(RoundAction.somethingFailure("Can not show down with nullish"));
         }
 
         const useCase = registrar.resolve("newRoundUseCase");
@@ -216,8 +247,8 @@ export const gameEpic = (
           map((output) => {
             switch (output.kind) {
               case "success":
-                return GameAction.newRoundSuccess(output.game);
-              case "notFoundGame":
+                return GameAction.newRoundSuccess(output.round);
+              case "notFound":
                 return GameAction.newRoundFailure({ reason: "can not find game" });
               case "canNotStartNewRound":
                 return GameAction.newRoundFailure({ reason: "can not start new round" });

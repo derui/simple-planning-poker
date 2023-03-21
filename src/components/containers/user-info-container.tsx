@@ -5,7 +5,7 @@ import { UserInfoUpdater } from "../presentations/user-info-updater";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Loader } from "../presentations/loader";
 import * as UserAction from "@/status/actions/user";
-import * as RoundAction from "@/status/actions/round";
+import * as GameAction from "@/status/actions/game";
 import { UserMode } from "@/domains/game-player";
 import { selectUserInfo } from "@/status/selectors/user";
 import { isFinished } from "@/utils/loadable";
@@ -69,7 +69,7 @@ export function UserInfoContainer(props: Props) {
   const handleChangeUserInfo = (mode: UserMode, name: string) => {
     setOpened(false);
     dispatch(UserAction.changeName(name));
-    dispatch(RoundAction.changeUserMode(mode));
+    dispatch(GameAction.changeUserMode(mode));
   };
 
   if (!isFinished(userInfo)) {

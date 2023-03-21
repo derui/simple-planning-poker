@@ -8,11 +8,12 @@ import { RoundResultPage } from "./round-result";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
-import { randomGame, randomUser } from "@/test-lib";
+import { randomGame, randomRound, randomUser } from "@/test-lib";
 import * as Game from "@/domains/game";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { giveUp, estimated } from "@/domains/user-estimation";
 import { showDownSuccess } from "@/status/actions/round";
+import { showDown, takePlayerEstimation } from "@/domains/round";
 
 install(twind);
 
@@ -54,6 +55,7 @@ export const Loaded: Story = {
     const users = [randomUser({}), randomUser({})];
     const owner = randomUser({});
     let game = randomGame({ owner: owner.id });
+    let round = randomRound({ id: game.round, cards: game.cards });
     users.forEach((user) => {
       game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
     });
@@ -65,9 +67,9 @@ export const Loaded: Story = {
       })
     );
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
-    game = Game.acceptPlayerEstimation(game, owner.id, giveUp());
-    game = Game.acceptPlayerEstimation(game, users[0].id, estimated(game.cards[0]));
-    store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0].round));
+    round = takePlayerEstimation(round, owner.id, giveUp());
+    round = takePlayerEstimation(round, users[0].id, estimated(game.cards[0]));
+    store.dispatch(showDownSuccess(showDown(round as any, new Date())[0]));
 
     const route = createMemoryRouter(
       [

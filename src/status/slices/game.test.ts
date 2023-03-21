@@ -3,6 +3,7 @@ import { getInitialState, reducer } from "./game";
 import * as GameAction from "@/status/actions/game";
 
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
@@ -13,6 +14,7 @@ const [GAME] = Game.create({
   name: "name",
   cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   owner: User.createId(),
+  round: Round.createId(),
   finishedRounds: [],
 });
 

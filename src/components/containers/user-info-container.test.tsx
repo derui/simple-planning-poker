@@ -6,6 +6,7 @@ import sinon from "sinon";
 import { UserInfoContainer } from "./user-info-container";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomCards, randomGame } from "@/test-lib";
@@ -24,6 +25,7 @@ test("should not open initial", () => {
     finishedRounds: [],
     owner: user.id,
     cards: randomCards(),
+    round: Round.createId(),
   });
 
   store.dispatch(tryAuthenticateSuccess({ user }));

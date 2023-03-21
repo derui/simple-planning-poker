@@ -1,7 +1,9 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as Invitation from "@/domains/invitation";
 import * as User from "@/domains/user";
+import { UserMode } from "@/domains/game-player";
 
 const prefix = "game";
 
@@ -35,7 +37,11 @@ export const createGame = createAction<{ name: string; points: number[] }>(`${pr
 export const createGameSuccess = createAction<Game.T>(`${prefix}:createGameSuccess`);
 export const createGameFailure = createAction<{ reason: string }>(`${prefix}:createGameFailure`);
 
+// change user mode
+export const changeUserMode = createAction<UserMode>(`${prefix}:changeUserMode`);
+export const changeUserModeSuccess = createAction<Game.T>(`${prefix}:changeUserModeSuccess`);
+
 // new round
 export const newRound = createAction(`${prefix}:newRound`);
-export const newRoundSuccess = createAction<Game.T>(`${prefix}:newRoundSuccess`);
+export const newRoundSuccess = createAction<Round.T>(`${prefix}:newRoundSuccess`);
 export const newRoundFailure = createAction<{ reason: string }>(`${prefix}:newRoundFailure`);

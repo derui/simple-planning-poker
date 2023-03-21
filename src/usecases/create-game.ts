@@ -4,6 +4,7 @@ import { GameRepository } from "@/domains/game-repository";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 
 export interface CreateGameUseCaseInput {
   name: string;
@@ -33,12 +34,14 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Promis
     const selectableCards = SelectableCards.create(storyPoints);
 
     const gameId = Game.createId();
+    const roundId = Round.createId();
     const [game, event] = Game.create({
       id: gameId,
       name: input.name,
       finishedRounds: [],
       owner: input.createdBy,
       cards: selectableCards,
+      round: roundId,
     });
 
     await this.gameRepository.save(game);

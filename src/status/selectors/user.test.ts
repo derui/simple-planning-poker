@@ -4,6 +4,7 @@ import { openGameSuccess } from "../actions/game";
 import { signInSuccess } from "../actions/signin";
 import * as s from "./user";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
@@ -23,6 +24,7 @@ test("should return current user info ", () => {
     owner: user.id,
     finishedRounds: [],
     cards: CARDS,
+    round: Round.createId(),
   });
 
   store.dispatch(signInSuccess({ user }));
@@ -51,6 +53,7 @@ test("should not return value when the user was not joined before", () => {
     owner: User.createId("2"),
     finishedRounds: [],
     cards: CARDS,
+    round: Round.createId(),
   });
 
   store.dispatch(signInSuccess({ user }));

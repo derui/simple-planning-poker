@@ -1,12 +1,9 @@
 import produce from "immer";
 import * as UserEstimation from "./user-estimation";
 import * as User from "./user";
-import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
-import * as GamePlayer from "./game-player";
 import { Branded, DateTime, dateTimeToString } from "./type";
 import { DomainEvent, DOMAIN_EVENTS } from "./event";
-import { UserMode } from "./game-player";
 import * as Base from "@/domains/base";
 
 /**
@@ -27,9 +24,7 @@ const _round = "Round";
 
 interface CommonRound {
   readonly id: Id;
-  readonly count: number;
   readonly estimations: Record<User.Id, UserEstimation.T>;
-  readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
 }
 
@@ -67,23 +62,17 @@ export const createId = function createId(id?: string): Id {
 export const roundOf = function roundOf({
   id,
   cards,
-  count,
-  joinedPlayers,
   estimations = [],
 }: {
   id: Id;
   cards: SelectableCards.T;
-  count: number;
   estimations?: PlayerEstimation[];
-  joinedPlayers: GamePlayer.T[];
 }): Round {
   return {
     _tag: _round,
     id,
-    count,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     cards: SelectableCards.clone(cards),
-    joinedPlayers,
   };
 };
 
@@ -93,52 +82,41 @@ export const roundOf = function roundOf({
 export const finishedRoundOf = function finishedRoundOf({
   id,
   cards,
-  count,
   estimations,
   finishedAt,
-  joinedPlayers,
 }: {
   id: Id;
   cards: SelectableCards.T;
-  count: number;
   finishedAt: DateTime;
   estimations: PlayerEstimation[];
-  joinedPlayers: GamePlayer.T[];
 }): FinishedRound {
   return {
     _tag: _finishedRound,
     id,
-    count,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
     cards: SelectableCards.clone(cards),
-    joinedPlayers,
   };
 };
 
 /**
  * Player take the estimation to round.
  */
-export const takePlayerEstimation = function takePlayerEstimation(round: Round, userId: User.Id, card: Card.T) {
-  if (!SelectableCards.contains(round.cards, card)) {
+export const takePlayerEstimation = function takePlayerEstimation(
+  round: T,
+  userId: User.Id,
+  estimation: UserEstimation.T
+) {
+  if (isFinishedRound(round)) {
+    return round;
+  }
+
+  if (UserEstimation.isEstimated(estimation) && !SelectableCards.contains(round.cards, estimation.card)) {
     throw new Error("Can not accept this card");
   }
 
-  const estimations = Object.assign({}, round.estimations);
-
-  estimations[userId] = UserEstimation.estimated(card);
-
   return produce(round, (draft) => {
-    draft.estimations = estimations;
-  });
-};
-
-/**
- * Round accepts player to give up in this round.
- */
-export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, userId: User.Id) {
-  return produce(round, (draft) => {
-    draft.estimations[userId] = UserEstimation.giveUp();
+    draft.estimations[userId] = estimation;
   });
 };
 
@@ -194,64 +172,6 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
     }, 0) / cards.length;
 
   return average as CalculatedStoryPoint;
-};
-
-/**
- * join player into current round.
- */
-export const joinPlayer = function joinPlayer(round: T, player: User.Id) {
-  if (round._tag !== _round) {
-    return round;
-  }
-
-  const ret = produce(round, (draft) => {
-    if (draft.joinedPlayers.some((v) => v.user === player)) {
-      return;
-    }
-
-    draft.joinedPlayers.push(
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: player, mode: UserMode.normal })
-    );
-  });
-
-  return ret;
-};
-
-/**
- * change user mode in round.
- */
-export const changeUserMode = function changeUserMode(round: Round, user: User.Id, mode: GamePlayer.UserMode): T {
-  const joinedUser = round.joinedPlayers.find((v) => v.user === user);
-
-  if (!joinedUser) {
-    throw new Error("The user didn't join game");
-  }
-
-  return produce(round, (draft) => {
-    const map = new Map(draft.joinedPlayers.map((v) => [v.user, v]));
-    const target = map.get(user);
-
-    if (!target) {
-      map.set(user, GamePlayer.create({ type: GamePlayer.PlayerType.player, user, mode }));
-    } else {
-      map.set(user, { ...target, mode });
-    }
-
-    draft.joinedPlayers = Array.from(map.values());
-  });
-};
-
-/**
- * An user leave from this round
- */
-export const acceptLeaveFrom = function acceptLeaveFrom(round: Round, user: User.Id): T {
-  if (round.joinedPlayers.every((v) => v.user !== user)) {
-    return round;
-  }
-
-  return produce(round, (draft) => {
-    draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
-  });
 };
 
 // simple guards

@@ -3,12 +3,12 @@ import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules
 import { get, ref, update } from "firebase/database";
 import { v4 } from "uuid";
 import { GameRepositoryImpl } from "./game-repository";
-import { RoundRepositoryImpl } from "./round-repository";
 import { joinedGames } from "./user-ref-resolver";
 import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -40,10 +40,11 @@ test("should be able to save and find a game", async () => {
     owner: User.createId("id"),
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
+    round: Round.createId(),
   });
   game = Game.joinUserAsPlayer(game, User.createId("other"), Game.makeInvitation(game))[0];
 
-  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const repository = new GameRepositoryImpl(database);
 
   // Act
   await repository.save(game);
@@ -52,7 +53,6 @@ test("should be able to save and find a game", async () => {
   // Assert
   expect(instance?.id).toEqual(game.id);
   expect(instance?.name).toEqual(game.name);
-  expect(instance?.round?.joinedPlayers).toEqual(game?.round?.joinedPlayers);
   expect(instance?.cards).toEqual(game.cards);
   expect(instance?.round).toEqual(game.round);
   expect(instance?.finishedRounds).toEqual(game.finishedRounds);
@@ -61,7 +61,7 @@ test("should be able to save and find a game", async () => {
 
 test("should not be able find a game if it did not save before", async () => {
   // Arrange
-  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const repository = new GameRepositoryImpl(database);
 
   // Act
   const instance = await repository.findBy(Game.createId());
@@ -78,10 +78,11 @@ test("should save invitation in key", async () => {
     owner: User.createId("id"),
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
+    round: Round.createId(),
   });
   game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];
 
-  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const repository = new GameRepositoryImpl(database);
 
   // Act
   await repository.save(game);
@@ -93,7 +94,7 @@ test("should save invitation in key", async () => {
 
 test("should be able to list games an user joined", async () => {
   // Arrange
-  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const repository = new GameRepositoryImpl(database);
   const gameId = Game.createId();
   const otherGameId = Game.createId();
 

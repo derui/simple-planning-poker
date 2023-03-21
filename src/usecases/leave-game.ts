@@ -8,7 +8,7 @@ export interface LeaveGameUseCaseInput {
   userId: User.Id;
 }
 
-export type LeaveGameUseCaseOutput = { kind: "success"; game: Game.T } | { kind: "notFoundGame" };
+export type LeaveGameUseCaseOutput = { kind: "success"; game: Game.T } | { kind: "notFound" };
 
 export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<LeaveGameUseCaseOutput>> {
   constructor(private gameRepository: GameRepository) {}
@@ -17,7 +17,7 @@ export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<
     const game = await this.gameRepository.findBy(input.gameId);
 
     if (!game) {
-      return { kind: "notFoundGame" };
+      return { kind: "notFound" };
     }
     const newGame = Game.acceptLeaveFrom(game, input.userId);
     await this.gameRepository.save(newGame);

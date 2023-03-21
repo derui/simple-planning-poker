@@ -12,10 +12,11 @@ import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
 import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
+import * as Round from "@/domains/round";
 import * as GameAction from "@/status/actions/game";
 import * as RoundAction from "@/status/actions/round";
-import * as UserEstimation from "@/domains/user-estimation";
 import {
+  createMockedChangeUserModeUseCase,
   createMockedCreateGameUseCase,
   createMockedGameObserver,
   createMockedGameRepository,
@@ -24,6 +25,7 @@ import {
   createMockedRoundObserver,
   createMockedUserObserver,
   createMockedUserRepository,
+  randomRound,
 } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
 import { NewRoundUseCase } from "@/usecases/new-round";
@@ -38,6 +40,7 @@ describe("leave game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
@@ -71,6 +74,7 @@ describe("join game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
@@ -103,6 +107,7 @@ describe("open game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
@@ -136,6 +141,7 @@ describe("create game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
@@ -175,8 +181,8 @@ describe("observe game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("roundObserver", createMockedRoundObserver());
@@ -204,8 +210,8 @@ describe("observe game", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());
@@ -229,21 +235,22 @@ describe("observe game", () => {
   });
 
   test("notify round change", async () => {
+    const round = randomRound({ cards: CARDS });
     let [game] = Game.create({
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: round.id,
     });
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());
     registrar.register("gameObserver", createMockedGameObserver());
     registrar.register("roundObserver", {
       subscribe(_id, _callback) {
-        _callback(game.round);
+        _callback(round);
       },
       unsubscribe() {},
     });
@@ -256,7 +263,7 @@ describe("observe game", () => {
 
     const ret = await lastValueFrom(epics.observeOpenedGame(action$, state$, null).pipe(take(2)));
 
-    expect(ret).toEqual(RoundAction.notifyRoundUpdated(game.round));
+    expect(ret).toEqual(RoundAction.notifyRoundUpdated(round));
   });
 });
 
@@ -268,6 +275,7 @@ describe("new round", () => {
       owner: User.createId(),
       finishedRounds: [],
       cards: CARDS,
+      round: Round.createId(),
     });
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
@@ -287,10 +295,45 @@ describe("new round", () => {
 
     const ret = await firstValueFrom(epics.newRound(action$, state$, null));
 
-    expect(ret).toEqual(GameAction.newRoundSuccess(game));
+    expect(ret.type).toEqual(GameAction.newRoundSuccess.type);
     expect(fake.callCount).toBe(1);
     expect(fake.lastCall.firstArg).toEqual({
       gameId: game.id,
     });
+  });
+});
+
+describe("change user mode", () => {
+  test("get mode changed", async () => {
+    const [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+      round: Round.createId(),
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const expected = Game.declarePlayerAs(game, user.id, UserMode.inspector);
+    registrar.register(
+      "changeUserModeUseCase",
+      createMockedChangeUserModeUseCase({
+        execute: sinon.fake.resolves({ kind: "success", game: expected }),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
+    store.dispatch(signInSuccess({ user }));
+
+    const action$ = of(GameAction.changeUserMode(UserMode.inspector));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.changeUserMode(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.changeUserModeSuccess(expected));
   });
 });

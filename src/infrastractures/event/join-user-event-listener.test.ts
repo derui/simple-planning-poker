@@ -3,9 +3,9 @@ import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules
 import { v4 } from "uuid";
 import { UserRepositoryImpl } from "../user-repository";
 import { GameRepositoryImpl } from "../game-repository";
-import { RoundRepositoryImpl } from "../round-repository";
 import { JoinUserEventListener } from "./join-user-event-listener";
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
@@ -42,11 +42,12 @@ test("should add joined user as owner", async () => {
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
     finishedRounds: [],
+    round: Round.createId(),
   });
   const [, event] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
   const userRepository = new UserRepositoryImpl(database);
   const listener = new JoinUserEventListener(database);
-  const repository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+  const repository = new GameRepositoryImpl(database);
   await userRepository.save(owner);
   await userRepository.save(player);
 

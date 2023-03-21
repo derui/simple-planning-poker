@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import { ChangeUserModeUseCase } from "./change-user-mode";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import * as Round from "@/domains/round";
 import * as GamePlayer from "@/domains/game-player";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
@@ -42,6 +43,7 @@ test("should save game", async () => {
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: userId,
     finishedRounds: [],
+    round: Round.createId(),
   })[0];
 
   const repository = createMockedGameRepository({

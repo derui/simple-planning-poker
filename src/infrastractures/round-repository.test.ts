@@ -7,9 +7,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as UserEstimation from "@/domains/user-estimation";
-import * as GamePlayer from "@/domains/game-player";
 import { parseDateTime } from "@/domains/type";
-import { UserMode } from "@/domains/game-player";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -38,19 +36,12 @@ test("should be able to save and find a round", async () => {
   const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
   const round = R.roundOf({
     id: R.createId(),
-    count: 1,
     cards: cards,
     estimations: [
       { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
       { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
       { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
       { user: User.createId("user4"), estimation: UserEstimation.unselected() },
-    ],
-    joinedPlayers: [
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user2"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user3"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user4"), mode: UserMode.inspector }),
     ],
   });
 
@@ -62,7 +53,6 @@ test("should be able to save and find a round", async () => {
 
   // Assert
   expect(instance?.id).toEqual(round.id);
-  expect(instance?.count).toEqual(round.count);
   expect(instance?.estimations).toEqual(
     Object.fromEntries([
       [User.createId("user1"), UserEstimation.estimated(cards[0])],
@@ -72,14 +62,6 @@ test("should be able to save and find a round", async () => {
     ])
   );
   expect(instance?.cards).toEqual(round.cards);
-  expect(instance?.joinedPlayers).toEqual(
-    expect.arrayContaining([
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user2"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user3"), mode: UserMode.normal }),
-      GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user4"), mode: UserMode.inspector }),
-    ])
-  );
 });
 
 test("should be able to save and find a finished round", async () => {
@@ -87,7 +69,6 @@ test("should be able to save and find a finished round", async () => {
   const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
   const round = R.roundOf({
     id: R.createId(),
-    count: 1,
     cards: cards,
     estimations: [
       { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
@@ -95,7 +76,6 @@ test("should be able to save and find a finished round", async () => {
       { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
       { user: User.createId("user4"), estimation: UserEstimation.unselected() },
     ],
-    joinedPlayers: [],
   });
   const [finished] = R.showDown(round, parseDateTime("2023-02-25T00:01:01.000Z"));
 
@@ -109,7 +89,6 @@ test("should be able to save and find a finished round", async () => {
   // Assert
   expect(R.isFinishedRound(instance)).toBe(true);
   expect(instance?.id).toEqual(round.id);
-  expect(instance?.count).toEqual(round.count);
   expect(instance?.estimations).toEqual(
     Object.fromEntries([
       [User.createId("user1"), UserEstimation.estimated(cards[0])],

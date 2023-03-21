@@ -1,36 +1,40 @@
 import { EventDispatcher, UseCase } from "./base";
-import * as Game from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
+import * as Round from "@/domains/round";
+import { RoundRepository } from "@/domains/round-repository";
 
 export interface ShowDownUseCaseInput {
-  gameId: Game.Id;
+  roundId: Round.Id;
 }
 
 export type ShowDownUseCaseOutput =
   | {
       kind: "success";
-      game: Game.T;
+      round: Round.T;
     }
   | { kind: "notFoundGame" }
   | { kind: "showDownFailed" };
 
 export class ShowDownUseCase implements UseCase<ShowDownUseCaseInput, Promise<ShowDownUseCaseOutput>> {
-  constructor(private dispatcher: EventDispatcher, private gameRepository: GameRepository) {}
+  constructor(private dispatcher: EventDispatcher, private roundRepository: RoundRepository) {}
 
   async execute(input: ShowDownUseCaseInput): Promise<ShowDownUseCaseOutput> {
-    const game = await this.gameRepository.findBy(input.gameId);
-    if (!game) {
+    const round = await this.roundRepository.findBy(input.roundId);
+    if (!round) {
       return { kind: "notFoundGame" };
     }
 
-    try {
-      const [newGame, event] = Game.showDown(game, new Date());
+    if (Round.isFinishedRound(round)) {
+      return { kind: "showDownFailed" };
+    }
 
-      await this.gameRepository.save(newGame);
+    try {
+      const [newRound, event] = Round.showDown(round, new Date());
+
+      await this.roundRepository.save(newRound);
 
       this.dispatcher.dispatch(event);
 
-      return { kind: "success", game: newGame };
+      return { kind: "success", round: newRound };
     } catch (e) {
       console.error(e);
 

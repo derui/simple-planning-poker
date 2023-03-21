@@ -8,8 +8,9 @@ import * as Game from "@/domains/game";
 import * as UserEstimation from "@/domains/user-estimation";
 import * as Cards from "@/domains/selectable-cards";
 import * as User from "@/domains/user";
+import * as Round from "@/domains/round";
 import * as StoryPoint from "@/domains/story-point";
-import { randomGame } from "@/test-lib";
+import { randomGame, randomRound } from "@/test-lib";
 
 describe("select current game name", () => {
   test("should return loading when game not set", () => {
@@ -73,8 +74,9 @@ describe("select flag to be able to hold new round", () => {
   test("should return false if the round can show down", () => {
     const store = createPureStore();
     let game = randomGame({});
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
-    store.dispatch(openGameSuccess({ game, players: [] }));
+    let round: Round.T = randomRound({ id: game.round });
+    round = Round.takePlayerEstimation(round, game.owner, UserEstimation.giveUp());
+    store.dispatch(notifyRoundUpdated(round));
 
     const ret = s.selectCanShowDown(store.getState());
 
@@ -84,8 +86,10 @@ describe("select flag to be able to hold new round", () => {
   test("should return false if the round is finished", () => {
     const store = createPureStore();
     let game = randomGame({});
-    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
-    store.dispatch(openGameSuccess({ game: Game.showDown(game, new Date())[0], players: [] }));
+    let round: Round.T = randomRound({ id: game.round });
+    round = Round.takePlayerEstimation(round, game.owner, UserEstimation.giveUp());
+    round = Round.showDown(round as any, new Date())[0];
+    store.dispatch(notifyRoundUpdated(round));
 
     const ret = s.selectCanShowDown(store.getState());
 
@@ -132,7 +136,10 @@ describe("select round result", () => {
   test("return error if game is not round finished", () => {
     const store = createPureStore();
     const game = randomGame({ cards: Cards.create([1, 2, 3, 5].map(StoryPoint.create)) });
+    let round: Round.T = randomRound({ id: game.round });
+
     store.dispatch(openGameSuccess({ game, players: [] }));
+    store.dispatch(notifyRoundUpdated(round));
 
     const ret = s.selectRoundResult(store.getState());
 
@@ -144,13 +151,23 @@ describe("select round result", () => {
     let game = randomGame({
       cards: Cards.create([1, 2, 3, 5].map(StoryPoint.create)),
     });
+    let round = randomRound({ cards: game.cards, id: game.round });
     game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
     game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
     store.dispatch(openGameSuccess({ game, players: [] }));
-    game = Game.acceptPlayerEstimation(game, game.round.joinedPlayers[0].user, UserEstimation.estimated(game.cards[1]));
-    game = Game.acceptPlayerEstimation(game, game.round.joinedPlayers[1].user, UserEstimation.estimated(game.cards[2]));
-    game = Game.showDown(game, new Date())[0];
-    store.dispatch(notifyRoundUpdated(game.round));
+
+    round = Round.takePlayerEstimation(
+      round as any,
+      game.joinedPlayers[0].user,
+      UserEstimation.estimated(game.cards[1])
+    );
+    round = Round.takePlayerEstimation(
+      round as any,
+      game.joinedPlayers[1].user,
+      UserEstimation.estimated(game.cards[2])
+    );
+    round = Round.showDown(round as any, new Date())[0];
+    store.dispatch(notifyRoundUpdated(round));
 
     const ret = s.selectRoundResult(store.getState());
 

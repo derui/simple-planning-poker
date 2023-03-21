@@ -7,7 +7,7 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
 
-type Epics = "giveUp" | "estimate" | "changeUserMode" | "showDown";
+type Epics = "giveUp" | "estimate" | "showDown";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -22,9 +22,9 @@ export const roundEpic = (
     action$.pipe(
       filter(RoundAction.giveUp.match),
       switchMap(() => {
-        const { game, user } = state$.value;
+        const { round, user } = state$.value;
 
-        if (!game.currentGame || !user.currentUser) {
+        if (!round.instance || !user.currentUser) {
           return of(RoundAction.somethingFailure("Can not give up with nullish"));
         }
 
@@ -32,7 +32,7 @@ export const roundEpic = (
 
         return from(
           useCase.execute({
-            gameId: game.currentGame.id,
+            roundId: round.instance.id,
             userId: user.currentUser.id,
             userEstimation: UserEstimation.giveUp(),
           })
@@ -40,7 +40,7 @@ export const roundEpic = (
           map((output) => {
             switch (output.kind) {
               case "success":
-                return RoundAction.giveUpSuccess(output.game.round);
+                return RoundAction.giveUpSuccess(output.round);
               default:
                 return RoundAction.somethingFailure(output.kind);
             }
@@ -54,13 +54,13 @@ export const roundEpic = (
     action$.pipe(
       filter(RoundAction.estimate.match),
       switchMap(({ payload }) => {
-        const { game, user } = state$.value;
+        const { round, user } = state$.value;
 
-        if (!game.currentGame || !user.currentUser) {
+        if (!round.instance || !user.currentUser) {
           return of(RoundAction.somethingFailure("Can not give up with nullish"));
         }
 
-        const selectedCard = game.currentGame.cards[payload.cardIndex];
+        const selectedCard = Object.values(round.instance.cards).find((v) => v.order === payload.cardIndex)?.card;
         if (!selectedCard) {
           return of(RoundAction.somethingFailure("specified card not found"));
         }
@@ -69,7 +69,7 @@ export const roundEpic = (
 
         return from(
           useCase.execute({
-            gameId: game.currentGame.id,
+            roundId: round.instance.id,
             userId: user.currentUser.id,
             userEstimation: UserEstimation.estimated(selectedCard),
           })
@@ -77,38 +77,7 @@ export const roundEpic = (
           map((output) => {
             switch (output.kind) {
               case "success":
-                return RoundAction.estimateSuccess(output.game.round);
-              default:
-                return RoundAction.somethingFailure(output.kind);
-            }
-          })
-        );
-      }),
-      commonCatchError
-    ),
-  changeUserMode: (action$, state$) =>
-    action$.pipe(
-      filter(RoundAction.changeUserMode.match),
-      switchMap(({ payload }) => {
-        const { game, user } = state$.value;
-
-        if (!game.currentGame || !user.currentUser) {
-          return of(RoundAction.somethingFailure("Can not give up with nullish"));
-        }
-
-        const useCase = registrar.resolve("changeUserModeUseCase");
-
-        return from(
-          useCase.execute({
-            gameId: game.currentGame.id,
-            userId: user.currentUser.id,
-            mode: payload,
-          })
-        ).pipe(
-          map((output) => {
-            switch (output.kind) {
-              case "success":
-                return RoundAction.changeUserModeSuccess(output.game.round);
+                return RoundAction.estimateSuccess(output.round);
               default:
                 return RoundAction.somethingFailure(output.kind);
             }
@@ -123,10 +92,10 @@ export const roundEpic = (
       filter(RoundAction.showDown.match),
       switchMap(() => {
         const {
-          game: { currentGame },
+          round: { instance },
         } = state$.value;
 
-        if (!currentGame) {
+        if (!instance) {
           return of(RoundAction.somethingFailure("Can not show down with nullish"));
         }
 
@@ -134,13 +103,13 @@ export const roundEpic = (
 
         return from(
           useCase.execute({
-            gameId: currentGame.id,
+            roundId: instance.id,
           })
         ).pipe(
           map((output) => {
             switch (output.kind) {
               case "success":
-                return RoundAction.showDownSuccess(output.game.round);
+                return RoundAction.showDownSuccess(output.round);
               case "notFoundGame":
                 return RoundAction.showDownFailed({ reason: "can not find game" });
               case "showDownFailed":

@@ -2,19 +2,18 @@ import { Database, ref, onValue, Unsubscribe, DataSnapshot } from "firebase/data
 import { GameObserver } from "./observer";
 import { deserializeFrom } from "./game-snapshot-deserializer";
 import { T, Id } from "@/domains/game";
-import { RoundRepository } from "@/domains/round-repository";
 
 export class GameObserverImpl implements GameObserver {
   private _unsubscribe: Unsubscribe | null = null;
   private subscribingGameId: Id | null = null;
-  constructor(private database: Database, private roundRepository: RoundRepository) {}
+  constructor(private database: Database) {}
 
   subscribe(gameId: Id, subscriber: (game: T) => void): void {
     this.unsubscribe();
 
     this.subscribingGameId = gameId;
     const _subscriber: (data: DataSnapshot) => void = async (data) => {
-      const game = await deserializeFrom(gameId, data, this.roundRepository);
+      const game = await deserializeFrom(gameId, data);
 
       if (!game) {
         return;

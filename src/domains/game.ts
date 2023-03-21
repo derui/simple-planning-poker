@@ -6,7 +6,6 @@ import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
 import * as Round from "./round";
 import * as GamePlayer from "./game-player";
-import * as UserEstimation from "./user-estimation";
 
 export type Id = Base.Id<"Game">;
 
@@ -21,7 +20,7 @@ export interface T {
   readonly owner: User.Id;
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
-  readonly round: Round.T;
+  readonly round: Round.Id;
   readonly finishedRounds: Round.Id[];
 }
 
@@ -42,6 +41,7 @@ export interface GameCreated extends DomainEvent {
   name: string;
   createdBy: User.Id;
   selectableCards: SelectableCards.T;
+  round: Round.Id;
 }
 
 export const isGameCreated = function isGameCreated(event: DomainEvent): event is GameCreated {
@@ -72,11 +72,11 @@ export const create = ({
   owner: User.Id;
   cards: SelectableCards.T;
   joinedPlayers?: GamePlayer.T[];
-  round?: Round.T;
+  round: Round.Id;
   finishedRounds: Round.Id[];
 }): [T, DomainEvent] => {
   const distinctedPlayers = new Map<User.Id, any>();
-  if (!round) {
+  if (!joinedPlayers) {
     distinctedPlayers.set(
       owner,
       GamePlayer.create({ type: GamePlayer.PlayerType.owner, user: owner, mode: GamePlayer.UserMode.normal })
@@ -90,6 +90,7 @@ export const create = ({
     name: name,
     createdBy: owner,
     selectableCards: cards,
+    round,
   };
 
   const game = {
@@ -98,15 +99,7 @@ export const create = ({
     cards,
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
-    round:
-      round ??
-      Round.roundOf({
-        id: Round.createId(),
-        cards: cards,
-        count: 1,
-        estimations: [],
-        joinedPlayers: Array.from(distinctedPlayers.values()),
-      }),
+    round,
     finishedRounds,
   };
 
@@ -134,39 +127,25 @@ export const changeName = function changeName(game: T, name: string) {
   });
 };
 
-export const newRound = function newRound(game: T): [T, DomainEvent] {
-  if (Round.isRound(game.round)) {
-    throw new Error("Can not open new round because it is not finished yet");
-  }
+/**
+ * apply new round
+ */
+export const applyNewRound = function applyNewRound(game: T, round: Round.Id): T {
+  return produce(game, (draft) => {
+    draft.finishedRounds.push(draft.round);
 
-  const newObj = produce(game, (draft) => {
-    draft.round = Round.roundOf({
-      id: Round.createId(),
-      count: game.round.count + 1,
-      cards: game.cards,
-      joinedPlayers: game.round.joinedPlayers,
-    });
-
-    draft.finishedRounds.push(game.round.id);
+    draft.round = round;
   });
-
-  const event: NewRoundStarted = {
-    kind: DOMAIN_EVENTS.NewRoundStarted,
-    gameId: game.id,
-    roundId: newObj.round.id,
-  };
-
-  return [newObj, event];
 };
 
 export const declarePlayerAs = function declarePlayerAs(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
-  const round = game.round;
-  if (!Round.isRound(round)) {
-    return game;
-  }
-
   return produce(game, (draft) => {
-    draft.round = Round.changeUserMode(round, user, mode);
+    const player = draft.joinedPlayers.findIndex((v) => v.user === user);
+    if (player === -1) {
+      return;
+    }
+
+    draft.joinedPlayers[player].mode = mode;
   });
 };
 
@@ -180,10 +159,13 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   }
 
   const newObj = produce(game, (draft) => {
+    if (draft.joinedPlayers.some((v) => v.user === user)) {
+      return;
+    }
+
     draft.joinedPlayers.push(
       GamePlayer.create({ type: GamePlayer.PlayerType.player, user, mode: GamePlayer.UserMode.normal })
     );
-    draft.round = Round.joinPlayer(draft.round, user);
   });
 
   const event: UserJoined = {
@@ -195,61 +177,26 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   return [newObj, event];
 };
 
+export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
+  const newRound = Round.roundOf({
+    id: Round.createId(),
+    cards: game.cards,
+  });
+
+  const event: NewRoundStarted = {
+    kind: DOMAIN_EVENTS.NewRoundStarted,
+    gameId: game.id,
+    roundId: newRound.id,
+  };
+
+  return [newRound, event];
+};
+
 /**
  * An user leave from this round
  */
 export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): T {
-  const round = game.round;
   return produce(game, (draft) => {
     draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
-
-    if (Round.isRound(round)) {
-      draft.round = Round.acceptLeaveFrom(round, user);
-    }
-  });
-};
-
-export const isShowedDown = function isShowedDown(game: T) {
-  return Round.isFinishedRound(game.round);
-};
-
-/**
- * show down current round of the game
- */
-export const showDown = function showDown(game: T, now: Date): [T, DomainEvent] {
-  const round = game.round;
-  if (!Round.isRound(round)) {
-    throw new Error("Can not show down. should start new round");
-  }
-
-  const [finishedRound, event] = Round.showDown(round, now);
-
-  return [
-    produce(game, (draft) => {
-      draft.round = finishedRound;
-    }),
-    event,
-  ];
-};
-
-export const acceptPlayerEstimation = function acceptPlayerEstimation(
-  game: T,
-  userId: User.Id,
-  estimation: UserEstimation.T
-): T {
-  const round = game.round;
-  if (!Round.isRound(round)) {
-    throw new Error("Can not accept estimation to finished round");
-  }
-
-  let updated = round;
-  if (UserEstimation.isEstimated(estimation)) {
-    updated = Round.takePlayerEstimation(round, userId, estimation.card);
-  } else if (UserEstimation.isGiveUp(estimation)) {
-    updated = Round.acceptPlayerToGiveUp(round, userId);
-  }
-
-  return produce(game, (draft) => {
-    draft.round = updated;
   });
 };

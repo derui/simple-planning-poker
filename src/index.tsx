@@ -41,7 +41,7 @@ if (location.hostname === "localhost") {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-const gameRepository = new GameRepositoryImpl(database, new RoundRepositoryImpl(database));
+const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
 
 const dispatcher = new EventDispatcherImpl([
@@ -54,9 +54,12 @@ registrar.register("userRepository", userRepository);
 registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
 registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("gameRepository", gameRepository);
-registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(registrar.resolve("gameRepository")));
-registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, registrar.resolve("gameRepository")));
-registrar.register("newRoundUseCase", new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository")));
+registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(new RoundRepositoryImpl(database)));
+registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, new RoundRepositoryImpl(database)));
+registrar.register(
+  "newRoundUseCase",
+  new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository"), new RoundRepositoryImpl(database))
+);
 registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
 registrar.register("leaveGameUseCase", new LeaveGameUseCase(registrar.resolve("gameRepository")));
 registrar.register("changeUserModeUseCase", new ChangeUserModeUseCase(registrar.resolve("gameRepository")));
@@ -66,7 +69,7 @@ registrar.register(
 );
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
-registrar.register("gameObserver", new GameObserverImpl(database, new RoundRepositoryImpl(database)));
+registrar.register("gameObserver", new GameObserverImpl(database));
 
 install(config);
 
