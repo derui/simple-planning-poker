@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
-import { PlayerHand } from "./player-hand";
+import { PlayerEstimation } from "./player-estimation";
 import { UserHandInfo } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
@@ -12,11 +12,11 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function PlayerHands({ hands, testid }: Props) {
+export function PlayerEstimations({ hands, testid }: Props) {
   const gen = generateTestId(testid);
 
   const createUserHand = (props: UserHandInfo, index: number) => {
-    return <PlayerHand key={index} testid={gen(props.userName)} {...props} />;
+    return <PlayerEstimation key={index} testid={gen(props.userName)} {...props} />;
   };
 
   return (

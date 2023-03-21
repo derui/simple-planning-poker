@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { PlayerHands } from "../presentations/player-hands";
+import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { selectUserHandInfos } from "@/status/selectors/user-hand";
@@ -109,11 +109,11 @@ export function GameAreaContainer() {
       <div className={styles.gridContainer}>
         <div className="col-span-full row-start-1"></div>
         <div className="col-start-2 row-start-2">
-          <PlayerHands hands={upper} testid="hands" />
+          <PlayerEstimations hands={upper} testid="hands" />
         </div>
         <div className={styles.table}>{button}</div>
         <div className="col-start-2 row-start-4">
-          <PlayerHands hands={lower} testid="hands" />
+          <PlayerEstimations hands={lower} testid="hands" />
         </div>
         <div className="col-span-full row-start-5"></div>
       </div>

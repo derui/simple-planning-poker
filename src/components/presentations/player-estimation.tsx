@@ -54,7 +54,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function PlayerHand(props: Props) {
+export function PlayerEstimation(props: Props) {
   const gen = generateTestId(props.testid);
 
   let card: ReactElement;
