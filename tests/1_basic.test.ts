@@ -78,7 +78,7 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
   await expect(other.getByTestId("estimations/test@example.com/card")).toBeVisible();
 });
 
-test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
   resetFirebase();
 
   // sign up main
