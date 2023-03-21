@@ -60,7 +60,7 @@ export function GameInfo({ gameName, onLeaveGame, testid }: Props) {
         <span className={styles.name.name}> {gameName}</span>
       </div>
       <div className={styles.actions.root}>
-        <button className={styles.actions.leave} onClick={() => onLeaveGame()}></button>
+        <button className={styles.actions.leave} onClick={() => onLeaveGame()} data-testid={gen("leave")}></button>
       </div>
     </main>
   );
