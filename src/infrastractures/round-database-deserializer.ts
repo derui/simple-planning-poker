@@ -1,5 +1,5 @@
 import { DataSnapshot } from "firebase/database";
-import { deserialize as deserializeHand, Serialized } from "./user-hand-converter";
+import { deserialize as deserializeHand, Serialized } from "./user-estimation-converter";
 import * as Round from "@/domains/round";
 import * as StoryPoint from "@/domains/story-point";
 import * as SelectableCards from "@/domains/selectable-cards";

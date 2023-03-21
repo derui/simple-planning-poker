@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { deserialize, serialize } from "./user-hand-converter";
+import { deserialize, serialize } from "./user-estimation-converter";
 import * as Card from "@/domains/card";
 import * as StoryPoint from "@/domains/story-point";
 import * as UserEstimation from "@/domains/user-estimation";
