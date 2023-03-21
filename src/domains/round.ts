@@ -1,5 +1,5 @@
 import produce from "immer";
-import * as UserHand from "./user-hand";
+import * as UserEstimation from "./user-estimation";
 import * as User from "./user";
 import * as Card from "./card";
 import * as SelectableCards from "./selectable-cards";
@@ -16,7 +16,7 @@ export type Id = Base.Id<"RoundId">;
 
 interface PlayerHand {
   readonly user: User.Id;
-  readonly hand: UserHand.T;
+  readonly hand: UserEstimation.T;
 }
 
 const _calculatedStoryPoint = Symbol();
@@ -28,7 +28,7 @@ const _round = "Round";
 interface CommonRound {
   readonly id: Id;
   readonly count: number;
-  readonly hands: Record<User.Id, UserHand.T>;
+  readonly hands: Record<User.Id, UserEstimation.T>;
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
 }
@@ -126,7 +126,7 @@ export const takePlayerCard = function takePlayerCard(round: Round, userId: User
 
   const hands = Object.assign({}, round.hands);
 
-  hands[userId] = UserHand.handed(card);
+  hands[userId] = UserEstimation.estimated(card);
 
   return produce(round, (draft) => {
     draft.hands = hands;
@@ -138,7 +138,7 @@ export const takePlayerCard = function takePlayerCard(round: Round, userId: User
  */
 export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, userId: User.Id) {
   return produce(round, (draft) => {
-    draft.hands[userId] = UserHand.giveUp();
+    draft.hands[userId] = UserEstimation.giveUp();
   });
 };
 
@@ -181,7 +181,7 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
  */
 export const calculateAverage = function calculateAverage(round: FinishedRound) {
   const cards = Object.values(round.hands)
-    .filter(UserHand.isHanded)
+    .filter(UserEstimation.isEstimated)
     .map((v) => v.card);
 
   if (cards.length === 0) {

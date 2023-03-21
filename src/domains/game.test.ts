@@ -18,7 +18,7 @@ import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
 import * as User from "./user";
 import * as Round from "./round";
-import * as UserHand from "./user-hand";
+import * as UserEstimation from "./user-estimation";
 import * as GamePlayer from "./game-player";
 import * as Invitation from "./invitation";
 import { DOMAIN_EVENTS } from "./event";
@@ -70,7 +70,7 @@ test("newRound should make new round", () => {
       id: Round.createId(),
       count: 2,
       cards: cards,
-      hands: [{ user: User.createId("user"), hand: UserHand.giveUp() }],
+      hands: [{ user: User.createId("user"), hand: UserEstimation.giveUp() }],
       joinedPlayers: [],
     }),
     new Date()
@@ -260,8 +260,8 @@ describe("show down", () => {
       cards,
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
-    game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
+    game = acceptPlayerHand(game, User.createId("user"), UserEstimation.giveUp());
+    game = acceptPlayerHand(game, User.createId("new"), UserEstimation.estimated(cards[0]));
     const ret = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
 
     expect(ret[0]).not.toBe(game);
@@ -280,8 +280,8 @@ describe("show down", () => {
     });
 
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerHand(game, User.createId("user"), UserHand.giveUp());
-    game = acceptPlayerHand(game, User.createId("new"), UserHand.handed(cards[0]));
+    game = acceptPlayerHand(game, User.createId("user"), UserEstimation.giveUp());
+    game = acceptPlayerHand(game, User.createId("new"), UserEstimation.estimated(cards[0]));
     const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
 
     expect(isShowedDown(finished)).toBe(true);

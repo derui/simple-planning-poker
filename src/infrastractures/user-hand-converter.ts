@@ -1,5 +1,5 @@
 import * as Card from "@/domains/card";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import * as StoryPoint from "@/domains/story-point";
 
 export type Serialized =
@@ -9,14 +9,14 @@ export type Serialized =
   | { kind: "selected"; storypoint: number }
   | { kind: "unselected" };
 
-export const serialize = function serializeUserHand(hand: UserHand.T): Serialized {
-  switch (UserHand.kindOf(hand)) {
+export const serialize = function serializeUserHand(hand: UserEstimation.T): Serialized {
+  switch (UserEstimation.kindOf(hand)) {
     case "giveup":
       return { kind: "giveUp" };
     case "unselected":
       return { kind: "unselected" };
-    case "handed":
-      if (UserHand.isHanded(hand)) {
+    case "estimated":
+      if (UserEstimation.isEstimated(hand)) {
         return { kind: "selected", storypoint: hand.card };
       }
     default:
@@ -24,13 +24,13 @@ export const serialize = function serializeUserHand(hand: UserHand.T): Serialize
   }
 };
 
-export const deserialize = function deserializeUserHand(obj: Serialized): UserHand.T {
+export const deserialize = function deserializeUserHand(obj: Serialized): UserEstimation.T {
   switch (obj.kind) {
     case "giveUp":
-      return UserHand.giveUp();
+      return UserEstimation.giveUp();
     case "unselected":
-      return UserHand.unselected();
+      return UserEstimation.unselected();
     case "selected":
-      return UserHand.handed(Card.create(StoryPoint.create(obj.storypoint)));
+      return UserEstimation.estimated(Card.create(StoryPoint.create(obj.storypoint)));
   }
 };

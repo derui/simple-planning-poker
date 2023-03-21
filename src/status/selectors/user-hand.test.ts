@@ -6,7 +6,7 @@ import { handCardSuccess } from "../actions/round";
 import * as s from "./user-hand";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import { randomGame } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
 import { isLoading } from "@/utils/loadable";
@@ -48,7 +48,9 @@ test("return hands with handed user", () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.handed(game.cards[0])).round));
+  store.dispatch(
+    handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserEstimation.estimated(game.cards[0])).round)
+  );
 
   const [ret] = s.selectUserHandInfos(store.getState());
 
@@ -76,7 +78,7 @@ test("give up hand", () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.giveUp()).round));
+  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserEstimation.giveUp()).round));
 
   const [ret] = s.selectUserHandInfos(store.getState());
 

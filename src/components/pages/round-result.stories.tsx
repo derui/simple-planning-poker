@@ -11,7 +11,7 @@ import { openGameSuccess } from "@/status/actions/game";
 import { randomGame, randomUser } from "@/test-lib";
 import * as Game from "@/domains/game";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
-import { giveUp, handed } from "@/domains/user-hand";
+import { giveUp, estimated } from "@/domains/user-estimation";
 import { showDownSuccess } from "@/status/actions/round";
 
 install(twind);
@@ -66,7 +66,7 @@ export const Loaded: Story = {
     );
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
     game = Game.acceptPlayerHand(game, owner.id, giveUp());
-    game = Game.acceptPlayerHand(game, users[0].id, handed(game.cards[0]));
+    game = Game.acceptPlayerHand(game, users[0].id, estimated(game.cards[0]));
     store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0].round));
 
     const route = createMemoryRouter(

@@ -14,7 +14,7 @@ import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as GameAction from "@/status/actions/game";
 import * as RoundAction from "@/status/actions/round";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import {
   createMockedCreateGameUseCase,
   createMockedGameObserver,
@@ -176,7 +176,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("roundObserver", createMockedRoundObserver());
@@ -205,7 +205,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());
@@ -236,7 +236,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());

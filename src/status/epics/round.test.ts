@@ -13,7 +13,7 @@ import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as RoundAction from "@/status/actions/round";
 import * as GameAction from "@/status/actions/game";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import {
   createMockedChangeUserModeUseCase,
   createMockedHandCardUseCase,
@@ -70,7 +70,7 @@ describe("giveUp", () => {
     });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerHand(game, user.id, UserHand.giveUp());
+    const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.giveUp());
     registrar.register(
       "handCardUseCase",
       createMockedHandCardUseCase({
@@ -170,7 +170,7 @@ describe("hand card", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerHand(game, user.id, UserHand.handed(CARDS[1]));
+    const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.estimated(CARDS[1]));
     registrar.register(
       "handCardUseCase",
       createMockedHandCardUseCase({
@@ -292,7 +292,7 @@ describe("show down", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 

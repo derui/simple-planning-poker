@@ -6,7 +6,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import { createMockedGameRepository } from "@/test-lib";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 
 const CARDS = SelectableCards.create([StoryPoint.create(1)]);
 
@@ -15,7 +15,7 @@ test("should return error if game is not found", async () => {
   const input = {
     userId: User.createId(),
     gameId: Game.createId(),
-    userHand: UserHand.handed(CARDS[0]),
+    userHand: UserEstimation.estimated(CARDS[0]),
   };
 
   const repository = createMockedGameRepository();
@@ -34,7 +34,7 @@ test("should save player with card selected by user", async () => {
   const input = {
     userId: User.createId(),
     gameId: Game.createId(),
-    userHand: UserHand.handed(CARDS[0]),
+    userHand: UserEstimation.estimated(CARDS[0]),
   };
   let [game] = Game.create({
     id: input.gameId,
@@ -57,5 +57,7 @@ test("should save player with card selected by user", async () => {
   // Assert
   expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
   expect(save.callCount).toBe(1);
-  expect(save.lastCall.firstArg.round.hands).toEqual(Object.fromEntries([[input.userId, UserHand.handed(CARDS[0])]]));
+  expect(save.lastCall.firstArg.round.hands).toEqual(
+    Object.fromEntries([[input.userId, UserEstimation.estimated(CARDS[0])]])
+  );
 });

@@ -2,7 +2,7 @@ import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import * as Loadable from "@/utils/loadable";
 import * as Game from "@/domains/game";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 
 const selectSelf = (state: RootState) => state;
 const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game);
@@ -56,7 +56,7 @@ export const selectCards = createDraftSafeSelector(selectCurrentGame, (game): Lo
 });
 
 export type PlayerHandInfo = {
-  hand: UserHand.T;
+  hand: UserEstimation.T;
   cardIndex: number;
 };
 
@@ -73,16 +73,16 @@ export const selectPlayerHandedCard = createDraftSafeSelector(
   selectCurrentUser,
   (round, user): PlayerHandInfo => {
     if (!round || !user) {
-      return { hand: UserHand.unselected(), cardIndex: -1 };
+      return { hand: UserEstimation.unselected(), cardIndex: -1 };
     }
 
     const hand = round.hands[user.id];
     if (!hand) {
-      return { hand: UserHand.unselected(), cardIndex: -1 };
+      return { hand: UserEstimation.unselected(), cardIndex: -1 };
     }
 
     let cardIndex = -1;
-    if (UserHand.isHanded(hand)) {
+    if (UserEstimation.isEstimated(hand)) {
       cardIndex = round.cards[hand.card].order;
     }
 
@@ -136,7 +136,7 @@ export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (r
   const handMap = new Map<number, number>();
 
   Object.values(round.hands).forEach((v) => {
-    if (UserHand.isHanded(v)) {
+    if (UserEstimation.isEstimated(v)) {
       const count = handMap.get(v.card) ?? 1;
       handMap.set(v.card, count);
     }

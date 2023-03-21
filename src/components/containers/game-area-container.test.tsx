@@ -11,7 +11,7 @@ import { randomGame } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { notifyOtherUserChanged } from "@/status/actions/user";
 import { acceptPlayerHand, joinUserAsPlayer, makeInvitation } from "@/domains/game";
-import { giveUp } from "@/domains/user-hand";
+import { giveUp } from "@/domains/user-estimation";
 
 afterEach(cleanup);
 

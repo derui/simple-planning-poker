@@ -6,7 +6,7 @@ import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as Round from "@/domains/round";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import { dateTimeToString } from "@/domains/type";
 import { DOMAIN_EVENTS } from "@/domains/event";
@@ -74,7 +74,7 @@ test("should dispatch NewRound event", async () => {
     cards,
   });
 
-  const [changed] = Game.showDown(Game.acceptPlayerHand(game, game.owner, UserHand.giveUp()), new Date());
+  const [changed] = Game.showDown(Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp()), new Date());
 
   const input = {
     gameId: game.id,

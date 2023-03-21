@@ -1,13 +1,13 @@
 import { UseCase } from "./base";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import { GameRepository } from "@/domains/game-repository";
 
 export interface HandCardUseCaseInput {
   userId: User.Id;
   gameId: Game.Id;
-  userHand: UserHand.T;
+  userHand: UserEstimation.T;
 }
 
 export type HandCardUseCaseOutput =

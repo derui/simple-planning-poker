@@ -5,7 +5,7 @@ import * as RoundAction from "../actions/round";
 import * as Round from "@/domains/round";
 import * as Card from "@/domains/card";
 import * as User from "@/domains/user";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import { UserMode } from "@/domains/game-player";
 
 type State = "NotPrepared" | "Finished" | "ShowDownPrepared";
@@ -16,7 +16,7 @@ interface RoundState {
     id: Round.Id;
     cards: Record<Card.T, { card: Card.T; order: number }>;
     count: number;
-    hands: Record<User.Id, UserHand.T>;
+    hands: Record<User.Id, UserEstimation.T>;
     joinedPlayers: Record<User.Id, UserMode>;
     state: State;
     averagePoint: number;

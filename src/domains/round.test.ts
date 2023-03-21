@@ -15,7 +15,7 @@ import {
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
 import * as User from "./user";
-import * as UserHand from "./user-hand";
+import * as UserEstimation from "./user-estimation";
 import * as Card from "./card";
 import * as GamePlayer from "./game-player";
 import { DOMAIN_EVENTS } from "./event";
@@ -67,7 +67,7 @@ test("round can accept user hand", () => {
   expect(round).not.toBe(changed);
   expect(round.id).toBe(changed.id);
   expect(round.cards).toBe(changed.cards);
-  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
+  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[0])]]));
 });
 
 test("update hand if user already take their hand before", () => {
@@ -75,7 +75,7 @@ test("update hand if user already take their hand before", () => {
   let changed = takePlayerCard(round, User.createId("id"), cards[0]);
   changed = takePlayerCard(changed, User.createId("id"), cards[1]);
 
-  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[1])]]));
+  expect(changed.hands).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[1])]]));
 });
 
 test("throw error when a card user took is not contained selectable cards", () => {
@@ -91,15 +91,15 @@ test("round can accept user giveup", () => {
     id: createId("id"),
     count: 1,
     cards: cards,
-    hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+    hands: [{ user: User.createId("id"), hand: UserEstimation.estimated(cards[0]) }],
     joinedPlayers: [],
   });
   round = acceptPlayerToGiveUp(round, User.createId("id2"));
 
   expect(round.hands).toEqual(
     Object.fromEntries([
-      [User.createId("id"), UserHand.handed(cards[0])],
-      [User.createId("id2"), UserHand.giveUp()],
+      [User.createId("id"), UserEstimation.estimated(cards[0])],
+      [User.createId("id2"), UserEstimation.giveUp()],
     ])
   );
 });
@@ -109,12 +109,12 @@ test("give upped user can take other hand", () => {
     id: createId("id"),
     count: 1,
     cards: cards,
-    hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+    hands: [{ user: User.createId("id"), hand: UserEstimation.giveUp() }],
     joinedPlayers: [],
   });
   round = takePlayerCard(round, User.createId("id"), cards[0]);
 
-  expect(round.hands).toEqual(Object.fromEntries([[User.createId("id"), UserHand.handed(cards[0])]]));
+  expect(round.hands).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[0])]]));
 });
 
 describe("show down", () => {
@@ -123,7 +123,7 @@ describe("show down", () => {
       id: createId("id"),
       count: 1,
       cards: cards,
-      hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.estimated(cards[0]) }],
       joinedPlayers: [],
     });
 
@@ -157,7 +157,7 @@ describe("calculate average", () => {
       id: createId("id"),
       count: 1,
       cards: cards,
-      hands: [{ user: User.createId("id"), hand: UserHand.handed(cards[0]) }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.estimated(cards[0]) }],
       joinedPlayers: [],
     });
 
@@ -174,9 +174,9 @@ describe("calculate average", () => {
       cards: cards,
       count: 1,
       hands: [
-        { user: User.createId("id1"), hand: UserHand.giveUp() },
-        { user: User.createId("id2"), hand: UserHand.unselected() },
-        { user: User.createId("id3"), hand: UserHand.giveUp() },
+        { user: User.createId("id1"), hand: UserEstimation.giveUp() },
+        { user: User.createId("id2"), hand: UserEstimation.unselected() },
+        { user: User.createId("id3"), hand: UserEstimation.giveUp() },
       ],
       joinedPlayers: [],
     });
@@ -194,9 +194,9 @@ describe("calculate average", () => {
       count: 1,
       cards: cards,
       hands: [
-        { user: User.createId("id1"), hand: UserHand.handed(cards[0]) },
-        { user: User.createId("id2"), hand: UserHand.handed(cards[1]) },
-        { user: User.createId("id3"), hand: UserHand.handed(cards[0]) },
+        { user: User.createId("id1"), hand: UserEstimation.estimated(cards[0]) },
+        { user: User.createId("id2"), hand: UserEstimation.estimated(cards[1]) },
+        { user: User.createId("id3"), hand: UserEstimation.estimated(cards[0]) },
       ],
       joinedPlayers: [],
     });
@@ -215,7 +215,7 @@ describe("guards", () => {
       id: createId("id"),
       cards: cards,
       count: 1,
-      hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.unselected() }],
       joinedPlayers: [],
     });
 
@@ -230,7 +230,7 @@ describe("guards", () => {
       id: createId("id"),
       cards: cards,
       count: 1,
-      hands: [{ user: User.createId("id"), hand: UserHand.unselected() }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.unselected() }],
       joinedPlayers: [],
     });
 
@@ -247,7 +247,7 @@ describe("join player", () => {
       id: createId("id"),
       cards: cards,
       count: 1,
-      hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.giveUp() }],
       finishedAt: "2022-01-01T00:01:02",
       joinedPlayers: [],
     });
@@ -262,7 +262,7 @@ describe("join player", () => {
       id: createId("id"),
       cards: cards,
       count: 1,
-      hands: [{ user: User.createId("id"), hand: UserHand.giveUp() }],
+      hands: [{ user: User.createId("id"), hand: UserEstimation.giveUp() }],
       joinedPlayers: [
         GamePlayer.create({
           type: GamePlayer.PlayerType.player,

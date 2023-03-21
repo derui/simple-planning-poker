@@ -5,7 +5,7 @@ import type { RootState } from "../store";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 
 type Epics = "giveUp" | "handCard" | "changeUserMode" | "showDown";
 
@@ -31,7 +31,11 @@ export const roundEpic = (
         const useCase = registrar.resolve("handCardUseCase");
 
         return from(
-          useCase.execute({ gameId: game.currentGame.id, userId: user.currentUser.id, userHand: UserHand.giveUp() })
+          useCase.execute({
+            gameId: game.currentGame.id,
+            userId: user.currentUser.id,
+            userHand: UserEstimation.giveUp(),
+          })
         ).pipe(
           map((output) => {
             switch (output.kind) {
@@ -67,7 +71,7 @@ export const roundEpic = (
           useCase.execute({
             gameId: game.currentGame.id,
             userId: user.currentUser.id,
-            userHand: UserHand.handed(selectedCard),
+            userHand: UserEstimation.estimated(selectedCard),
           })
         ).pipe(
           map((output) => {

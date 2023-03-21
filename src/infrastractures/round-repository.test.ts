@@ -6,7 +6,7 @@ import * as R from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import * as GamePlayer from "@/domains/game-player";
 import { parseDateTime } from "@/domains/type";
 import { UserMode } from "@/domains/game-player";
@@ -41,10 +41,10 @@ test("should be able to save and find a round", async () => {
     count: 1,
     cards: cards,
     hands: [
-      { user: User.createId("user1"), hand: UserHand.handed(cards[0]) },
-      { user: User.createId("user2"), hand: UserHand.handed(cards[1]) },
-      { user: User.createId("user3"), hand: UserHand.giveUp() },
-      { user: User.createId("user4"), hand: UserHand.unselected() },
+      { user: User.createId("user1"), hand: UserEstimation.estimated(cards[0]) },
+      { user: User.createId("user2"), hand: UserEstimation.estimated(cards[1]) },
+      { user: User.createId("user3"), hand: UserEstimation.giveUp() },
+      { user: User.createId("user4"), hand: UserEstimation.unselected() },
     ],
     joinedPlayers: [
       GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
@@ -65,10 +65,10 @@ test("should be able to save and find a round", async () => {
   expect(instance?.count).toEqual(round.count);
   expect(instance?.hands).toEqual(
     Object.fromEntries([
-      [User.createId("user1"), UserHand.handed(cards[0])],
-      [User.createId("user2"), UserHand.handed(cards[1])],
-      [User.createId("user3"), UserHand.giveUp()],
-      [User.createId("user4"), UserHand.unselected()],
+      [User.createId("user1"), UserEstimation.estimated(cards[0])],
+      [User.createId("user2"), UserEstimation.estimated(cards[1])],
+      [User.createId("user3"), UserEstimation.giveUp()],
+      [User.createId("user4"), UserEstimation.unselected()],
     ])
   );
   expect(instance?.cards).toEqual(round.cards);
@@ -90,10 +90,10 @@ test("should be able to save and find a finished round", async () => {
     count: 1,
     cards: cards,
     hands: [
-      { user: User.createId("user1"), hand: UserHand.handed(cards[0]) },
-      { user: User.createId("user2"), hand: UserHand.handed(cards[1]) },
-      { user: User.createId("user3"), hand: UserHand.giveUp() },
-      { user: User.createId("user4"), hand: UserHand.unselected() },
+      { user: User.createId("user1"), hand: UserEstimation.estimated(cards[0]) },
+      { user: User.createId("user2"), hand: UserEstimation.estimated(cards[1]) },
+      { user: User.createId("user3"), hand: UserEstimation.giveUp() },
+      { user: User.createId("user4"), hand: UserEstimation.unselected() },
     ],
     joinedPlayers: [],
   });
@@ -112,10 +112,10 @@ test("should be able to save and find a finished round", async () => {
   expect(instance?.count).toEqual(round.count);
   expect(instance?.hands).toEqual(
     Object.fromEntries([
-      [User.createId("user1"), UserHand.handed(cards[0])],
-      [User.createId("user2"), UserHand.handed(cards[1])],
-      [User.createId("user3"), UserHand.giveUp()],
-      [User.createId("user4"), UserHand.unselected()],
+      [User.createId("user1"), UserEstimation.estimated(cards[0])],
+      [User.createId("user2"), UserEstimation.estimated(cards[1])],
+      [User.createId("user3"), UserEstimation.giveUp()],
+      [User.createId("user4"), UserEstimation.unselected()],
     ])
   );
   expect(instance?.finishedAt).toBe("2023-02-25T00:01:01.000Z");

@@ -5,7 +5,7 @@ import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 
 import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 import { DOMAIN_EVENTS } from "@/domains/event";
@@ -40,7 +40,7 @@ test("should save game showed down", async () => {
     cards: CARDS,
   });
 
-  const changed = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+  const changed = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
 
   const input = {
     gameId: game.id,
@@ -98,7 +98,7 @@ test("should dispatch ShowedDown event", async () => {
     finishedRounds: [],
     cards: CARDS,
   });
-  const changed = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
+  const changed = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
 
   const input = {
     gameId: game.id,

@@ -1,7 +1,7 @@
 import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { UserMode } from "@/domains/game-player";
-import * as UserHand from "@/domains/user-hand";
+import * as UserEstimation from "@/domains/user-estimation";
 import * as Card from "@/domains/card";
 import * as User from "@/domains/user";
 import { filterUndefined } from "@/utils/basic";
@@ -50,9 +50,9 @@ export const selectUserHandInfos = createDraftSafeSelector(
 
         let displayValue: string = "?";
 
-        if (UserHand.isHanded(hand)) {
+        if (UserEstimation.isEstimated(hand)) {
           displayValue = Card.toString(hand.card);
-        } else if (UserHand.isGiveUp(hand)) {
+        } else if (UserEstimation.isGiveUp(hand)) {
           displayValue = "?";
         }
 

@@ -6,7 +6,7 @@ import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
 import * as Round from "./round";
 import * as GamePlayer from "./game-player";
-import * as UserHand from "./user-hand";
+import * as UserEstimation from "./user-estimation";
 
 export type Id = Base.Id<"Game">;
 
@@ -232,16 +232,16 @@ export const showDown = function showDown(game: T, now: Date): [T, DomainEvent] 
   ];
 };
 
-export const acceptPlayerHand = function acceptPlayerHand(game: T, userId: User.Id, hand: UserHand.T): T {
+export const acceptPlayerHand = function acceptPlayerHand(game: T, userId: User.Id, hand: UserEstimation.T): T {
   const round = game.round;
   if (!Round.isRound(round)) {
     throw new Error("Can not accept hand to finished round");
   }
 
   let updated = round;
-  if (UserHand.isHanded(hand)) {
+  if (UserEstimation.isEstimated(hand)) {
     updated = Round.takePlayerCard(round, userId, hand.card);
-  } else if (UserHand.isGiveUp(hand)) {
+  } else if (UserEstimation.isGiveUp(hand)) {
     updated = Round.acceptPlayerToGiveUp(round, userId);
   }
 
