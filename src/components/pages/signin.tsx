@@ -54,8 +54,8 @@ export function SignInPage(props: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const authenticating = useAppSelector(selectAuthenticating());
-  const authenticated = useAppSelector(selectAuthenticated());
+  const authenticating = useAppSelector(selectAuthenticating);
+  const authenticated = useAppSelector(selectAuthenticated);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

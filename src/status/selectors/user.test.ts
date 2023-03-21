@@ -28,7 +28,7 @@ test("should return current user info ", () => {
   store.dispatch(signInSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
-  const ret = s.selectUserInfo()(store.getState());
+  const ret = s.selectUserInfo(store.getState());
 
   expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal });
 });
@@ -36,7 +36,7 @@ test("should return current user info ", () => {
 test("should loading with undefined when game or user is not provided", () => {
   const store = createPureStore();
 
-  const ret = s.selectUserInfo()(store.getState());
+  const ret = s.selectUserInfo(store.getState());
 
   expect(isLoading(ret)).toBe(true);
 });
@@ -56,7 +56,7 @@ test("should not return value when the user was not joined before", () => {
   store.dispatch(signInSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
-  const ret = s.selectUserInfo()(store.getState());
+  const ret = s.selectUserInfo(store.getState());
 
   expect(isError(ret)).toBe(true);
 });
@@ -67,7 +67,7 @@ describe("joined games", () => {
     const user = User.create({ id: User.createId("1"), name: "foo" });
     store.dispatch(signInSuccess({ user }));
 
-    const ret = s.selectJoinedGames()(store.getState());
+    const ret = s.selectJoinedGames(store.getState());
 
     expect(ret).toEqual([]);
   });
@@ -85,7 +85,7 @@ describe("joined games", () => {
       })
     );
 
-    const ret = s.selectJoinedGames()(store.getState());
+    const ret = s.selectJoinedGames(store.getState());
 
     expect(ret).toEqual([
       { gameId: Game.createId("id1"), name: "name1" },

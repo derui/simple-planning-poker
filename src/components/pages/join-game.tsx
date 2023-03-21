@@ -27,8 +27,8 @@ const styles = {
 export function JoinGamePage() {
   const param = useParams<{ signature: string }>();
   const dispatch = useAppDispatch();
-  const currentRoundId = useAppSelector(selectCurrentRoundId());
-  const currentGameId = useAppSelector(selectCurrentGameId());
+  const currentRoundId = useAppSelector(selectCurrentRoundId);
+  const currentGameId = useAppSelector(selectCurrentGameId);
   const navigate = useNavigate();
 
   useEffect(() => {

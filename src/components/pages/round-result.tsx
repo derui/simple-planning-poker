@@ -18,9 +18,9 @@ const styles = {
 // eslint-disable-next-line func-style
 export function RoundResultPage() {
   const params = useParams<{ gameId: string }>();
-  const averageResult = useAppSelector(selectRoundResult());
+  const averageResult = useAppSelector(selectRoundResult);
   const navigate = useNavigate();
-  const roundStatus = useAppSelector(selectRoundStatus());
+  const roundStatus = useAppSelector(selectRoundStatus);
 
   let showcase = (
     <div className={styles.showcase}>

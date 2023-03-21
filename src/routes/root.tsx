@@ -7,7 +7,7 @@ import { RootLayout } from "./layout";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
-  const state = useAppSelector(selectAuthenticated());
+  const state = useAppSelector(selectAuthenticated);
   const location = useLocation();
   const navigate = useNavigate();
 

@@ -66,7 +66,7 @@ const GameProgressionButton = (dispatch: AppDispatch) => {
 
 // eslint-disable-next-line func-style
 export function GameResultAreaContainer() {
-  const hands = useAppSelector(selectUserHandInfos());
+  const hands = useAppSelector(selectUserHandInfos);
   const dispatch = useAppDispatch();
 
   if (!isFinished(hands)) {

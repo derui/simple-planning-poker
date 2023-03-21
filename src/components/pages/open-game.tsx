@@ -27,7 +27,7 @@ const styles = {
 export function OpenGamePage() {
   const param = useParams<{ gameId: string }>();
   const dispatch = useAppDispatch();
-  const currentRoundId = useAppSelector(selectCurrentRoundId());
+  const currentRoundId = useAppSelector(selectCurrentRoundId);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -14,7 +14,7 @@ import { isLoading } from "@/utils/loadable";
 test("return undefined if game not opened", () => {
   const store = createPureStore();
 
-  const ret = s.selectUserHandInfos()(store.getState());
+  const ret = s.selectUserHandInfos(store.getState());
 
   expect(isLoading(ret)).toBe(true);
 });
@@ -27,7 +27,7 @@ test("return one hand from the game contains only owner", () => {
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
 
-  const ret = s.selectUserHandInfos()(store.getState());
+  const ret = s.selectUserHandInfos(store.getState());
 
   expect(ret[0]).toEqual([
     {
@@ -50,7 +50,7 @@ test("return hands with handed user", () => {
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
   store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.handed(game.cards[0])).round));
 
-  const [ret] = s.selectUserHandInfos()(store.getState());
+  const [ret] = s.selectUserHandInfos(store.getState());
 
   expect(ret).toHaveLength(2);
   expect(ret).toContainEqual({
@@ -78,7 +78,7 @@ test("give up hand", () => {
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
   store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserHand.giveUp()).round));
 
-  const [ret] = s.selectUserHandInfos()(store.getState());
+  const [ret] = s.selectUserHandInfos(store.getState());
 
   expect(ret).toHaveLength(2);
   expect(ret).toEqual(

@@ -38,7 +38,7 @@ const styles = {
 export function CreateGamePage() {
   const [name, setName] = useState("");
   const [points, setPoints] = useState(DEFAULT_POINTS);
-  const status = useAppSelector(selectGameCreatingStatus());
+  const status = useAppSelector(selectGameCreatingStatus);
   const canSubmit = Game.canChangeName(name) && points.split(",").filter((v) => v.trim() !== "").length > 0;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

@@ -90,7 +90,7 @@ const Empty = () => {
 
 // eslint-disable-next-line func-style
 export function SelectGamePage() {
-  const games = useAppSelector(selectJoinedGames());
+  const games = useAppSelector(selectJoinedGames);
 
   const gameComponents = games.map((v) => {
     return (

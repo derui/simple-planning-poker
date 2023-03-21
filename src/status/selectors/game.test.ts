@@ -15,7 +15,7 @@ describe("select current game name", () => {
   test("should return loading when game not set", () => {
     const store = createPureStore();
 
-    const ret = s.selectCurrentGameName()(store.getState());
+    const ret = s.selectCurrentGameName(store.getState());
 
     expect(ret).toEqual(Loadable.loading());
   });
@@ -25,7 +25,7 @@ describe("select current game name", () => {
     const game = randomGame({});
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCurrentGameName()(store.getState());
+    const ret = s.selectCurrentGameName(store.getState());
 
     expect(ret).toEqual(Loadable.finished(game.name));
   });
@@ -35,7 +35,7 @@ describe("select current game invitation", () => {
   test("should return loading when game not set", () => {
     const store = createPureStore();
 
-    const ret = s.selectCurrentGameInvitationLink()(store.getState());
+    const ret = s.selectCurrentGameInvitationLink(store.getState());
 
     expect(ret).toEqual(Loadable.loading());
   });
@@ -45,7 +45,7 @@ describe("select current game invitation", () => {
     const game = randomGame({});
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCurrentGameInvitationLink()(store.getState());
+    const ret = s.selectCurrentGameInvitationLink(store.getState());
 
     expect(ret).toEqual(Loadable.finished(`/invitation/${Game.makeInvitation(game)}`));
   });
@@ -55,7 +55,7 @@ describe("select flag to be able to hold new round", () => {
   test("should return false when game not set", () => {
     const store = createPureStore();
 
-    const ret = s.selectCanShowDown()(store.getState());
+    const ret = s.selectCanShowDown(store.getState());
 
     expect(ret).toBe(false);
   });
@@ -65,7 +65,7 @@ describe("select flag to be able to hold new round", () => {
     const game = randomGame({});
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCanShowDown()(store.getState());
+    const ret = s.selectCanShowDown(store.getState());
 
     expect(ret).toBe(false);
   });
@@ -76,7 +76,7 @@ describe("select flag to be able to hold new round", () => {
     game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCanShowDown()(store.getState());
+    const ret = s.selectCanShowDown(store.getState());
 
     expect(ret).toBe(true);
   });
@@ -87,7 +87,7 @@ describe("select flag to be able to hold new round", () => {
     game = Game.acceptPlayerHand(game, game.owner, UserHand.giveUp());
     store.dispatch(openGameSuccess({ game: Game.showDown(game, new Date())[0], players: [] }));
 
-    const ret = s.selectCanShowDown()(store.getState());
+    const ret = s.selectCanShowDown(store.getState());
 
     expect(ret).toBe(false);
   });
@@ -97,7 +97,7 @@ describe("select cards", () => {
   test("return loading if game not opened", () => {
     const store = createPureStore();
 
-    const ret = s.selectCards()(store.getState());
+    const ret = s.selectCards(store.getState());
 
     expect(ret).toEqual(Loadable.loading());
   });
@@ -107,7 +107,7 @@ describe("select cards", () => {
     const game = randomGame({ cards: Cards.create([1, 2, 3, 5].map(StoryPoint.create)) });
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCards()(store.getState());
+    const ret = s.selectCards(store.getState());
 
     expect(ret).toEqual(
       Loadable.finished([
@@ -124,7 +124,7 @@ describe("select round result", () => {
   test("return loading if game not opened", () => {
     const store = createPureStore();
 
-    const ret = s.selectRoundResult()(store.getState());
+    const ret = s.selectRoundResult(store.getState());
 
     expect(ret).toEqual(Loadable.loading());
   });
@@ -134,7 +134,7 @@ describe("select round result", () => {
     const game = randomGame({ cards: Cards.create([1, 2, 3, 5].map(StoryPoint.create)) });
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectRoundResult()(store.getState());
+    const ret = s.selectRoundResult(store.getState());
 
     expect(ret).toEqual(Loadable.error());
   });
@@ -152,7 +152,7 @@ describe("select round result", () => {
     game = Game.showDown(game, new Date())[0];
     store.dispatch(notifyRoundUpdated(game.round));
 
-    const ret = s.selectRoundResult()(store.getState());
+    const ret = s.selectRoundResult(store.getState());
 
     expect(ret).toEqual(
       Loadable.finished({

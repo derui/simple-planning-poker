@@ -7,7 +7,7 @@ import { randomUser } from "@/test-lib";
 test("not authenticating with initial state", () => {
   const store = createPureStore();
 
-  const ret = s.selectAuthenticating()(store.getState());
+  const ret = s.selectAuthenticating(store.getState());
 
   expect(ret).toBe(false);
 });
@@ -16,7 +16,7 @@ test("authenticating with some authentication is progress", () => {
   const store = createPureStore();
   store.dispatch(tryAuthenticate());
 
-  const ret = s.selectAuthenticating()(store.getState());
+  const ret = s.selectAuthenticating(store.getState());
 
   expect(ret).toBe(true);
 });
@@ -25,7 +25,7 @@ describe("isAuthenticated", () => {
   test("return false with initial state", () => {
     const store = createPureStore();
 
-    const ret = s.selectAuthenticated()(store.getState());
+    const ret = s.selectAuthenticated(store.getState());
 
     expect(ret).toBe(false);
   });
@@ -34,7 +34,7 @@ describe("isAuthenticated", () => {
     const store = createPureStore();
     store.dispatch(tryAuthenticate());
 
-    const ret = s.selectAuthenticated()(store.getState());
+    const ret = s.selectAuthenticated(store.getState());
 
     expect(ret).toBe(false);
   });
@@ -44,7 +44,7 @@ describe("isAuthenticated", () => {
     store.dispatch(tryAuthenticate());
     store.dispatch(tryAuthenticateSuccess({ user: randomUser({}) }));
 
-    const ret = s.selectAuthenticated()(store.getState());
+    const ret = s.selectAuthenticated(store.getState());
 
     expect(ret).toBe(true);
   });

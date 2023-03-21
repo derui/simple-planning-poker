@@ -20,8 +20,8 @@ const styles = {
 // eslint-disable-next-line func-style
 export function GameHeaderContainer(props: Props) {
   const gen = generateTestId(props.testid);
-  const gameName = useAppSelector(selectCurrentGameName());
-  const invitation = useAppSelector(selectCurrentGameInvitationLink());
+  const gameName = useAppSelector(selectCurrentGameName);
+  const invitation = useAppSelector(selectCurrentGameInvitationLink);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

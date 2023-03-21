@@ -24,10 +24,10 @@ const styles = {
 // eslint-disable-next-line func-style
 function CardHolderContainer() {
   const params = useParams<{ gameId: string }>();
-  const cards = useAppSelector(selectCards());
-  const roundStatus = useAppSelector(selectRoundStatus());
-  const playerHand = useAppSelector(selectPlayerHandedCard());
-  const userMode = useAppSelector(selectUserInfo());
+  const cards = useAppSelector(selectCards);
+  const roundStatus = useAppSelector(selectRoundStatus);
+  const playerHand = useAppSelector(selectPlayerHandedCard);
+  const userMode = useAppSelector(selectUserInfo);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

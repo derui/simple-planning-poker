@@ -25,8 +25,10 @@ export interface UserHandInfo {
 /**
  * return UserInfo in current game with current user
  */
-export const selectUserHandInfos = function selectUserHandInfos() {
-  return createDraftSafeSelector(selectRoundInstance, selectUsers, (round, users): Loadable.T<UserHandInfo[]> => {
+export const selectUserHandInfos = createDraftSafeSelector(
+  selectRoundInstance,
+  selectUsers,
+  (round, users): Loadable.T<UserHandInfo[]> => {
     if (!round) {
       return Loadable.loading();
     }
@@ -59,5 +61,5 @@ export const selectUserHandInfos = function selectUserHandInfos() {
       .filter(filterUndefined);
 
     return Loadable.finished(hands);
-  });
-};
+  }
+);

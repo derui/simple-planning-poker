@@ -15,33 +15,27 @@ const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => stat
 /**
  * return current game id if it was loaded.
  */
-export const selectCurrentGameId = function selectCurrentGameId() {
-  return createDraftSafeSelector(selectCurrentGame, (game) => {
-    return game?.id;
-  });
-};
+export const selectCurrentGameId = createDraftSafeSelector(selectCurrentGame, (game) => {
+  return game?.id;
+});
 
 /**
  * return current round id if it was loaded.
  */
-export const selectCurrentRoundId = function selectCurrentRoundId() {
-  return createDraftSafeSelector(selectRoundInstance, (round) => {
-    return round?.id;
-  });
-};
+export const selectCurrentRoundId = createDraftSafeSelector(selectRoundInstance, (round) => {
+  return round?.id;
+});
 
 /**
  * select current game name if it was loaded
  */
-export const selectCurrentGameName = function selectCurrentGameName() {
-  return createDraftSafeSelector(selectCurrentGame, (currentGame): Loadable.T<string> => {
-    if (!currentGame) {
-      return Loadable.loading();
-    }
+export const selectCurrentGameName = createDraftSafeSelector(selectCurrentGame, (currentGame): Loadable.T<string> => {
+  if (!currentGame) {
+    return Loadable.loading();
+  }
 
-    return Loadable.finished(currentGame.name);
-  });
-};
+  return Loadable.finished(currentGame.name);
+});
 
 export interface CardInfo {
   display: string;
@@ -51,17 +45,15 @@ export interface CardInfo {
 /**
  * select cards that are selectable in current game.
  */
-export const selectCards = function selectCards() {
-  return createDraftSafeSelector(selectCurrentGame, (game): Loadable.T<CardInfo[]> => {
-    if (!game) {
-      return Loadable.loading();
-    }
+export const selectCards = createDraftSafeSelector(selectCurrentGame, (game): Loadable.T<CardInfo[]> => {
+  if (!game) {
+    return Loadable.loading();
+  }
 
-    const cards = game.cards.map((c, index) => ({ display: `${c}`, index }));
+  const cards = game.cards.map((c, index) => ({ display: `${c}`, index }));
 
-    return Loadable.finished(cards);
-  });
-};
+  return Loadable.finished(cards);
+});
 
 export type PlayerHandInfo = {
   hand: UserHand.T;
@@ -71,15 +63,15 @@ export type PlayerHandInfo = {
 /**
  * return status of creating
  */
-export const selectGameCreatingStatus = function selectGameCreatingStatus() {
-  return createDraftSafeSelector(selectGame, (game) => game.status.creating);
-};
+export const selectGameCreatingStatus = createDraftSafeSelector(selectGame, (game) => game.status.creating);
 
 /**
  * select player hand that did current player
  */
-export const selectPlayerHandedCard = function selectPlayerHandedCard() {
-  return createDraftSafeSelector(selectRoundInstance, selectCurrentUser, (round, user): PlayerHandInfo => {
+export const selectPlayerHandedCard = createDraftSafeSelector(
+  selectRoundInstance,
+  selectCurrentUser,
+  (round, user): PlayerHandInfo => {
     if (!round || !user) {
       return { hand: UserHand.unselected(), cardIndex: -1 };
     }
@@ -95,14 +87,15 @@ export const selectPlayerHandedCard = function selectPlayerHandedCard() {
     }
 
     return { hand, cardIndex };
-  });
-};
+  }
+);
 
 /**
  * select invitation link of the current game.
  */
-export const selectCurrentGameInvitationLink = function selectCurrentGameInvitationLink() {
-  return createDraftSafeSelector(selectCurrentGame, (currentGame): Loadable.T<string> => {
+export const selectCurrentGameInvitationLink = createDraftSafeSelector(
+  selectCurrentGame,
+  (currentGame): Loadable.T<string> => {
     if (!currentGame) {
       return Loadable.loading();
     }
@@ -110,64 +103,58 @@ export const selectCurrentGameInvitationLink = function selectCurrentGameInvitat
     const invitation = Game.makeInvitation(currentGame);
 
     return Loadable.finished(`/invitation/${invitation}`);
-  });
-};
+  }
+);
 
 /**
  * select flag to be able to hold new round
  */
-export const selectCanShowDown = function selectCanShowDown() {
-  return createDraftSafeSelector(selectRoundInstance, (instance): boolean => {
-    if (!instance) {
-      return false;
-    }
+export const selectCanShowDown = createDraftSafeSelector(selectRoundInstance, (instance): boolean => {
+  if (!instance) {
+    return false;
+  }
 
-    return instance.state === "ShowDownPrepared";
-  });
-};
+  return instance.state === "ShowDownPrepared";
+});
 
 interface RoundResultInfo {
   average: number;
   cardAndCounts: [number, number][];
 }
 
-export const selectRoundResult = function selectRoundResult() {
-  return createDraftSafeSelector(selectRoundInstance, (round): Loadable.T<RoundResultInfo> => {
-    if (!round) {
-      return Loadable.loading();
+export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (round): Loadable.T<RoundResultInfo> => {
+  if (!round) {
+    return Loadable.loading();
+  }
+
+  if (round.state !== "Finished") {
+    return Loadable.error();
+  }
+
+  const average = round.averagePoint;
+
+  const handMap = new Map<number, number>();
+
+  Object.values(round.hands).forEach((v) => {
+    if (UserHand.isHanded(v)) {
+      const count = handMap.get(v.card) ?? 1;
+      handMap.set(v.card, count);
     }
-
-    if (round.state !== "Finished") {
-      return Loadable.error();
-    }
-
-    const average = round.averagePoint;
-
-    const handMap = new Map<number, number>();
-
-    Object.values(round.hands).forEach((v) => {
-      if (UserHand.isHanded(v)) {
-        const count = handMap.get(v.card) ?? 1;
-        handMap.set(v.card, count);
-      }
-    });
-
-    return Loadable.finished({
-      average,
-      cardAndCounts: Array.from(handMap.entries()).sort(([v1], [v2]) => v1 - v2),
-    });
   });
-};
+
+  return Loadable.finished({
+    average,
+    cardAndCounts: Array.from(handMap.entries()).sort(([v1], [v2]) => v1 - v2),
+  });
+});
 
 /**
  * return status of round
  */
-export const selectRoundStatus = function selectRoundStatus() {
-  return createDraftSafeSelector(selectRoundInstance, (round) => {
-    if (!round) {
-      return Loadable.loading();
-    }
+export const selectRoundStatus = createDraftSafeSelector(selectRoundInstance, (round) => {
+  if (!round) {
+    return Loadable.loading();
+  }
 
-    return Loadable.finished({ id: round.id, state: round.state });
-  });
-};
+  return Loadable.finished({ id: round.id, state: round.state });
+});

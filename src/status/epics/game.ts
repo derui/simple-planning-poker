@@ -27,6 +27,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
       subscriber.next(noopOnEpic());
 
       gameObserver.subscribe(payload.game.id, (game) => {
+        console.log("in epic", game);
         userObserver.unsubscribe();
 
         game.joinedPlayers.forEach((_user) => {
@@ -36,6 +37,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
         });
 
         roundObserver.subscribe(game.round.id, (round) => {
+          console.log("in epic", round);
           subscriber.next(RoundAction.notifyRoundUpdated(round));
         });
 
@@ -49,6 +51,7 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
       });
 
       roundObserver.subscribe(payload.game.round.id, (round) => {
+        console.log("first", round);
         subscriber.next(RoundAction.notifyRoundUpdated(round));
       });
     });

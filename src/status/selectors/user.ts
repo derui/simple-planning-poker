@@ -19,8 +19,10 @@ export interface UserInfo {
 /**
  * return UserInfo in current game with current user
  */
-export const selectUserInfo = function selectUserInfo() {
-  return createDraftSafeSelector(selectCurrentUser, selectCurrentRound, (currentUser, round): Loadable.T<UserInfo> => {
+export const selectUserInfo = createDraftSafeSelector(
+  selectCurrentUser,
+  selectCurrentRound,
+  (currentUser, round): Loadable.T<UserInfo> => {
     if (!currentUser || !round) {
       return Loadable.loading();
     }
@@ -31,8 +33,8 @@ export const selectUserInfo = function selectUserInfo() {
     }
 
     return Loadable.finished({ userName: currentUser.name, userMode });
-  });
-};
+  }
+);
 
 interface JoinedGameModel {
   gameId: Game.Id;
@@ -42,12 +44,10 @@ interface JoinedGameModel {
 /**
  * return games that are joined current user before
  */
-export const selectJoinedGames = function selectJoinedGames() {
-  return createDraftSafeSelector(selectCurrentUserJoinedGames, (games): JoinedGameModel[] => {
-    return Object.entries(games)
-      .map(([key, value]) => {
-        return { gameId: Game.createId(key), name: value };
-      })
-      .sort(({ name: o1 }, { name: o2 }) => o1.localeCompare(o2));
-  });
-};
+export const selectJoinedGames = createDraftSafeSelector(selectCurrentUserJoinedGames, (games): JoinedGameModel[] => {
+  return Object.entries(games)
+    .map(([key, value]) => {
+      return { gameId: Game.createId(key), name: value };
+    })
+    .sort(({ name: o1 }, { name: o2 }) => o1.localeCompare(o2));
+});

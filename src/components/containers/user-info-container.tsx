@@ -63,7 +63,7 @@ const styles = {
 export function UserInfoContainer(props: Props) {
   const testid = generateTestId(props.testid);
   const [opened, setOpened] = React.useState(false);
-  const userInfo = useAppSelector(selectUserInfo());
+  const userInfo = useAppSelector(selectUserInfo);
   const dispatch = useAppDispatch();
 
   const handleChangeUserInfo = (mode: UserMode, name: string) => {
