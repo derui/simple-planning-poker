@@ -56,7 +56,7 @@ export const createMockedChangeUserModeUseCase = function createMockedChangeUser
   } as ChangeUserModeUseCase;
 };
 
-export const createMockedHandCardUseCase = function createMockedHandCardUseCase(
+export const createMockedEstimatePlayerUseCase = function createMockedEstimatePlayerUseCase(
   mock: Partial<EstimatePlayerUseCase> = {}
 ) {
   return {

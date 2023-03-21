@@ -16,7 +16,7 @@ import * as GameAction from "@/status/actions/game";
 import * as UserEstimation from "@/domains/user-estimation";
 import {
   createMockedChangeUserModeUseCase,
-  createMockedHandCardUseCase,
+  createMockedEstimatePlayerUseCase,
   createMockedShowDownUseCase,
 } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
@@ -73,7 +73,7 @@ describe("giveUp", () => {
     const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.giveUp());
     registrar.register(
       "handCardUseCase",
-      createMockedHandCardUseCase({
+      createMockedEstimatePlayerUseCase({
         execute: sinon.fake.resolves({ kind: "success", game: expected }),
       })
     );
@@ -104,7 +104,7 @@ describe("giveUp", () => {
 
     registrar.register(
       "handCardUseCase",
-      createMockedHandCardUseCase({
+      createMockedEstimatePlayerUseCase({
         execute: sinon.fake.rejects("error"),
       })
     );
@@ -173,7 +173,7 @@ describe("hand card", () => {
     const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.estimated(CARDS[1]));
     registrar.register(
       "handCardUseCase",
-      createMockedHandCardUseCase({
+      createMockedEstimatePlayerUseCase({
         execute: sinon.fake.resolves({ kind: "success", game: expected }),
       })
     );
@@ -202,7 +202,7 @@ describe("hand card", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    registrar.register("handCardUseCase", createMockedHandCardUseCase());
+    registrar.register("handCardUseCase", createMockedEstimatePlayerUseCase());
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
@@ -230,7 +230,7 @@ describe("hand card", () => {
 
     registrar.register(
       "handCardUseCase",
-      createMockedHandCardUseCase({
+      createMockedEstimatePlayerUseCase({
         execute: sinon.fake.rejects("error"),
       })
     );
