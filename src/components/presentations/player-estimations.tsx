@@ -1,10 +1,10 @@
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { PlayerEstimation } from "./player-estimation";
-import { UserHandInfo } from "@/status/selectors/user-hand";
+import { UserEstimationInfo } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
-  hands: UserHandInfo[];
+  hands: UserEstimationInfo[];
 }
 
 const styles = {
@@ -15,7 +15,7 @@ const styles = {
 export function PlayerEstimations({ hands, testid }: Props) {
   const gen = generateTestId(testid);
 
-  const createUserHand = (props: UserHandInfo, index: number) => {
+  const createUserHand = (props: UserEstimationInfo, index: number) => {
     return <PlayerEstimation key={index} testid={gen(props.userName)} {...props} />;
   };
 

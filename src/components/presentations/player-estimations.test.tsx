@@ -2,7 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { PlayerEstimations } from "./player-estimations";
 import { UserMode } from "@/domains/game-player";
-import { UserHandInfo } from "@/status/selectors/user-hand";
+import { UserEstimationInfo } from "@/status/selectors/user-hand";
 
 afterEach(cleanup);
 
@@ -25,8 +25,8 @@ test("display three hands", async () => {
   const hands = [
     { userName: "name", userMode: UserMode.inspector, displayValue: "value", state: "notSelected" },
     { userName: "name2", userMode: UserMode.normal, displayValue: "value", state: "notSelected" },
-    { userName: "name3", userMode: UserMode.normal, displayValue: "value", state: "handed" },
-  ] satisfies UserHandInfo[];
+    { userName: "name3", userMode: UserMode.normal, displayValue: "value", state: "estimated" },
+  ] satisfies UserEstimationInfo[];
   render(<PlayerEstimations hands={hands} />);
 
   expect(screen.queryByText("name")).not.toBeNull();

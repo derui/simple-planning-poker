@@ -13,22 +13,22 @@ const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => stat
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectUsers = createDraftSafeSelector(selectUser, (state) => state.users);
 
-export type UserHandState = "notSelected" | "handed" | "result";
+export type UserEstimationState = "notSelected" | "estimated" | "result";
 
-export interface UserHandInfo {
+export interface UserEstimationInfo {
   userName: string;
   userMode: UserMode;
   displayValue: string;
-  state: UserHandState;
+  state: UserEstimationState;
 }
 
 /**
  * return UserInfo in current game with current user
  */
-export const selectUserHandInfos = createDraftSafeSelector(
+export const selectUserEstimationInfos = createDraftSafeSelector(
   selectRoundInstance,
   selectUsers,
-  (round, users): Loadable.T<UserHandInfo[]> => {
+  (round, users): Loadable.T<UserEstimationInfo[]> => {
     if (!round) {
       return Loadable.loading();
     }
@@ -46,7 +46,7 @@ export const selectUserHandInfos = createDraftSafeSelector(
           return { userName: user.name, userMode: mode, displayValue: "?", state: "notSelected" } as const;
         }
 
-        const state = opened ? (hand ? "result" : "notSelected") : hand ? "handed" : "notSelected";
+        const state = opened ? (hand ? "result" : "notSelected") : hand ? "estimated" : "notSelected";
 
         let displayValue: string = "?";
 

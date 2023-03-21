@@ -28,7 +28,7 @@ export const Normal: Story = {
       },
       {
         displayValue: "",
-        state: "handed",
+        state: "estimated",
         userMode: UserMode.normal,
         userName: "user2",
       },

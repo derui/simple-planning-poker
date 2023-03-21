@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
-import { selectUserHandInfos } from "@/status/selectors/user-hand";
+import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
 import { selectCanShowDown } from "@/status/selectors/game";
 import * as RoundAction from "@/status/actions/round";
@@ -76,7 +76,7 @@ const GameProgressionButton = (dispatch: AppDispatch, displayButton: boolean) =>
 
 // eslint-disable-next-line func-style
 export function GameAreaContainer() {
-  const hands = useAppSelector(selectUserHandInfos);
+  const hands = useAppSelector(selectUserEstimationInfos);
   const displayNewRoundButton = useAppSelector(selectCanShowDown);
   const dispatch = useAppDispatch();
 

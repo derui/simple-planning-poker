@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
-import { selectUserHandInfos } from "@/status/selectors/user-hand";
+import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
 import { AppDispatch } from "@/status/store";
 import { newRound } from "@/status/actions/game";
@@ -66,7 +66,7 @@ const GameProgressionButton = (dispatch: AppDispatch) => {
 
 // eslint-disable-next-line func-style
 export function GameResultAreaContainer() {
-  const hands = useAppSelector(selectUserHandInfos);
+  const hands = useAppSelector(selectUserEstimationInfos);
   const dispatch = useAppDispatch();
 
   if (!isFinished(hands)) {

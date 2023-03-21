@@ -2,18 +2,18 @@ import { ReactElement } from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserMode } from "@/domains/game-player";
-import { UserHandState } from "@/status/selectors/user-hand";
+import { UserEstimationState } from "@/status/selectors/user-hand";
 
 interface Props extends BaseProps {
   userName: string;
   userMode: UserMode;
   displayValue: string;
-  state: UserHandState;
+  state: UserEstimationState;
 }
 
 const styles = {
   root: classnames("flex", "flex-col", "items-center"),
-  card: (state: UserHandState) =>
+  card: (state: UserEstimationState) =>
     classnames(
       "flex",
       "flex-col",
@@ -32,9 +32,9 @@ const styles = {
         "bg-white": state === "notSelected",
       },
       {
-        "bg-primary-400": state === "handed",
-        "text-secondary1-200": state === "handed",
-        "[transform:rotateY(180deg)]": state === "handed",
+        "bg-primary-400": state === "estimated",
+        "text-secondary1-200": state === "estimated",
+        "[transform:rotateY(180deg)]": state === "estimated",
       },
       {
         "bg-white": state === "result",

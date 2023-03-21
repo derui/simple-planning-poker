@@ -21,9 +21,9 @@ test("display player card as inspector", async () => {
 });
 
 test("selected card", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="handed" userMode="normal" />);
+  render(<PlayerEstimation userName="user" displayValue="5" state="estimated" userMode="normal" />);
 
-  expect(screen.getByTestId("card").dataset).toHaveProperty("state", "handed");
+  expect(screen.getByTestId("card").dataset).toHaveProperty("state", "estimated");
 });
 
 test("opened card that user not selected", async () => {
