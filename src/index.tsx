@@ -30,6 +30,8 @@ import { routes } from "./routes/root";
 import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
 import { RoundObserverImpl } from "./infrastractures/round-observer";
 import { JoinUserEventListener } from "./infrastractures/event/join-user-event-listener";
+import { CreateRoundAfterCreateGameListener } from "./infrastractures/event/create-round-after-create-game-listener";
+import { NewRoundStartedListener } from "./infrastractures/event/new-round-started-listener";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -43,10 +45,13 @@ if (location.hostname === "localhost") {
 
 const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
+const roundRepository = new RoundRepositoryImpl(database);
 
 const dispatcher = new EventDispatcherImpl([
   new CreateGameEventListener(database),
   new JoinUserEventListener(database),
+  new CreateRoundAfterCreateGameListener(roundRepository),
+  new NewRoundStartedListener(gameRepository),
 ]);
 
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
@@ -54,11 +59,11 @@ registrar.register("userRepository", userRepository);
 registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
 registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("gameRepository", gameRepository);
-registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(new RoundRepositoryImpl(database)));
-registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, new RoundRepositoryImpl(database)));
+registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(roundRepository));
+registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, roundRepository));
 registrar.register(
   "newRoundUseCase",
-  new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository"), new RoundRepositoryImpl(database))
+  new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository"), roundRepository)
 );
 registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
 registrar.register("leaveGameUseCase", new LeaveGameUseCase(registrar.resolve("gameRepository")));
