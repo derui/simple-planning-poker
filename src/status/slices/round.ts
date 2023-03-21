@@ -16,7 +16,7 @@ interface RoundState {
     id: Round.Id;
     cards: Record<Card.T, { card: Card.T; order: number }>;
     count: number;
-    hands: Record<User.Id, UserEstimation.T>;
+    estimations: Record<User.Id, UserEstimation.T>;
     joinedPlayers: Record<User.Id, UserMode>;
     state: State;
     averagePoint: number;
@@ -35,7 +35,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
           return accum;
         }, {}) ?? {},
       count: round.count,
-      hands: round.hands,
+      estimations: round.estimations,
       joinedPlayers: round.joinedPlayers.reduce<Record<User.Id, UserMode>>((accum, obj) => {
         accum[obj.user] = obj.mode;
         return accum;
@@ -51,7 +51,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
         return accum;
       }, {}) ?? {};
     draft.instance.count = round.count;
-    draft.instance.hands = round.hands;
+    draft.instance.estimations = round.estimations;
     draft.instance.joinedPlayers = round.joinedPlayers.reduce<Record<User.Id, UserMode>>((accum, obj) => {
       accum[obj.user] = obj.mode;
       return accum;
@@ -76,7 +76,7 @@ const slice = createSlice({
       normalize(draft, payload.game.round);
     });
 
-    builder.addCase(RoundAction.handCardSuccess, (draft, { payload }) => {
+    builder.addCase(RoundAction.estimateSuccess, (draft, { payload }) => {
       if (!draft.instance) {
         return;
       }

@@ -19,7 +19,7 @@ export type Dependencies = {
   changeUserNameUseCase: ChangeUserNameUseCase;
   gameRepository: GameRepository;
   createGameUseCase: CreateGameUseCase;
-  handCardUseCase: EstimatePlayerUseCase;
+  estimatePlayerUseCase: EstimatePlayerUseCase;
   showDownUseCase: ShowDownUseCase;
   newRoundUseCase: NewRoundUseCase;
   changeUserModeUseCase: ChangeUserModeUseCase;

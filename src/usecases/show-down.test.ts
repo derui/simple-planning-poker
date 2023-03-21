@@ -40,7 +40,7 @@ test("should save game showed down", async () => {
     cards: CARDS,
   });
 
-  const changed = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+  const changed = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
 
   const input = {
     gameId: game.id,
@@ -98,7 +98,7 @@ test("should dispatch ShowedDown event", async () => {
     finishedRounds: [],
     cards: CARDS,
   });
-  const changed = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+  const changed = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
 
   const input = {
     gameId: game.id,

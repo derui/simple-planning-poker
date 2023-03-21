@@ -37,7 +37,7 @@ test("should save game showed down", async () => {
     owner: User.createId(),
     round: Round.finishedRoundOf({
       id: Round.createId(),
-      hands: [],
+      estimations: [],
       cards,
       count: 1,
       finishedAt: dateTimeToString(new Date()),
@@ -74,7 +74,7 @@ test("should dispatch NewRound event", async () => {
     cards,
   });
 
-  const [changed] = Game.showDown(Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp()), new Date());
+  const [changed] = Game.showDown(Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp()), new Date());
 
   const input = {
     gameId: game.id,

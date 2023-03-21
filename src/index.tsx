@@ -9,7 +9,7 @@ import { firebaseConfig } from "./firebase.config";
 import { FirebaseAuthenticator } from "./infrastractures/authenticator";
 import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
 import { GameRepositoryImpl } from "./infrastractures/game-repository";
-import { EstimatePlayerUseCase } from "./usecases/hand-card";
+import { EstimatePlayerUseCase } from "./usecases/estimate-player";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { GameObserverImpl } from "./infrastractures/game-observer";
 import { UserRepositoryImpl } from "./infrastractures/user-repository";
@@ -54,7 +54,7 @@ registrar.register("userRepository", userRepository);
 registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
 registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("gameRepository", gameRepository);
-registrar.register("handCardUseCase", new EstimatePlayerUseCase(registrar.resolve("gameRepository")));
+registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(registrar.resolve("gameRepository")));
 registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, registrar.resolve("gameRepository")));
 registrar.register("newRoundUseCase", new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository")));
 registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
@@ -66,7 +66,7 @@ registrar.register(
 );
 registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
-registrar.register("gameObserver", new GameObserverImpl(database, registrar.resolve("gameRepository")));
+registrar.register("gameObserver", new GameObserverImpl(database, new RoundRepositoryImpl(database)));
 
 install(config);
 

@@ -2,7 +2,7 @@ import { test, expect } from "vitest";
 import { createPureStore } from "../store";
 import { openGameSuccess } from "../actions/game";
 import { tryAuthenticateSuccess } from "../actions/signin";
-import { handCardSuccess } from "../actions/round";
+import { estimateSuccess } from "../actions/round";
 import * as s from "./user-estimation";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
@@ -19,7 +19,7 @@ test("return undefined if game not opened", () => {
   expect(isLoading(ret)).toBe(true);
 });
 
-test("return one hand from the game contains only owner", () => {
+test("return one estimation from the game contains only owner", () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "owner" });
   const game = randomGame({ owner: user.id });
@@ -39,7 +39,7 @@ test("return one hand from the game contains only owner", () => {
   ]);
 });
 
-test("return hands with handed user", () => {
+test("return estimations with estimated user", () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "owner" });
   const otherUser = User.create({ id: User.createId(), name: "other" });
@@ -49,7 +49,7 @@ test("return hands with handed user", () => {
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
   store.dispatch(
-    handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserEstimation.estimated(game.cards[0])).round)
+    estimateSuccess(Game.acceptPlayerEstimation(game, otherUser.id, UserEstimation.estimated(game.cards[0])).round)
   );
 
   const [ret] = s.selectUserEstimationInfos(store.getState());
@@ -69,7 +69,7 @@ test("return hands with handed user", () => {
   });
 });
 
-test("give up hand", () => {
+test("give up estimation", () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "owner" });
   const otherUser = User.create({ id: User.createId(), name: "other" });
@@ -78,7 +78,7 @@ test("give up hand", () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-  store.dispatch(handCardSuccess(Game.acceptPlayerHand(game, otherUser.id, UserEstimation.giveUp()).round));
+  store.dispatch(estimateSuccess(Game.acceptPlayerEstimation(game, otherUser.id, UserEstimation.giveUp()).round));
 
   const [ret] = s.selectUserEstimationInfos(store.getState());
 

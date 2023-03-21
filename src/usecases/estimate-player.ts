@@ -7,13 +7,13 @@ import { GameRepository } from "@/domains/game-repository";
 export interface EstimatePlayerUseCaseInput {
   userId: User.Id;
   gameId: Game.Id;
-  userHand: UserEstimation.T;
+  userEstimation: UserEstimation.T;
 }
 
 export type EstimatePlayerUseCaseOutput =
   | { kind: "success"; game: Game.T }
   | { kind: "notFoundGame" }
-  | { kind: "HandCardFailed" };
+  | { kind: "EstimatePlayerFailed" };
 
 export class EstimatePlayerUseCase
   implements UseCase<EstimatePlayerUseCaseInput, Promise<EstimatePlayerUseCaseOutput>>
@@ -27,14 +27,14 @@ export class EstimatePlayerUseCase
     }
 
     try {
-      const newGame = Game.acceptPlayerHand(game, input.userId, input.userHand);
+      const newGame = Game.acceptPlayerEstimation(game, input.userId, input.userEstimation);
       this.gameRepository.save(newGame);
 
       return { kind: "success", game: newGame };
     } catch (e) {
       console.error(e);
 
-      return { kind: "HandCardFailed" };
+      return { kind: "EstimatePlayerFailed" };
     }
   }
 }

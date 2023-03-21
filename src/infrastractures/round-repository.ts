@@ -17,7 +17,7 @@ export class RoundRepositoryImpl implements RoundRepository {
     const updates: { [key: string]: any } = {};
     updates[resolver.count(round.id)] = round.count;
     updates[resolver.finished(round.id)] = Round.isFinishedRound(round);
-    updates[resolver.userHands(round.id)] = Object.entries(round.hands).reduce<Record<User.Id, Serialized>>(
+    updates[resolver.userEstimations(round.id)] = Object.entries(round.estimations).reduce<Record<User.Id, Serialized>>(
       (accum, [key, value]) => {
         accum[key as User.Id] = serialize(value);
 

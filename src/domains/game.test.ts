@@ -1,7 +1,7 @@
 import { test, expect, describe } from "vitest";
 import {
   acceptLeaveFrom,
-  acceptPlayerHand,
+  acceptPlayerEstimation,
   changeName,
   create,
   createId,
@@ -46,7 +46,7 @@ test("get aggregate and event when game created ", () => {
   ]);
   expect(game.owner).toEqual(User.createId("user"));
   expect(game.round.count).toBe(1);
-  expect(game.round.hands).toEqual({});
+  expect(game.round.estimations).toEqual({});
   expect(game.finishedRounds).toHaveLength(0);
 });
 
@@ -70,7 +70,7 @@ test("newRound should make new round", () => {
       id: Round.createId(),
       count: 2,
       cards: cards,
-      hands: [{ user: User.createId("user"), hand: UserEstimation.giveUp() }],
+      estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUp() }],
       joinedPlayers: [],
     }),
     new Date()
@@ -260,8 +260,8 @@ describe("show down", () => {
       cards,
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerHand(game, User.createId("user"), UserEstimation.giveUp());
-    game = acceptPlayerHand(game, User.createId("new"), UserEstimation.estimated(cards[0]));
+    game = acceptPlayerEstimation(game, User.createId("user"), UserEstimation.giveUp());
+    game = acceptPlayerEstimation(game, User.createId("new"), UserEstimation.estimated(cards[0]));
     const ret = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
 
     expect(ret[0]).not.toBe(game);
@@ -280,8 +280,8 @@ describe("show down", () => {
     });
 
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
-    game = acceptPlayerHand(game, User.createId("user"), UserEstimation.giveUp());
-    game = acceptPlayerHand(game, User.createId("new"), UserEstimation.estimated(cards[0]));
+    game = acceptPlayerEstimation(game, User.createId("user"), UserEstimation.giveUp());
+    game = acceptPlayerEstimation(game, User.createId("new"), UserEstimation.estimated(cards[0]));
     const [finished] = showDown(game, parseDateTime("2023-02-25T11:22:33Z"));
 
     expect(isShowedDown(finished)).toBe(true);

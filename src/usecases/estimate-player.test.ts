@@ -15,7 +15,7 @@ test("should return error if game is not found", async () => {
   const input = {
     userId: User.createId(),
     gameId: Game.createId(),
-    userHand: UserEstimation.estimated(CARDS[0]),
+    userEstimation: UserEstimation.estimated(CARDS[0]),
   };
 
   const repository = createMockedGameRepository();
@@ -34,7 +34,7 @@ test("should save player with card selected by user", async () => {
   const input = {
     userId: User.createId(),
     gameId: Game.createId(),
-    userHand: UserEstimation.estimated(CARDS[0]),
+    userEstimation: UserEstimation.estimated(CARDS[0]),
   };
   let [game] = Game.create({
     id: input.gameId,
@@ -57,7 +57,7 @@ test("should save player with card selected by user", async () => {
   // Assert
   expect(ret).toEqual({ kind: "success", game: save.lastCall.firstArg });
   expect(save.callCount).toBe(1);
-  expect(save.lastCall.firstArg.round.hands).toEqual(
+  expect(save.lastCall.firstArg.round.estimations).toEqual(
     Object.fromEntries([[input.userId, UserEstimation.estimated(CARDS[0])]])
   );
 });

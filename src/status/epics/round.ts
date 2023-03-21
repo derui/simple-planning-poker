@@ -7,7 +7,7 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
 
-type Epics = "giveUp" | "handCard" | "changeUserMode" | "showDown";
+type Epics = "giveUp" | "estimate" | "changeUserMode" | "showDown";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -28,13 +28,13 @@ export const roundEpic = (
           return of(RoundAction.somethingFailure("Can not give up with nullish"));
         }
 
-        const useCase = registrar.resolve("handCardUseCase");
+        const useCase = registrar.resolve("estimatePlayerUseCase");
 
         return from(
           useCase.execute({
             gameId: game.currentGame.id,
             userId: user.currentUser.id,
-            userHand: UserEstimation.giveUp(),
+            userEstimation: UserEstimation.giveUp(),
           })
         ).pipe(
           map((output) => {
@@ -50,9 +50,9 @@ export const roundEpic = (
       commonCatchError
     ),
 
-  handCard: (action$, state$) =>
+  estimate: (action$, state$) =>
     action$.pipe(
-      filter(RoundAction.handCard.match),
+      filter(RoundAction.estimate.match),
       switchMap(({ payload }) => {
         const { game, user } = state$.value;
 
@@ -65,19 +65,19 @@ export const roundEpic = (
           return of(RoundAction.somethingFailure("specified card not found"));
         }
 
-        const useCase = registrar.resolve("handCardUseCase");
+        const useCase = registrar.resolve("estimatePlayerUseCase");
 
         return from(
           useCase.execute({
             gameId: game.currentGame.id,
             userId: user.currentUser.id,
-            userHand: UserEstimation.estimated(selectedCard),
+            userEstimation: UserEstimation.estimated(selectedCard),
           })
         ).pipe(
           map((output) => {
             switch (output.kind) {
               case "success":
-                return RoundAction.handCardSuccess(output.game.round);
+                return RoundAction.estimateSuccess(output.game.round);
               default:
                 return RoundAction.somethingFailure(output.kind);
             }

@@ -55,8 +55,8 @@ export const selectCards = createDraftSafeSelector(selectCurrentGame, (game): Lo
   return Loadable.finished(cards);
 });
 
-export type PlayerHandInfo = {
-  hand: UserEstimation.T;
+export type PlayerEstimationInfo = {
+  estimation: UserEstimation.T;
   cardIndex: number;
 };
 
@@ -66,27 +66,27 @@ export type PlayerHandInfo = {
 export const selectGameCreatingStatus = createDraftSafeSelector(selectGame, (game) => game.status.creating);
 
 /**
- * select player hand that did current player
+ * select player estimation that did current player
  */
-export const selectPlayerHandedCard = createDraftSafeSelector(
+export const selectPlayerEstimatedCards = createDraftSafeSelector(
   selectRoundInstance,
   selectCurrentUser,
-  (round, user): PlayerHandInfo => {
+  (round, user): PlayerEstimationInfo => {
     if (!round || !user) {
-      return { hand: UserEstimation.unselected(), cardIndex: -1 };
+      return { estimation: UserEstimation.unselected(), cardIndex: -1 };
     }
 
-    const hand = round.hands[user.id];
-    if (!hand) {
-      return { hand: UserEstimation.unselected(), cardIndex: -1 };
+    const estimation = round.estimations[user.id];
+    if (!estimation) {
+      return { estimation: UserEstimation.unselected(), cardIndex: -1 };
     }
 
     let cardIndex = -1;
-    if (UserEstimation.isEstimated(hand)) {
-      cardIndex = round.cards[hand.card].order;
+    if (UserEstimation.isEstimated(estimation)) {
+      cardIndex = round.cards[estimation.card].order;
     }
 
-    return { hand, cardIndex };
+    return { estimation: estimation, cardIndex };
   }
 );
 
@@ -133,18 +133,18 @@ export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (r
 
   const average = round.averagePoint;
 
-  const handMap = new Map<number, number>();
+  const estimationMap = new Map<number, number>();
 
-  Object.values(round.hands).forEach((v) => {
+  Object.values(round.estimations).forEach((v) => {
     if (UserEstimation.isEstimated(v)) {
-      const count = handMap.get(v.card) ?? 1;
-      handMap.set(v.card, count);
+      const count = estimationMap.get(v.card) ?? 1;
+      estimationMap.set(v.card, count);
     }
   });
 
   return Loadable.finished({
     average,
-    cardAndCounts: Array.from(handMap.entries()).sort(([v1], [v2]) => v1 - v2),
+    cardAndCounts: Array.from(estimationMap.entries()).sort(([v1], [v2]) => v1 - v2),
   });
 });
 

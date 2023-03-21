@@ -7,9 +7,9 @@ import { GameAreaContainer } from "../containers/game-area-container";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { InspectorHolder } from "../presentations/inspector-holder";
-import { selectCards, selectPlayerHandedCard, selectRoundStatus } from "@/status/selectors/game";
+import { selectCards, selectPlayerEstimatedCards, selectRoundStatus } from "@/status/selectors/game";
 import { isFinished } from "@/utils/loadable";
-import { handCard } from "@/status/actions/round";
+import { estimate } from "@/status/actions/round";
 import { openGame } from "@/status/actions/game";
 import * as Game from "@/domains/game";
 import { selectUserInfo } from "@/status/selectors/user";
@@ -26,7 +26,7 @@ function CardHolderContainer() {
   const params = useParams<{ gameId: string }>();
   const cards = useAppSelector(selectCards);
   const roundStatus = useAppSelector(selectRoundStatus);
-  const playerHand = useAppSelector(selectPlayerHandedCard);
+  const playerEstimation = useAppSelector(selectPlayerEstimatedCards);
   const userMode = useAppSelector(selectUserInfo);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -51,12 +51,12 @@ function CardHolderContainer() {
     return <InspectorHolder />;
   }
 
-  const handleSelectCard = (index: number) => dispatch(handCard({ cardIndex: index }));
+  const handleSelectCard = (index: number) => dispatch(estimate({ cardIndex: index }));
 
   return (
     <CardHolder
       displays={cards[0].map((v) => v.display)}
-      selectedIndex={playerHand.cardIndex}
+      selectedIndex={playerEstimation.cardIndex}
       onSelect={handleSelectCard}
     />
   );

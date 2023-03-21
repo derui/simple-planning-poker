@@ -70,9 +70,9 @@ describe("giveUp", () => {
     });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.giveUp());
+    const expected = Game.acceptPlayerEstimation(game, user.id, UserEstimation.giveUp());
     registrar.register(
-      "handCardUseCase",
+      "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
         execute: sinon.fake.resolves({ kind: "success", game: expected }),
       })
@@ -103,7 +103,7 @@ describe("giveUp", () => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register(
-      "handCardUseCase",
+      "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
         execute: sinon.fake.rejects("error"),
       })
@@ -129,10 +129,10 @@ describe("hand card", () => {
     const epics = roundEpic(registrar);
     const store = createPureStore();
 
-    const action$ = of(RoundAction.handCard({ cardIndex: 1 }));
+    const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.handCard(action$, state$, null));
+    const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
   });
@@ -151,10 +151,10 @@ describe("hand card", () => {
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
 
-    const action$ = of(RoundAction.handCard({ cardIndex: 1 }));
+    const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.handCard(action$, state$, null));
+    const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
   });
@@ -170,9 +170,9 @@ describe("hand card", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const expected = Game.acceptPlayerHand(game, user.id, UserEstimation.estimated(CARDS[1]));
+    const expected = Game.acceptPlayerEstimation(game, user.id, UserEstimation.estimated(CARDS[1]));
     registrar.register(
-      "handCardUseCase",
+      "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
         execute: sinon.fake.resolves({ kind: "success", game: expected }),
       })
@@ -183,12 +183,12 @@ describe("hand card", () => {
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess({ user }));
 
-    const action$ = of(RoundAction.handCard({ cardIndex: 1 }));
+    const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.handCard(action$, state$, null));
+    const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.handCardSuccess(expected.round));
+    expect(ret).toEqual(RoundAction.estimateSuccess(expected.round));
   });
 
   test("should get error if index is invalid", async () => {
@@ -202,17 +202,17 @@ describe("hand card", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    registrar.register("handCardUseCase", createMockedEstimatePlayerUseCase());
+    registrar.register("estimatePlayerUseCase", createMockedEstimatePlayerUseCase());
 
     const epics = roundEpic(registrar);
     const store = createPureStore();
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess({ user }));
 
-    const action$ = of(RoundAction.handCard({ cardIndex: 5 }));
+    const action$ = of(RoundAction.estimate({ cardIndex: 5 }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.handCard(action$, state$, null));
+    const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.somethingFailure("specified card not found"));
   });
@@ -229,7 +229,7 @@ describe("hand card", () => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register(
-      "handCardUseCase",
+      "estimatePlayerUseCase",
       createMockedEstimatePlayerUseCase({
         execute: sinon.fake.rejects("error"),
       })
@@ -240,10 +240,10 @@ describe("hand card", () => {
     store.dispatch(GameAction.openGameSuccess({ game, players: [user] }));
     store.dispatch(signInSuccess({ user }));
 
-    const action$ = of(RoundAction.handCard({ cardIndex: 1 }));
+    const action$ = of(RoundAction.estimate({ cardIndex: 1 }));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.handCard(action$, state$, null));
+    const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.somethingFailure("failed with exception"));
   });
@@ -292,7 +292,7 @@ describe("show down", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 

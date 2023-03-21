@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { UserMode } from "@/domains/game-player";
-import { UserEstimationState } from "@/status/selectors/user-hand";
+import { UserEstimationState } from "@/status/selectors/user-estimation";
 
 interface Props extends BaseProps {
   userName: string;

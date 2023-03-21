@@ -11,9 +11,9 @@ export const somethingFailure = createAction<string>(`${prefix}:somethingFailure
 export const giveUp = createAction(`${prefix}:giveUp`);
 export const giveUpSuccess = createAction<Round.T>(`${prefix}:giveUpSuccess`);
 
-// hand card
-export const handCard = createAction<{ cardIndex: number }>(`${prefix}:handCard`);
-export const handCardSuccess = createAction<Round.T>(`${prefix}:handCardSuccess`);
+// estimate
+export const estimate = createAction<{ cardIndex: number }>(`${prefix}:estimate`);
+export const estimateSuccess = createAction<Round.T>(`${prefix}:estimateSuccess`);
 
 // change user mode
 export const changeUserMode = createAction<UserMode>(`${prefix}:changeUserMode`);

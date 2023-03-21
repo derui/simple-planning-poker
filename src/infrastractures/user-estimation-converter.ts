@@ -9,22 +9,22 @@ export type Serialized =
   | { kind: "selected"; storypoint: number }
   | { kind: "unselected" };
 
-export const serialize = function serializeUserHand(hand: UserEstimation.T): Serialized {
-  switch (UserEstimation.kindOf(hand)) {
+export const serialize = function serializeEstimation(estimation: UserEstimation.T): Serialized {
+  switch (UserEstimation.kindOf(estimation)) {
     case "giveup":
       return { kind: "giveUp" };
     case "unselected":
       return { kind: "unselected" };
     case "estimated":
-      if (UserEstimation.isEstimated(hand)) {
-        return { kind: "selected", storypoint: hand.card };
+      if (UserEstimation.isEstimated(estimation)) {
+        return { kind: "selected", storypoint: estimation.card };
       }
     default:
-      throw new Error("unknown hand");
+      throw new Error("unknown estimation");
   }
 };
 
-export const deserialize = function deserializeUserHand(obj: Serialized): UserEstimation.T {
+export const deserialize = function deserializeEstimation(obj: Serialized): UserEstimation.T {
   switch (obj.kind) {
     case "giveUp":
       return UserEstimation.giveUp();

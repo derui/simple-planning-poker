@@ -35,24 +35,24 @@ export const selectUserEstimationInfos = createDraftSafeSelector(
 
     const opened = round.state === "Finished";
 
-    const hands = Object.entries(round.joinedPlayers)
+    const estimations = Object.entries(round.joinedPlayers)
       .map(([userId, mode]) => {
         const user = users[userId as User.Id];
 
         if (!user) return;
 
-        const hand = round.hands[user.id];
-        if (!hand) {
+        const estimation = round.estimations[user.id];
+        if (!estimation) {
           return { userName: user.name, userMode: mode, displayValue: "?", state: "notSelected" } as const;
         }
 
-        const state = opened ? (hand ? "result" : "notSelected") : hand ? "estimated" : "notSelected";
+        const state = opened ? (estimation ? "result" : "notSelected") : estimation ? "estimated" : "notSelected";
 
         let displayValue: string = "?";
 
-        if (UserEstimation.isEstimated(hand)) {
-          displayValue = Card.toString(hand.card);
-        } else if (UserEstimation.isGiveUp(hand)) {
+        if (UserEstimation.isEstimated(estimation)) {
+          displayValue = Card.toString(estimation.card);
+        } else if (UserEstimation.isGiveUp(estimation)) {
           displayValue = "?";
         }
 
@@ -60,6 +60,6 @@ export const selectUserEstimationInfos = createDraftSafeSelector(
       })
       .filter(filterUndefined);
 
-    return Loadable.finished(hands);
+    return Loadable.finished(estimations);
   }
 );

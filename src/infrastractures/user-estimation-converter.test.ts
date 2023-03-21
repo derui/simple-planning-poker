@@ -4,35 +4,35 @@ import * as Card from "@/domains/card";
 import * as StoryPoint from "@/domains/story-point";
 import * as UserEstimation from "@/domains/user-estimation";
 
-test("serialize and deserialize give up hand", () => {
+test("serialize and deserialize give up estimation", () => {
   // Arrange
-  const hand = UserEstimation.giveUp();
+  const estimation = UserEstimation.giveUp();
 
   // Act
-  const ret = deserialize(serialize(hand));
+  const ret = deserialize(serialize(estimation));
 
   // Assert
-  expect(ret).toEqual(hand);
+  expect(ret).toEqual(estimation);
 });
 
-test("serialize and deserialize handed", () => {
+test("serialize and deserialize estimationed", () => {
   // Arrange
-  const hand = UserEstimation.estimated(Card.create(StoryPoint.create(3)));
+  const estimation = UserEstimation.estimated(Card.create(StoryPoint.create(3)));
 
   // Act
-  const ret = deserialize(serialize(hand));
+  const ret = deserialize(serialize(estimation));
 
   // Assert
-  expect(ret).toEqual(hand);
+  expect(ret).toEqual(estimation);
 });
 
 test("serialize and deserialize unselected", () => {
   // Arrange
-  const hand = UserEstimation.unselected();
+  const estimation = UserEstimation.unselected();
 
   // Act
-  const ret = deserialize(serialize(hand));
+  const ret = deserialize(serialize(estimation));
 
   // Assert
-  expect(ret).toEqual(hand);
+  expect(ret).toEqual(estimation);
 });

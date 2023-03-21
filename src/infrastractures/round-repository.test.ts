@@ -40,11 +40,11 @@ test("should be able to save and find a round", async () => {
     id: R.createId(),
     count: 1,
     cards: cards,
-    hands: [
-      { user: User.createId("user1"), hand: UserEstimation.estimated(cards[0]) },
-      { user: User.createId("user2"), hand: UserEstimation.estimated(cards[1]) },
-      { user: User.createId("user3"), hand: UserEstimation.giveUp() },
-      { user: User.createId("user4"), hand: UserEstimation.unselected() },
+    estimations: [
+      { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
+      { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
+      { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
+      { user: User.createId("user4"), estimation: UserEstimation.unselected() },
     ],
     joinedPlayers: [
       GamePlayer.create({ type: GamePlayer.PlayerType.player, user: User.createId("user1"), mode: UserMode.normal }),
@@ -63,7 +63,7 @@ test("should be able to save and find a round", async () => {
   // Assert
   expect(instance?.id).toEqual(round.id);
   expect(instance?.count).toEqual(round.count);
-  expect(instance?.hands).toEqual(
+  expect(instance?.estimations).toEqual(
     Object.fromEntries([
       [User.createId("user1"), UserEstimation.estimated(cards[0])],
       [User.createId("user2"), UserEstimation.estimated(cards[1])],
@@ -89,11 +89,11 @@ test("should be able to save and find a finished round", async () => {
     id: R.createId(),
     count: 1,
     cards: cards,
-    hands: [
-      { user: User.createId("user1"), hand: UserEstimation.estimated(cards[0]) },
-      { user: User.createId("user2"), hand: UserEstimation.estimated(cards[1]) },
-      { user: User.createId("user3"), hand: UserEstimation.giveUp() },
-      { user: User.createId("user4"), hand: UserEstimation.unselected() },
+    estimations: [
+      { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
+      { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
+      { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
+      { user: User.createId("user4"), estimation: UserEstimation.unselected() },
     ],
     joinedPlayers: [],
   });
@@ -110,7 +110,7 @@ test("should be able to save and find a finished round", async () => {
   expect(R.isFinishedRound(instance)).toBe(true);
   expect(instance?.id).toEqual(round.id);
   expect(instance?.count).toEqual(round.count);
-  expect(instance?.hands).toEqual(
+  expect(instance?.estimations).toEqual(
     Object.fromEntries([
       [User.createId("user1"), UserEstimation.estimated(cards[0])],
       [User.createId("user2"), UserEstimation.estimated(cards[1])],

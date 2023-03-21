@@ -48,7 +48,7 @@ export const NormalSelected: Story = {
   args: {
     userName: "name",
     userMode: UserMode.normal,
-    state: "handed",
+    state: "estimated",
     displayValue: "value",
   },
 };

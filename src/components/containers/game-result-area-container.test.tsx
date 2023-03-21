@@ -30,8 +30,8 @@ test("should not open initial", () => {
     </Provider>
   );
 
-  expect(screen.queryAllByTestId("hands/name/root")).toHaveLength(1);
-  expect(screen.queryAllByTestId("hands/player/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("estimations/name/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("estimations/player/root")).toHaveLength(1);
 });
 
 test("should dsiplay skeleton when loading", () => {

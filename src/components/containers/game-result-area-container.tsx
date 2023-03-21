@@ -10,7 +10,7 @@ import { newRound } from "@/status/actions/game";
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
   gridContainer: classNames("w-full", "h-full", "grid", "grid-rows-[1fr_8rem_5rem_8rem_1fr]", "grid-cols-3"),
-  hands: classNames("flex"),
+  estimations: classNames("flex"),
   table: classNames(
     "row-start-3",
     "col-start-2",
@@ -66,10 +66,10 @@ const GameProgressionButton = (dispatch: AppDispatch) => {
 
 // eslint-disable-next-line func-style
 export function GameResultAreaContainer() {
-  const hands = useAppSelector(selectUserEstimationInfos);
+  const estimations = useAppSelector(selectUserEstimationInfos);
   const dispatch = useAppDispatch();
 
-  if (!isFinished(hands)) {
+  if (!isFinished(estimations)) {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
@@ -91,19 +91,19 @@ export function GameResultAreaContainer() {
   }
 
   const button = GameProgressionButton(dispatch);
-  const upper = hands[0].filter((_, index) => index % 2 === 0);
-  const lower = hands[0].filter((_, index) => index % 2 === 1);
+  const upper = estimations[0].filter((_, index) => index % 2 === 0);
+  const lower = estimations[0].filter((_, index) => index % 2 === 1);
 
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
         <div className="row-start-1 col-span-full"></div>
         <div className="row-start-2 col-start-2">
-          <PlayerEstimations hands={upper} testid="hands" />
+          <PlayerEstimations estimations={upper} testid="estimations" />
         </div>
         <div className={styles.table}>{button}</div>
         <div className="row-start-4 col-start-2">
-          <PlayerEstimations hands={lower} testid="hands" />
+          <PlayerEstimations estimations={lower} testid="estimations" />
         </div>
         <div className="row-start-5 col-span-full"></div>
       </div>

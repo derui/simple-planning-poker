@@ -20,7 +20,7 @@ test("get round as open game", () => {
 
   expect(ret.instance).toEqual({
     id: game.round.id,
-    hands: {},
+    estimations: {},
     cards: {
       1: { card: cards[0], order: 0 },
       2: { card: cards[1], order: 1 },
@@ -42,7 +42,7 @@ test("get round after new round", () => {
 
   expect(ret.instance).toEqual({
     id: game.round.id,
-    hands: {},
+    estimations: {},
     cards: {
       1: { card: cards[0], order: 0 },
       2: { card: cards[1], order: 1 },
@@ -59,13 +59,13 @@ test("get round after new round", () => {
 test("should finished with finished", () => {
   const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
   let game = randomGame({ cards });
-  game = Game.acceptPlayerHand(game, game.owner, estimated(cards[0]));
+  game = Game.acceptPlayerEstimation(game, game.owner, estimated(cards[0]));
 
   const ret = reducer(getInitialState(), openGameSuccess({ game, players: [] }));
 
   expect(ret.instance).toEqual({
     id: game.round.id,
-    hands: {
+    estimations: {
       [game.owner]: estimated(cards[0]),
     },
     cards: {

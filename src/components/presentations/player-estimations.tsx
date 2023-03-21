@@ -1,10 +1,10 @@
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
 import { PlayerEstimation } from "./player-estimation";
-import { UserEstimationInfo } from "@/status/selectors/user-hand";
+import { UserEstimationInfo } from "@/status/selectors/user-estimation";
 
 interface Props extends BaseProps {
-  hands: UserEstimationInfo[];
+  estimations: UserEstimationInfo[];
 }
 
 const styles = {
@@ -12,16 +12,16 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function PlayerEstimations({ hands, testid }: Props) {
+export function PlayerEstimations({ estimations, testid }: Props) {
   const gen = generateTestId(testid);
 
-  const createUserHand = (props: UserEstimationInfo, index: number) => {
+  const createUserEstimation = (props: UserEstimationInfo, index: number) => {
     return <PlayerEstimation key={index} testid={gen(props.userName)} {...props} />;
   };
 
   return (
     <div className={styles.root} data-testid={gen("root")}>
-      {hands.map((v, index) => createUserHand(v, index))}
+      {estimations.map((v, index) => createUserEstimation(v, index))}
     </div>
   );
 }

@@ -4,8 +4,8 @@ export const count = function count(id: Id) {
   return `/rounds/${id}/count`;
 };
 
-export const userHands = function userHands(id: Id) {
-  return `/rounds/${id}/userHands`;
+export const userEstimations = function userEstimations(id: Id) {
+  return `/rounds/${id}/userEstimations`;
 };
 
 export const cards = function cards(id: Id) {

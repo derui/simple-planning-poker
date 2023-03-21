@@ -10,7 +10,7 @@ import { showDown } from "@/status/actions/round";
 import { randomGame } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { notifyOtherUserChanged } from "@/status/actions/user";
-import { acceptPlayerHand, joinUserAsPlayer, makeInvitation } from "@/domains/game";
+import { acceptPlayerEstimation, joinUserAsPlayer, makeInvitation } from "@/domains/game";
 import { giveUp } from "@/domains/user-estimation";
 
 afterEach(cleanup);
@@ -32,8 +32,8 @@ test("render", () => {
     </Provider>
   );
 
-  expect(screen.queryAllByTestId("hands/name/root")).toHaveLength(1);
-  expect(screen.queryAllByTestId("hands/player/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("estimations/name/root")).toHaveLength(1);
+  expect(screen.queryAllByTestId("estimations/player/root")).toHaveLength(1);
 });
 
 test("should dsiplay skeleton when loading", () => {
@@ -59,7 +59,7 @@ test("dispatch show down event", async () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "name" });
   let game = randomGame({ owner: user.id });
-  game = acceptPlayerHand(game, user.id, giveUp());
+  game = acceptPlayerEstimation(game, user.id, giveUp());
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game, players: [user] }));
@@ -81,7 +81,7 @@ test("dispatch show down event", async () => {
   await userEvent.click(screen.getByText("Show down!"));
 });
 
-test("do not display button if no user handed", async () => {
+test("do not display button if no user estimated", async () => {
   const store = createPureStore();
   const user = User.create({ id: User.createId(), name: "name" });
   const game = randomGame({ owner: user.id });

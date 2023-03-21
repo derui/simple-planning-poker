@@ -7,7 +7,7 @@ import lazyImport from "./utils/lazy-import";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
-  const state = useAppSelector(selectAuthenticating());
+  const state = useAppSelector(selectAuthenticating);
   const location = useLocation();
 
   if (!state) {

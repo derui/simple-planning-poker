@@ -14,9 +14,9 @@ import * as Base from "@/domains/base";
  */
 export type Id = Base.Id<"RoundId">;
 
-interface PlayerHand {
+interface PlayerEstimation {
   readonly user: User.Id;
-  readonly hand: UserEstimation.T;
+  readonly estimation: UserEstimation.T;
 }
 
 const _calculatedStoryPoint = Symbol();
@@ -28,7 +28,7 @@ const _round = "Round";
 interface CommonRound {
   readonly id: Id;
   readonly count: number;
-  readonly hands: Record<User.Id, UserEstimation.T>;
+  readonly estimations: Record<User.Id, UserEstimation.T>;
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
 }
@@ -69,19 +69,19 @@ export const roundOf = function roundOf({
   cards,
   count,
   joinedPlayers,
-  hands = [],
+  estimations = [],
 }: {
   id: Id;
   cards: SelectableCards.T;
   count: number;
-  hands?: PlayerHand[];
+  estimations?: PlayerEstimation[];
   joinedPlayers: GamePlayer.T[];
 }): Round {
   return {
     _tag: _round,
     id,
     count,
-    hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
+    estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     cards: SelectableCards.clone(cards),
     joinedPlayers,
   };
@@ -94,7 +94,7 @@ export const finishedRoundOf = function finishedRoundOf({
   id,
   cards,
   count,
-  hands,
+  estimations,
   finishedAt,
   joinedPlayers,
 }: {
@@ -102,14 +102,14 @@ export const finishedRoundOf = function finishedRoundOf({
   cards: SelectableCards.T;
   count: number;
   finishedAt: DateTime;
-  hands: PlayerHand[];
+  estimations: PlayerEstimation[];
   joinedPlayers: GamePlayer.T[];
 }): FinishedRound {
   return {
     _tag: _finishedRound,
     id,
     count,
-    hands: Object.fromEntries(hands.map((v) => [v.user, v.hand])),
+    estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
     cards: SelectableCards.clone(cards),
     joinedPlayers,
@@ -117,19 +117,19 @@ export const finishedRoundOf = function finishedRoundOf({
 };
 
 /**
- * Player take the hand to round.
+ * Player take the estimation to round.
  */
-export const takePlayerCard = function takePlayerCard(round: Round, userId: User.Id, card: Card.T) {
+export const takePlayerEstimation = function takePlayerEstimation(round: Round, userId: User.Id, card: Card.T) {
   if (!SelectableCards.contains(round.cards, card)) {
     throw new Error("Can not accept this card");
   }
 
-  const hands = Object.assign({}, round.hands);
+  const estimations = Object.assign({}, round.estimations);
 
-  hands[userId] = UserEstimation.estimated(card);
+  estimations[userId] = UserEstimation.estimated(card);
 
   return produce(round, (draft) => {
-    draft.hands = hands;
+    draft.estimations = estimations;
   });
 };
 
@@ -138,7 +138,7 @@ export const takePlayerCard = function takePlayerCard(round: Round, userId: User
  */
 export const acceptPlayerToGiveUp = function acceptPlayerToGiveUp(round: Round, userId: User.Id) {
   return produce(round, (draft) => {
-    draft.hands[userId] = UserEstimation.giveUp();
+    draft.estimations[userId] = UserEstimation.giveUp();
   });
 };
 
@@ -147,7 +147,7 @@ export const canShowDown = function canShowDown(round: T) {
     return false;
   }
 
-  if (Object.keys(round.hands).length === 0) {
+  if (Object.keys(round.estimations).length === 0) {
     return false;
   }
 
@@ -155,17 +155,17 @@ export const canShowDown = function canShowDown(round: T) {
 };
 
 /**
- * finish a round. Throw error if round has no hand.
+ * finish a round. Throw error if round has no estimation.
  */
 export const showDown = function showDown(round: Round, now: Date): [FinishedRound, DomainEvent] {
   if (!canShowDown(round)) {
-    throw new Error("Can not finish round because it has no hand");
+    throw new Error("Can not finish round because it has no estimation");
   }
 
-  const hands = Object.entries(round.hands).map(([user, hand]) => {
+  const estimations = Object.entries(round.estimations).map(([user, estimation]) => {
     return {
       user: user as User.Id,
-      hand,
+      estimation,
     };
   });
 
@@ -173,14 +173,14 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
     kind: DOMAIN_EVENTS.RoundFinished,
     roundId: round.id,
   };
-  return [finishedRoundOf({ ...round, finishedAt: dateTimeToString(now), hands }), event];
+  return [finishedRoundOf({ ...round, finishedAt: dateTimeToString(now), estimations: estimations }), event];
 };
 
 /**
  * calculate averate on round.
  */
 export const calculateAverage = function calculateAverage(round: FinishedRound) {
-  const cards = Object.values(round.hands)
+  const cards = Object.values(round.estimations)
     .filter(UserEstimation.isEstimated)
     .map((v) => v.card);
 

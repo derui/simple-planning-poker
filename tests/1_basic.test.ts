@@ -54,7 +54,7 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   // expect game pages
   await expect(page.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(page.getByTestId("hands/test@example.com/root")).toHaveText("test@example.com");
+  await expect(page.getByTestId("estimations/test@example.com/root")).toHaveText("test@example.com");
 
   for (let card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
@@ -67,15 +67,15 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   await expect(other).toHaveURL(page.url());
   await expect(other.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(other.getByTestId("hands/test2@example.com/root")).toBeVisible();
+  await expect(other.getByTestId("estimations/test2@example.com/root")).toBeVisible();
 
   // update joined user in other page
-  await expect(page.getByTestId("hands/test2@example.com/root")).toBeVisible();
+  await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();
 
-  // selecting hand synchronize each page
+  // estimation synchronize each page
   await page.getByText("3", { exact: true }).click();
-  await expect(page.getByTestId("hands/test@example.com/card")).toHaveAttribute("data-state", "handed");
-  await expect(other.getByTestId("hands/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test@example.com/card")).toHaveAttribute("data-state", "estimated");
+  await expect(other.getByTestId("estimations/test@example.com/card")).toBeVisible();
 });
 
 test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
@@ -109,10 +109,10 @@ test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebas
   await page.getByTestId("invitation/opener").click();
   const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
   await other.goto(joinUrl);
-  await expect(page.getByTestId("hands/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("hands/test2@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
 
-  // hand
+  // estimation
   await page.getByText("3", { exact: true }).click();
 
   // show down
@@ -136,10 +136,10 @@ test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebas
   await expect(nextRoundButton).toBeEnabled();
   await expect(nextRoundButtonOnOtherPage).toBeEnabled();
 
-  await expect(page.getByTestId("hands/test@example.com/card")).toHaveText("3");
-  await expect(page.getByTestId("hands/test2@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("hands/test@example.com/card")).toHaveText("3");
-  await expect(other.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+  await expect(page.getByTestId("estimations/test@example.com/card")).toHaveText("3");
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("estimations/test@example.com/card")).toHaveText("3");
+  await expect(other.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
 
   await expect(page.getByTestId("resultCard")).toContainText("3");
   await expect(other.getByTestId("resultCard")).toContainText("3");
@@ -152,10 +152,10 @@ test.only("result game", async ({ page, newPageOnNewContext: other, resetFirebas
   await expect(nextRoundButton).toBeHidden();
   await expect(nextRoundButtonOnOtherPage).toBeHidden();
 
-  await expect(page.getByTestId("hands/test@example.com/card")).toBeEmpty();
-  await expect(page.getByTestId("hands/test2@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("hands/test@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("hands/test2@example.com/card")).toBeEmpty();
+  await expect(page.getByTestId("estimations/test@example.com/card")).toBeEmpty();
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("estimations/test@example.com/card")).toBeEmpty();
+  await expect(other.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
 
   for (let card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();

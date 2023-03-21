@@ -1,5 +1,5 @@
 import { DataSnapshot } from "firebase/database";
-import { deserialize as deserializeHand, Serialized } from "./user-estimation-converter";
+import { deserialize as deserializeEstimation, Serialized } from "./user-estimation-converter";
 import * as Round from "@/domains/round";
 import * as StoryPoint from "@/domains/story-point";
 import * as SelectableCards from "@/domains/selectable-cards";
@@ -18,20 +18,20 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
 
   const count = val.count as number;
   const cards = val.cards as number[];
-  const hands = val.userHands as { [key: User.Id]: Serialized } | undefined;
+  const estimations = val.userEstimations as { [key: User.Id]: Serialized } | undefined;
   const finishedAt = val.finishedAt as string | undefined;
   const joinedPlayers = (val.joinedPlayers as Record<User.Id, { type: PlayerType; mode: UserMode }> | undefined) ?? {};
 
   const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
-  const deserializedHands = hands
-    ? Object.entries(hands)
-        .map(([k, hand]) => {
-          if (!hand) {
+  const deserializedEstimations = estimations
+    ? Object.entries(estimations)
+        .map(([k, estimation]) => {
+          if (!estimation) {
             return undefined;
           }
           return {
             user: User.createId(k),
-            hand: deserializeHand(hand),
+            estimation: deserializeEstimation(estimation),
           };
         })
         .filter(filterUndefined)
@@ -43,7 +43,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
       count,
       finishedAt,
       cards: selectableCards,
-      hands: deserializedHands,
+      estimations: deserializedEstimations,
       joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({
         type,
         user: User.createId(k),
@@ -56,7 +56,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
     id,
     count,
     cards: selectableCards,
-    hands: deserializedHands,
+    estimations: deserializedEstimations,
     joinedPlayers: Object.entries(joinedPlayers).map(([k, { mode, type }]) => ({ type, user: User.createId(k), mode })),
   });
 };

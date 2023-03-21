@@ -34,8 +34,8 @@ export const estimated = function estimated(card: Card.T): T {
 
 export type Kind = "unselected" | "giveup" | "estimated";
 
-export const kindOf = function kindOf(hand: T): Kind {
-  switch (hand._tag) {
+export const kindOf = function kindOf(estimation: T): Kind {
+  switch (estimation._tag) {
     case "giveup":
       return "giveup";
     case "estimated":
@@ -43,18 +43,22 @@ export const kindOf = function kindOf(hand: T): Kind {
     case "unselected":
       return "unselected";
     default:
-      throw new Error("unknown hand");
+      throw new Error("unknown estimation");
   }
 };
 
-export const isEstimated = function isEstimated(hand: T): hand is Branded<Estimated, typeof UserEstimation> {
-  return kindOf(hand) === "estimated";
+export const isEstimated = function isEstimated(
+  estimation: T
+): estimation is Branded<Estimated, typeof UserEstimation> {
+  return kindOf(estimation) === "estimated";
 };
 
-export const isGiveUp = function isGiveUp(hand: T): hand is Branded<Giveup, typeof UserEstimation> {
-  return kindOf(hand) === "giveup";
+export const isGiveUp = function isGiveUp(estimation: T): estimation is Branded<Giveup, typeof UserEstimation> {
+  return kindOf(estimation) === "giveup";
 };
 
-export const isUnselected = function isUnselected(hand: T): hand is Branded<Unselected, typeof UserEstimation> {
-  return kindOf(hand) === "unselected";
+export const isUnselected = function isUnselected(
+  estimation: T
+): estimation is Branded<Unselected, typeof UserEstimation> {
+  return kindOf(estimation) === "unselected";
 };

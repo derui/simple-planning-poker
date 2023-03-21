@@ -65,8 +65,8 @@ export const Loaded: Story = {
       })
     );
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
-    game = Game.acceptPlayerHand(game, owner.id, giveUp());
-    game = Game.acceptPlayerHand(game, users[0].id, estimated(game.cards[0]));
+    game = Game.acceptPlayerEstimation(game, owner.id, giveUp());
+    game = Game.acceptPlayerEstimation(game, users[0].id, estimated(game.cards[0]));
     store.dispatch(showDownSuccess(Game.showDown(game, new Date())[0].round));
 
     const route = createMemoryRouter(

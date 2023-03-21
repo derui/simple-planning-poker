@@ -104,7 +104,7 @@ export const create = ({
         id: Round.createId(),
         cards: cards,
         count: 1,
-        hands: [],
+        estimations: [],
         joinedPlayers: Array.from(distinctedPlayers.values()),
       }),
     finishedRounds,
@@ -232,16 +232,20 @@ export const showDown = function showDown(game: T, now: Date): [T, DomainEvent] 
   ];
 };
 
-export const acceptPlayerHand = function acceptPlayerHand(game: T, userId: User.Id, hand: UserEstimation.T): T {
+export const acceptPlayerEstimation = function acceptPlayerEstimation(
+  game: T,
+  userId: User.Id,
+  estimation: UserEstimation.T
+): T {
   const round = game.round;
   if (!Round.isRound(round)) {
-    throw new Error("Can not accept hand to finished round");
+    throw new Error("Can not accept estimation to finished round");
   }
 
   let updated = round;
-  if (UserEstimation.isEstimated(hand)) {
-    updated = Round.takePlayerCard(round, userId, hand.card);
-  } else if (UserEstimation.isGiveUp(hand)) {
+  if (UserEstimation.isEstimated(estimation)) {
+    updated = Round.takePlayerEstimation(round, userId, estimation.card);
+  } else if (UserEstimation.isGiveUp(estimation)) {
     updated = Round.acceptPlayerToGiveUp(round, userId);
   }
 

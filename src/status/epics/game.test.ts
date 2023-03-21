@@ -176,7 +176,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("roundObserver", createMockedRoundObserver());
@@ -205,7 +205,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());
@@ -236,7 +236,7 @@ describe("observe game", () => {
       finishedRounds: [],
       cards: CARDS,
     });
-    game = Game.acceptPlayerHand(game, game.owner, UserEstimation.giveUp());
+    game = Game.acceptPlayerEstimation(game, game.owner, UserEstimation.giveUp());
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register("userObserver", createMockedUserObserver());

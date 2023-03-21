@@ -205,14 +205,16 @@ describe("observe user after tryAuthenticate", () => {
     );
 
     const changed = User.changeName(user, "changed")[0];
-    const observer = {
-      subscribe(_id: any, callback: any) {
-        callback(changed);
+    registrar.register(
+      "userObserver",
+      createMockedUserObserver({
+        subscribe(_id: any, callback: any) {
+          callback(changed);
 
-        return () => {};
-      },
-    };
-    registrar.register("userObserver", observer);
+          return () => {};
+        },
+      })
+    );
     registrar.register(
       "userRepository",
       createMockedUserRepository({
