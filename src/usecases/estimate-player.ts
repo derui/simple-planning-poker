@@ -4,21 +4,23 @@ import * as Game from "@/domains/game";
 import * as UserEstimation from "@/domains/user-estimation";
 import { GameRepository } from "@/domains/game-repository";
 
-export interface HandCardUseCaseInput {
+export interface EstimatePlayerUseCaseInput {
   userId: User.Id;
   gameId: Game.Id;
   userHand: UserEstimation.T;
 }
 
-export type HandCardUseCaseOutput =
+export type EstimatePlayerUseCaseOutput =
   | { kind: "success"; game: Game.T }
   | { kind: "notFoundGame" }
   | { kind: "HandCardFailed" };
 
-export class HandCardUseCase implements UseCase<HandCardUseCaseInput, Promise<HandCardUseCaseOutput>> {
+export class EstimatePlayerUseCase
+  implements UseCase<EstimatePlayerUseCaseInput, Promise<EstimatePlayerUseCaseOutput>>
+{
   constructor(private gameRepository: GameRepository) {}
 
-  async execute(input: HandCardUseCaseInput): Promise<HandCardUseCaseOutput> {
+  async execute(input: EstimatePlayerUseCaseInput): Promise<EstimatePlayerUseCaseOutput> {
     const game = await this.gameRepository.findBy(input.gameId);
     if (!game) {
       return { kind: "notFoundGame" };

@@ -5,7 +5,7 @@ import { Authenticator } from "./status/type";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
-import { HandCardUseCase } from "./usecases/hand-card";
+import { EstimatePlayerUseCase } from "./usecases/estimate-player";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { NewRoundUseCase } from "./usecases/new-round";
@@ -19,7 +19,7 @@ export type Dependencies = {
   changeUserNameUseCase: ChangeUserNameUseCase;
   gameRepository: GameRepository;
   createGameUseCase: CreateGameUseCase;
-  handCardUseCase: HandCardUseCase;
+  handCardUseCase: EstimatePlayerUseCase;
   showDownUseCase: ShowDownUseCase;
   newRoundUseCase: NewRoundUseCase;
   changeUserModeUseCase: ChangeUserModeUseCase;

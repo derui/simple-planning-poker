@@ -7,7 +7,7 @@ import { EventDispatcher } from "./usecases/base";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
-import { HandCardUseCase } from "./usecases/hand-card";
+import { EstimatePlayerUseCase } from "./usecases/estimate-player";
 import { JoinUserUseCase } from "./usecases/join-user";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { ShowDownUseCase } from "./usecases/show-down";
@@ -56,10 +56,12 @@ export const createMockedChangeUserModeUseCase = function createMockedChangeUser
   } as ChangeUserModeUseCase;
 };
 
-export const createMockedHandCardUseCase = function createMockedHandCardUseCase(mock: Partial<HandCardUseCase> = {}) {
+export const createMockedHandCardUseCase = function createMockedHandCardUseCase(
+  mock: Partial<EstimatePlayerUseCase> = {}
+) {
   return {
     execute: mock.execute ?? sinon.fake(),
-  } as HandCardUseCase;
+  } as EstimatePlayerUseCase;
 };
 
 export const createMockedLeaveGameUseCase = function createMockedLeaveGameUseCase(

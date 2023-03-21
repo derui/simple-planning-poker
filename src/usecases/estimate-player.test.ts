@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
-import { HandCardUseCase } from "./hand-card";
+import { EstimatePlayerUseCase } from "./estimate-player";
 import * as Game from "@/domains/game";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
@@ -20,7 +20,7 @@ test("should return error if game is not found", async () => {
 
   const repository = createMockedGameRepository();
 
-  const useCase = new HandCardUseCase(repository);
+  const useCase = new EstimatePlayerUseCase(repository);
 
   // Act
   const ret = await useCase.execute(input);
@@ -51,7 +51,7 @@ test("should save player with card selected by user", async () => {
   });
 
   // Act
-  const useCase = new HandCardUseCase(repository);
+  const useCase = new EstimatePlayerUseCase(repository);
   const ret = await useCase.execute(input);
 
   // Assert
