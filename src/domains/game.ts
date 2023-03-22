@@ -58,6 +58,16 @@ export const isUserJoined = function isUserJoined(event: DomainEvent): event is 
   return event.kind === "UserJoined";
 };
 
+export interface UserLeftFromGame extends DomainEvent {
+  readonly kind: "UserLeftFromGame";
+  gameId: Id;
+  userId: User.Id;
+}
+
+export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent): event is UserLeftFromGame {
+  return event.kind === "UserLeftFromGame";
+};
+
 export const create = ({
   id,
   name,
@@ -195,8 +205,16 @@ export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
 /**
  * An user leave from this round
  */
-export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): T {
-  return produce(game, (draft) => {
+export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent] {
+  const newObj = produce(game, (draft) => {
     draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
   });
+
+  const event: UserLeftFromGame = {
+    kind: DOMAIN_EVENTS.UserLeftFromGame,
+    gameId: game.id,
+    userId: user,
+  };
+
+  return [newObj, event];
 };

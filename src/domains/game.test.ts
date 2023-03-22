@@ -11,6 +11,7 @@ import {
   makeInvitation,
   newRound,
   NewRoundStarted,
+  UserLeftFromGame,
 } from "./game";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -209,7 +210,7 @@ describe("leave", () => {
       round: Round.createId(),
     });
 
-    const ret = acceptLeaveFrom(game, User.createId("not found"));
+    const [ret] = acceptLeaveFrom(game, User.createId("not found"));
 
     expect(ret).toEqual(game);
   });
@@ -225,12 +226,14 @@ describe("leave", () => {
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
-    const ret = acceptLeaveFrom(game, User.createId("new"));
+    const [ret, event] = acceptLeaveFrom(game, User.createId("new"));
 
     expect(ret).not.toBe(game);
     expect(ret.joinedPlayers.map((v) => v.user)).not.toContainEqual(User.createId("new"));
     expect(ret.joinedPlayers).toHaveLength(1);
     expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
+    expect(event.kind).toBe(DOMAIN_EVENTS.UserLeftFromGame);
+    expect((event as UserLeftFromGame).gameId).toBe(game.id);
   });
 });
 

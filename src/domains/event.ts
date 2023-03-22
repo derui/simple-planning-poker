@@ -13,7 +13,7 @@ export const DOMAIN_EVENTS = {
   UserJoined: "UserJoined",
   GameShowedDown: "GameShowedDown",
   GamePlayerCardSelected: "GamePlayerCardSelected",
-  UserLeavedFromGame: "UserLeavedFromGame",
+  UserLeftFromGame: "UserLeftFromGame",
   GamePlayerGiveUp: "GamePlayerGiveUp",
   RoundFinished: "RoundFinished",
 } as const;

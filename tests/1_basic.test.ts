@@ -205,9 +205,12 @@ test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase
   // left user is navigated to select page, and do not display any game
   await expect(other).toHaveURL(/.*game\/?$/);
   await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
+
+  await other.goto("/game/");
+  await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
 });
 
-test.only("re-open and restore current round", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+test("re-open and restore current round", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
   resetFirebase();
 
   // sign up main

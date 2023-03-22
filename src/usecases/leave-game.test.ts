@@ -6,7 +6,7 @@ import * as User from "@/domains/user";
 import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
-import { createMockedGameRepository } from "@/test-lib";
+import { createMockedDispatcher, createMockedGameRepository } from "@/test-lib";
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -15,7 +15,8 @@ test("should return error if user not found", async () => {
     gameId: Game.createId(),
   };
   const gameRepository = createMockedGameRepository();
-  const useCase = new LeaveGameUseCase(gameRepository);
+  const dispatcher = createMockedDispatcher();
+  const useCase = new LeaveGameUseCase(gameRepository, dispatcher);
 
   // Act
   const ret = await useCase.execute(input);
@@ -47,7 +48,11 @@ test("should return success if user leaved from a game", async () => {
     save,
     findBy: sinon.fake.resolves(game),
   });
-  const useCase = new LeaveGameUseCase(gameRepository);
+  const dispatch = sinon.fake();
+  const dispatcher = createMockedDispatcher({
+    dispatch: dispatch,
+  });
+  const useCase = new LeaveGameUseCase(gameRepository, dispatcher);
 
   // Act
   const ret = await useCase.execute(input);
@@ -55,4 +60,6 @@ test("should return success if user leaved from a game", async () => {
   // Assert
   expect(ret).toEqual({ kind: "success", game: save.lastCall.lastArg });
   expect(save.callCount).toBe(1);
+  expect(dispatch.callCount).toBe(1);
+  expect(dispatch.lastCall.firstArg.gameId).toBe(game.id);
 });
