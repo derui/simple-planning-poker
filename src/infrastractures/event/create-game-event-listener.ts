@@ -1,4 +1,4 @@
-import { Database, ref, update } from "firebase/database";
+import { Database, push, ref, set } from "firebase/database";
 import { joinedGames } from "../user-ref-resolver";
 import { DomainEventListener } from "./domain-event-listener";
 import { isGameCreated } from "@/domains/game";
@@ -16,10 +16,8 @@ export class CreateGameEventListener implements DomainEventListener {
     }
 
     const targetRef = joinedGames(event.owner);
-    const updates = {
-      [`${targetRef}/${event.gameId}`]: { name: event.name, relation: "owner" },
-    };
+    const value = push(ref(this.database, targetRef));
 
-    await update(ref(this.database), updates);
+    await set(value, { gameId: event.gameId, relation: "owner" });
   }
 }

@@ -46,6 +46,7 @@ test("should add joined user as owner", async () => {
   const userRepository = new UserRepositoryImpl(database);
   const listener = new CreateGameEventListener(database);
   const repository = new GameRepositoryImpl(database);
+  await repository.save(game);
   await userRepository.save(owner);
 
   // Act

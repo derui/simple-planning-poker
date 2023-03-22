@@ -6,6 +6,7 @@ import * as Game from "@/domains/game";
 import { GameRepository } from "@/domains/game-repository";
 import * as User from "@/domains/user";
 import * as Invitation from "@/domains/invitation";
+import { filterUndefined } from "@/utils/basic";
 
 export class GameRepositoryImpl implements GameRepository {
   constructor(private database: Database) {}
@@ -63,10 +64,12 @@ export class GameRepositoryImpl implements GameRepository {
       return [];
     }
 
-    const ret = Object.entries(val).map(([key, value]) => {
-      return { id: Game.createId(key), name: (value as any).name as string };
-    });
+    const games = await Promise.all(
+      Object.values(val as Record<string, { gameId: Game.Id }>).map(({ gameId }) => {
+        return this.findBy(gameId);
+      })
+    );
 
-    return ret;
+    return games.filter(filterUndefined).map((v) => ({ id: v.id, name: v.name }));
   }
 }

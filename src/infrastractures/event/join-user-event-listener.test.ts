@@ -48,6 +48,7 @@ test("should add joined user as owner", async () => {
   const userRepository = new UserRepositoryImpl(database);
   const listener = new JoinUserEventListener(database);
   const repository = new GameRepositoryImpl(database);
+  await repository.save(game);
   await userRepository.save(owner);
   await userRepository.save(player);
 
@@ -56,5 +57,5 @@ test("should add joined user as owner", async () => {
   const joinedGames = await repository.listUserJoined(player.id);
 
   // Assert
-  expect(joinedGames).toEqual([{ id: game.id }]);
+  expect(joinedGames).toEqual([{ id: game.id, name: "test" }]);
 });

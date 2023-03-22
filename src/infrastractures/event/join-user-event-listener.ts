@@ -1,4 +1,4 @@
-import { Database, ref, update } from "firebase/database";
+import { Database, push, ref, set } from "firebase/database";
 import { joinedGames } from "../user-ref-resolver";
 import { DomainEventListener } from "./domain-event-listener";
 import { isUserJoined } from "@/domains/game";
@@ -16,10 +16,11 @@ export class JoinUserEventListener implements DomainEventListener {
     }
 
     const targetRef = joinedGames(event.userId);
-    const updates = {
-      [`${targetRef}/${event.gameId}`]: { relation: "player" },
-    };
+    const value = push(ref(this.database, targetRef));
 
-    await update(ref(this.database), updates);
+    await set(value, {
+      relation: "player",
+      gameId: event.gameId,
+    });
   }
 }
