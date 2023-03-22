@@ -32,6 +32,7 @@ import { RoundObserverImpl } from "./infrastractures/round-observer";
 import { JoinUserEventListener } from "./infrastractures/event/join-user-event-listener";
 import { CreateRoundAfterCreateGameListener } from "./infrastractures/event/create-round-after-create-game-listener";
 import { NewRoundStartedListener } from "./infrastractures/event/new-round-started-listener";
+import { RemoveGameFromJoinedGameListener } from "./infrastractures/event/remove-game-from-joined-games-listener";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -52,6 +53,7 @@ const dispatcher = new EventDispatcherImpl([
   new JoinUserEventListener(database),
   new CreateRoundAfterCreateGameListener(roundRepository),
   new NewRoundStartedListener(gameRepository),
+  new RemoveGameFromJoinedGameListener(database),
 ]);
 
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
@@ -66,7 +68,7 @@ registrar.register(
   new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository"), roundRepository)
 );
 registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
-registrar.register("leaveGameUseCase", new LeaveGameUseCase(registrar.resolve("gameRepository")));
+registrar.register("leaveGameUseCase", new LeaveGameUseCase(registrar.resolve("gameRepository"), dispatcher));
 registrar.register("changeUserModeUseCase", new ChangeUserModeUseCase(registrar.resolve("gameRepository")));
 registrar.register(
   "joinUserUseCase",
