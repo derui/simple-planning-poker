@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 import { BaseProps, generateTestId } from "../base";
 
 interface Props extends BaseProps {
@@ -47,6 +48,34 @@ const styles = {
       "hover:after:right-0"
     ),
   },
+
+  backToTop: {
+    root: classNames("flex", "mr-2"),
+    container: classNames("flex", "items-center"),
+    link: classNames(
+      "inline-block",
+      "flex-auto",
+      "rounded-full",
+      "border",
+      "border-transparent",
+      "bg-none",
+      "w-7",
+      "h-7",
+      "transition-colors",
+      "cursor-pointer",
+      "hover:border-primary-400",
+      "active:bg-primary-200",
+      "before:w-6",
+      "before:h-6",
+      "before:inline-block",
+      "before:[mask-size:cover]",
+      "before:[mask-repeat:no-repeat]",
+      "before:[mask-position:center]",
+      'before:[mask-image:url("/static/svg/tabler-icons/arrow-back-up.svg")]',
+      "before:bg-primary-500",
+      "before:align-middle"
+    ),
+  },
 };
 
 // eslint-disable-next-line func-style
@@ -54,7 +83,12 @@ export function GameInfo({ gameName, onLeaveGame, testid }: Props) {
   const gen = generateTestId(testid);
 
   return (
-    <main className={styles.root} data-testid={gen("root")}>
+    <div className={styles.root} data-testid={gen("root")}>
+      <div className={styles.backToTop.root}>
+        <Link className={styles.backToTop.container} to="/game">
+          <span className={styles.backToTop.link} data-testid={gen("backToTop")}></span>
+        </Link>
+      </div>
       <div className={styles.name.contaienr}>
         <span className={styles.name.label}>Now voting</span>
         <span className={styles.name.name}> {gameName}</span>
@@ -62,6 +96,6 @@ export function GameInfo({ gameName, onLeaveGame, testid }: Props) {
       <div className={styles.actions.root}>
         <button className={styles.actions.leave} onClick={() => onLeaveGame()} data-testid={gen("leave")}></button>
       </div>
-    </main>
+    </div>
   );
 }

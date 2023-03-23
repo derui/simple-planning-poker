@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { install } from "@twind/core";
 
+import { MemoryRouter } from "react-router";
 import { GameInfo } from "./game-info";
 import twind from "@/twind.config.cjs";
 
@@ -20,5 +21,13 @@ export const Normal: Story = {
   args: {
     gameName: "Name of Game",
     onLeaveGame() {},
+  },
+
+  render(args) {
+    return (
+      <MemoryRouter>
+        <GameInfo {...args} />
+      </MemoryRouter>
+    );
   },
 };
