@@ -3,7 +3,7 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -24,10 +24,11 @@
       "port": 9000
     },
     "hosting": {
-      "port": 5001
+      "enabled": false
     },
     "ui": {
       "enabled": true
-    }
+    },
+    "singleProjectMode": false
   }
 }
