@@ -29,6 +29,7 @@
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.7",
     "@playwright/test": "^1.31.2",
+    "@remix-run/web-fetch": "^4.3.3",
     "@storybook/addon-controls": "7.0.0-beta.61",
     "@storybook/cli": "7.0.0-beta.61",
     "@storybook/react": "^7.0.0-beta.61",
