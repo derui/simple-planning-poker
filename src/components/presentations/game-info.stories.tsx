@@ -31,3 +31,19 @@ export const Normal: Story = {
     );
   },
 };
+
+export const Owner: Story = {
+  args: {
+    gameName: "Name of Game",
+    onLeaveGame() {},
+    owner: true,
+  },
+
+  render(args) {
+    return (
+      <MemoryRouter>
+        <GameInfo {...args} />
+      </MemoryRouter>
+    );
+  },
+};

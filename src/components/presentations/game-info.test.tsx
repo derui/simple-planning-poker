@@ -58,3 +58,13 @@ test("back to top page", async () => {
     expect(routes.state.location.pathname).toBe("/game");
   });
 });
+
+test("do not show leave button when owner", async () => {
+  render(
+    <MemoryRouter>
+      <GameInfo owner gameName="name" onLeaveGame={() => {}} />
+    </MemoryRouter>
+  );
+
+  expect(screen.queryByTestId("leave")).toBeNull();
+});

@@ -4,7 +4,8 @@ import { BaseProps, generateTestId } from "../base";
 
 interface Props extends BaseProps {
   gameName: string;
-  onLeaveGame: () => void;
+  owner?: boolean;
+  onLeaveGame?: () => void;
 }
 
 const styles = {
@@ -81,8 +82,22 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function GameInfo({ gameName, onLeaveGame, testid }: Props) {
+export function GameInfo({ gameName, onLeaveGame, testid, owner }: Props) {
   const gen = generateTestId(testid);
+
+  const leaveButton = !owner ? (
+    <div className={styles.actions.root}>
+      <button
+        className={styles.actions.leave}
+        onClick={() => {
+          if (onLeaveGame) {
+            onLeaveGame();
+          }
+        }}
+        data-testid={gen("leave")}
+      ></button>
+    </div>
+  ) : null;
 
   return (
     <div className={styles.root} data-testid={gen("root")}>
@@ -95,9 +110,7 @@ export function GameInfo({ gameName, onLeaveGame, testid }: Props) {
         <span className={styles.name.label}>Now voting</span>
         <span className={styles.name.name}> {gameName}</span>
       </div>
-      <div className={styles.actions.root}>
-        <button className={styles.actions.leave} onClick={() => onLeaveGame()} data-testid={gen("leave")}></button>
-      </div>
+      {leaveButton}
     </div>
   );
 }
