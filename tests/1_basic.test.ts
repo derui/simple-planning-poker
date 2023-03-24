@@ -193,6 +193,7 @@ test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase
   await other.goto(joinUrl);
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("game-info/leave")).toBeHidden();
 
   // leave from current game. This button is hidden first, and hidden by clip-path
   await other.getByTestId("game-info/leave").hover({ position: { x: 10, y: 10 } });

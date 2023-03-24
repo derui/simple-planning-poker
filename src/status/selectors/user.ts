@@ -14,6 +14,7 @@ const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.c
 export interface UserInfo {
   userName: string;
   userMode: UserMode;
+  owner: boolean;
 }
 
 /**
@@ -22,17 +23,17 @@ export interface UserInfo {
 export const selectUserInfo = createDraftSafeSelector(
   selectCurrentUser,
   selectCurrentGame,
-  (currentUser, round): Loadable.T<UserInfo> => {
-    if (!currentUser || !round) {
+  (user, game): Loadable.T<UserInfo> => {
+    if (!user || !game) {
       return Loadable.loading();
     }
 
-    const userMode = round.joinedPlayers.find((v) => v.user === currentUser.id)?.mode;
+    const userMode = game.joinedPlayers.find((v) => v.user === user.id)?.mode;
     if (!userMode) {
       return Loadable.error();
     }
 
-    return Loadable.finished({ userName: currentUser.name, userMode });
+    return Loadable.finished({ userName: user.name, userMode, owner: user.id === game.owner });
   }
 );
 

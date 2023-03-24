@@ -32,7 +32,7 @@ test("should return current user info ", () => {
 
   const ret = s.selectUserInfo(store.getState());
 
-  expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal });
+  expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal, owner: true });
 });
 
 test("should loading with undefined when game or user is not provided", () => {
@@ -95,4 +95,28 @@ describe("joined games", () => {
       { gameId: Game.createId("id2"), name: "name2" },
     ]);
   });
+});
+
+test("return user info that not owner ", () => {
+  const store = createPureStore();
+
+  const user = User.create({ id: User.createId(), name: "foo" });
+  const owner = User.createId("owner");
+  let [game] = Game.create({
+    id: Game.createId(),
+    name: "test",
+    owner: owner,
+    finishedRounds: [],
+    cards: CARDS,
+    round: Round.createId(),
+  });
+
+  game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
+
+  store.dispatch(signInSuccess({ user }));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
+
+  const ret = s.selectUserInfo(store.getState());
+
+  expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal, owner: false });
 });

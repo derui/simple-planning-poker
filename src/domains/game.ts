@@ -205,7 +205,11 @@ export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
 /**
  * An user leave from this round
  */
-export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent] {
+export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent | undefined] {
+  if (user === game.owner) {
+    return [game, undefined];
+  }
+
   const newObj = produce(game, (draft) => {
     draft.joinedPlayers = draft.joinedPlayers.filter((v) => v.user !== user);
   });

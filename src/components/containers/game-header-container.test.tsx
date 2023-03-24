@@ -38,6 +38,7 @@ test("should not open initial", () => {
 
   expect(screen.queryByTestId("root")).not.toBeNull();
   expect(screen.queryByTestId("game-info/root")?.textContent).toMatch(/game/);
+  expect(screen.queryByTestId("game-info/leave")).toBeNull();
   expect(screen.queryByTestId("user-info/root")?.textContent).toMatch(/name/);
 });
 
@@ -53,4 +54,31 @@ test("should display skeleton if game or user do not initialized", async () => {
   );
 
   expect(screen.queryByTestId("loading/root")).not.toBeNull();
+});
+
+test("should display leave button", async () => {
+  const store = createPureStore();
+  const user = User.create({ id: User.createId("user"), name: "name" });
+  let [game] = Game.create({
+    id: Game.createId(),
+    name: "game",
+    finishedRounds: [],
+    owner: User.createId("owner"),
+    cards: randomCards(),
+    round: Round.createId(),
+  });
+  game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
+
+  store.dispatch(tryAuthenticateSuccess({ user }));
+  store.dispatch(openGameSuccess({ game, players: [user] }));
+
+  render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <GameHeaderContainer />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  expect(screen.queryByTestId("game-info/leave")).not.toBeNull();
 });
