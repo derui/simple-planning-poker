@@ -53,7 +53,8 @@ const styles = {
     root: classNames("flex", "mr-2"),
     container: classNames("flex", "items-center"),
     link: classNames(
-      "inline-block",
+      "flex",
+      "items-center",
       "flex-auto",
       "rounded-full",
       "border",
@@ -68,6 +69,7 @@ const styles = {
       "before:w-6",
       "before:h-6",
       "before:inline-block",
+      "before:flex-none",
       "before:[mask-size:cover]",
       "before:[mask-repeat:no-repeat]",
       "before:[mask-position:center]",
