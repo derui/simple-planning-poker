@@ -7,6 +7,7 @@ import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { EstimatePlayerUseCase } from "./usecases/estimate-player";
 import { JoinUserUseCase } from "./usecases/join-user";
+import { KickPlayerUseCase } from "./usecases/kick-player";
 import { LeaveGameUseCase } from "./usecases/leave-game";
 import { NewRoundUseCase } from "./usecases/new-round";
 import { ShowDownUseCase } from "./usecases/show-down";
@@ -27,6 +28,7 @@ export type Dependencies = {
   leaveGameUseCase: LeaveGameUseCase;
   authenticator: Authenticator;
   gameObserver: GameObserver;
+  kickPlayerUseCase: KickPlayerUseCase;
 };
 
 export type ApplicationDependencyRegistrar = DependencyRegistrar<Dependencies>;
