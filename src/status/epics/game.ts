@@ -9,7 +9,15 @@ import * as GameAction from "@/status/actions/game";
 import * as RoundAction from "@/status/actions/round";
 import * as UserAction from "@/status/actions/user";
 
-type Epics = "leaveGame" | "joinGame" | "openGame" | "createGame" | "observeOpenedGame" | "changeUserMode" | "newRound";
+type Epics =
+  | "leaveGame"
+  | "joinGame"
+  | "openGame"
+  | "createGame"
+  | "observeOpenedGame"
+  | "changeUserMode"
+  | "newRound"
+  | "kickPlayer";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -88,6 +96,38 @@ export const gameEpic = (
       }),
       commonCatchError
     ),
+  kickPlayer: (action$, state$) =>
+    action$.pipe(
+      filter(GameAction.kickPlayer.match),
+      switchMap((action) => {
+        const { game, user } = state$.value;
+
+        if (!game.currentGame || !user.currentUser) {
+          return of(GameAction.somethingFailure("Can not give up with nullish"));
+        }
+
+        const useCase = registrar.resolve("kickPlayerUseCase");
+
+        return from(
+          useCase.execute({
+            gameId: game.currentGame.id,
+            requestedUserId: user.currentUser.id,
+            targetUserId: action.payload,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return GameAction.kickPlayerSuccess();
+              default:
+                return GameAction.somethingFailure(output.kind);
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
   joinGame: (action$, state$) =>
     action$.pipe(
       filter(GameAction.joinGame.match),

@@ -23,12 +23,16 @@ import {
   createMockedJoinUserUseCase,
   createMockedLeaveGameUseCase,
   createMockedRoundObserver,
+  createMockedUseCase,
   createMockedUserObserver,
   createMockedUserRepository,
+  randomGame,
   randomRound,
+  randomUser,
 } from "@/test-lib";
 import { UserMode } from "@/domains/game-player";
 import { NewRoundUseCase } from "@/usecases/new-round";
+import { KickPlayerUseCase } from "@/usecases/kick-player";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -66,6 +70,7 @@ describe("leave game", () => {
     expect(ret).toEqual(GameAction.leaveGameSuccess());
   });
 });
+
 describe("join game", () => {
   test("join game", async () => {
     const [game] = Game.create({
@@ -335,5 +340,35 @@ describe("change user mode", () => {
     const ret = await firstValueFrom(epics.changeUserMode(action$, state$, null));
 
     expect(ret).toEqual(GameAction.changeUserModeSuccess(expected));
+  });
+});
+
+describe("kick player", () => {
+  test("kick player", async () => {
+    const owner = randomUser({ name: "owner" });
+    const player = randomUser({ name: "player" });
+    let game = randomGame({ owner: owner.id });
+    game = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game))[0];
+
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register(
+      "kickPlayerUseCase",
+      createMockedUseCase<KickPlayerUseCase>({
+        execute: sinon.fake.resolves({ kind: "success", game }),
+      })
+    );
+
+    const epics = gameEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(GameAction.openGameSuccess({ game, players: [owner, player] }));
+    store.dispatch(signInSuccess({ user: owner }));
+
+    const action$ = of(GameAction.kickPlayer(player.id));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.kickPlayer(action$, state$, null));
+
+    expect(ret).toEqual(GameAction.kickPlayerSuccess());
   });
 });

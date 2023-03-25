@@ -3,7 +3,7 @@ import * as sinon from "sinon";
 import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
 import { Authenticator } from "./status/type";
-import { EventDispatcher } from "./usecases/base";
+import { EventDispatcher, UseCase } from "./usecases/base";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
@@ -79,6 +79,14 @@ export const createMockedLeaveGameUseCase = function createMockedLeaveGameUseCas
   return {
     execute: mock.execute ?? sinon.fake(),
   } as LeaveGameUseCase;
+};
+
+export const createMockedUseCase = function createMockedLeaveGameUseCase<T extends UseCase<unknown>>(
+  mock: Partial<T> = {}
+) {
+  return {
+    execute: mock.execute ?? sinon.fake(),
+  } as T;
 };
 
 export const createMockedJoinUserUseCase = function createMockedJoinUserUseCase(mock: Partial<JoinUserUseCase> = {}) {
