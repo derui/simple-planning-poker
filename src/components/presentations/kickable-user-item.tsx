@@ -127,6 +127,7 @@ const KickButton = function KickButton({ onKick, testid }: { onKick: () => void;
     <span className={styles.kickButton.root(confirming)} data-testid={gen("root")}>
       <button
         className={styles.kickButton.kick}
+        data-testid={gen("main")}
         onClick={() => {
           setConfirming(true);
         }}
