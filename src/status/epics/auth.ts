@@ -1,6 +1,6 @@
 import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
-import { catchError, filter, from, map, Observable, of, OperatorFunction, startWith, switchMap, tap } from "rxjs";
+import { catchError, filter, from, map, Observable, of, OperatorFunction, startWith, switchMap } from "rxjs";
 import type { RootState } from "../store";
 import { notifyOtherUserChanged } from "../actions/user";
 import { noopOnEpic } from "../actions/common";
@@ -172,7 +172,6 @@ export const authEpic = (
       filter(SignIn.signInSuccess.match),
       map(({ payload }) => payload),
       observeUser(registrar),
-      tap(console.log),
       catchError((e, source) => {
         console.error(e);
 
