@@ -2,6 +2,8 @@ import { test, expect, describe } from "vitest";
 import { createPureStore } from "../store";
 import { openGameSuccess } from "../actions/game";
 import { notifyRoundUpdated } from "../actions/round";
+import { notifyOtherUserChanged } from "../actions/user";
+import { tryAuthenticateSuccess } from "../actions/signin";
 import * as s from "./game";
 import * as Loadable from "@/utils/loadable";
 import * as Game from "@/domains/game";
@@ -11,6 +13,7 @@ import * as User from "@/domains/user";
 import * as Round from "@/domains/round";
 import * as StoryPoint from "@/domains/story-point";
 import { randomGame, randomRound } from "@/test-lib";
+import { UserMode } from "@/domains/game-player";
 
 describe("select current game name", () => {
   test("should return loading when game not set", () => {
@@ -179,6 +182,68 @@ describe("select round result", () => {
           [3, 1],
         ],
       })
+    );
+  });
+});
+
+describe("joined players", () => {
+  test("return loading if game is not opened", () => {
+    const store = createPureStore();
+
+    const ret = s.selectJoinedPlayers(store.getState());
+
+    expect(ret).toEqual(Loadable.loading());
+  });
+
+  test("return joined players in game", () => {
+    const store = createPureStore();
+
+    let game = randomGame({ owner: User.createId("owner") });
+    game = Game.joinUserAsPlayer(game, User.createId("player1"), Game.makeInvitation(game))[0];
+
+    store.dispatch(openGameSuccess({ game, players: [] }));
+    store.dispatch(notifyOtherUserChanged(User.create({ id: User.createId("player1"), name: "name" })));
+    store.dispatch(tryAuthenticateSuccess({ user: User.create({ id: User.createId("owner"), name: "name2" }) }));
+
+    const ret = s.selectJoinedPlayers(store.getState());
+
+    expect(ret[0]).toHaveLength(2);
+    expect(ret[0]).toEqual(
+      expect.arrayContaining([
+        {
+          id: User.createId("owner"),
+          name: "name2",
+          mode: UserMode.normal,
+        },
+        {
+          id: User.createId("player1"),
+          name: "name",
+          mode: UserMode.normal,
+        },
+      ])
+    );
+  });
+
+  test("do not return player if user information did not notify", () => {
+    const store = createPureStore();
+
+    let game = randomGame({ owner: User.createId("owner") });
+    game = Game.joinUserAsPlayer(game, User.createId("player1"), Game.makeInvitation(game))[0];
+
+    store.dispatch(openGameSuccess({ game, players: [] }));
+    store.dispatch(tryAuthenticateSuccess({ user: User.create({ id: User.createId("owner"), name: "name2" }) }));
+
+    const ret = s.selectJoinedPlayers(store.getState());
+
+    expect(ret[0]).toHaveLength(1);
+    expect(ret[0]).toEqual(
+      expect.arrayContaining([
+        {
+          id: User.createId("owner"),
+          name: "name2",
+          mode: UserMode.normal,
+        },
+      ])
     );
   });
 });

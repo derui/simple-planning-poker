@@ -2,13 +2,17 @@ import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import * as Loadable from "@/utils/loadable";
 import * as Game from "@/domains/game";
+import * as User from "@/domains/user";
 import * as UserEstimation from "@/domains/user-estimation";
+import { filterUndefined } from "@/utils/basic";
+import { UserMode } from "@/domains/game-player";
 
 const selectSelf = (state: RootState) => state;
 const selectGame = createDraftSafeSelector(selectSelf, (state) => state.game);
 const selectCurrentGame = createDraftSafeSelector(selectGame, (state) => state.currentGame);
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
 const selectCurrentUser = createDraftSafeSelector(selectUser, (state) => state.currentUser);
+const selectUsers = createDraftSafeSelector(selectUser, (state) => state.users);
 const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round);
 const selectRoundInstance = createDraftSafeSelector(selectRound, (state) => state.instance);
 
@@ -158,3 +162,33 @@ export const selectRoundStatus = createDraftSafeSelector(selectRoundInstance, (r
 
   return Loadable.finished({ id: round.id, state: round.state });
 });
+
+export interface JoinedPlayerInfo {
+  id: User.Id;
+  name: string;
+  mode: UserMode;
+}
+
+/**
+ * select current joined players
+ */
+export const selectJoinedPlayers = createDraftSafeSelector(
+  selectCurrentGame,
+  selectUsers,
+  (game, users): Loadable.T<JoinedPlayerInfo[]> => {
+    if (!game) {
+      return Loadable.loading();
+    }
+
+    const players = game.joinedPlayers
+      .map((v) => {
+        const user = users[v.user];
+
+        return user ? { user, player: v } : undefined;
+      })
+      .filter(filterUndefined)
+      .map((v) => ({ id: v.user.id, name: v.user.name, mode: v.player.mode }));
+
+    return Loadable.finished(players);
+  }
+);
