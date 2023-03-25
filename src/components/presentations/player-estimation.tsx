@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import classnames from "classnames";
 import { BaseProps, generateTestId } from "../base";
+import { iconize } from "../iconize";
 import { UserMode } from "@/domains/game-player";
 import { UserEstimationState } from "@/status/selectors/user-estimation";
 
@@ -43,14 +44,7 @@ const styles = {
       }
     ),
 
-  eye: classnames(
-    "block",
-    '[mask-image:url("/static/svg/tabler-icons/eye.svg")]',
-    "[mask-size:contain]",
-    "bg-primary-400",
-    "h-10",
-    "w-10"
-  ),
+  eye: classnames("flex", "items-center", iconize("eye", "l"), "before:bg-primary-400"),
 };
 
 // eslint-disable-next-line func-style

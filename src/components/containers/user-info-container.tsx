@@ -4,6 +4,7 @@ import { BaseProps, generateTestId } from "../base";
 import { UserInfoUpdater } from "../presentations/user-info-updater";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Loader } from "../presentations/loader";
+import { iconize } from "../iconize";
 import * as UserAction from "@/status/actions/user";
 import * as GameAction from "@/status/actions/game";
 import { UserMode } from "@/domains/game-player";
@@ -29,16 +30,7 @@ const styles = {
       "hover:border-secondary1-500"
     ),
 
-  icon: classnames(
-    "inline-block",
-    "flex-none",
-    "w-6",
-    "h-6",
-    "bg-secondary1-500",
-    "mr-3",
-    '[mask-image:url("/static/svg/tabler-icons/user.svg")]',
-    "[mask-size:cover]"
-  ),
+  icon: classnames("inline-block", "flex-none", "w-6", "h-6", "mr-3", "before:bg-secondary1-500", iconize("user")),
 
   name: classnames("inline-block", "flex-none", "w-24", "overflow-hidden", "text-ellipsis", "text-primary-500"),
 
@@ -47,11 +39,10 @@ const styles = {
       "ml-3",
       "inline-block",
       "flex-none",
-      '[mask-image:url("/static/svg/tabler-icons/chevron-down.svg")]',
-      "[mask-size:cover]",
+      "before:bg-primary-500",
+      iconize("chevron-down", "s"),
       "w-5",
       "h-5",
-      "bg-primary-500",
       "transition-transform",
       {
         "[transform:rotateZ(180deg)]": opened,

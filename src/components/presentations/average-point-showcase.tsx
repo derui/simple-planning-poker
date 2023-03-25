@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { BaseProps, generateTestId } from "../base";
+import { iconize } from "../iconize";
 
 interface Props extends BaseProps {
   cardCounts: [number, number][];
@@ -20,18 +21,7 @@ const styles = {
     "rounded",
     "p-3"
   ),
-  equal: classNames(
-    "flex-none",
-    "inline-block",
-    "w-6",
-    "h-6",
-    "bg-primary-400",
-    "mr-4",
-    "[mask-size:cover]",
-    "[mask-repeat:no-repeat]",
-    "[mask-position:center]",
-    '[mask-image:url("/static/svg/tabler-icons/equal.svg")]'
-  ),
+  equal: classNames("flex-none", "inline-block", "w-6", "h-6", "before:bg-primary-400", "mr-4", iconize("equal")),
   averageLabel: classNames("flex-none", "text-secondary2-500"),
   averageValue: classNames("flex-none", "items-center", "text-xl", "text-secondary2-500"),
 

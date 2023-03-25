@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { BaseProps, generateTestId } from "../base";
+import { iconize } from "../iconize";
 
 interface Props extends BaseProps {
   gameName: string;
@@ -29,13 +30,7 @@ const styles = {
       "hover:bg-secondary2-200",
       "hover:[clip-path:polygon(0%_0%,_100%_0%,_100%_100%,_0%_100%)]",
       "before:ml-2",
-      "before:w-6",
-      "before:h-6",
-      "before:inline-block",
-      "before:[mask-size:cover]",
-      "before:[mask-repeat:no-repeat]",
-      "before:[mask-position:center]",
-      'before:[mask-image:url("/static/svg/tabler-icons/door-exit.svg")]',
+      iconize("door-exit"),
       "before:bg-secondary2-500",
       "before:align-middle",
       "after:inline-block",
@@ -67,14 +62,7 @@ const styles = {
       "cursor-pointer",
       "hover:border-primary-400",
       "active:bg-primary-200",
-      "before:w-6",
-      "before:h-6",
-      "before:inline-block",
-      "before:flex-none",
-      "before:[mask-size:cover]",
-      "before:[mask-repeat:no-repeat]",
-      "before:[mask-position:center]",
-      'before:[mask-image:url("/static/svg/tabler-icons/arrow-back-up.svg")]',
+      iconize("arrow-back-up"),
       "before:bg-primary-500",
       "before:align-middle"
     ),

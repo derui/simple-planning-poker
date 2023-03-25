@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { BaseProps, generateTestId } from "../base";
+import { iconize } from "../iconize";
 
 type Size = "s" | "m" | "l";
 
@@ -19,8 +20,8 @@ const sizeStyle = (size: Size) =>
       "h-6": size === "m",
     },
     {
-      "w-8": size === "l",
-      "h-8": size === "l",
+      "w-7": size === "l",
+      "h-7": size === "l",
     }
   );
 
@@ -41,9 +42,8 @@ const styles = {
       "left-0",
       "inline-block",
       "z-10",
-      '[mask-image:url("/static/svg/tabler-icons/loader-2.svg")]',
-      "[mask-size:cover]",
-      "bg-gray",
+      iconize("loader-2", size),
+      "before:bg-gray",
       "animate-spin",
       sizeStyle(size)
     ),
