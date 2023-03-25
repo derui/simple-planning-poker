@@ -12,7 +12,7 @@ interface Props extends BaseProps {
 const styles = {
   root: classNames("flex-none", "flex", "text-primary-500", "pr-2", "justify-center"),
   name: {
-    contaienr: classNames("flex", "flex-auto", "align-stretch", "items-center"),
+    container: classNames("flex", "flex-auto", "align-stretch", "items-center"),
     label: classNames("flex", "flex-none", "text-primary-300", "items-center"),
     name: classNames("flex", "flex-auto", "font-bold", "px-3", "py-2", "items-center"),
   },
@@ -96,7 +96,7 @@ export function GameInfo({ gameName, onLeaveGame, testid, owner }: Props) {
           <span className={styles.backToTop.link} data-testid={gen("backToTop")}></span>
         </Link>
       </div>
-      <div className={styles.name.contaienr}>
+      <div className={styles.name.container}>
         <span className={styles.name.name}> {gameName}</span>
       </div>
       {leaveButton}
