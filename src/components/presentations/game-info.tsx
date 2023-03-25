@@ -59,11 +59,13 @@ const styles = {
       "w-7",
       "h-7",
       "transition-colors",
+      "before:transition-colors",
       "cursor-pointer",
       "hover:border-primary-400",
+      "hover:before:bg-primary-500",
       "active:bg-primary-200",
       iconize("arrow-back-up"),
-      "before:bg-primary-500",
+      "before:bg-primary-300",
       "before:align-middle"
     ),
   },
@@ -95,7 +97,6 @@ export function GameInfo({ gameName, onLeaveGame, testid, owner }: Props) {
         </Link>
       </div>
       <div className={styles.name.contaienr}>
-        <span className={styles.name.label}>Now voting</span>
         <span className={styles.name.name}> {gameName}</span>
       </div>
       {leaveButton}
