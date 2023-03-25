@@ -78,9 +78,9 @@ registrar.register("authenticator", new FirebaseAuthenticator(auth, database, re
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 registrar.register("gameObserver", new GameObserverImpl(database));
 
-install(config);
+install(config, process.env.NODE_ENV === "production");
 
-const store = createStore(registrar);
+const store = createStore(registrar, process.env.NODE_ENV === "production");
 
 store.dispatch(tryAuthenticate());
 
