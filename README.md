@@ -3,12 +3,20 @@ This project provides functions to do planning poker in online.
 
 # Requirement #
 
-- Node >= 14
+- Node >= 16
 - Firebase project you have own
-- yarn >= 1.22
+- pnpm (recommended using latest version)
 - JRE >= 1.8
   - To run firebase emulators
 
+# Libraries #
+
+- React.js
+- React Router
+- Vite
+- Vitest
+- Redux Toolkit & React-Redux & Redux-Observable
+- twind
 
 # Development #
 
@@ -16,9 +24,9 @@ This project provides functions to do planning poker in online.
 You should login to firebase before to start development.
 
 ```sh
-$ yarn
-$ yarn run firebase login
-$ yarn run firebase init
+$ pnpm i
+$ npx firebase login
+$ npx firebase init
 ```
 
 You must select in initialization below:
@@ -32,36 +40,48 @@ You must select in initialization below:
 ## Run test ##
 
 ```sh
-$ yarn test
+$ pnpm run test
 
 # want to watch source and run test
 
-$ yarn test:watch
+$ pnpm run test:watch
 ```
-
-> NOTICE: Use jest and swc in this project to improve test executing speed, so it has no type checking in test. You should check type consistency of test.
 
 ## Lint ##
 
 ```sh
-# for TypeScript
-$ yarn lint:ts
-# for CSS
-$ yarn lint:css
-
-# Lint all
-$ yarn lint
+$ pnpm run lint
 ```
 
 ## Start entire development environment ##
 
-The command below run emulators of firebase, webpack-dev-server, and postcss watcher.
+The command below run firebase emulators, tsc for type checking, and vite to build.
 
 ```sh
-$ yarn start
+$ pnpm run start
 ```
 
-Then open `localhost:5000` to see top page.
+Then open `localhost:5173` to see top page.
+
+## Run End 2 End Test ##
+
+```sh
+$ pnpm run ci
+# In other terminal
+$ npx playwright test
+```
+
+Sources of e2e tests are under `tests` directory.
+
+## storybook ##
+
+You can start the storybook with the following command.
+
+```sh
+$ pnpm run storybook
+```
+
+If you want to add stories, or modify current stories, you edit `.stories.tsx` files under `src` directory.
 
 # Publish to Firebase #
 
@@ -89,7 +109,7 @@ You can get the object from your firebase console.
 > Notice: This feature is based on beta feature of Firebase Hosting.
 
 ```sh
-$ yarn publish:preview
+$ pnpm run publish:preview
 ```
 
 Open your firebase console of Hosting, then you can find preview URL.
@@ -97,7 +117,7 @@ Open your firebase console of Hosting, then you can find preview URL.
 ## Publish to production ##
 
 ```sh
-$ yarn publish:production
+$ pnpm run publish:production
 ```
 
 And you can open application from your app URL!

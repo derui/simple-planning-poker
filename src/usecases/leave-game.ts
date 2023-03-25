@@ -8,7 +8,10 @@ export interface LeaveGameUseCaseInput {
   userId: User.Id;
 }
 
-export type LeaveGameUseCaseOutput = { kind: "success"; game: Game.T } | { kind: "notFound" };
+export type LeaveGameUseCaseOutput =
+  | { kind: "success"; game: Game.T }
+  | { kind: "notFound" }
+  | { kind: "ownerCanNotLeave" };
 
 export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<LeaveGameUseCaseOutput>> {
   constructor(private gameRepository: GameRepository, private dispatcher: EventDispatcher) {}
@@ -20,6 +23,10 @@ export class LeaveGameUseCase implements UseCase<LeaveGameUseCaseInput, Promise<
       return { kind: "notFound" };
     }
     const [newGame, event] = Game.acceptLeaveFrom(game, input.userId);
+
+    if (!event) {
+      return { kind: "ownerCanNotLeave" };
+    }
 
     await this.gameRepository.save(newGame);
     this.dispatcher.dispatch(event);

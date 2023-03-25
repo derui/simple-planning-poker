@@ -9,6 +9,7 @@ import { UserInfoContainer } from "./user-info-container";
 import { isFinished } from "@/utils/loadable";
 import { selectCurrentGameInvitationLink, selectCurrentGameName } from "@/status/selectors/game";
 import { leaveGame } from "@/status/actions/game";
+import { selectUserInfo } from "@/status/selectors/user";
 
 type Props = BaseProps;
 
@@ -21,12 +22,13 @@ const styles = {
 export function GameHeaderContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const gameName = useAppSelector(selectCurrentGameName);
+  const userInfo = useAppSelector(selectUserInfo);
   const invitation = useAppSelector(selectCurrentGameInvitationLink);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  if (!isFinished(gameName) || !isFinished(invitation)) {
+  if (!isFinished(gameName) || !isFinished(invitation) || !isFinished(userInfo)) {
     return (
       <div className={styles.root} data-testid={gen("root")}>
         <Skeleton testid={gen("loading")} />
@@ -41,7 +43,12 @@ export function GameHeaderContainer(props: Props) {
 
   return (
     <div className={styles.root} data-testid={gen("root")}>
-      <GameInfo gameName={gameName[0]} onLeaveGame={handleLeaveGame} testid={gen("game-info")} />
+      <GameInfo
+        owner={userInfo[0].owner}
+        gameName={gameName[0]}
+        onLeaveGame={handleLeaveGame}
+        testid={gen("game-info")}
+      />
       <div className={styles.right}>
         <InvitationLink invitationLink={invitation[0]} testid={gen("invitation")} />
         <UserInfoContainer testid={gen("user-info")} />

@@ -33,7 +33,7 @@ const reducers = {
 } as const;
 
 // eslint-disable-next-line
-export const createStore = (registrar: DependencyRegistrar<Dependencies>) => {
+export const createStore = (registrar: DependencyRegistrar<Dependencies>, production: boolean = false) => {
   const rootEpics = [
     ...Object.values(authEpic(registrar)),
 
@@ -51,6 +51,7 @@ export const createStore = (registrar: DependencyRegistrar<Dependencies>) => {
   const store = configureStore({
     reducer: reducers,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(epicMiddleware),
+    devTools: !production,
   });
 
   epicMiddleware.run(combineEpics<Action, Action, RootState>(...rootEpics));

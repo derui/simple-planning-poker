@@ -232,8 +232,24 @@ describe("leave", () => {
     expect(ret.joinedPlayers.map((v) => v.user)).not.toContainEqual(User.createId("new"));
     expect(ret.joinedPlayers).toHaveLength(1);
     expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
-    expect(event.kind).toBe(DOMAIN_EVENTS.UserLeftFromGame);
+    expect(event!.kind).toBe(DOMAIN_EVENTS.UserLeftFromGame);
     expect((event as UserLeftFromGame).gameId).toBe(game.id);
+  });
+
+  test("can not leave owner from the game owner having", () => {
+    let [game] = create({
+      id: createId("id"),
+      name: "name",
+      owner: User.createId("user"),
+      finishedRounds: [],
+      cards,
+      round: Round.createId(),
+    });
+
+    const [ret, event] = acceptLeaveFrom(game, User.createId("user"));
+
+    expect(ret).toBe(game);
+    expect(event).toBeUndefined();
   });
 });
 
