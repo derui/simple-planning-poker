@@ -8,29 +8,28 @@ interface Props extends BaseProps {
 }
 
 const styles = {
-  root: classNames("flex", "flex-col", "relative", "mr-4", "w-8", "h-8"),
+  root: classNames("flex", "flex-col", "relative", "w-8", "h-8"),
   opener: (opened: boolean) =>
     classNames(
       "outline-none",
       "w-8",
       "h-8",
       "bg-none",
-      "border",
       "transition-colors",
+      "before:transition-colors",
       "cursor-pointer",
       "rounded-full",
       "flex",
       "items-center",
       "justify-center",
       iconize("mail"),
-      "hover:border-secondary1-500",
       {
-        "before:bg-secondary1-500": !opened,
-        "border-transparent": !opened,
-        "border-secondary1-500": opened,
-        "bg-secondary1-500": opened,
+        "before:bg-secondary1-400": !opened,
+        "hover:bg-secondary1-400": !opened,
+        "hover:before:bg-secondary1-200": !opened,
+        "bg-secondary1-400": opened,
+        "before:bg-secondary1-200": opened,
         "rounded-b-none": opened,
-        "before:bg-white": opened,
       }
     ),
   container: (opened: boolean) =>

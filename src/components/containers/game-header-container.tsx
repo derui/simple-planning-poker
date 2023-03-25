@@ -17,7 +17,7 @@ type Props = BaseProps;
 
 const styles = {
   root: classNames("flex", "flex-none", "justify-between", "items-center", "p-4", "z-30"),
-  right: classNames("flex", "flex-auto", "align-center", "justify-end"),
+  right: classNames("flex", "flex-auto", "align-center", "justify-end", "space-x-4"),
 } as const;
 
 // eslint-disable-next-line func-style
