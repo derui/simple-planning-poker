@@ -5,11 +5,13 @@ import { InvitationLink } from "../presentations/invitation-link";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { BaseProps, generateTestId } from "../base";
 import { Skeleton } from "../presentations/skeleton";
+import { JoinedUserList } from "../presentations/joined-user-list";
 import { UserInfoContainer } from "./user-info-container";
 import { isFinished } from "@/utils/loadable";
-import { selectCurrentGameInvitationLink, selectCurrentGameName } from "@/status/selectors/game";
-import { leaveGame } from "@/status/actions/game";
+import { selectCurrentGameInvitationLink, selectCurrentGameName, selectJoinedPlayers } from "@/status/selectors/game";
+import { kickPlayer, leaveGame } from "@/status/actions/game";
 import { selectUserInfo } from "@/status/selectors/user";
+import * as User from "@/domains/user";
 
 type Props = BaseProps;
 
@@ -24,11 +26,12 @@ export function GameHeaderContainer(props: Props) {
   const gameName = useAppSelector(selectCurrentGameName);
   const userInfo = useAppSelector(selectUserInfo);
   const invitation = useAppSelector(selectCurrentGameInvitationLink);
+  const joinedPlayers = useAppSelector(selectJoinedPlayers);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  if (!isFinished(gameName) || !isFinished(invitation) || !isFinished(userInfo)) {
+  if (!isFinished(gameName) || !isFinished(invitation) || !isFinished(userInfo) || !isFinished(joinedPlayers)) {
     return (
       <div className={styles.root} data-testid={gen("root")}>
         <Skeleton testid={gen("loading")} />
@@ -41,6 +44,10 @@ export function GameHeaderContainer(props: Props) {
     navigate("/game");
   };
 
+  const handleKick = (id: User.Id) => {
+    dispatch(kickPlayer(id));
+  };
+
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <GameInfo
@@ -49,7 +56,13 @@ export function GameHeaderContainer(props: Props) {
         onLeaveGame={handleLeaveGame}
         testid={gen("game-info")}
       />
+
       <div className={styles.right}>
+        <JoinedUserList
+          users={joinedPlayers[0]}
+          onKick={userInfo[0].owner ? handleKick : undefined}
+          testid={gen("joined-user-list")}
+        />
         <InvitationLink invitationLink={invitation[0]} testid={gen("invitation")} />
         <UserInfoContainer testid={gen("user-info")} />
       </div>

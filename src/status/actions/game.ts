@@ -22,6 +22,10 @@ export const notifyGameChanges = createAction<Game.T>(`${prefix}:notifyGamenChan
 export const leaveGame = createAction(`${prefix}:leaveGame`);
 export const leaveGameSuccess = createAction(`${prefix}:leaveGameSuccess`);
 
+// kick player from game
+export const kickPlayer = createAction<User.Id>(`${prefix}:kickPlayer`);
+export const kickPlayerSuccess = createAction(`${prefix}:kickPlayerSuccess`);
+
 // join to the game.
 export const joinGame = createAction<Invitation.T>(`${prefix}:joinGame`);
 export const joinGameFailure = createAction<{ reason: string }>(`${prefix}:joinGameFailure`);
