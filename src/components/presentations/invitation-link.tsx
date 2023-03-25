@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 import { BaseProps, generateTestId } from "../base";
+import { iconize } from "../iconize";
 
 interface Props extends BaseProps {
   invitationLink: string;
@@ -20,12 +21,7 @@ const styles = {
       "rounded-full",
       "before:w-8",
       "before:h-8",
-      "before:inline-block",
-      "before: flex-none",
-      'before:[mask-image:url("/static/svg/tabler-icons/settings.svg")]',
-      "before:[mask-size:cover]",
-      "before:[mask-position:center]",
-      "before:[mask-repeat:no-repeat]",
+      iconize("settings"),
       "before:w-full",
       "before:h-full",
       "hover:border-secondary1-500",
