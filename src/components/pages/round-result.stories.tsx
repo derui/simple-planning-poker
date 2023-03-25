@@ -12,8 +12,8 @@ import { randomGame, randomRound, randomUser } from "@/test-lib";
 import * as Game from "@/domains/game";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { giveUp, estimated } from "@/domains/user-estimation";
-import { showDownSuccess } from "@/status/actions/round";
-import { showDown, takePlayerEstimation } from "@/domains/round";
+import { notifyRoundUpdated, showDownSuccess } from "@/status/actions/round";
+import { Round, showDown, takePlayerEstimation } from "@/domains/round";
 
 install(twind);
 
@@ -66,10 +66,11 @@ export const Loaded: Story = {
         players: users,
       })
     );
+    store.dispatch(notifyRoundUpdated(round));
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
     round = takePlayerEstimation(round, owner.id, giveUp());
     round = takePlayerEstimation(round, users[0].id, estimated(game.cards[0]));
-    store.dispatch(showDownSuccess(showDown(round as any, new Date())[0]));
+    store.dispatch(showDownSuccess(showDown(round as Round, new Date())[0]));
 
     const route = createMemoryRouter(
       [

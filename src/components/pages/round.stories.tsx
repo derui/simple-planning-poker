@@ -8,9 +8,10 @@ import { RoundPage } from "./round";
 import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
-import { randomGame, randomUser } from "@/test-lib";
+import { randomGame, randomRound, randomUser } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { joinUserAsPlayer, makeInvitation } from "@/domains/game";
+import { notifyRoundUpdated } from "@/status/actions/round";
 
 install(twind);
 
@@ -48,6 +49,7 @@ export const Loaded: Story = {
     users.forEach((user) => {
       game = joinUserAsPlayer(game, user.id, makeInvitation(game))[0];
     });
+    let round = randomRound({ cards: game.cards });
 
     store.dispatch(
       openGameSuccess({
@@ -56,6 +58,7 @@ export const Loaded: Story = {
       })
     );
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
+    store.dispatch(notifyRoundUpdated(round));
 
     return (
       <Provider store={store}>
