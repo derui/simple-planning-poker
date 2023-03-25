@@ -61,7 +61,7 @@ test("should remove game from joined game of left user", async () => {
   }
 
   // Act
-  await listener.handle(event);
+  await listener.handle(event!);
   const repository = new GameRepositoryImpl(database);
   const ret = await repository.listUserJoined(player.id);
 
