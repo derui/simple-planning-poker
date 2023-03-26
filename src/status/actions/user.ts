@@ -15,4 +15,6 @@ export const notifyOtherUserChanged = createAction<User.T>(`${prefix}:notifyOthe
 /**
  * notify changes of joined games of current user
  */
-export const notifyJoinedGames = createAction<{ id: Game.Id; state: JoinedGameState }[]>(`${prefix}:notifyJoinedGames`);
+export const notifyJoinedGames = createAction<{ user: User.Id; games: { id: Game.Id; state: JoinedGameState }[] }>(
+  `${prefix}:notifyJoinedGames`
+);

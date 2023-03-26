@@ -252,3 +252,61 @@ test("re-open and restore current round", async ({ page, newPageOnNewContext: ot
 
   await expect(page.getByTestId("estimations/test@example.com/card")).toHaveAttribute("data-state", "estimated");
 });
+
+test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+  resetFirebase();
+
+  // sign up main
+  await page.goto(`/`);
+  await page.getByText("Sign up").click();
+  await signIn(page, "test@example.com", "password");
+
+  // sign up other
+  await other.goto(`/`);
+  await other.getByText("Sign up").click();
+  await signIn(other, "test2@example.com", "password");
+
+  // create game
+  await page.getByRole("button", { name: "Create Game" }).click();
+  const submit = page.getByRole("button", { name: "Submit" });
+
+  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+  await submit.click();
+
+  // open game
+  await page.getByRole("link", { name: "CI sample" }).click();
+
+  // join game with other
+  await page.getByTestId("invitation/opener").click();
+  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.goto(joinUrl);
+  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("joined-user-list/root")).toBeVisible();
+  await expect(other.getByTestId("joined-user-list/root")).toBeVisible();
+
+  // open joined user list
+  await page.getByTestId("joined-user-list/opener").click();
+  await expect(page.getByTestId("joined-user-list/list")).toContainText("test@example.com");
+  await expect(page.getByTestId("joined-user-list/list")).toContainText("test2@example.com");
+
+  await other.getByTestId("joined-user-list/opener").click();
+  await expect(other.getByTestId("joined-user-list/list")).toContainText("test@example.com");
+  await expect(other.getByTestId("joined-user-list/list")).toContainText("test2@example.com");
+
+  // Kick user
+  const kickButton = page.getByTestId("joined-user-list/test2@example.com/kick/root");
+
+  await kickButton.hover({ position: { x: 10, y: 10 } });
+  await kickButton.getByRole("button", { name: "Kick" }).click();
+  await kickButton.getByRole("button", { name: "Yes" }).click();
+
+  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test2@example.com/card")).not.toBeVisible();
+  await expect(page.getByTestId("joined-user-list/list")).toContainText("test@example.com");
+  await expect(page.getByTestId("joined-user-list/list")).not.toContainText("test2@example.com");
+
+  // kicked user is navigated to select page, and do not display any game
+  await expect(other).toHaveURL(/.*game\/?$/);
+  await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
+});

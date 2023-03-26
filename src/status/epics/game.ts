@@ -32,14 +32,14 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
     const roundObserver = registrar.resolve("roundObserver");
 
     return new Observable((subscriber) => {
+      userObserver.unsubscribe();
       subscriber.next(noopOnEpic());
 
       gameObserver.subscribe(payload.game.id, (game) => {
-        userObserver.unsubscribe();
-
         game.joinedPlayers.forEach((_user) => {
-          userObserver.subscribe(_user.user, (user) => {
+          userObserver.subscribe(_user.user, (user, games) => {
             subscriber.next(UserAction.notifyOtherUserChanged(user));
+            subscriber.next(UserAction.notifyJoinedGames({ user: user.id, games }));
           });
         });
 
@@ -51,8 +51,9 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
       });
 
       payload.game.joinedPlayers.forEach((_user) => {
-        userObserver.subscribe(_user.user, (user) => {
+        userObserver.subscribe(_user.user, (user, games) => {
           subscriber.next(UserAction.notifyOtherUserChanged(user));
+          subscriber.next(UserAction.notifyJoinedGames({ user: user.id, games }));
         });
       });
 

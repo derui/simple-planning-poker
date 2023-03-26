@@ -60,7 +60,7 @@ const observeUser = function observeUser(
     return new Observable<Action>((subscriber) => {
       observer.subscribe(payload.user.id, (user, joinedGames) => {
         subscriber.next(notifyOtherUserChanged(user));
-        subscriber.next(notifyJoinedGames(joinedGames));
+        subscriber.next(notifyJoinedGames({ user: user.id, games: joinedGames }));
       });
     });
   });

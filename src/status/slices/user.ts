@@ -52,9 +52,18 @@ const slice = createSlice({
     });
 
     builder.addCase(notifyJoinedGames, (draft, { payload }) => {
-      payload.forEach((data) => {
+      if (payload.user !== draft.currentUser?.id) {
+        return;
+      }
+
+      payload.games.forEach((data) => {
         if (draft.currentUserJoinedGames[data.id]) {
           draft.currentUserJoinedGames[data.id].state = data.state;
+        } else {
+          draft.currentUserJoinedGames[data.id] = {
+            name: data.id,
+            state: data.state,
+          };
         }
       });
     });

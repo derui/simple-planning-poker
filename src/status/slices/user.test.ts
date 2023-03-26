@@ -118,7 +118,7 @@ test("should update state with notification of joined games", () => {
 
   let state = reducer(getInitialState(), signUpSuccess({ user }));
   state = reducer(state, createGameSuccess(game));
-  state = reducer(state, notifyJoinedGames([{ id: game.id, state: JoinedGameState.left }]));
+  state = reducer(state, notifyJoinedGames({ user: user.id, games: [{ id: game.id, state: JoinedGameState.left }] }));
 
   expect(state.currentUserJoinedGames).toEqual({ [game.id]: { name: game.name, state: JoinedGameState.left } });
 });

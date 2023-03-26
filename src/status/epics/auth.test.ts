@@ -247,6 +247,8 @@ describe("observe user after tryAuthenticate", () => {
     const ret$ = epics.observeUserAfterTryAuthenticate(action$, state$, null).pipe(take(2));
     const ret = await lastValueFrom(ret$);
 
-    expect(ret).toEqual(notifyJoinedGames([{ id: Game.createId("id"), state: JoinedGameState.joined }]));
+    expect(ret).toEqual(
+      notifyJoinedGames({ games: [{ id: Game.createId("id"), state: JoinedGameState.joined }], user: user.id })
+    );
   });
 });
