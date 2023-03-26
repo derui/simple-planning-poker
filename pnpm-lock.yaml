@@ -2,21 +2,21 @@ lockfileVersion: 5.4
 
 specifiers:
   '@firebase/rules-unit-testing': ^2.0.7
-  '@playwright/test': ^1.31.2
+  '@playwright/test': ^1.32.1
   '@reduxjs/toolkit': ^1.9.3
   '@remix-run/web-fetch': ^4.3.3
   '@storybook/addon-controls': 7.0.0-beta.61
   '@storybook/cli': 7.0.0-beta.61
   '@storybook/react': ^7.0.0-beta.61
   '@storybook/react-vite': ^7.0.0-beta.61
-  '@testing-library/dom': ^9.0.1
+  '@testing-library/dom': ^9.2.0
   '@testing-library/react': ^14.0.0
   '@testing-library/user-event': ^14.4.3
   '@twind/core': ^1.1.3
   '@twind/preset-autoprefix': ^1.0.7
   '@twind/preset-tailwind': ^1.1.4
   '@types/crypto-js': ^4.1.1
-  '@types/react': ^18.0.28
+  '@types/react': ^18.0.29
   '@types/react-dom': ^18.0.11
   '@types/react-router': ^5.1.20
   '@types/react-router-dom': ^5.3.3
@@ -40,9 +40,9 @@ specifiers:
   firebase: ^9.18.0
   firebase-tools: ^11.25.1
   hygen: ^6.2.11
-  immer: ^9.0.19
+  immer: ^9.0.21
   jsdom: ^21.1.1
-  playwright: ^1.31.2
+  playwright: ^1.32.1
   prettier: ^2.8.6
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -71,10 +71,10 @@ dependencies:
   classnames: 2.3.2
   crypto-js: 4.1.1
   firebase: 9.18.0
-  immer: 9.0.19
+  immer: 9.0.21
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  react-redux: 8.0.5_ctrls2ti7t7iutxbwkm5ipogyy
+  react-redux: 8.0.5_hqb2jc6bbxyt4unzbunbyxvgem
   react-router: 6.9.0_react@18.2.0
   react-router-dom: 6.9.0_biqbaboplfbrettd7655fr4n2y
   react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
@@ -85,17 +85,17 @@ dependencies:
 
 devDependencies:
   '@firebase/rules-unit-testing': 2.0.7_firebase@9.18.0
-  '@playwright/test': 1.31.2
+  '@playwright/test': 1.32.1
   '@remix-run/web-fetch': 4.3.3
   '@storybook/addon-controls': 7.0.0-beta.61_biqbaboplfbrettd7655fr4n2y
   '@storybook/cli': 7.0.0-beta.61
   '@storybook/react': 7.0.0-beta.61_ygqkwb4gg3aean7xjfdauovyqq
   '@storybook/react-vite': 7.0.0-beta.61_6uylmgnzlqpeawp7a5cr5koi6y
-  '@testing-library/dom': 9.0.1
+  '@testing-library/dom': 9.2.0
   '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
-  '@testing-library/user-event': 14.4.3_@testing-library+dom@9.0.1
+  '@testing-library/user-event': 14.4.3_@testing-library+dom@9.2.0
   '@types/crypto-js': 4.1.1
-  '@types/react': 18.0.28
+  '@types/react': 18.0.29
   '@types/react-dom': 18.0.11
   '@types/react-router': 5.1.20
   '@types/react-router-dom': 5.3.3
@@ -117,7 +117,7 @@ devDependencies:
   firebase-tools: 11.25.1
   hygen: 6.2.11
   jsdom: 21.1.1
-  playwright: 1.31.2
+  playwright: 1.32.1
   prettier: 2.8.6
   sinon: 15.0.2
   storybook: 7.0.0-beta.61
@@ -2541,14 +2541,14 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.5
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
 
   /@grpc/grpc-js/1.8.12:
     resolution: {integrity: sha512-MbUMvpVvakeKhdYux6gbSIPJaFMLNSY8jw4PqLI+FFztGrQRrYYAnHlR94+ncBQQewkpXQaW449m3tpH/B/ZnQ==}
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.5
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
     dev: true
 
   /@grpc/proto-loader/0.6.13:
@@ -2726,13 +2726,13 @@ packages:
     engines: {node: '>=8.12.0'}
     dev: true
 
-  /@playwright/test/1.31.2:
-    resolution: {integrity: sha512-BYVutxDI4JeZKV1+ups6dt5WiqKhjBtIYowyZIJ3kBDmJgsuPKsqqKNIMFbUePLSCmp2cZu+BDL427RcNKTRYw==}
+  /@playwright/test/1.32.1:
+    resolution: {integrity: sha512-FTwjCuhlm1qHUGf4hWjfr64UMJD/z0hXYbk+O387Ioe6WdyZQ+0TBDAc6P+pHjx2xCv1VYNgrKbYrNixFWy4Dg==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 18.14.4
-      playwright-core: 1.31.2
+      '@types/node': 18.15.10
+      playwright-core: 1.32.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -2802,9 +2802,9 @@ packages:
       react-redux:
         optional: true
     dependencies:
-      immer: 9.0.19
+      immer: 9.0.21
       react: 18.2.0
-      react-redux: 8.0.5_ctrls2ti7t7iutxbwkm5ipogyy
+      react-redux: 8.0.5_hqb2jc6bbxyt4unzbunbyxvgem
       redux: 4.2.1
       redux-thunk: 2.4.2_redux@4.2.1
       reselect: 4.1.7
@@ -3477,8 +3477,8 @@ packages:
       file-system-cache: 2.0.2
     dev: true
 
-  /@testing-library/dom/9.0.1:
-    resolution: {integrity: sha512-fTOVsMY9QLFCCXRHG3Ese6cMH5qIWwSbgxZsgeF5TNsy81HKaZ4kgehnSF8FsR3OF+numlIV2YcU79MzbnhSig==}
+  /@testing-library/dom/9.2.0:
+    resolution: {integrity: sha512-xTEnpUKiV/bMyEsE5bT4oYA0x0Z/colMtxzUY8bKyPXBNLn/e0V4ZjBZkEhms0xE4pv9QsPfSRu9AWS4y5wGvA==}
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.18.6
@@ -3499,19 +3499,19 @@ packages:
       react-dom: ^18.0.0
     dependencies:
       '@babel/runtime': 7.20.13
-      '@testing-library/dom': 9.0.1
+      '@testing-library/dom': 9.2.0
       '@types/react-dom': 18.0.11
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: true
 
-  /@testing-library/user-event/14.4.3_@testing-library+dom@9.0.1:
+  /@testing-library/user-event/14.4.3_@testing-library+dom@9.2.0:
     resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
     dependencies:
-      '@testing-library/dom': 9.0.1
+      '@testing-library/dom': 9.2.0
     dev: true
 
   /@tootallnate/once/1.1.2:
@@ -3603,7 +3603,7 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.14.4
+      '@types/node': 18.15.10
     dev: true
 
   /@types/chai-subset/1.3.3:
@@ -3619,7 +3619,7 @@ packages:
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.14.4
+      '@types/node': 18.15.10
     dev: true
 
   /@types/crypto-js/4.1.1:
@@ -3637,7 +3637,7 @@ packages:
   /@types/duplexify/3.6.1:
     resolution: {integrity: sha512-n0zoEj/fMdMOvqbHxmqnza/kXyoGgJmEpsXjpP+gEqE1Ye4yNqc7xWipKnUoMpWhMuzJQSfK2gMrwlElly7OGQ==}
     dependencies:
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
     dev: true
 
   /@types/ejs/3.1.2:
@@ -3655,7 +3655,7 @@ packages:
   /@types/express-serve-static-core/4.17.33:
     resolution: {integrity: sha512-TPBqmR/HRYI3eC2E5hmiivIzv+bidAfXofM+sbonAGvyDhySGw9/PQZFt2BLOrjUUR++4eJVpx6KnLQK1Fk9tA==}
     dependencies:
-      '@types/node': 18.14.4
+      '@types/node': 18.15.10
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
     dev: true
@@ -3677,21 +3677,21 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.14.4
+      '@types/node': 18.15.10
     dev: true
 
   /@types/glob/8.0.1:
     resolution: {integrity: sha512-8bVUjXZvJacUFkJXHdyZ9iH1Eaj5V7I8c4NdH5sQJsdXkqT4CA5Dhb4yb4VE/3asyx4L9ayZr1NIhTsWHczmMw==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.14.4
+      '@types/node': 16.18.14
     dev: true
 
   /@types/glob/8.1.0:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
     dev: true
 
   /@types/history/4.7.11:
@@ -3701,7 +3701,7 @@ packages:
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -3774,12 +3774,12 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node/18.14.4:
-    resolution: {integrity: sha512-VhCw7I7qO2X49+jaKcAUwi3rR+hbxT5VcYF493+Z5kMLI0DL568b7JI4IDJaxWFH0D/xwmGJNoXisyX+w7GH/g==}
-    dev: true
+  /@types/node/18.15.10:
+    resolution: {integrity: sha512-9avDaQJczATcXgfmMAW3MIWArOO7A+m90vuCFLr8AotWf8igO/mRoYukrk2cqZVtv38tHs33retzHEilM7FpeQ==}
 
   /@types/node/18.15.5:
     resolution: {integrity: sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==}
+    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -3807,13 +3807,13 @@ packages:
   /@types/react-dom/18.0.11:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
 
   /@types/react-router-dom/5.3.3:
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
       '@types/react-router': 5.1.20
     dev: true
 
@@ -3821,31 +3821,31 @@ packages:
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
     dev: true
 
   /@types/react-transition-group/4.4.5:
     resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
     dev: true
 
-  /@types/react/18.0.28:
-    resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
+  /@types/react/18.0.29:
+    resolution: {integrity: sha512-wXHktgUABxplw1+UnljseDq4+uztQyp2tlWZRIxHlpchsCFqiYkvaDS8JR7eKOQm8wziTH/el5qL7D6gYNkYcw==}
     dependencies:
       '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
+      '@types/scheduler': 0.16.3
       csstype: 3.1.1
 
   /@types/rimraf/3.0.2:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
     dev: true
 
-  /@types/scheduler/0.16.2:
-    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+  /@types/scheduler/0.16.3:
+    resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
@@ -3855,7 +3855,7 @@ packages:
     resolution: {integrity: sha512-NUo5XNiAdULrJENtJXZZ3fHtfMolzZwczzBbnAeBbqBwG+LaG6YaJtuwzwGSQZ2wsCrxjEhNNjAkKigy3n8teQ==}
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 18.14.4
+      '@types/node': 18.15.10
     dev: true
 
   /@types/sinon/10.0.13:
@@ -8117,8 +8117,8 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /immer/9.0.19:
-    resolution: {integrity: sha512-eY+Y0qcsB4TZKwgQzLaE/lqYMlKhv5J9dyd2RhhtGhNo2njPXDqU9XPfcNfa3MIDsdtZt5KlkIsirlo4dHsWdQ==}
+  /immer/9.0.21:
+    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
     dev: false
 
   /import-fresh/3.3.0:
@@ -8992,7 +8992,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.10
     dev: true
 
   /jsonwebtoken/9.0.0:
@@ -10457,19 +10457,19 @@ packages:
       pathe: 1.1.0
     dev: true
 
-  /playwright-core/1.31.2:
-    resolution: {integrity: sha512-a1dFgCNQw4vCsG7bnojZjDnPewZcw7tZUNFN0ZkcLYKj+mPmXvg4MpaaKZ5SgqPsOmqIf2YsVRkgqiRDxD+fDQ==}
+  /playwright-core/1.32.1:
+    resolution: {integrity: sha512-KZYUQC10mXD2Am1rGlidaalNGYk3LU1vZqqNk0gT4XPty1jOqgup8KDP8l2CUlqoNKhXM5IfGjWgW37xvGllBA==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
 
-  /playwright/1.31.2:
-    resolution: {integrity: sha512-jpC47n2PKQNtzB7clmBuWh6ftBRS/Bt5EGLigJ9k2QAKcNeYXZkEaDH5gmvb6+AbcE0DO6GnXdbl9ogG6Eh+og==}
+  /playwright/1.32.1:
+    resolution: {integrity: sha512-GnEizysWMvoqHC3I9l8+4/ZxeLwLNdJJG76xdKGxzOcIZDcw5RSk/FKrFb5CuA+zcLpjIM2p9eR9Z4CuUDkWXg==}
     engines: {node: '>=14'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      playwright-core: 1.31.2
+      playwright-core: 1.32.1
     dev: true
 
   /polished/4.2.2:
@@ -10674,7 +10674,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
       long: 4.0.0
 
   /protobufjs/7.2.2:
@@ -10692,7 +10692,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.15.5
+      '@types/node': 18.15.10
       long: 5.2.1
 
   /proxy-addr/2.0.7:
@@ -10952,7 +10952,7 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
-  /react-redux/8.0.5_ctrls2ti7t7iutxbwkm5ipogyy:
+  /react-redux/8.0.5_hqb2jc6bbxyt4unzbunbyxvgem:
     resolution: {integrity: sha512-Q2f6fCKxPFpkXt1qNRZdEDLlScsDWyrgSj0mliK59qU6W5gvBiKkdMEG2lJzhd1rCctf0hb6EtePPLZ2e0m1uw==}
     peerDependencies:
       '@types/react': ^16.8 || ^17.0 || ^18.0
@@ -10975,7 +10975,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 18.0.28
+      '@types/react': 18.0.29
       '@types/react-dom': 18.0.11
       '@types/use-sync-external-store': 0.0.3
       hoist-non-react-statics: 3.3.2
