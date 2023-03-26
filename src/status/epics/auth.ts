@@ -2,13 +2,13 @@ import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
 import { catchError, filter, from, map, Observable, of, OperatorFunction, startWith, switchMap } from "rxjs";
 import type { RootState } from "../store";
-import { notifyOtherUserChanged } from "../actions/user";
-import { noopOnEpic } from "../actions/common";
+import { notifyJoinedGames, notifyOtherUserChanged } from "../actions/user";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as SignIn from "@/status/actions/signin";
 import * as Game from "@/domains/game";
 import * as User from "@/domains/user";
+import { JoinedGameState } from "@/domains/game-repository";
 
 type Epics =
   | "tryAuthenticate"
@@ -27,8 +27,8 @@ const getAuthenticationSuccess = function getAuthenticationSuccess(registrar: De
 
     return from(gameRepository.listUserJoined(user.id)).pipe(
       map((games) =>
-        games.reduce<Record<Game.Id, string>>((accum, game) => {
-          accum[game.id] = game.name;
+        games.reduce<Record<Game.Id, { name: string; state: JoinedGameState }>>((accum, game) => {
+          accum[game.id] = { name: game.name, state: game.state };
           return accum;
         }, {})
       ),
@@ -58,10 +58,9 @@ const observeUser = function observeUser(
     const observer = registrar.resolve("userObserver");
 
     return new Observable<Action>((subscriber) => {
-      subscriber.next(noopOnEpic());
-
-      observer.subscribe(payload.user.id, (user) => {
+      observer.subscribe(payload.user.id, (user, joinedGames) => {
         subscriber.next(notifyOtherUserChanged(user));
+        subscriber.next(notifyJoinedGames(joinedGames));
       });
     });
   });
@@ -85,7 +84,7 @@ export const authEpic = (
       }),
       getUser(registrar),
       getAuthenticationSuccess(registrar),
-      map((ret: { user: User.T; games: Record<Game.Id, string> } | undefined) => {
+      map((ret) => {
         if (!ret) {
           return SignIn.tryAuthenticateFailure();
         }

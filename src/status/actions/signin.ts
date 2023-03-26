@@ -1,12 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import { JoinedGameState } from "@/domains/game-repository";
 
 const prefix = "signin";
 
 export interface AuthenticationSuccess {
   user: User.T;
-  joinedGames?: Record<Game.Id, string>;
+  joinedGames?: Record<Game.Id, { name: string; state: JoinedGameState }>;
 }
 
 // try to authenticate with stored credential if it exists
