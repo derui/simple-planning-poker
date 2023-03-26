@@ -4,11 +4,12 @@ import { changeNameSuccess, notifyOtherUserChanged } from "../actions/user";
 import { createGameSuccess, openGameSuccess } from "../actions/game";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import { JoinedGameState } from "@/domains/game-repository";
 
 interface UserState {
   users: { [k: User.Id]: User.T };
   currentUser: User.T | null;
-  currentUserJoinedGames: Record<Game.Id, string>;
+  currentUserJoinedGames: Record<Game.Id, { name: string; state: JoinedGameState }>;
 }
 
 const initialState = {
@@ -44,10 +45,14 @@ const slice = createSlice({
 
     builder.addCase(notifyOtherUserChanged, (draft, { payload }) => {
       draft.users[payload.id] = payload;
+
+      if (payload.id === draft.currentUser?.id) {
+        draft.currentUser = payload;
+      }
     });
 
     builder.addCase(createGameSuccess, (draft, { payload }) => {
-      draft.currentUserJoinedGames[payload.id] = payload.name;
+      draft.currentUserJoinedGames[payload.id] = { name: payload.name, state: JoinedGameState.joined };
     });
 
     builder.addCase(changeNameSuccess, (draft, { payload }) => {

@@ -11,6 +11,7 @@ import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
+import { JoinedGameState } from "@/domains/game-repository";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -49,15 +50,17 @@ test("should remove game from joined game of left user", async () => {
   let [_game] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
   let [, event] = Game.acceptLeaveFrom(_game, player.id);
   const userRepository = new UserRepositoryImpl(database);
+  const gameRepository = new GameRepositoryImpl(database);
   const listener = new RemoveGameFromJoinedGameListener(database);
+  await gameRepository.save(_game);
   await userRepository.save(owner);
   await userRepository.save(player);
 
   const data = [{ id: player.id, relation: "player", gameId: game.id }];
 
-  for (let { id, gameId } of data) {
+  for (let { id, ...rest } of data) {
     const newRef = push(ref(database, joinedGames(User.createId(id))));
-    await set(newRef, { gameId });
+    await set(newRef, rest);
   }
 
   // Act
@@ -66,5 +69,11 @@ test("should remove game from joined game of left user", async () => {
   const ret = await repository.listUserJoined(player.id);
 
   // Assert
-  expect(ret).toEqual([]);
+  expect(ret).toEqual([
+    {
+      name: "test",
+      id: game.id,
+      state: JoinedGameState.left,
+    },
+  ]);
 });

@@ -10,6 +10,7 @@ import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as Round from "@/domains/round";
 import { randomGame } from "@/test-lib";
+import { JoinedGameState } from "@/domains/game-repository";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -96,24 +97,24 @@ test("should save invitation in key", async () => {
 test("should be able to list games an user joined", async () => {
   // Arrange
   const repository = new GameRepositoryImpl(database);
-  const game = randomGame({ id: Game.createId("1"), name: "name" });
-  const otherGame = randomGame({ id: Game.createId("2"), name: "name2" });
+  let game = randomGame({ id: Game.createId("1"), name: "name" });
+  let otherGame = randomGame({ id: Game.createId("2"), name: "name2" });
 
   await repository.save(game);
   await repository.save(otherGame);
 
   const data = [
-    { id: User.createId("1"), relation: "player", gameId: game.id },
-    { id: User.createId("1"), relation: "player", gameId: otherGame.id },
+    { id: User.createId("1"), relation: "player", gameId: game.id, state: JoinedGameState.joined },
+    { id: User.createId("1"), relation: "player", gameId: otherGame.id, state: JoinedGameState.joined },
     { id: User.createId("2"), relation: "player", gameId: game.id },
     { id: User.createId("3"), relation: "player", gameId: otherGame.id },
     { id: User.createId("4"), relation: "player", gameId: otherGame.id },
     { id: User.createId("5"), relation: "player", gameId: game.id },
   ];
 
-  for (let { id, gameId } of data) {
+  for (let { id, ...rest } of data) {
     const newRef = push(ref(database, joinedGames(User.createId(id))));
-    await set(newRef, { gameId });
+    await set(newRef, rest);
   }
 
   // Act
@@ -122,8 +123,8 @@ test("should be able to list games an user joined", async () => {
   // Assert
   expect(ret).toEqual(
     expect.arrayContaining([
-      { id: game.id, name: "name" },
-      { id: otherGame.id, name: "name2" },
+      { id: game.id, name: "name", state: JoinedGameState.joined },
+      { id: otherGame.id, name: "name2", state: JoinedGameState.joined },
     ])
   );
 });

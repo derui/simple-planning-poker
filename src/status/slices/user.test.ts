@@ -6,6 +6,7 @@ import { getInitialState, reducer } from "./user";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import { randomGame } from "@/test-lib";
+import { JoinedGameState } from "@/domains/game-repository";
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({
@@ -90,5 +91,5 @@ test("should add joined game when user created a game", () => {
   let state = reducer(getInitialState(), signUpSuccess({ user }));
   state = reducer(state, createGameSuccess(game));
 
-  expect(state.currentUserJoinedGames).toEqual({ [game.id]: game.name });
+  expect(state.currentUserJoinedGames).toEqual({ [game.id]: { name: game.name, state: JoinedGameState.joined } });
 });

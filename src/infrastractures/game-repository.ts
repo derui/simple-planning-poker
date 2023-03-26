@@ -3,7 +3,7 @@ import * as resolver from "./game-ref-resolver";
 import * as UserRefResolver from "./user-ref-resolver";
 import { deserializeFrom } from "./game-snapshot-deserializer";
 import * as Game from "@/domains/game";
-import { GameRepository } from "@/domains/game-repository";
+import { GameRepository, JoinedGameState } from "@/domains/game-repository";
 import * as User from "@/domains/user";
 import * as Invitation from "@/domains/invitation";
 import { filterUndefined } from "@/utils/basic";
@@ -56,7 +56,7 @@ export class GameRepositoryImpl implements GameRepository {
     return game ? game : undefined;
   }
 
-  async listUserJoined(user: User.Id): Promise<{ id: Game.Id; name: string }[]> {
+  async listUserJoined(user: User.Id): Promise<{ id: Game.Id; name: string; state: JoinedGameState }[]> {
     const snapshot = await get(ref(this.database, UserRefResolver.joinedGames(user)));
     const val = snapshot.val();
 
@@ -65,11 +65,11 @@ export class GameRepositoryImpl implements GameRepository {
     }
 
     const games = await Promise.all(
-      Object.values(val as Record<string, { gameId: Game.Id }>).map(({ gameId }) => {
-        return this.findBy(gameId);
+      Object.values(val as Record<string, { gameId: Game.Id; state: JoinedGameState }>).map(async (v) => {
+        return this.findBy(v.gameId).then((game) => (game ? ([game, v] as const) : undefined));
       })
     );
 
-    return games.filter(filterUndefined).map((v) => ({ id: v.id, name: v.name }));
+    return games.filter(filterUndefined).map(([game, v]) => ({ id: game.id, name: game.name, state: v.state }));
   }
 }

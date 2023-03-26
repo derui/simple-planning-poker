@@ -4,6 +4,7 @@ import { DomainEventListener } from "./domain-event-listener";
 import { isUserLeftFromGame } from "@/domains/game";
 import { DomainEvent } from "@/domains/event";
 import * as Game from "@/domains/game";
+import { JoinedGameState } from "@/domains/game-repository";
 
 /**
  * update created game as joined game
@@ -26,7 +27,7 @@ export class RemoveGameFromJoinedGameListener implements DomainEventListener {
 
     const updater = Object.entries(val).reduce<Record<string, unknown>>((accum, [key, value]) => {
       if (value.gameId === event.gameId) {
-        accum[key] = null;
+        accum[key] = { ...value, state: JoinedGameState.left };
       } else {
         accum[key] = value;
       }
