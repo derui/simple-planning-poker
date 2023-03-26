@@ -35,6 +35,9 @@ const styles = {
   list: (opened: boolean) =>
     classNames(
       {
+        invisible: !opened,
+      },
+      {
         "animate-fade-in": opened,
       },
       "z-20",
@@ -53,6 +56,9 @@ const styles = {
     ),
   tipArrow: (opened: boolean) =>
     classNames(
+      {
+        invisible: !opened,
+      },
       {
         "animate-fade-in": opened,
       },
