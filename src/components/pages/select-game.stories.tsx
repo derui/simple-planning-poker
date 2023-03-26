@@ -10,6 +10,7 @@ import { createPureStore } from "@/status/store";
 import { signInSuccess } from "@/status/actions/signin";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
+import { JoinedGameState } from "@/domains/game-repository";
 
 install(twind);
 
@@ -45,9 +46,9 @@ export const SomeGames: Story = {
       signInSuccess({
         user,
         joinedGames: {
-          [Game.createId()]: "name",
-          [Game.createId()]: "long name",
-          [Game.createId()]: "looooong name",
+          [Game.createId()]: { name: "name", state: JoinedGameState.joined },
+          [Game.createId()]: { name: "long name", state: JoinedGameState.joined },
+          [Game.createId()]: { name: "looooong name", state: JoinedGameState.joined },
         },
       })
     );

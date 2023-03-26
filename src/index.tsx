@@ -58,10 +58,13 @@ const dispatcher = new EventDispatcherImpl([
 ]);
 
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
-registrar.register("userRepository", userRepository);
-registrar.register("userObserver", new UserObserverImpl(database, registrar.resolve("userRepository")));
-registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("gameRepository", gameRepository);
+registrar.register("userRepository", userRepository);
+registrar.register(
+  "userObserver",
+  new UserObserverImpl(database, registrar.resolve("userRepository"), registrar.resolve("gameRepository"))
+);
+registrar.register("roundObserver", new RoundObserverImpl(database));
 registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(roundRepository));
 registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, roundRepository));
 registrar.register(

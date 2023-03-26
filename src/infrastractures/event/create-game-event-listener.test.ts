@@ -9,6 +9,7 @@ import * as Round from "@/domains/round";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
+import { JoinedGameState } from "@/domains/game-repository";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -54,5 +55,5 @@ test("should add joined user as owner", async () => {
   const joinedGames = await repository.listUserJoined(owner.id);
 
   // Assert
-  expect(joinedGames).toEqual([{ id: game.id, name: "test" }]);
+  expect(joinedGames).toEqual([{ id: game.id, name: "test", state: JoinedGameState.joined }]);
 });

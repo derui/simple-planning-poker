@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { signInSuccess, signUpSuccess, tryAuthenticateSuccess } from "../actions/signin";
-import { changeNameSuccess } from "../actions/user";
+import { changeNameSuccess, notifyJoinedGames } from "../actions/user";
 import { createGameSuccess } from "../actions/game";
 import { getInitialState, reducer } from "./user";
 import * as User from "@/domains/user";
@@ -24,11 +24,16 @@ test("put current user if authentication did succeed", () => {
 
   const state = reducer(
     getInitialState(),
-    tryAuthenticateSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } })
+    tryAuthenticateSuccess({
+      user,
+      joinedGames: { [Game.createId("id")]: { name: "name", state: JoinedGameState.joined } },
+    })
   );
 
   expect(state.currentUser).toEqual(user);
-  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
+  expect(state.currentUserJoinedGames).toEqual({
+    [Game.createId("id")]: { name: "name", state: JoinedGameState.joined },
+  });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -38,10 +43,15 @@ test("put current user if sign-in did succeed", () => {
     name: "name",
   });
 
-  const state = reducer(getInitialState(), signInSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } }));
+  const state = reducer(
+    getInitialState(),
+    signInSuccess({ user, joinedGames: { [Game.createId("id")]: { name: "name", state: JoinedGameState.joined } } })
+  );
 
   expect(state.currentUser).toEqual(user);
-  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
+  expect(state.currentUserJoinedGames).toEqual({
+    [Game.createId("id")]: { name: "name", state: JoinedGameState.joined },
+  });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -51,10 +61,15 @@ test("put current user if sign-up did succeed", () => {
     name: "name",
   });
 
-  const state = reducer(getInitialState(), signUpSuccess({ user, joinedGames: { [Game.createId("id")]: "name" } }));
+  const state = reducer(
+    getInitialState(),
+    signUpSuccess({ user, joinedGames: { [Game.createId("id")]: { name: "name", state: JoinedGameState.joined } } })
+  );
 
   expect(state.currentUser).toEqual(user);
-  expect(state.currentUserJoinedGames).toEqual({ [Game.createId("id")]: "name" });
+  expect(state.currentUserJoinedGames).toEqual({
+    [Game.createId("id")]: { name: "name", state: JoinedGameState.joined },
+  });
   expect(state.users).toEqual({ [user.id]: user });
 });
 
@@ -92,4 +107,18 @@ test("should add joined game when user created a game", () => {
   state = reducer(state, createGameSuccess(game));
 
   expect(state.currentUserJoinedGames).toEqual({ [game.id]: { name: game.name, state: JoinedGameState.joined } });
+});
+
+test("should update state with notification of joined games", () => {
+  const user = User.create({
+    id: User.createId(),
+    name: "name",
+  });
+  const game = randomGame({ owner: user.id });
+
+  let state = reducer(getInitialState(), signUpSuccess({ user }));
+  state = reducer(state, createGameSuccess(game));
+  state = reducer(state, notifyJoinedGames([{ id: game.id, state: JoinedGameState.left }]));
+
+  expect(state.currentUserJoinedGames).toEqual({ [game.id]: { name: game.name, state: JoinedGameState.left } });
 });

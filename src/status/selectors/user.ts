@@ -3,6 +3,7 @@ import { RootState } from "../store";
 import { UserMode } from "@/domains/game-player";
 import * as Game from "@/domains/game";
 import * as Loadable from "@/utils/loadable";
+import { JoinedGameState } from "@/domains/game-repository";
 
 const selectSelf = (state: RootState) => state;
 const selectUser = createDraftSafeSelector(selectSelf, (state) => state.user);
@@ -47,8 +48,25 @@ interface JoinedGameModel {
  */
 export const selectJoinedGames = createDraftSafeSelector(selectCurrentUserJoinedGames, (games): JoinedGameModel[] => {
   return Object.entries(games)
+    .filter(([, value]) => value.state === JoinedGameState.joined)
     .map(([key, value]) => {
-      return { gameId: Game.createId(key), name: value };
+      return { gameId: Game.createId(key), name: value.name };
     })
     .sort(({ name: o1 }, { name: o2 }) => o1.localeCompare(o2));
 });
+
+interface JoinedGameModelWithState extends JoinedGameModel {
+  state: JoinedGameState;
+}
+
+/**
+ * return all joined games with state. THIS SELECTOR DO NOT USE IN COMPONENTS. USAGE OF THIS SELECTOR IS ONLY USED BY ROUTING.
+ */
+export const selectAllJoinedGames = createDraftSafeSelector(
+  selectCurrentUserJoinedGames,
+  (games): JoinedGameModelWithState[] => {
+    return Object.entries(games).map(([key, value]) => {
+      return { gameId: Game.createId(key), name: value.name, state: value.state };
+    });
+  }
+);

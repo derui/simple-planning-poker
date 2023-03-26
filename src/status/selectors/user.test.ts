@@ -11,6 +11,7 @@ import * as StoryPoint from "@/domains/story-point";
 
 import { UserMode } from "@/domains/game-player";
 import { isError, isLoading } from "@/utils/loadable";
+import { JoinedGameState } from "@/domains/game-repository";
 
 const CARDS = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -82,8 +83,8 @@ describe("joined games", () => {
       signInSuccess({
         user,
         joinedGames: {
-          [Game.createId("id1")]: "name1",
-          [Game.createId("id2")]: "name2",
+          [Game.createId("id1")]: { name: "name1", state: JoinedGameState.joined },
+          [Game.createId("id2")]: { name: "name2", state: JoinedGameState.joined },
         },
       })
     );
@@ -94,6 +95,24 @@ describe("joined games", () => {
       { gameId: Game.createId("id1"), name: "name1" },
       { gameId: Game.createId("id2"), name: "name2" },
     ]);
+  });
+
+  test("do not include left game", () => {
+    const store = createPureStore();
+    const user = User.create({ id: User.createId("1"), name: "foo" });
+    store.dispatch(
+      signInSuccess({
+        user,
+        joinedGames: {
+          [Game.createId("id1")]: { name: "name1", state: JoinedGameState.joined },
+          [Game.createId("id2")]: { name: "name2", state: JoinedGameState.left },
+        },
+      })
+    );
+
+    const ret = s.selectJoinedGames(store.getState());
+
+    expect(ret).toEqual([{ gameId: Game.createId("id1"), name: "name1" }]);
   });
 });
 
@@ -119,4 +138,37 @@ test("return user info that not owner ", () => {
   const ret = s.selectUserInfo(store.getState());
 
   expect(ret[0]).toEqual({ userName: "foo", userMode: UserMode.normal, owner: false });
+});
+
+describe("all joined games", () => {
+  test("return empty when user did not join any games before ", () => {
+    const store = createPureStore();
+    const user = User.create({ id: User.createId("1"), name: "foo" });
+    store.dispatch(signInSuccess({ user }));
+
+    const ret = s.selectAllJoinedGames(store.getState());
+
+    expect(ret).toEqual([]);
+  });
+
+  test("return games", () => {
+    const store = createPureStore();
+    const user = User.create({ id: User.createId("1"), name: "foo" });
+    store.dispatch(
+      signInSuccess({
+        user,
+        joinedGames: {
+          [Game.createId("id1")]: { name: "name1", state: JoinedGameState.joined },
+          [Game.createId("id2")]: { name: "name2", state: JoinedGameState.left },
+        },
+      })
+    );
+
+    const ret = s.selectAllJoinedGames(store.getState());
+
+    expect(ret).toEqual([
+      { gameId: Game.createId("id1"), name: "name1", state: JoinedGameState.joined },
+      { gameId: Game.createId("id2"), name: "name2", state: JoinedGameState.left },
+    ]);
+  });
 });
