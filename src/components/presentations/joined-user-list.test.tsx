@@ -30,8 +30,8 @@ test("display users", async () => {
     />
   );
 
-  expect(screen.getByTestId("item0/root").textContent).toMatch(/name/);
-  expect(screen.getByTestId("item1/root").textContent).toMatch(/other/);
+  expect(screen.getByTestId("name/root").textContent).toMatch(/name/);
+  expect(screen.getByTestId("other/root").textContent).toMatch(/other/);
 });
 
 test("raise event when user confirmed to kick", async () => {
@@ -48,6 +48,6 @@ test("raise event when user confirmed to kick", async () => {
     />
   );
 
-  await userEvent.click(screen.getByTestId("item0/kick/main"));
-  await userEvent.click(screen.getByTestId("item0/kick/confirm"));
+  await userEvent.click(screen.getByTestId("name/kick/main"));
+  await userEvent.click(screen.getByTestId("name/kick/confirm"));
 });

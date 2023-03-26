@@ -82,7 +82,7 @@ export function JoinedUserList({ onKick, testid, users }: Props) {
 
   const items = users.map((user, index) => {
     const _onKick = onKick ? () => onKick(user.id) : undefined;
-    return <KickableUserItem key={index} name={user.name} onKick={_onKick} testid={gen(`item${index}`)} />;
+    return <KickableUserItem key={index} name={user.name} onKick={_onKick} testid={gen(user.name)} />;
   });
 
   return (
