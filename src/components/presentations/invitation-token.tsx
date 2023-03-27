@@ -4,7 +4,7 @@ import { BaseProps, generateTestId } from "../base";
 import { iconize } from "../iconize";
 
 interface Props extends BaseProps {
-  invitationLink: string;
+  invitationToken: string;
 }
 
 const styles = {
@@ -15,8 +15,8 @@ const styles = {
       "w-8",
       "h-8",
       "bg-none",
-      "transition-colors",
-      "before:transition-colors",
+      "transition-[color,border-color,border-radius]",
+      "before:transition-[color,border-color,border-radius]",
       "cursor-pointer",
       "rounded-full",
       "flex",
@@ -40,7 +40,7 @@ const styles = {
       "-right-2",
       "bg-white",
       "border",
-      "border-secondary1-500",
+      "border-secondary1-400",
       "px-3",
       "py-2",
       "rounded",
@@ -75,7 +75,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function InvitationLink(props: Props) {
+export function InvitationToken(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = React.useState(false);
 
@@ -84,8 +84,8 @@ export function InvitationLink(props: Props) {
       <button className={styles.opener(opened)} onClick={() => setOpened(!opened)} data-testid={gen("opener")}></button>
       <div className={styles.container(opened)} data-testid={gen("container")}>
         <div className={styles.item}>
-          <span className={styles.label}>Invitation Link</span>
-          <input className={styles.input} type="text" readOnly value={props.invitationLink} />
+          <span className={styles.label}>Invitation Token</span>
+          <input className={styles.input} type="text" readOnly value={props.invitationToken} />
         </div>
       </div>
     </div>

@@ -62,8 +62,9 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
 
   await expect(other).toHaveURL(page.url());
   await expect(other.getByTestId("waiting")).toHaveText("Waiting to select card...");
@@ -107,8 +108,9 @@ test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) 
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
 
@@ -189,8 +191,9 @@ test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
   await expect(page.getByTestId("game-info/leave")).toBeHidden();
@@ -237,8 +240,9 @@ test("re-open and restore current round", async ({ page, newPageOnNewContext: ot
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
 
@@ -278,8 +282,9 @@ test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) 
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
   await expect(page.getByTestId("joined-user-list/root")).toBeVisible();

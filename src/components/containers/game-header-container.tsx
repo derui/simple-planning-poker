@@ -1,14 +1,14 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router";
 import { GameInfo } from "../presentations/game-info";
-import { InvitationLink } from "../presentations/invitation-link";
+import { InvitationToken } from "../presentations/invitation-token";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { BaseProps, generateTestId } from "../base";
 import { Skeleton } from "../presentations/skeleton";
 import { JoinedUserList } from "../presentations/joined-user-list";
 import { UserInfoContainer } from "./user-info-container";
 import { isFinished } from "@/utils/loadable";
-import { selectCurrentGameInvitationLink, selectCurrentGameName, selectJoinedPlayers } from "@/status/selectors/game";
+import { selectCurrentGameInvitationToken, selectCurrentGameName, selectJoinedPlayers } from "@/status/selectors/game";
 import { kickPlayer, leaveGame } from "@/status/actions/game";
 import { selectUserInfo } from "@/status/selectors/user";
 import * as User from "@/domains/user";
@@ -25,7 +25,7 @@ export function GameHeaderContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const gameName = useAppSelector(selectCurrentGameName);
   const userInfo = useAppSelector(selectUserInfo);
-  const invitation = useAppSelector(selectCurrentGameInvitationLink);
+  const invitation = useAppSelector(selectCurrentGameInvitationToken);
   const joinedPlayers = useAppSelector(selectJoinedPlayers);
 
   const dispatch = useAppDispatch();
@@ -63,7 +63,7 @@ export function GameHeaderContainer(props: Props) {
           onKick={userInfo[0].owner ? handleKick : undefined}
           testid={gen("joined-user-list")}
         />
-        <InvitationLink invitationLink={invitation[0]} testid={gen("invitation")} />
+        <InvitationToken invitationToken={invitation[0]} testid={gen("invitation")} />
         <UserInfoContainer testid={gen("user-info")} />
       </div>
     </div>

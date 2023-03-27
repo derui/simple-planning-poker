@@ -95,9 +95,9 @@ export const selectPlayerEstimatedCards = createDraftSafeSelector(
 );
 
 /**
- * select invitation link of the current game.
+ * select invitation token of the current game.
  */
-export const selectCurrentGameInvitationLink = createDraftSafeSelector(
+export const selectCurrentGameInvitationToken = createDraftSafeSelector(
   selectCurrentGame,
   (currentGame): Loadable.T<string> => {
     if (!currentGame) {
@@ -106,7 +106,7 @@ export const selectCurrentGameInvitationLink = createDraftSafeSelector(
 
     const invitation = Game.makeInvitation(currentGame);
 
-    return Loadable.finished(`/invitation/${invitation}`);
+    return Loadable.finished(invitation);
   }
 );
 

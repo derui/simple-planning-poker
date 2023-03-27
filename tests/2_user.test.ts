@@ -27,8 +27,9 @@ test("change user name and mode", async ({ page, newPageOnNewContext: other, res
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
 
   // update joined user in other page
   await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();
@@ -74,8 +75,9 @@ test("inspector can show down", async ({ page, newPageOnNewContext: other, reset
 
   // join game with other
   await page.getByTestId("invitation/opener").click();
-  const joinUrl = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.goto(joinUrl);
+  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByRole("button", { name: "Join" }).click();
 
   // update joined user in other page
   await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();

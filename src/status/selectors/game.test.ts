@@ -39,7 +39,7 @@ describe("select current game invitation", () => {
   test("should return loading when game not set", () => {
     const store = createPureStore();
 
-    const ret = s.selectCurrentGameInvitationLink(store.getState());
+    const ret = s.selectCurrentGameInvitationToken(store.getState());
 
     expect(ret).toEqual(Loadable.loading());
   });
@@ -49,9 +49,9 @@ describe("select current game invitation", () => {
     const game = randomGame({});
     store.dispatch(openGameSuccess({ game, players: [] }));
 
-    const ret = s.selectCurrentGameInvitationLink(store.getState());
+    const ret = s.selectCurrentGameInvitationToken(store.getState());
 
-    expect(ret).toEqual(Loadable.finished(`/invitation/${Game.makeInvitation(game)}`));
+    expect(ret).toEqual(Loadable.finished(Game.makeInvitation(game)));
   });
 });
 

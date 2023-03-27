@@ -2,12 +2,12 @@ import { test, afterEach, expect } from "vitest";
 import { render, cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { InvitationLink } from "./invitation-link";
+import { InvitationToken } from "./invitation-token";
 
 afterEach(cleanup);
 
 test("should be able to render", async () => {
-  render(<InvitationLink invitationLink="http://link" />);
+  render(<InvitationToken invitationToken="token" />);
 
   const ret = screen.findByTestId("root");
 
@@ -15,7 +15,7 @@ test("should be able to render", async () => {
 });
 
 test("do not open default", async () => {
-  render(<InvitationLink invitationLink="http://link" />);
+  render(<InvitationToken invitationToken="token" />);
 
   const ret = screen.getByTestId("root");
 
@@ -23,7 +23,7 @@ test("do not open default", async () => {
 });
 
 test("open container after click", async () => {
-  render(<InvitationLink invitationLink="http://link" />);
+  render(<InvitationToken invitationToken="token" />);
 
   await userEvent.click(screen.getByTestId("opener"));
 
@@ -35,11 +35,11 @@ test("open container after click", async () => {
 });
 
 test("display invitation link", async () => {
-  render(<InvitationLink invitationLink="http://link" />);
+  render(<InvitationToken invitationToken="token" />);
 
   await userEvent.click(screen.getByTestId("opener"));
 
   const container = screen.getByRole("textbox");
 
-  expect(container).toHaveProperty("value", "http://link");
+  expect(container).toHaveProperty("value", "token");
 });
