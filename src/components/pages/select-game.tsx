@@ -1,6 +1,8 @@
 import classNames from "classnames";
-import { Link } from "react-router-dom";
+import { generatePath, Link, useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
 import { useAppSelector } from "../hooks";
+import { baseInput } from "../common-styles";
 import { selectJoinedGames } from "@/status/selectors/user";
 
 const styles = {
@@ -8,7 +10,6 @@ const styles = {
     "flex",
     "flex-col",
     "absolute",
-    "min-w-fit",
     "w-1/2",
     "max-h-96",
     "shadow",
@@ -23,6 +24,7 @@ const styles = {
   header: classNames("flex-none", "p-2", "text-lg", "font-bold", "rounded-t", "bg-primary-400", "text-secondary1-200"),
   main: {
     root: classNames("flex", "flex-auto", "flex-col", "overflow-y-auto"),
+    list: classNames("flex", "flex-auto", "flex-col", "overflow-y-auto"),
     container: classNames(
       "flex",
       "flex-[0_0_auto]",
@@ -30,15 +32,12 @@ const styles = {
       "text-lg",
       "transition-shadow",
       "rounded",
-      "px-3",
-      "py-4",
       "relative",
       "m-3",
       "text-primary-500",
-      "cursor-pointer",
       "border",
       "border-primary-400",
-      "hover:shadow",
+      "hover:shadow-md",
       "before:w-2",
       "before:h-full",
       "before:absolute",
@@ -46,8 +45,33 @@ const styles = {
       "before:top-0",
       "before:transition-colors",
       "before:rounded-l",
-      "hover:before:bg-secondary2-300"
+      "active:before:bg-secondary2-300"
     ),
+    link: classNames("flex-auto", "h-full", "px-3", "py-4"),
+    invitation: classNames("flex", "flex-none", "px-3", "mt-3", "border-b", "border-b-primary-400", "pb-3"),
+    invitationToken: classNames(baseInput, "rounded-r-none"),
+    joinButton: (enabled: boolean) =>
+      classNames(
+        "rounded",
+        "rounded-l-none",
+        "flex-none",
+        "text-sm",
+        "p-2",
+        "border",
+        "border-l-none",
+        "transition-[color,box-shadow,border-color]",
+        "active:shadow",
+        {
+          "border-secondary1-400": enabled,
+          "text-secondary1-500": enabled,
+          "bg-secondary1-200": enabled,
+        },
+        {
+          "border-gray": !enabled,
+          "text-gray": !enabled,
+          "bg-lightgray": !enabled,
+        }
+      ),
   },
   footer: classNames(
     "flex",
@@ -76,7 +100,7 @@ const styles = {
     "hover:text-secondary1-200",
     "hover:bg-secondary1-500"
   ),
-  empty: classNames("flex-auto", "text-center", "relative", "py-8", "px-3"),
+  empty: classNames("flex-auto", "text-center", "relative", "py-10", "px-3"),
   emptyText: classNames("relative", "align-middle", "text-lg", "font-bold"),
 } as const;
 
@@ -90,20 +114,45 @@ const Empty = () => {
 
 // eslint-disable-next-line func-style
 export function SelectGamePage() {
+  const [token, setToken] = useState("");
   const games = useAppSelector(selectJoinedGames);
+  const navigate = useNavigate();
 
   const gameComponents = games.map((v) => {
     return (
-      <Link key={v.gameId} className={styles.main.container} to={`/game/${v.gameId}`}>
-        <span data-testid="game-name">{v.name}</span>
-      </Link>
+      <li key={v.gameId} className={styles.main.container}>
+        <Link className={styles.main.link} to={`/game/${v.gameId}`}>
+          <span data-testid="game-name">{v.name}</span>
+        </Link>
+      </li>
     );
   });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (token) {
+      navigate(generatePath("/invitation/:token", { token: token }));
+    }
+  };
 
   return (
     <div className={styles.root}>
       <header className={styles.header}>Select game you already joined</header>
-      <main className={styles.main.root}>{games.length > 0 ? gameComponents : <Empty />}</main>
+      <main className={styles.main.root}>
+        <form className={styles.main.invitation} onSubmit={handleSubmit}>
+          <input
+            className={styles.main.invitationToken}
+            placeholder="Paste invitation token here"
+            onChange={(e) => setToken(e.target.value)}
+          />
+          <button className={styles.main.joinButton(token !== "")} disabled={token === ""}>
+            Join
+          </button>
+        </form>
+        <ul className={styles.main.list}>{games.length > 0 ? gameComponents : <Empty />}</ul>
+      </main>
       <footer className={styles.footer}>
         <Link className={styles.opener} to={"/game/create"} role="button">
           Create Game
