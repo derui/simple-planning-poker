@@ -46,11 +46,17 @@ export default defineConfig({
           '0%': {opacity: 1, visibility: 'visible'},
           '50%': {opacity: 0.5, visibility: 'visible'},
           '100%': {opacity: 0, visibility: 'hidden'},
+        },
+        'slide-in': {
+          '0%': {opacity: 0, transform: 'translateY(50%)'},
+          '50%': {opacity: 0.5, transform: 'translateY(25%)'},
+          '100%': {opacity: 1, transform: 'translateY(0)' },
         }
       },
       animation: {
         'fade-in': 'fade-in 0.1s ease-in-out 1',
         'fade-out': 'fade-out 0.1s ease-in-out 1',
+        'slide-in': 'slide-in 0.3s ease-in-out 1',
       },
       transitionProperty: {
         'outline': 'outline',
@@ -59,6 +65,7 @@ export default defineConfig({
         'stroke': 'stroke, stroke-width',
         'fill': 'fill',
         'transform': 'transform',
+        'slide-in': 'opacity,transform',
       },
       gridTemplateColumns: {
         'top-toolbar': 'min-content 1fr min-content min-content',
