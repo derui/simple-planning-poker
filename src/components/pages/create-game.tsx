@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Dialog } from "../presentations/dialog";
+import { baseInput } from "../common-styles";
 import { createGame } from "@/status/actions/game";
 import * as Game from "@/domains/game";
 import { selectGameCreatingStatus } from "@/status/selectors/game";
@@ -17,19 +18,7 @@ const styles = {
       container: classNames("w-full", "mx-auto", "flex-auto", "px-3"),
       row: classNames("flex", "items-center", "mb-4", "last:mb-0"),
       label: classNames("flex-auto", "w-24", "mr-3", "text-secondary2-500"),
-      input: classNames(
-        "flex-auto",
-        "w-full",
-        "p-2",
-        "outline-none",
-        "rounded",
-        "border",
-        "border-lightgray/40",
-        "bg-lightgray/20",
-        "transition-colors",
-        "focus:border-secondary2-500",
-        "focus:bg-white"
-      ),
+      input: classNames(baseInput),
     },
   },
 } as const;

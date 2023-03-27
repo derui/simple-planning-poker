@@ -1,6 +1,7 @@
 import classnames from "classnames";
 import React from "react";
 import { BaseProps, generateTestId } from "../base";
+import { baseInput } from "../common-styles";
 import { RadioGroup } from "./radio-group";
 import { RadioButton } from "./radio-button";
 import { UserMode } from "@/domains/game-player";
@@ -52,18 +53,7 @@ const styles = {
 
   nameEditor: classnames("flex", "flex-auto", "flex-col", "border", "border-secondary1-500", "rounded", "mt-3"),
   nameEditorLabel: classnames("flex-none", "text-center", "px-3", "py-2", "bg-secondary1-500", "text-secondary1-200"),
-  nameEditorInput: classnames(
-    "flex-auto",
-    "w-40",
-    "mx-3",
-    "my-2",
-    "outline-none",
-    "border-0",
-    "border-b",
-    "border-b-secondary1-400",
-    "border-dashed",
-    "focus:border-solid"
-  ),
+  nameEditorInput: classnames(baseInput),
 };
 
 // eslint-disable-next-line func-style
