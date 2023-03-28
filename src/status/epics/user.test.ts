@@ -54,7 +54,7 @@ test("should fail if current user not defined", async () => {
 
   const ret = await firstValueFrom(epics.changeUserName(action$, state$, null));
 
-  expect(ret).toEqual(UserAction.changeNameFailure());
+  expect(ret).toEqual(UserAction.changeNameFailure({ reason: "Can not change user name" }));
 });
 
 test("should fail if use case failed", async () => {
@@ -81,7 +81,7 @@ test("should fail if use case failed", async () => {
 
   const ret = await firstValueFrom(epics.changeUserName(action$, state$, null));
 
-  expect(ret).toEqual(UserAction.changeNameFailure());
+  expect(ret).toEqual(UserAction.changeNameFailure({ reason: "Can not change user name" }));
 });
 
 test("should fail if error occurred", async () => {
@@ -106,5 +106,5 @@ test("should fail if error occurred", async () => {
   const state$ = new StateObservable(NEVER, store.getState());
 
   const ret = await firstValueFrom(epics.changeUserName(action$, state$, null));
-  expect(ret).toEqual(UserAction.changeNameFailure());
+  expect(ret).toEqual(UserAction.changeNameFailure({ reason: "Failed to change user name" }));
 });

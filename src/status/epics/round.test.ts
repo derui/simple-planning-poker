@@ -29,7 +29,7 @@ describe("giveUp", () => {
 
     const ret = await firstValueFrom(epics.giveUp(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "Can not give up" }));
   });
 
   test("should error if user is not set", async () => {
@@ -44,7 +44,7 @@ describe("giveUp", () => {
 
     const ret = await firstValueFrom(epics.giveUp(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "Can not give up" }));
   });
 
   test("get changed game", async () => {
@@ -96,7 +96,7 @@ describe("giveUp", () => {
 
     const ret = await firstValueFrom(epics.giveUp(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("failed with exception"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "failed with exception" }));
   });
 });
 
@@ -111,7 +111,7 @@ describe("estimate", () => {
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "Can not estimate" }));
   });
 
   test("should error if user is not set", async () => {
@@ -126,7 +126,7 @@ describe("estimate", () => {
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("Can not give up with nullish"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "Can not estimate" }));
   });
 
   test("get changed round", async () => {
@@ -173,7 +173,7 @@ describe("estimate", () => {
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("specified card not found"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "Selected card is not valid" }));
   });
 
   test("should get error", async () => {
@@ -199,7 +199,7 @@ describe("estimate", () => {
 
     const ret = await firstValueFrom(epics.estimate(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.somethingFailure("failed with exception"));
+    expect(ret).toEqual(RoundAction.somethingFailure({ reason: "failed with exception" }));
   });
 });
 

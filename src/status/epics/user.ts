@@ -19,7 +19,7 @@ export const userEpic = (
         const state = state$.value;
 
         if (!state.user.currentUser) {
-          return of(changeNameFailure());
+          return of(changeNameFailure({ reason: "Can not change user name" }));
         }
 
         return from(useCase.execute({ name: payload, userId: state.user.currentUser.id })).pipe(
@@ -30,7 +30,7 @@ export const userEpic = (
               default:
                 console.warn(`failed with ${output.kind}`);
 
-                return changeNameFailure();
+                return changeNameFailure({ reason: `Can not change user name` });
             }
           })
         );
@@ -38,7 +38,7 @@ export const userEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(changeNameFailure()));
+        return source.pipe(startWith(changeNameFailure({ reason: "Failed to change user name" })));
       })
     ),
 });

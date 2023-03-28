@@ -87,7 +87,7 @@ describe("try authenticate", () => {
 
     const ret = await firstValueFrom(epics.tryAuthenticate(action$, state$, null));
 
-    expect(ret).toEqual(SignInAction.tryAuthenticateFailure());
+    expect(ret).toEqual(SignInAction.tryAuthenticateFailure({ reason: "Authentication failed" }));
   });
 });
 

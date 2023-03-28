@@ -86,7 +86,7 @@ export const authEpic = (
       getAuthenticationSuccess(registrar),
       map((ret) => {
         if (!ret) {
-          return SignIn.tryAuthenticateFailure();
+          return SignIn.tryAuthenticateFailure({ reason: "Authentication failed" });
         }
 
         return SignIn.tryAuthenticateSuccess({ user: ret.user, joinedGames: ret.games });
@@ -94,7 +94,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.tryAuthenticateFailure()));
+        return source.pipe(startWith(SignIn.tryAuthenticateFailure({ reason: "Authentication failed" })));
       })
     ),
 
@@ -110,7 +110,7 @@ export const authEpic = (
       getAuthenticationSuccess(registrar),
       map((ret) => {
         if (!ret) {
-          return SignIn.signInFailure();
+          return SignIn.signInFailure({ reason: "Sign-in failed" });
         }
 
         return SignIn.signInSuccess({ user: ret.user, joinedGames: ret.games });
@@ -118,7 +118,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.signInFailure()));
+        return source.pipe(startWith(SignIn.signInFailure({ reason: "Sign-in failed" })));
       })
     ),
   signUp: (action$) =>
@@ -133,7 +133,7 @@ export const authEpic = (
       getAuthenticationSuccess(registrar),
       map((ret) => {
         if (!ret) {
-          return SignIn.signUpFailure();
+          return SignIn.signUpFailure({ reason: "Sign-up failed" });
         }
 
         return SignIn.signUpSuccess({ user: ret.user, joinedGames: ret.games });
@@ -141,7 +141,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.signUpFailure()));
+        return source.pipe(startWith(SignIn.signUpFailure({ reason: "Sign-up failed" })));
       })
     ),
   observeUserAfterSignUp: (action$) =>
@@ -152,7 +152,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.observingFailure()));
+        return source.pipe(startWith(SignIn.observingFailure({ reason: "Observing user failed" })));
       })
     ),
   observeUserAfterTryAuthenticate: (action$) =>
@@ -163,7 +163,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.observingFailure()));
+        return source.pipe(startWith(SignIn.observingFailure({ reason: "Observing user failed" })));
       })
     ),
   observeUserAfterSignIn: (action$) =>
@@ -174,7 +174,7 @@ export const authEpic = (
       catchError((e, source) => {
         console.error(e);
 
-        return source.pipe(startWith(SignIn.observingFailure()));
+        return source.pipe(startWith(SignIn.observingFailure({ reason: "Observing user failed" })));
       })
     ),
 });

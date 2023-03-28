@@ -31,7 +31,7 @@ test("tryAuthentication successed", () => {
 
 test("tryAuthentication failed", () => {
   let state = reducer(getInitialState(), tryAuthenticate());
-  state = reducer(state, tryAuthenticateFailure());
+  state = reducer(state, tryAuthenticateFailure({ reason: "" }));
 
   expect(state.progress).toBe("failed");
 });
@@ -51,7 +51,7 @@ test("sign in succeeded", () => {
 
 test("sign in failed", () => {
   let state = reducer(getInitialState(), signIn({ email: "mail", password: "pass" }));
-  state = reducer(state, signInFailure());
+  state = reducer(state, signInFailure({ reason: "" }));
 
   expect(state.progress).toBe("failed");
 });
@@ -65,7 +65,7 @@ test("sign up succeeded", () => {
 
 test("sign up failed", () => {
   let state = reducer(getInitialState(), signUp({ email: "mail", password: "pass" }));
-  state = reducer(state, signUpFailure());
+  state = reducer(state, signUpFailure({ reason: "" }));
 
   expect(state.progress).toBe("failed");
 });

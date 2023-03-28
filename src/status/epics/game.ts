@@ -2,7 +2,6 @@ import { Epic } from "redux-observable";
 import type { Action } from "@reduxjs/toolkit";
 import { filter, map, from, of, switchMap, catchError, startWith, OperatorFunction, Observable } from "rxjs";
 import type { RootState } from "../store";
-import { noopOnEpic } from "../actions/common";
 import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as GameAction from "@/status/actions/game";
@@ -22,7 +21,7 @@ type Epics =
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
 
-  return source.pipe(startWith(GameAction.somethingFailure("failed with exception")));
+  return source.pipe(startWith(GameAction.somethingFailure({ reason: "failed with exception" })));
 });
 
 const observeGame = function observeGame(registrar: DependencyRegistrar<Dependencies>) {
@@ -33,7 +32,6 @@ const observeGame = function observeGame(registrar: DependencyRegistrar<Dependen
 
     return new Observable((subscriber) => {
       userObserver.unsubscribe();
-      subscriber.next(noopOnEpic());
 
       gameObserver.subscribe(payload.game.id, (game) => {
         game.joinedPlayers.forEach((_user) => {
@@ -74,7 +72,7 @@ export const gameEpic = (
         const { game, user } = state$.value;
 
         if (!game.currentGame || !user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
+          return of(GameAction.somethingFailure({ reason: "Can not give up with nullish" }));
         }
 
         const useCase = registrar.resolve("leaveGameUseCase");
@@ -90,7 +88,7 @@ export const gameEpic = (
               case "success":
                 return GameAction.leaveGameSuccess();
               default:
-                return GameAction.somethingFailure(output.kind);
+                return GameAction.somethingFailure({ reason: `Can not leave game: ${output.kind}` });
             }
           })
         );
@@ -104,7 +102,7 @@ export const gameEpic = (
         const { game, user } = state$.value;
 
         if (!game.currentGame || !user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
+          return of(GameAction.somethingFailure({ reason: "Can not kick player without game" }));
         }
 
         const useCase = registrar.resolve("kickPlayerUseCase");
@@ -121,7 +119,7 @@ export const gameEpic = (
               case "success":
                 return GameAction.kickPlayerSuccess();
               default:
-                return GameAction.somethingFailure(output.kind);
+                return GameAction.somethingFailure({ reason: `Can not kick user: ${output.kind}` });
             }
           })
         );
@@ -136,7 +134,7 @@ export const gameEpic = (
         const { user } = state$.value;
 
         if (!user.currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
+          return of(GameAction.somethingFailure({ reason: "Can not join" }));
         }
 
         const useCase = registrar.resolve("joinUserUseCase");
@@ -152,7 +150,7 @@ export const gameEpic = (
               case "success":
                 return GameAction.openGame(output.game.id);
               default:
-                return GameAction.somethingFailure(output.kind);
+                return GameAction.somethingFailure({ reason: `Can not join game: ${output.kind}` });
             }
           })
         );
@@ -168,7 +166,7 @@ export const gameEpic = (
         const currentUser = user.currentUser;
 
         if (!currentUser) {
-          return of(GameAction.somethingFailure("Can not open game"));
+          return of(GameAction.somethingFailure({ reason: "Can not open game" }));
         }
 
         const repository = registrar.resolve("gameRepository");
@@ -208,7 +206,7 @@ export const gameEpic = (
         const currentUser = user.currentUser;
 
         if (!currentUser) {
-          return of(GameAction.somethingFailure("Can not give up with nullish"));
+          return of(GameAction.somethingFailure({ reason: "Can not create game" }));
         }
 
         const useCase = registrar.resolve("createGameUseCase");
@@ -242,7 +240,7 @@ export const gameEpic = (
         const { game, user } = state$.value;
 
         if (!game.currentGame || !user.currentUser) {
-          return of(RoundAction.somethingFailure("Can not give up with nullish"));
+          return of(RoundAction.somethingFailure({ reason: "Can not change user mode" }));
         }
 
         const useCase = registrar.resolve("changeUserModeUseCase");
@@ -259,7 +257,7 @@ export const gameEpic = (
               case "success":
                 return GameAction.changeUserModeSuccess(output.game);
               default:
-                return GameAction.somethingFailure(output.kind);
+                return GameAction.somethingFailure({ reason: `Can not change user mode: ${output.kind}` });
             }
           })
         );
@@ -275,7 +273,7 @@ export const gameEpic = (
         } = state$.value;
 
         if (!currentGame) {
-          return of(RoundAction.somethingFailure("Can not show down with nullish"));
+          return of(RoundAction.somethingFailure({ reason: "Can not make new round" }));
         }
 
         const useCase = registrar.resolve("newRoundUseCase");

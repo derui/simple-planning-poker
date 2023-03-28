@@ -12,7 +12,7 @@ type Epics = "giveUp" | "estimate" | "showDown";
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
 
-  return source.pipe(startWith(RoundAction.somethingFailure("failed with exception")));
+  return source.pipe(startWith(RoundAction.somethingFailure({ reason: "failed with exception" })));
 });
 
 export const roundEpic = (
@@ -25,7 +25,7 @@ export const roundEpic = (
         const { round, user } = state$.value;
 
         if (!round.instance || !user.currentUser) {
-          return of(RoundAction.somethingFailure("Can not give up with nullish"));
+          return of(RoundAction.somethingFailure({ reason: "Can not give up" }));
         }
 
         const useCase = registrar.resolve("estimatePlayerUseCase");
@@ -42,7 +42,7 @@ export const roundEpic = (
               case "success":
                 return RoundAction.giveUpSuccess(output.round);
               default:
-                return RoundAction.somethingFailure(output.kind);
+                return RoundAction.somethingFailure({ reason: "Can not give up" });
             }
           })
         );
@@ -57,12 +57,12 @@ export const roundEpic = (
         const { round, user } = state$.value;
 
         if (!round.instance || !user.currentUser) {
-          return of(RoundAction.somethingFailure("Can not give up with nullish"));
+          return of(RoundAction.somethingFailure({ reason: "Can not estimate" }));
         }
 
         const selectedCard = Object.values(round.instance.cards).find((v) => v.order === payload.cardIndex)?.card;
         if (!selectedCard) {
-          return of(RoundAction.somethingFailure("specified card not found"));
+          return of(RoundAction.somethingFailure({ reason: "Selected card is not valid" }));
         }
 
         const useCase = registrar.resolve("estimatePlayerUseCase");
@@ -79,7 +79,7 @@ export const roundEpic = (
               case "success":
                 return RoundAction.estimateSuccess(output.round);
               default:
-                return RoundAction.somethingFailure(output.kind);
+                return RoundAction.somethingFailure({ reason: `Can not estimate: ${output.kind}` });
             }
           })
         );
@@ -96,7 +96,7 @@ export const roundEpic = (
         } = state$.value;
 
         if (!instance) {
-          return of(RoundAction.somethingFailure("Can not show down with nullish"));
+          return of(RoundAction.somethingFailure({ reason: "Can not show down" }));
         }
 
         const useCase = registrar.resolve("showDownUseCase");
