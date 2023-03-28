@@ -20,7 +20,7 @@ const styles = {
       "px-4",
       "py-3",
       "text-sm",
-      "transition-[opacity,top]",
+      "transition-[opacity,transform]",
       "animate-slide-in",
       {
         "border-primary-400": type === "info",

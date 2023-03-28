@@ -14,7 +14,6 @@ export function KickedUserNavigator() {
   useEffect(() => {
     const joinedGame = joinedGames.find((v) => v.gameId === gameId);
 
-    console.log(joinedGames, joinedGame);
     if (joinedGame && joinedGame.state === JoinedGameState.left) {
       navigate("/");
     }
