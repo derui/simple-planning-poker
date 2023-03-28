@@ -12,7 +12,16 @@ test("store error with failure", () => {
   let state = reducer(getInitialState(), somethingFailure({ reason: "failed1" }));
   state = reducer(state, tryAuthenticateFailure({ reason: "failed2" }));
 
-  expect(Object.values(state.errors).sort()).toEqual(expect.arrayContaining(["failed1", "failed2"]));
+  expect(
+    Object.values(state.errors)
+      .map((v) => v.content)
+      .sort()
+  ).toEqual(expect.arrayContaining(["failed1", "failed2"]));
+  expect(
+    Object.values(state.errors)
+      .map((v) => v.type)
+      .sort()
+  ).toEqual(expect.arrayContaining(["alert", "alert"]));
 });
 
 test("clear error with id", () => {

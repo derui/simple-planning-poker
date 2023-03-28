@@ -141,8 +141,8 @@ export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (r
 
   Object.values(round.estimations).forEach((v) => {
     if (UserEstimation.isEstimated(v)) {
-      const count = estimationMap.get(v.card) ?? 1;
-      estimationMap.set(v.card, count);
+      const count = estimationMap.get(v.card) ?? 0;
+      estimationMap.set(v.card, count + 1);
     }
   });
 

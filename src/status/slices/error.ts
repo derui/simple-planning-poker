@@ -2,8 +2,10 @@ import { AnyAction, createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 import { clearError, SomethingFailure } from "../actions/common";
 
+type Type = "info" | "warning" | "alert";
+
 interface ErrorState {
-  errors: Record<string, string>;
+  errors: Record<string, { content: string; type: Type }>;
 }
 
 const initialState = {
@@ -24,7 +26,7 @@ const slice = createSlice({
     builder.addMatcher(
       (action) => action.type.match(/.*Failure$/),
       (draft, action: AnyAction) => {
-        draft.errors[v4()] = (action.payload as SomethingFailure).reason;
+        draft.errors[v4()] = { content: (action.payload as SomethingFailure).reason, type: "alert" };
       }
     );
   },

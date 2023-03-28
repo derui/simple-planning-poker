@@ -157,6 +157,7 @@ describe("select round result", () => {
     let round = randomRound({ cards: game.cards, id: game.round });
     game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
     game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
+    game = Game.joinUserAsPlayer(game, User.createId(), Game.makeInvitation(game))[0];
     store.dispatch(openGameSuccess({ game, players: [] }));
 
     round = Round.takePlayerEstimation(
@@ -167,7 +168,12 @@ describe("select round result", () => {
     round = Round.takePlayerEstimation(
       round as any,
       game.joinedPlayers[1].user,
-      UserEstimation.estimated(game.cards[2])
+      UserEstimation.estimated(game.cards[3])
+    );
+    round = Round.takePlayerEstimation(
+      round as any,
+      game.joinedPlayers[2].user,
+      UserEstimation.estimated(game.cards[3])
     );
     round = Round.showDown(round as any, new Date())[0];
     store.dispatch(notifyRoundUpdated(round));
@@ -176,10 +182,10 @@ describe("select round result", () => {
 
     expect(ret).toEqual(
       Loadable.finished({
-        average: 2.5,
+        average: 4,
         cardAndCounts: [
           [2, 1],
-          [3, 1],
+          [5, 2],
         ],
       })
     );
