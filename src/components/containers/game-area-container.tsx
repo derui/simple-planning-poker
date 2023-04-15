@@ -10,7 +10,13 @@ import { AppDispatch } from "@/status/store";
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
-  gridContainer: classNames("w-full", "h-full", "grid", "grid-rows-[1fr_8rem_5rem_8rem_1fr]", "grid-cols-3"),
+  gridContainer: classNames(
+    "w-full",
+    "h-full",
+    "grid",
+    "grid-rows-[1fr_8rem_5rem_8rem_1fr]",
+    "grid-cols-[1fr_max-content_1fr]"
+  ),
   estimations: classNames("flex"),
   table: classNames(
     "row-start-3",
@@ -21,6 +27,7 @@ const styles = {
     "border-primary-400",
     "bg-secondary1-300",
     "h-20",
+    "px-6",
     "min-w-fit",
     "flex-col",
     "items-center",
