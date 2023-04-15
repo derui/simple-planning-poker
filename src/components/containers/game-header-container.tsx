@@ -12,6 +12,7 @@ import { selectCurrentGameInvitationToken, selectCurrentGameName, selectJoinedPl
 import { kickPlayer, leaveGame } from "@/status/actions/game";
 import { selectUserInfo } from "@/status/selectors/user";
 import * as User from "@/domains/user";
+import { showMessage } from "@/status/actions/common";
 
 type Props = BaseProps;
 
@@ -48,6 +49,10 @@ export function GameHeaderContainer(props: Props) {
     dispatch(kickPlayer(id));
   };
 
+  const handleCopy = () => {
+    dispatch(showMessage("invitation token copied"));
+  };
+
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <GameInfo
@@ -63,7 +68,7 @@ export function GameHeaderContainer(props: Props) {
           onKick={userInfo[0].owner ? handleKick : undefined}
           testid={gen("joined-user-list")}
         />
-        <InvitationToken invitationToken={invitation[0]} testid={gen("invitation")} />
+        <InvitationToken invitationToken={invitation[0]} testid={gen("invitation")} onCopy={handleCopy} />
         <UserInfoContainer testid={gen("user-info")} />
       </div>
     </div>

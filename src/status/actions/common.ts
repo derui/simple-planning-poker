@@ -16,3 +16,8 @@ export interface SomethingFailure {
  * clear error that is specified by given id
  */
 export const clearError = createAction<string>("clearError");
+
+/**
+ * show message as information
+ */
+export const showMessage = createAction<string>("showMessage");

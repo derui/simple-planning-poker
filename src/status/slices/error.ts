@@ -1,6 +1,6 @@
 import { AnyAction, createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
-import { clearError, SomethingFailure } from "../actions/common";
+import { clearError, showMessage, SomethingFailure } from "../actions/common";
 
 type Type = "info" | "warning" | "alert";
 
@@ -21,6 +21,10 @@ const slice = createSlice({
       if (draft.errors[action.payload]) {
         delete draft.errors[action.payload];
       }
+    });
+
+    builder.addCase(showMessage, (draft, action) => {
+      draft.errors[v4()] = { content: action.payload, type: "info" };
     });
 
     builder.addMatcher(
