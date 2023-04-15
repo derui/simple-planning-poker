@@ -31,7 +31,7 @@ test("open container after click", async () => {
   const container = screen.getByTestId("container");
 
   expect(root.dataset).toHaveProperty("opened", "true");
-  expect(container.classList.contains("visible")).toBe(true);
+  expect(container.classList.contains("animate-fade-in")).toBe(true);
 });
 
 test("display invitation link", async () => {
@@ -42,4 +42,13 @@ test("display invitation link", async () => {
   const container = screen.getByRole("textbox");
 
   expect(container).toHaveProperty("value", "token");
+});
+
+test("raise event when click copy button", async () => {
+  expect.assertions(1);
+
+  render(<InvitationToken invitationToken="token" onCopy={() => expect(1)} />);
+
+  await userEvent.click(screen.getByTestId("opener"));
+  await userEvent.click(screen.getByTestId("copyButton"));
 });

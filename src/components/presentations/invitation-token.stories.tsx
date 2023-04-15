@@ -8,7 +8,7 @@ import twind from "@/twind.config.cjs";
 install(twind);
 
 const meta = {
-  title: "Presentational/Invitation Link",
+  title: "Presentational/Invitation Token",
   component: InvitationToken,
   tags: ["autodocs"],
 } satisfies Meta<typeof InvitationToken>;
@@ -23,7 +23,7 @@ export const Normal: Story = {
 
   render(args) {
     return (
-      <div className="w-full flex flex-col items-end">
+      <div className="w-full flex flex-col items-center">
         <InvitationToken {...args} />
       </div>
     );
