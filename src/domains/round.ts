@@ -26,6 +26,7 @@ interface CommonRound {
   readonly id: Id;
   readonly estimations: Record<User.Id, UserEstimation.T>;
   readonly cards: SelectableCards.T;
+  readonly theme: string | undefined;
 }
 
 /**
@@ -63,16 +64,19 @@ export const roundOf = function roundOf({
   id,
   cards,
   estimations = [],
+  theme = undefined,
 }: {
   id: Id;
   cards: SelectableCards.T;
   estimations?: PlayerEstimation[];
+  theme?: string;
 }): Round {
   return {
     _tag: _round,
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     cards: SelectableCards.clone(cards),
+    theme,
   };
 };
 
@@ -84,11 +88,13 @@ export const finishedRoundOf = function finishedRoundOf({
   cards,
   estimations,
   finishedAt,
+  theme = undefined,
 }: {
   id: Id;
   cards: SelectableCards.T;
   finishedAt: DateTime;
   estimations: PlayerEstimation[];
+  theme?: string;
 }): FinishedRound {
   return {
     _tag: _finishedRound,
@@ -96,6 +102,7 @@ export const finishedRoundOf = function finishedRoundOf({
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
     cards: SelectableCards.clone(cards),
+    theme,
   };
 };
 
@@ -172,6 +179,19 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
     }, 0) / cards.length;
 
   return average as CalculatedStoryPoint;
+};
+
+/**
+ * change theme of round.
+ */
+export const changeTheme = function changeTheme(round: T, theme: string): T {
+  if (round._tag === _finishedRound) {
+    return round;
+  }
+
+  return produce(round, (draft) => {
+    draft.theme = theme;
+  });
 };
 
 // simple guards

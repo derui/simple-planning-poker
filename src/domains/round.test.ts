@@ -10,6 +10,7 @@ import {
   isFinishedRound,
   canShowDown,
   T,
+  changeTheme,
 } from "./round";
 import * as SelectableCards from "./selectable-cards";
 import * as StoryPoint from "./story-point";
@@ -208,5 +209,36 @@ describe("guards", () => {
 
     expect(isFinishedRound(round)).toBe(false);
     expect(isFinishedRound(finished)).toBe(true);
+  });
+});
+
+describe("theme", () => {
+  test("should be able to change theme for round", () => {
+    const round = roundOf({
+      id: createId("id"),
+      cards: cards,
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+    });
+
+    const newRound = changeTheme(round, "new theme");
+
+    expect(round.theme).toBeUndefined();
+    expect(isRound(newRound)).toBe(true);
+    expect(newRound.theme).toBe("new theme");
+  });
+
+  test("can not change theme of finished round", () => {
+    const round = finishedRoundOf({
+      id: createId("id"),
+      cards: cards,
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      finishedAt: new Date().toISOString(),
+      theme: "finished",
+    });
+
+    const changed = changeTheme(round, "changed");
+
+    expect(changed).toBe(round);
+    expect(changed.theme).toBe("finished");
   });
 });
