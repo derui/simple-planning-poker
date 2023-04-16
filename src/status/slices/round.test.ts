@@ -15,7 +15,7 @@ test("initial state", () => {
 test("should finished with finished", () => {
   const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
   let owner = User.createId();
-  let round: Round.T = randomRound({ cards });
+  let round: Round.T = randomRound({ cards, theme: "theme" });
   round = Round.takePlayerEstimation(round, owner, estimated(cards[0]));
   round = Round.showDown(round as any, new Date())[0];
 
@@ -32,5 +32,6 @@ test("should finished with finished", () => {
     },
     state: "Finished",
     averagePoint: 1,
+    theme: "theme",
   });
 });

@@ -171,6 +171,7 @@ export const randomRound = function randomRound(args: Partial<Parameters<typeof 
     id: args.id ?? Round.createId(),
     cards: args.cards ?? randomCards(),
     estimations: args.estimations ?? [],
+    theme: args.theme,
   });
 };
 

@@ -20,5 +20,9 @@ export const showDown = createAction(`${prefix}:showDown`);
 export const showDownSuccess = createAction<Round.T>(`${prefix}:showDownSuccess`);
 export const showDownFailed = createAction<SomethingFailure>(`${prefix}:showDownFailed`);
 
+// change theme
+export const changeTheme = createAction<string>(`${prefix}:changeTheme`);
+export const changeThemeSuccess = createAction<Round.T>(`${prefix}:changeThemeSuccess`);
+
 // notify round update(private action. DO NOT DISPATCH THESE ACTIONS FROM COMPONENTS)
 export const notifyRoundUpdated = createAction<Round.T>(`${prefix}:notifyRoundUpdated`);

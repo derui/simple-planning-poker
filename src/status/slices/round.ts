@@ -16,6 +16,7 @@ interface RoundState {
     estimations: Record<User.Id, UserEstimation.T>;
     state: State;
     averagePoint: number;
+    theme: string | undefined;
   };
 }
 
@@ -33,6 +34,7 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
       estimations: round.estimations,
       state: Round.isFinishedRound(round) ? "Finished" : Round.canShowDown(round) ? "ShowDownPrepared" : "NotPrepared",
       averagePoint: Round.isFinishedRound(round) ? Round.calculateAverage(round) : 0,
+      theme: round.theme,
     };
   } else {
     draft.instance.id = round.id;
@@ -48,6 +50,8 @@ const normalize = function normalize(draft: WritableDraft<RoundState>, round: Ro
       : Round.canShowDown(round)
       ? "ShowDownPrepared"
       : "NotPrepared";
+
+    draft.instance.theme = round.theme;
   }
 
   draft.instance.averagePoint = Round.isFinishedRound(round) ? Round.calculateAverage(round) : 0;
@@ -75,6 +79,14 @@ const slice = createSlice({
     });
 
     builder.addCase(RoundAction.showDownSuccess, (draft, { payload }) => {
+      if (!draft.instance) {
+        return;
+      }
+
+      normalize(draft, payload);
+    });
+
+    builder.addCase(RoundAction.changeThemeSuccess, (draft, { payload }) => {
       if (!draft.instance) {
         return;
       }
