@@ -40,7 +40,7 @@ const styles = {
       "inline-block",
       "flex-none",
       "before:bg-primary-500",
-      iconize("chevron-down", "s"),
+      iconize("chevron-down", { size: "s" }),
       "w-5",
       "h-5",
       "transition-transform",

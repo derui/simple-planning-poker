@@ -76,7 +76,7 @@ const styles = {
       "bg-primary-500",
       "active:shadow",
       "before:bg-primary-200",
-      iconize("check", "s")
+      iconize("check", { size: "s" })
     ),
     cancel: classNames(
       "rounded",
@@ -90,7 +90,7 @@ const styles = {
       "border-transparent",
       "hover:border-darkgray",
       "before:bg-gray",
-      iconize("x", "s")
+      iconize("x", { size: "s" })
     ),
   },
 } as const;

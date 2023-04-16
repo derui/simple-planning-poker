@@ -42,7 +42,7 @@ const styles = {
       "left-0",
       "inline-block",
       "z-10",
-      iconize("loader-2", size),
+      iconize("loader-2", { size }),
       "before:bg-gray",
       "animate-spin",
       sizeStyle(size)
