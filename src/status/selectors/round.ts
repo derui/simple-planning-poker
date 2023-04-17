@@ -7,7 +7,7 @@ const selectRound = createDraftSafeSelector(selectSelf, (state) => state.round.i
 
 interface RoundInformation {
   finished: boolean;
-  theme: string | undefined;
+  theme: string | null;
 }
 
 /**

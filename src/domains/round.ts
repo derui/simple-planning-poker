@@ -26,7 +26,7 @@ interface CommonRound {
   readonly id: Id;
   readonly estimations: Record<User.Id, UserEstimation.T>;
   readonly cards: SelectableCards.T;
-  readonly theme: string | undefined;
+  readonly theme: string | null;
 }
 
 /**
@@ -64,7 +64,7 @@ export const roundOf = function roundOf({
   id,
   cards,
   estimations = [],
-  theme = undefined,
+  theme,
 }: {
   id: Id;
   cards: SelectableCards.T;
@@ -76,7 +76,7 @@ export const roundOf = function roundOf({
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     cards: SelectableCards.clone(cards),
-    theme: theme === "" ? undefined : theme,
+    theme: !theme ? null : theme,
   };
 };
 
@@ -88,7 +88,7 @@ export const finishedRoundOf = function finishedRoundOf({
   cards,
   estimations,
   finishedAt,
-  theme = undefined,
+  theme,
 }: {
   id: Id;
   cards: SelectableCards.T;
@@ -102,7 +102,7 @@ export const finishedRoundOf = function finishedRoundOf({
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
     cards: SelectableCards.clone(cards),
-    theme: theme === "" ? undefined : theme,
+    theme: !theme ? null : theme,
   };
 };
 
@@ -158,7 +158,15 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
     kind: DOMAIN_EVENTS.RoundFinished,
     roundId: round.id,
   };
-  return [finishedRoundOf({ ...round, finishedAt: dateTimeToString(now), estimations: estimations }), event];
+  return [
+    finishedRoundOf({
+      ...round,
+      finishedAt: dateTimeToString(now),
+      estimations: estimations,
+      theme: round.theme ?? undefined,
+    }),
+    event,
+  ];
 };
 
 /**
@@ -193,7 +201,7 @@ export const changeTheme = function changeTheme(round: T, theme: string): T {
     if (theme) {
       draft.theme = theme;
     } else {
-      draft.theme = undefined;
+      draft.theme = null;
     }
   });
 };

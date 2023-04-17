@@ -222,7 +222,7 @@ describe("theme", () => {
 
     const newRound = changeTheme(round, "new theme");
 
-    expect(round.theme).toBeUndefined();
+    expect(round.theme).toBeNull();
     expect(isRound(newRound)).toBe(true);
     expect(newRound.theme).toBe("new theme");
   });
@@ -252,6 +252,6 @@ describe("theme", () => {
 
     const changed = changeTheme(round, "");
 
-    expect(changed.theme).toBeUndefined();
+    expect(changed.theme).toBeNull();
   });
 });

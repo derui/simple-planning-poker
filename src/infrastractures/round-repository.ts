@@ -23,8 +23,10 @@ export class RoundRepositoryImpl implements RoundRepository {
       },
       {}
     );
-    if (round.theme) {
+    if (round.theme !== undefined) {
       updates[resolver.theme(round.id)] = round.theme;
+    } else {
+      updates[resolver.theme(round.id)] = null;
     }
 
     if (Round.isRound(round)) {

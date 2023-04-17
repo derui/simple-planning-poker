@@ -16,7 +16,7 @@ interface RoundState {
     estimations: Record<User.Id, UserEstimation.T>;
     state: State;
     averagePoint: number;
-    theme: string | undefined;
+    theme: string | null;
   };
 }
 

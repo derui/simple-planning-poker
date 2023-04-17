@@ -7,7 +7,7 @@ import { baseInput } from "../common-styles";
 
 export interface Props extends BaseProps {
   editable?: boolean;
-  initialTheme?: string;
+  initialTheme?: string | null;
   onThemeChange?: (theme: string) => void;
 }
 
@@ -73,7 +73,7 @@ const Styles = {
 
 interface EditorProps extends BaseProps {
   shown: boolean;
-  initialTheme?: string;
+  initialTheme?: string | null;
   onSubmit: (theme: string) => void;
   onCancel: () => void;
 }
@@ -105,10 +105,6 @@ const Editor = function Editor(props: EditorProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    if (!theme) {
-      return;
-    }
 
     props.onSubmit(theme);
   };
