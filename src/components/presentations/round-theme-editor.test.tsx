@@ -60,7 +60,7 @@ describe("edit theme", () => {
     expect(screen.getByTestId("editor/root").dataset.shown).toBe("false");
   });
 
-  test("should hide editor when lost focus on input", async () => {
+  test("should not hide editor when lost focus on input", async () => {
     render(<RoundThemeEditor initialTheme="initial theme" />);
 
     await userEvent.click(screen.getByTestId("theme"));
@@ -69,7 +69,7 @@ describe("edit theme", () => {
 
     await userEvent.click(screen.getByTestId("root"));
 
-    expect(screen.getByTestId("editor/root").dataset.shown).toBe("false");
+    expect(screen.getByTestId("editor/root").dataset.shown).toBe("true");
   });
 
   test("should hide editor when type escape", async () => {
