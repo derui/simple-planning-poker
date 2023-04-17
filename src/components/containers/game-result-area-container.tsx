@@ -2,10 +2,12 @@ import classNames from "classnames";
 import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
+import { RoundThemeEditor } from "../presentations/round-theme-editor";
 import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
 import { AppDispatch } from "@/status/store";
 import { newRound } from "@/status/actions/game";
+import { selectRoundInformation } from "@/status/selectors/round";
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
@@ -74,9 +76,10 @@ const GameProgressionButton = (dispatch: AppDispatch) => {
 // eslint-disable-next-line func-style
 export function GameResultAreaContainer() {
   const estimations = useAppSelector(selectUserEstimationInfos);
+  const roundInformation = useAppSelector(selectRoundInformation());
   const dispatch = useAppDispatch();
 
-  if (!isFinished(estimations)) {
+  if (!isFinished(estimations) || !isFinished(roundInformation)) {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
@@ -104,7 +107,9 @@ export function GameResultAreaContainer() {
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
-        <div className="row-start-1 col-span-full"></div>
+        <div className="row-start-1 col-span-full ml-12">
+          <RoundThemeEditor editable={false} initialTheme={roundInformation[0].theme} testid="themeEditor" />
+        </div>
         <div className="row-start-2 col-start-2">
           <PlayerEstimations estimations={upper} testid="estimations" />
         </div>

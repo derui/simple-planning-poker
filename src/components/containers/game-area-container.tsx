@@ -45,6 +45,7 @@ const styles = {
     "border-primary-400",
     "px-4",
     "h-20",
+    "w-48",
     "min-w-fit",
     "flex-col",
     "items-center",
@@ -120,10 +121,10 @@ export function GameAreaContainer() {
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
-        <div className="col-span-full row-start-1">
+        <div className="col-span-full row-start-1 ml-12">
           <RoundThemeEditor
             onThemeChange={handleThemeChange}
-            editable={roundInformation[0].finished}
+            editable={!roundInformation[0].finished}
             initialTheme={roundInformation[0].theme}
             testid="themeEditor"
           />

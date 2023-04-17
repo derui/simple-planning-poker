@@ -84,3 +84,22 @@ test("dispatch new round event", async () => {
 
   await userEvent.click(screen.getByText("Start next round"));
 });
+
+test("show round theme and can not change it", async () => {
+  const store = createPureStore();
+  const user = User.create({ id: User.createId(), name: "name" });
+  const round = randomRound({ theme: "finished round" });
+
+  store.dispatch(tryAuthenticateSuccess({ user }));
+  store.dispatch(openGameSuccess({ game: randomGame({ owner: user.id, round: round.id }), players: [user] }));
+  store.dispatch(notifyRoundUpdated(takePlayerEstimation(round, user.id, giveUp())));
+
+  render(
+    <Provider store={store}>
+      <GameResultAreaContainer />
+    </Provider>
+  );
+
+  expect(screen.getByText("finished round")).not.toBeNull();
+  expect(screen.getByTestId("themeEditor/theme").getAttribute("aria-disabled")).toBe("true");
+});
