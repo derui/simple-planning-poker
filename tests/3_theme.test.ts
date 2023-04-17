@@ -37,4 +37,12 @@ test("change theme", async ({ page, newPageOnNewContext: other, resetFirebase })
 
   // show same theme.
   await expect(other.getByText("changed")).toBeVisible();
+
+  // estimate and show down
+  await page.getByText("3", { exact: true }).click();
+  await page.getByRole("button", { name: "Show down!" }).click();
+
+  // show same theme
+  await expect(page.getByText("changed")).toBeVisible();
+  await expect(other.getByText("changed")).toBeVisible();
 });
