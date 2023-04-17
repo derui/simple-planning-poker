@@ -2,11 +2,13 @@ import classNames from "classnames";
 import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
+import { RoundThemeEditor } from "../presentations/round-theme-editor";
 import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
 import { selectCanShowDown } from "@/status/selectors/game";
 import * as RoundAction from "@/status/actions/round";
 import { AppDispatch } from "@/status/store";
+import { selectRoundInformation } from "@/status/selectors/round";
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
@@ -85,9 +87,10 @@ const GameProgressionButton = (dispatch: AppDispatch, displayButton: boolean) =>
 export function GameAreaContainer() {
   const estimations = useAppSelector(selectUserEstimationInfos);
   const displayNewRoundButton = useAppSelector(selectCanShowDown);
+  const roundInformation = useAppSelector(selectRoundInformation());
   const dispatch = useAppDispatch();
 
-  if (!isFinished(estimations)) {
+  if (!isFinished(estimations) || !isFinished(roundInformation)) {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
@@ -110,11 +113,21 @@ export function GameAreaContainer() {
   const button = GameProgressionButton(dispatch, displayNewRoundButton);
   const upper = estimations[0].filter((_, index) => index % 2 === 0);
   const lower = estimations[0].filter((_, index) => index % 2 === 1);
+  const handleThemeChange = (theme: string) => {
+    dispatch(RoundAction.changeTheme(theme));
+  };
 
   return (
     <div className={styles.root}>
       <div className={styles.gridContainer}>
-        <div className="col-span-full row-start-1"></div>
+        <div className="col-span-full row-start-1">
+          <RoundThemeEditor
+            onThemeChange={handleThemeChange}
+            editable={roundInformation[0].finished}
+            initialTheme={roundInformation[0].theme}
+            testid="themeEditor"
+          />
+        </div>
         <div className="col-start-2 row-start-2">
           <PlayerEstimations estimations={upper} testid="estimations" />
         </div>
