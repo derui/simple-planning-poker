@@ -18,6 +18,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
   const cards = val.cards as number[];
   const estimations = val.userEstimations as { [key: User.Id]: Serialized } | undefined;
   const finishedAt = val.finishedAt as string | undefined;
+  const theme = val.theme as string | undefined;
 
   const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
   const deserializedEstimations = estimations
@@ -40,6 +41,7 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
       finishedAt,
       cards: selectableCards,
       estimations: deserializedEstimations,
+      theme,
     });
   }
 
@@ -47,5 +49,6 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
     id,
     cards: selectableCards,
     estimations: deserializedEstimations,
+    theme,
   });
 };

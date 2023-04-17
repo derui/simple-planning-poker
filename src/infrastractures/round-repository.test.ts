@@ -62,6 +62,7 @@ test("should be able to save and find a round", async () => {
     ])
   );
   expect(instance?.cards).toEqual(round.cards);
+  expect(instance?.theme).toBeUndefined();
 });
 
 test("should be able to save and find a finished round", async () => {
@@ -76,6 +77,7 @@ test("should be able to save and find a finished round", async () => {
       { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
       { user: User.createId("user4"), estimation: UserEstimation.unselected() },
     ],
+    theme: "theme",
   });
   const [finished] = R.showDown(round, parseDateTime("2023-02-25T00:01:01.000Z"));
 
@@ -98,6 +100,7 @@ test("should be able to save and find a finished round", async () => {
     ])
   );
   expect(instance?.finishedAt).toBe("2023-02-25T00:01:01.000Z");
+  expect(instance?.theme).toBe("theme");
 });
 
 test("should not be able find a game if it did not save before", async () => {

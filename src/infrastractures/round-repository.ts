@@ -23,6 +23,9 @@ export class RoundRepositoryImpl implements RoundRepository {
       },
       {}
     );
+    if (round.theme) {
+      updates[resolver.theme(round.id)] = round.theme;
+    }
 
     if (Round.isRound(round)) {
       updates[resolver.cards(round.id)] = round.cards;

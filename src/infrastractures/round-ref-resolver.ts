@@ -23,3 +23,7 @@ export const finishedAt = function finishedAt(id: Id) {
 export const joinedPlayers = function joinedPlayers(id: Id) {
   return `/rounds/${id}/joinedPlayers`;
 };
+
+export const theme = function theme(id: Id) {
+  return `/rounds/${id}/theme`;
+};
