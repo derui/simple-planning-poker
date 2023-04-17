@@ -44,7 +44,7 @@ const styles = {
       }
     ),
 
-  eye: classnames("flex", "items-center", iconize("eye", "l"), "before:bg-primary-400"),
+  eye: classnames("flex", "items-center", iconize("eye", { size: "l" }), "before:bg-primary-400"),
 };
 
 // eslint-disable-next-line func-style
