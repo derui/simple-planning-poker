@@ -76,7 +76,7 @@ export const roundOf = function roundOf({
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     cards: SelectableCards.clone(cards),
-    theme,
+    theme: theme === "" ? undefined : theme,
   };
 };
 
@@ -102,7 +102,7 @@ export const finishedRoundOf = function finishedRoundOf({
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
     cards: SelectableCards.clone(cards),
-    theme,
+    theme: theme === "" ? undefined : theme,
   };
 };
 
@@ -190,7 +190,11 @@ export const changeTheme = function changeTheme(round: T, theme: string): T {
   }
 
   return produce(round, (draft) => {
-    draft.theme = theme;
+    if (theme) {
+      draft.theme = theme;
+    } else {
+      draft.theme = undefined;
+    }
   });
 };
 

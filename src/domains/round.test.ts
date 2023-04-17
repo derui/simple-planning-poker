@@ -241,4 +241,17 @@ describe("theme", () => {
     expect(changed).toBe(round);
     expect(changed.theme).toBe("finished");
   });
+
+  test("set undefined when given data is empty string", () => {
+    const round = roundOf({
+      id: createId("id"),
+      cards: cards,
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      theme: "theme",
+    });
+
+    const changed = changeTheme(round, "");
+
+    expect(changed.theme).toBeUndefined();
+  });
 });
