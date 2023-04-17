@@ -10,6 +10,9 @@ interface RoundInformation {
   theme: string | undefined;
 }
 
+/**
+ * select information of current round.
+ */
 export const selectRoundInformation = function selectRoundInformation() {
   return createDraftSafeSelector(selectRound, (round): Loadable.T<RoundInformation> => {
     if (!round) {
@@ -18,7 +21,7 @@ export const selectRoundInformation = function selectRoundInformation() {
 
     const ret = {
       finished: round.state === "Finished",
-      theme: undefined,
+      theme: round.theme,
     };
 
     return Loadable.finished(ret);

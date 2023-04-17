@@ -16,9 +16,9 @@ test("return loading when no round", () => {
 test("return theme after loaded", () => {
   const store = createPureStore();
 
-  store.dispatch(notifyRoundUpdated(randomRound()));
+  store.dispatch(notifyRoundUpdated(randomRound({ theme: "new theme" })));
 
   const ret = s.selectRoundInformation()(store.getState());
 
-  expect(ret[0]).toEqual({ theme: undefined, finished: false });
+  expect(ret[0]).toEqual({ theme: "new theme", finished: false });
 });
