@@ -47,6 +47,7 @@ const Styles = {
     input: classNames(baseInput, "pr-9"),
     submit: (canSubmit: boolean) =>
       classNames(
+        "z-1",
         "absolute",
         "right-2",
         "inline-flex",
@@ -96,10 +97,6 @@ const Editor = function Editor(props: EditorProps) {
     setTheme(value);
   };
 
-  const handleCancelAfterBlur = () => {
-    props.onCancel();
-  };
-
   const handleCancelAfterEscape = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       props.onCancel();
@@ -108,7 +105,6 @@ const Editor = function Editor(props: EditorProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    e.stopPropagation();
 
     if (!theme) {
       return;
@@ -127,7 +123,6 @@ const Editor = function Editor(props: EditorProps) {
       <input
         ref={ref}
         className={Styles.editor.input}
-        onBlur={handleCancelAfterBlur}
         onKeyUp={handleCancelAfterEscape}
         placeholder="Theme of round"
         type="text"

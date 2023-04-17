@@ -34,6 +34,7 @@ import { CreateRoundAfterCreateGameListener } from "./infrastractures/event/crea
 import { NewRoundStartedListener } from "./infrastractures/event/new-round-started-listener";
 import { RemoveGameFromJoinedGameListener } from "./infrastractures/event/remove-game-from-joined-games-listener";
 import { KickPlayerUseCase } from "./usecases/kick-player";
+import { ChangeThemeUseCase } from "./usecases/change-theme";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -82,6 +83,7 @@ registrar.register("authenticator", new FirebaseAuthenticator(auth, database, re
 registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
 registrar.register("gameObserver", new GameObserverImpl(database));
 registrar.register("kickPlayerUseCase", new KickPlayerUseCase(dispatcher, gameRepository));
+registrar.register("changeThemeUseCase", new ChangeThemeUseCase(roundRepository));
 
 install(config, process.env.NODE_ENV === "production");
 
