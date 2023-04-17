@@ -7,7 +7,7 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
 
-type Epics = "giveUp" | "estimate" | "showDown";
+type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -114,6 +114,41 @@ export const roundEpic = (
                 return RoundAction.showDownFailed({ reason: "can not find game" });
               case "showDownFailed":
                 return RoundAction.showDownFailed({ reason: "failed some reason" });
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  changeTheme: (action$, state$) =>
+    action$.pipe(
+      filter(RoundAction.changeTheme.match),
+      switchMap(({ payload }) => {
+        const {
+          round: { instance },
+        } = state$.value;
+
+        if (!instance) {
+          return of(RoundAction.somethingFailure({ reason: "Can not show down" }));
+        }
+
+        const useCase = registrar.resolve("changeThemeUseCase");
+
+        return from(
+          useCase.execute({
+            roundId: instance.id,
+            theme: payload,
+          })
+        ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return RoundAction.changeThemeSuccess(output.round);
+              case "notFound":
+                return RoundAction.somethingFailure({ reason: "can not find round" });
+              case "canNotChangeTheme":
+                return RoundAction.somethingFailure({ reason: "can not change theme" });
             }
           })
         );

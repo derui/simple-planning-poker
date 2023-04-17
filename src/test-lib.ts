@@ -81,9 +81,7 @@ export const createMockedLeaveGameUseCase = function createMockedLeaveGameUseCas
   } as LeaveGameUseCase;
 };
 
-export const createMockedUseCase = function createMockedLeaveGameUseCase<T extends UseCase<unknown>>(
-  mock: Partial<T> = {}
-) {
+export const createMockedUseCase = function createMockedUseCase<T extends UseCase<unknown>>(mock: Partial<T> = {}) {
   return {
     execute: mock.execute ?? sinon.fake(),
   } as T;

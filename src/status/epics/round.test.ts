@@ -14,7 +14,14 @@ import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
-import { createMockedEstimatePlayerUseCase, createMockedShowDownUseCase, randomGame, randomRound } from "@/test-lib";
+import {
+  createMockedEstimatePlayerUseCase,
+  createMockedShowDownUseCase,
+  createMockedUseCase,
+  randomGame,
+  randomRound,
+} from "@/test-lib";
+import { ChangeThemeUseCase } from "@/usecases/change-theme";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -240,6 +247,48 @@ describe("show down", () => {
     expect(fake.callCount).toBe(1);
     expect(fake.lastCall.firstArg).toEqual({
       roundId: round.id,
+    });
+  });
+});
+
+describe("change theme", () => {
+  test("handle event", async () => {
+    let round = randomRound({ cards: CARDS });
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: [],
+      cards: CARDS,
+      round: Round.createId(),
+    });
+    round = Round.takePlayerEstimation(round, game.owner, UserEstimation.giveUp());
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves({ kind: "success", round: round });
+    registrar.register(
+      "changeThemeUseCase",
+      createMockedUseCase<ChangeThemeUseCase>({
+        execute: fake,
+      })
+    );
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
+
+    const action$ = of(RoundAction.changeTheme("theme"));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.changeTheme(action$, state$, null));
+
+    expect(ret).toEqual(RoundAction.changeThemeSuccess(round));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.firstArg).toEqual({
+      roundId: round.id,
+      theme: "theme",
     });
   });
 });

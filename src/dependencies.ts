@@ -2,6 +2,7 @@ import { GameRepository } from "./domains/game-repository";
 import { UserRepository } from "./domains/user-repository";
 import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
 import { Authenticator } from "./status/type";
+import { ChangeThemeUseCase } from "./usecases/change-theme";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
 import { ChangeUserNameUseCase } from "./usecases/change-user-name";
 import { CreateGameUseCase } from "./usecases/create-game";
@@ -29,6 +30,7 @@ export type Dependencies = {
   authenticator: Authenticator;
   gameObserver: GameObserver;
   kickPlayerUseCase: KickPlayerUseCase;
+  changeThemeUseCase: ChangeThemeUseCase;
 };
 
 export type ApplicationDependencyRegistrar = DependencyRegistrar<Dependencies>;
