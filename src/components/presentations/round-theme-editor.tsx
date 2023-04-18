@@ -160,7 +160,7 @@ export function RoundThemeEditor(props: Props) {
   return (
     <div className={Styles.root} data-testid={gen("root")}>
       <span
-        className={Styles.theme(props.initialTheme !== undefined, showEditor, editable)}
+        className={Styles.theme(!!props.initialTheme, showEditor, editable)}
         onClick={handleSwitcherClick}
         aria-disabled={!editable}
         data-testid={gen("theme")}

@@ -12,6 +12,12 @@ describe("initial theme", () => {
     expect(screen.getByTestId("theme").textContent).include("No theme");
   });
 
+  test("should be able to render with null", () => {
+    render(<RoundThemeEditor initialTheme={null} />);
+
+    expect(screen.getByTestId("theme").textContent).include("No theme");
+  });
+
   test("print theme when it given", () => {
     render(<RoundThemeEditor initialTheme="initial theme" />);
 
