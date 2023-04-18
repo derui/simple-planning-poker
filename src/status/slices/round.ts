@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { WritableDraft } from "immer/dist/internal";
 import * as RoundAction from "../actions/round";
 import * as Round from "@/domains/round";
 import * as Card from "@/domains/card";
@@ -22,7 +21,7 @@ interface RoundState {
 
 const initialState = {} as RoundState satisfies RoundState;
 
-const normalize = function normalize(draft: WritableDraft<RoundState>, round: Round.T) {
+const normalize = function normalize(draft: RoundState, round: Round.T) {
   if (!draft.instance) {
     draft.instance = {
       id: round.id,

@@ -1,4 +1,4 @@
-import produce from "immer";
+import { produce } from "immer";
 import * as Base from "./base";
 import { DomainEvent, DOMAIN_EVENTS } from "./event";
 import * as User from "./user";

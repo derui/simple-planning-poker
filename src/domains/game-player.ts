@@ -1,4 +1,4 @@
-import produce from "immer";
+import { produce } from "immer";
 import * as User from "./user";
 
 export const UserMode = {

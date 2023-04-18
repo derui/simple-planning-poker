@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { WritableDraft } from "immer/dist/internal";
 import {
   leaveGameSuccess,
   notifyGameChanges,
@@ -30,12 +29,12 @@ const initialState = {
   },
 } as GameState satisfies GameState;
 
-const updateCurrentGame = function updateCurrentGame(state: WritableDraft<GameState>, action: { payload: Game.T }) {
+const updateCurrentGame = function updateCurrentGame(state: GameState, action: { payload: Game.T }) {
   state.currentGame = action.payload;
   state.loading = false;
 };
 
-const loading = function updateCurrentGame(state: WritableDraft<GameState>) {
+const loading = function updateCurrentGame(state: GameState) {
   state.loading = true;
 };
 
