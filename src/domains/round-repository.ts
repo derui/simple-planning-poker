@@ -10,6 +10,11 @@ export interface RoundRepository {
   findBy(id: Round.Id): Promise<Round.T | null>;
 
   /**
+   * find a finished round by id. If a round of given id do not finish yet, this method return `null`.
+   */
+  findFinishedRoundBy(id: Round.Id): Promise<Round.FinishedRound | null>;
+
+  /**
    * save a round
    */
   save(obj: Round.T): Promise<void>;

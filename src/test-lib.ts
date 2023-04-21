@@ -174,6 +174,21 @@ export const randomRound = function randomRound(args: Partial<Parameters<typeof 
 };
 
 /**
+ * create random round for test usage
+ */
+export const randomFinishedRound = function randomFinishedRound(
+  args: Partial<Parameters<typeof Round.finishedRoundOf>[0]> = {}
+): Round.FinishedRound {
+  return Round.finishedRoundOf({
+    id: args.id ?? Round.createId(),
+    cards: args.cards ?? randomCards(),
+    estimations: args.estimations ?? [],
+    theme: args.theme,
+    finishedAt: args.finishedAt ?? new Date().toISOString(),
+  });
+};
+
+/**
  * create random game for test usage
  */
 export const randomUser = function randomUser(args: Partial<Parameters<typeof User.create>[0]>) {

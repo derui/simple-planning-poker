@@ -97,6 +97,7 @@ test("should save invitation in key", async () => {
 test("should be able to list games an user joined", async () => {
   // Arrange
   const repository = new GameRepositoryImpl(database);
+
   let game = randomGame({ id: Game.createId("1"), name: "name" });
   let otherGame = randomGame({ id: Game.createId("2"), name: "name2" });
 

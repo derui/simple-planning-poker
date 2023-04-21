@@ -23,14 +23,12 @@ export class RoundRepositoryImpl implements RoundRepository {
       },
       {}
     );
+    updates[resolver.cards(round.id)] = round.cards;
+
     if (round.theme !== undefined) {
       updates[resolver.theme(round.id)] = round.theme;
     } else {
       updates[resolver.theme(round.id)] = null;
-    }
-
-    if (Round.isRound(round)) {
-      updates[resolver.cards(round.id)] = round.cards;
     }
 
     if (Round.isFinishedRound(round)) {
@@ -47,5 +45,20 @@ export class RoundRepositoryImpl implements RoundRepository {
     const snapshot = await get(child(ref(this.database, "rounds"), id));
 
     return deserializeFrom(id, snapshot);
+  }
+
+  async findFinishedRoundBy(id: Round.Id): Promise<Round.FinishedRound | null> {
+    if (id === "") {
+      return null;
+    }
+    const snapshot = await get(child(ref(this.database, "rounds"), id));
+
+    const ret = deserializeFrom(id, snapshot);
+
+    if (!ret || !Round.isFinishedRound(ret)) {
+      return null;
+    }
+
+    return ret;
   }
 }

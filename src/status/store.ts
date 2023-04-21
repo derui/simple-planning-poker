@@ -2,6 +2,8 @@ import { Action, configureStore } from "@reduxjs/toolkit";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
 // INJECT REDUCER IMPORT HERE
+import * as finishedRounds from "./slices/finished-rounds";
+
 import * as error from "./slices/error";
 
 import * as round from "./slices/round";
@@ -23,6 +25,8 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import type { Dependencies } from "@/dependencies";
 
 const reducers = {
+  finishedRounds: finishedRounds.reducer,
+
   error: error.reducer,
 
   round: round.reducer,

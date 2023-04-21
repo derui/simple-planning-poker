@@ -1,4 +1,4 @@
-import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
+import { test, expect, beforeAll, afterAll, afterEach, describe } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
 import { RoundRepositoryImpl } from "./round-repository";
@@ -8,6 +8,7 @@ import * as StoryPoint from "@/domains/story-point";
 import * as User from "@/domains/user";
 import * as UserEstimation from "@/domains/user-estimation";
 import { parseDateTime } from "@/domains/type";
+import { randomFinishedRound } from "@/test-lib";
 
 let database: any;
 let testEnv: RulesTestEnvironment;
@@ -146,4 +147,44 @@ test("should not be able find a game if it did not save before", async () => {
 
   // Assert
   expect(instance).toBeNull();
+});
+
+describe("find finished round by", () => {
+  test("should return null when the round is not finished", async () => {
+    // Arrange
+    const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
+    const repository = new RoundRepositoryImpl(database);
+    let round = R.roundOf({
+      id: R.createId(),
+      cards: cards,
+      estimations: [
+        { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
+        { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
+        { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
+        { user: User.createId("user4"), estimation: UserEstimation.unselected() },
+      ],
+      theme: "",
+    });
+
+    await repository.save(round);
+
+    // Act
+    const ret = await repository.findFinishedRoundBy(round.id);
+
+    // Assert
+    expect(ret).toBeNull();
+  });
+  test("should return finished round if it is finished", async () => {
+    // Arrange
+    const repository = new RoundRepositoryImpl(database);
+    let round = randomFinishedRound({ theme: "theme" });
+
+    await repository.save(round);
+
+    // Act
+    const ret = await repository.findFinishedRoundBy(round.id);
+
+    // Assert
+    expect(ret).toEqual(round);
+  });
 });

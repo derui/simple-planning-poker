@@ -7,7 +7,14 @@ import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
 
-type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme";
+type Epics =
+  | "giveUp"
+  | "estimate"
+  | "showDown"
+  | "changeTheme"
+  | "openFinishedRounds"
+  | "changePageOfSinishedRounds"
+  | "closeFinishedRounds";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -141,6 +148,36 @@ export const roundEpic = (
             theme: payload,
           })
         ).pipe(
+          map((output) => {
+            switch (output.kind) {
+              case "success":
+                return RoundAction.changeThemeSuccess(output.round);
+              case "notFound":
+                return RoundAction.somethingFailure({ reason: "can not find round" });
+              case "canNotChangeTheme":
+                return RoundAction.somethingFailure({ reason: "can not change theme" });
+            }
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  openFinishedRounds: (action$, state$) =>
+    action$.pipe(
+      filter(RoundAction.openFinishedRounds.match),
+      switchMap(({ payload }) => {
+        const {
+          game: { currentGame },
+        } = state$.value;
+
+        if (!currentGame) {
+          return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
+        }
+
+        const repository = registrar.resolve("gameRepository");
+
+        return from(repository.listFinishedRoundsOf(currentGame.id)).pipe(
           map((output) => {
             switch (output.kind) {
               case "success":
