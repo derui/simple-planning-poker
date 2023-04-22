@@ -283,6 +283,7 @@ test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) 
   // join game with other
   await page.getByTestId("invitation/opener").click();
   const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
+  await page.getByTestId("invitation/opener").click();
   await other.getByPlaceholder(/Paste invitation token/).type(token);
   await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
