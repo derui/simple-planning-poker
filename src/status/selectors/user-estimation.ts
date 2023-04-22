@@ -3,7 +3,6 @@ import { RootState } from "../store";
 import { UserMode } from "@/domains/game-player";
 import * as UserEstimation from "@/domains/user-estimation";
 import * as Card from "@/domains/card";
-import * as User from "@/domains/user";
 import { filterUndefined } from "@/utils/basic";
 import * as Loadable from "@/utils/loadable";
 
@@ -39,7 +38,7 @@ export const selectUserEstimationInfos = createDraftSafeSelector(
 
     const estimations = game.joinedPlayers
       .map(({ user: userId, mode }) => {
-        const user = users[userId as User.Id];
+        const user = users[userId];
 
         if (!user) return;
 
@@ -54,11 +53,9 @@ export const selectUserEstimationInfos = createDraftSafeSelector(
 
         if (UserEstimation.isEstimated(estimation)) {
           displayValue = Card.toString(estimation.card);
-        } else if (UserEstimation.isGiveUp(estimation)) {
-          displayValue = "?";
         }
 
-        if (displayValue) return { userName: user.name, userMode: mode, displayValue, state } as const;
+        return { userName: user.name, userMode: mode, displayValue, state } as const;
       })
       .filter(filterUndefined);
 
