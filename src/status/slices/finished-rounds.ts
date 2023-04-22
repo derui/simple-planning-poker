@@ -13,7 +13,7 @@ interface FinishedRoundState {
   readonly estimations: Record<User.Id, UserEstimation.T>;
   readonly averagePoint: number;
   readonly theme: string | null;
-  readonly finishedAt: Date;
+  readonly finishedAt: string;
 }
 
 interface FinishedRoundsState {
@@ -39,7 +39,7 @@ const normalize = function normalize(round: Round.FinishedRound): FinishedRoundS
     estimations: round.estimations,
     averagePoint: Round.calculateAverage(round),
     theme: round.theme,
-    finishedAt: new Date(round.finishedAt),
+    finishedAt: round.finishedAt,
   };
 };
 

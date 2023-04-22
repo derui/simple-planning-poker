@@ -65,7 +65,7 @@ describe("change page", () => {
             },
             estimations: {},
             averagePoint: 0,
-            finishedAt: new Date(round.finishedAt),
+            finishedAt: round.finishedAt,
             theme: round.theme,
           },
           [round2.id]: {
@@ -74,7 +74,7 @@ describe("change page", () => {
               1: { card: cards[0], order: 0 },
             },
             estimations: {},
-            finishedAt: new Date(round2.finishedAt),
+            finishedAt: round2.finishedAt,
             averagePoint: 0,
             theme: round2.theme,
           },
