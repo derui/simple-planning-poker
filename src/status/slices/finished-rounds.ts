@@ -1,11 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as Round from "@/domains/round";
+import * as Card from "@/domains/card";
+import * as User from "@/domains/user";
+import * as UserEstimation from "@/domains/user-estimation";
 import * as RoundAction from "@/status/actions/round";
 
 type State = "initial" | "fetching" | "fetched" | { kind: "pendingPage"; page: number };
 
 interface FinishedRoundState {
   readonly id: Round.Id;
+  readonly cards: Record<Card.T, { card: Card.T; order: number }>;
+  readonly estimations: Record<User.Id, UserEstimation.T>;
+  readonly averagePoint: number;
   readonly theme: string | null;
   readonly finishedAt: Date;
 }
@@ -22,6 +28,21 @@ const initialState = {
   state: "initial",
 } as FinishedRoundsState satisfies FinishedRoundsState;
 
+const normalize = function normalize(round: Round.FinishedRound): FinishedRoundState {
+  return {
+    id: round.id,
+    cards:
+      round.cards.reduce<Record<Card.T, { card: Card.T; order: number }>>((accum, card, index) => {
+        accum[card] = { card, order: index };
+        return accum;
+      }, {}) ?? {},
+    estimations: round.estimations,
+    averagePoint: Round.calculateAverage(round),
+    theme: round.theme,
+    finishedAt: new Date(round.finishedAt),
+  };
+};
+
 const slice = createSlice({
   name: "finishedRounds",
   initialState,
@@ -32,13 +53,19 @@ const slice = createSlice({
       draft.state = "fetching";
     });
 
+    builder.addCase(RoundAction.somethingFailure, (draft) => {
+      draft.rounds = {};
+      draft.page = 1;
+      draft.state = "fetched";
+    });
+
     builder.addCase(RoundAction.openFinishedRoundsSuccess, (draft, action) => {
       draft.rounds = {};
       draft.page = 1;
       draft.state = "fetched";
 
       for (let round of action.payload) {
-        draft.rounds[round.id] = { id: round.id, theme: round.theme, finishedAt: new Date(round.finishedAt) };
+        draft.rounds[round.id] = normalize(round);
       }
     });
 
@@ -52,7 +79,7 @@ const slice = createSlice({
       draft.state = "fetched";
 
       for (let round of action.payload.rounds) {
-        draft.rounds[round.id] = { id: round.id, theme: round.theme, finishedAt: new Date(round.finishedAt) };
+        draft.rounds[round.id] = normalize(round);
       }
     });
   },

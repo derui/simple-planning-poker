@@ -2,6 +2,8 @@ import { test, expect, describe } from "vitest";
 import { getInitialState, reducer } from "./finished-rounds";
 import * as RoundAction from "@/status/actions/round";
 import { randomFinishedRound } from "@/test-lib";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({ rounds: {}, page: 1, state: "initial" });
@@ -16,16 +18,24 @@ describe("open rounds", () => {
   });
 
   test("update rounds", () => {
-    const round = randomFinishedRound();
+    const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
+    const round = randomFinishedRound({ cards });
     let state = getInitialState();
     state = reducer(state, RoundAction.openFinishedRounds());
     state = reducer(state, RoundAction.openFinishedRoundsSuccess([round]));
 
-    expect(state).toEqual({
-      rounds: { [round.id]: { id: round.id, theme: round.theme, finishedAt: new Date(round.finishedAt) } },
-      page: 1,
-      state: "fetched",
-    });
+    expect(state.rounds[round.id]).toEqual(
+      expect.objectContaining({
+        id: round.id,
+        cards: {
+          1: { card: cards[0], order: 0 },
+          2: { card: cards[1], order: 1 },
+        },
+        estimations: {},
+        averagePoint: 0,
+        theme: round.theme,
+      })
+    );
   });
 });
 
@@ -38,19 +48,40 @@ describe("change page", () => {
   });
 
   test("page changed", () => {
-    const round = randomFinishedRound();
-    const round2 = randomFinishedRound();
+    const cards = SelectableCards.create([1].map(StoryPoint.create));
+    const round = randomFinishedRound({ cards });
+    const round2 = randomFinishedRound({ cards });
     let state = getInitialState();
     state = reducer(state, RoundAction.changePageOfFinishedRounds(3));
     state = reducer(state, RoundAction.changePageOfFinishedRoundsSuccess({ page: 3, rounds: [round, round2] }));
 
-    expect(state).toEqual({
-      rounds: {
-        [round.id]: { id: round.id, theme: round.theme, finishedAt: new Date(round.finishedAt) },
-        [round2.id]: { id: round2.id, theme: round2.theme, finishedAt: new Date(round2.finishedAt) },
-      },
-      page: 3,
-      state: "fetched",
-    });
+    expect(state).toEqual(
+      expect.objectContaining({
+        rounds: {
+          [round.id]: {
+            id: round.id,
+            cards: {
+              1: { card: cards[0], order: 0 },
+            },
+            estimations: {},
+            averagePoint: 0,
+            finishedAt: new Date(round.finishedAt),
+            theme: round.theme,
+          },
+          [round2.id]: {
+            id: round2.id,
+            cards: {
+              1: { card: cards[0], order: 0 },
+            },
+            estimations: {},
+            finishedAt: new Date(round2.finishedAt),
+            averagePoint: 0,
+            theme: round2.theme,
+          },
+        },
+        page: 3,
+        state: "fetched",
+      })
+    );
   });
 });
