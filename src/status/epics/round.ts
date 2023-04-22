@@ -6,15 +6,9 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
+import { filterUndefined } from "@/utils/basic";
 
-type Epics =
-  | "giveUp"
-  | "estimate"
-  | "showDown"
-  | "changeTheme"
-  | "openFinishedRounds"
-  | "changePageOfSinishedRounds"
-  | "closeFinishedRounds";
+type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openFinishedRounds" | "changePageOfSinishedRounds";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -166,6 +160,32 @@ export const roundEpic = (
   openFinishedRounds: (action$, state$) =>
     action$.pipe(
       filter(RoundAction.openFinishedRounds.match),
+      switchMap(() => {
+        const {
+          game: { currentGame },
+        } = state$.value;
+
+        if (!currentGame) {
+          return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
+        }
+
+        const finishedRoundsOnFirstPage = currentGame.finishedRounds.slice(0, 10);
+        const repository = registrar.resolve("roundRepository");
+        const promise = Promise.all(finishedRoundsOnFirstPage.map((id) => repository.findFinishedRoundBy(id)));
+
+        return from(promise).pipe(
+          map((v) => v.filter(filterUndefined)),
+          map((output) => {
+            return RoundAction.openFinishedRoundsSuccess(output);
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  changePageOfSinishedRounds: (action$, state$) =>
+    action$.pipe(
+      filter(RoundAction.changePageOfFinishedRounds.match),
       switchMap(({ payload }) => {
         const {
           game: { currentGame },
@@ -175,18 +195,14 @@ export const roundEpic = (
           return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
         }
 
-        const repository = registrar.resolve("gameRepository");
+        const finishedRoundsOnFirstPage = currentGame.finishedRounds.slice((payload - 1) * 10, payload * 10);
+        const repository = registrar.resolve("roundRepository");
+        const promise = Promise.all(finishedRoundsOnFirstPage.map((id) => repository.findFinishedRoundBy(id)));
 
-        return from(repository.listFinishedRoundsOf(currentGame.id)).pipe(
+        return from(promise).pipe(
+          map((v) => v.filter(filterUndefined)),
           map((output) => {
-            switch (output.kind) {
-              case "success":
-                return RoundAction.changeThemeSuccess(output.round);
-              case "notFound":
-                return RoundAction.somethingFailure({ reason: "can not find round" });
-              case "canNotChangeTheme":
-                return RoundAction.somethingFailure({ reason: "can not change theme" });
-            }
+            return RoundAction.changePageOfFinishedRoundsSuccess({ rounds: output, page: payload });
           })
         );
       }),

@@ -13,15 +13,19 @@ import * as User from "@/domains/user";
 import * as Cards from "@/domains/selectable-cards";
 import * as SP from "@/domains/story-point";
 import * as RoundAction from "@/status/actions/round";
+import * as GameAction from "@/status/actions/game";
 import * as UserEstimation from "@/domains/user-estimation";
 import {
   createMockedEstimatePlayerUseCase,
+  createMockedRoundRepository,
   createMockedShowDownUseCase,
   createMockedUseCase,
+  randomFinishedRound,
   randomGame,
   randomRound,
 } from "@/test-lib";
 import { ChangeThemeUseCase } from "@/usecases/change-theme";
+import { between } from "@/utils/array";
 
 const CARDS = Cards.create([1, 2, 3].map(SP.create));
 
@@ -290,5 +294,83 @@ describe("change theme", () => {
       roundId: round.id,
       theme: "theme",
     });
+  });
+});
+
+describe("finished rounds", () => {
+  test("open finished rounds", async () => {
+    let round = randomFinishedRound({ cards: CARDS });
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: [round.id],
+      cards: CARDS,
+      round: Round.createId(),
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves(round);
+    registrar.register(
+      "roundRepository",
+      createMockedRoundRepository({
+        findFinishedRoundBy: fake,
+      })
+    );
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
+
+    const action$ = of(RoundAction.openFinishedRounds());
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.openFinishedRounds(action$, state$, null));
+
+    expect(ret).toEqual(RoundAction.openFinishedRoundsSuccess([round]));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.firstArg).toBe(round.id);
+  });
+
+  test("change page of finished rounds", async () => {
+    const rounds: Round.FinishedRound[] = [];
+    between(0, 15).forEach((v) => {
+      rounds.push(randomFinishedRound({ theme: `theme${v}` }));
+    });
+
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: rounds.map((v) => v.id),
+      cards: CARDS,
+      round: Round.createId(),
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    registrar.register(
+      "roundRepository",
+      createMockedRoundRepository({
+        findFinishedRoundBy(id) {
+          return Promise.resolve(rounds.find((v) => v.id === id) || null);
+        },
+      })
+    );
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+
+    const action$ = of(RoundAction.changePageOfFinishedRounds(2));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.changePageOfSinishedRounds(action$, state$, null));
+
+    expect(ret).toEqual(RoundAction.changePageOfFinishedRoundsSuccess({ rounds: rounds.slice(10), page: 2 }));
   });
 });

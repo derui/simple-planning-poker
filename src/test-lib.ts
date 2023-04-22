@@ -38,6 +38,7 @@ export const createMockedRoundRepository = (mock: Partial<RoundRepository> = {})
   return {
     save: mock.save ?? sinon.fake(),
     findBy: mock.findBy ?? sinon.fake(),
+    findFinishedRoundBy: mock.findFinishedRoundBy ?? sinon.fake(),
   };
 };
 

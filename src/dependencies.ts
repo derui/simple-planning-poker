@@ -1,4 +1,5 @@
 import { GameRepository } from "./domains/game-repository";
+import { RoundRepository } from "./domains/round-repository";
 import { UserRepository } from "./domains/user-repository";
 import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
 import { Authenticator } from "./status/type";
@@ -20,6 +21,7 @@ export type Dependencies = {
   roundObserver: RoundObserver;
   changeUserNameUseCase: ChangeUserNameUseCase;
   gameRepository: GameRepository;
+  roundRepository: RoundRepository;
   createGameUseCase: CreateGameUseCase;
   estimatePlayerUseCase: EstimatePlayerUseCase;
   showDownUseCase: ShowDownUseCase;
