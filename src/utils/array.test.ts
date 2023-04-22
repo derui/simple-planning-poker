@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { unique } from "./array";
+import { between, unique } from "./array";
 
 test("get empty array", () => {
   // Arrange
@@ -43,4 +43,13 @@ test("use custom compare function", () => {
   // Assert
   expect(ret).toHaveLength(2);
   expect(ret.sort()).toEqual([{ bar: 2 }, { bar: 3 }]);
+});
+
+test("between", () => {
+  expect(between(0, -1)).toEqual([]);
+  expect(between(-1, 1)).toEqual([]);
+  expect(between(1, 1)).toEqual([]);
+  expect(between(2, 1)).toEqual([]);
+  expect(between(2, 3)).toEqual([2]);
+  expect(between(0, 3)).toEqual([0, 1, 2]);
 });

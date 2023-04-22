@@ -16,3 +16,24 @@ export const unique = <T>(array: T[], compare: (v1: T, v2: T) => boolean = physi
     return accum;
   }, accum);
 };
+
+/**
+ * get range between `start` and `end`. An array returned this function has range (start <= value < end)
+ */
+export const between = function between(start: number, end: number): number[] {
+  if (start < 0 || end < 0) {
+    return [];
+  }
+
+  if (start >= end) {
+    return [];
+  }
+
+  const array = new Array(end - start);
+
+  for (let i = 0; i < end - start; i++) {
+    array[i] = start + i;
+  }
+
+  return array;
+};
