@@ -37,3 +37,13 @@ test("handle click root", async () => {
 
   await userEvent.click(screen.getByTestId("root"));
 });
+
+test("show time string after clicked", async () => {
+  render(<FinishedRound id="id" theme="a theme" finishedAt={new Date("2023-01-01T05:01:02")} averagePoint={5.2} />);
+
+  expect(screen.queryByText("05:01:02")?.classList.contains("hidden")).toBeTruthy();
+
+  await userEvent.click(screen.getByTestId("time"));
+
+  expect(screen.queryByText("05:01:02")).not.toBeNull();
+});

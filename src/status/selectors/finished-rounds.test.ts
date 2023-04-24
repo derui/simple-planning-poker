@@ -32,8 +32,8 @@ describe("round list", () => {
 
     expect(isLoading(ret)).toBe(false);
     expect(ret[0]).toEqual([
-      { id: rounds[1].id, theme: "", finishedAt: new Date(rounds[1].finishedAt) },
-      { id: rounds[0].id, theme: "", finishedAt: new Date(rounds[0].finishedAt) },
+      { id: rounds[1].id, theme: "", finishedAt: new Date(rounds[1].finishedAt), averagePoint: 0, estimations: [] },
+      { id: rounds[0].id, theme: "", finishedAt: new Date(rounds[0].finishedAt), averagePoint: 0, estimations: [] },
     ]);
   });
 });

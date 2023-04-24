@@ -33,14 +33,20 @@ export interface FinishedRoundInfo {
 
 export const selectFinishedRoundList = createDraftSafeSelector(
   selectFinishedRounds,
-  (rounds): Loadable.T<{ id: Round.Id; theme: string; finishedAt: Date }[]> => {
+  (rounds): Loadable.T<FinishedRoundInfo[]> => {
     if (rounds.state !== "fetched") {
       return Loadable.loading();
     }
 
     const _rounds = Object.values(rounds.rounds)
-      .map((v) => {
-        return { id: v.id, theme: v.theme || "", finishedAt: new Date(v.finishedAt) };
+      .map((round) => {
+        return {
+          id: round.id,
+          theme: round.theme || "",
+          finishedAt: new Date(round.finishedAt),
+          averagePoint: round.averagePoint,
+          estimations: [],
+        };
       })
       .sort((o1, o2) => {
         return o2.finishedAt.getTime() - o1.finishedAt.getTime();
