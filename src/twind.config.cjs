@@ -61,6 +61,7 @@ export default defineConfig({
       transitionProperty: {
         'outline': 'outline',
         'width': 'width',
+        'left': 'left',
         'height': 'height',
         'stroke': 'stroke, stroke-width',
         'fill': 'fill',
