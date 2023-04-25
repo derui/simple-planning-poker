@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { BaseProps, generateTestId } from "../base";
 import { iconize } from "../iconize";
+import { FinishedRound } from "../presentations/finished-round";
 
 export type Props = BaseProps;
 
@@ -48,9 +49,12 @@ const Styles = {
         "border-primary-400",
         "shadow-lg",
         "flex",
+        "flex-col",
+        "p-3",
         "h-full",
         "w-full",
-        "bg-white"
+        "bg-white",
+        "space-y-3"
       ),
   },
 } as const;
@@ -60,9 +64,19 @@ export function FinishedRoundSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
 
+  const rounds = [
+    { theme: "theme", finishedAt: new Date(), id: "1", averagePoint: 1 },
+
+    { theme: "theme", finishedAt: new Date("2021-01-01T12:00:03"), id: "2", averagePoint: 3, estimations: [] },
+  ];
+
   return (
     <div className={Styles.root(opened)} data-testid={gen("root")}>
-      <div className={Styles.list.root(opened)}></div>
+      <ul className={Styles.list.root(opened)}>
+        {rounds.map((v) => (
+          <FinishedRound theme={v.theme} averagePoint={v.averagePoint} id={v.id} finishedAt={v.finishedAt} />
+        ))}
+      </ul>
       <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
         <span className={Styles.pullTab.icon(opened)}></span>
       </span>

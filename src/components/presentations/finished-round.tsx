@@ -28,8 +28,8 @@ const Styles = {
   container: classNames("flex-1", "flex", "flex-row", "ml-2", "items-center", "justify-center"),
   theme: (noTheme: boolean) =>
     classNames("flex-1", "ml-2", { "text-gray": noTheme, underline: !noTheme, "underline-offset-2": !noTheme }),
-  date: classNames("flex-none", "text-sm", "flex", "justify-center", "items-center"),
-  dateTime: classNames("text-sm", "text-gray", "flex", "mr-2"),
+  dateContainer: classNames("flex-none", "text-sm", "flex", "justify-center", "items-center"),
+  dateTime: classNames("text-sm", "text-gray", "flex", "mx-2"),
   time: (hours: number) =>
     classNames(
       "text-sm",
@@ -89,13 +89,13 @@ export function FinishedRound(props: Props) {
         <span className={Styles.theme(!props.theme)} data-testid={gen("theme")}>
           {theme}
         </span>
-        <span className={Styles.date} data-testid={gen("date")}>
-          <span className={Styles.dateTime}>{formatToDate(props.finishedAt)}</span>
+        <span className={Styles.dateContainer} data-testid={gen("date")}>
           <span
             className={Styles.time(props.finishedAt.getHours())}
             onClick={handleTimeClick}
             data-testid={gen("time")}
           >
+            <span className={Styles.dateTime}>{formatToDate(props.finishedAt)}</span>
             <span className={Styles.timeString(showTime)}> {formatToTime(props.finishedAt)} </span>
           </span>
         </span>
