@@ -1,17 +1,19 @@
+import type { MouseEvent } from "react";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseProps, generateTestId } from "../base";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { iconize } from "../iconize";
 import { FinishedRound } from "../presentations/finished-round";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
-import { selectFinishedRoundList } from "@/status/selectors/finished-rounds";
+import { selectCurrentPage, selectFinishedRoundList } from "@/status/selectors/finished-rounds";
+import { changePageOfFinishedRounds, openFinishedRounds } from "@/status/actions/round";
 
 export type Props = BaseProps;
 
 const Styles = {
-  root: (opened: boolean, loading: boolean) =>
+  root: (opened: boolean) =>
     classNames(
       "absolute",
       "top-0",
@@ -83,23 +85,36 @@ export function FinishedRoundSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
   const rounds = useAppSelector(selectFinishedRoundList);
-  const page = 1;
+  const page = useAppSelector(selectCurrentPage);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (opened) {
+      dispatch(openFinishedRounds());
+    }
+  }, [opened]);
+
+  const handlePage = (page: number) => (e: MouseEvent) => {
+    e.stopPropagation();
+
+    dispatch(changePageOfFinishedRounds(page));
+  };
 
   if (!isFinished(rounds)) {
     return (
-      <div className={Styles.root(opened, true)} data-testid={gen("root")}>
+      <div className={Styles.root(opened)} data-testid={gen("root")}>
         <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
           <span className={Styles.pullTab.icon(opened)}></span>
         </span>
 
         <div className={Styles.container}>
           <div className={Styles.list}>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
+            <Skeleton testid={gen("skeleton")} />
+            <Skeleton testid={gen("skeleton")} />
+            <Skeleton testid={gen("skeleton")} />
           </div>
           <div className={Styles.paginator.root}>
-            <Skeleton />
+            <Skeleton testid={gen("skeleton")} />
           </div>
         </div>
       </div>
@@ -107,14 +122,15 @@ export function FinishedRoundSidebarContainer(props: Props) {
   }
 
   return (
-    <div className={Styles.root(opened, false)} data-testid={gen("root")}>
+    <div className={Styles.root(opened)} data-testid={gen("root")}>
       <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
         <span className={Styles.pullTab.icon(opened)}></span>
       </span>
       <div className={Styles.container}>
         <ul className={Styles.list}>
-          {rounds[1].map((v) => (
+          {rounds[0].map((v) => (
             <FinishedRound
+              testid={gen(`round/${v.id}`)}
               key={v.id}
               theme={v.theme}
               averagePoint={v.averagePoint}
@@ -124,9 +140,15 @@ export function FinishedRoundSidebarContainer(props: Props) {
           ))}
         </ul>
         <div className={Styles.paginator.root}>
-          <button className={Styles.paginator.back(page > 1)} data-testid={gen("back")} disabled={page <= 1}></button>
+          <button
+            className={Styles.paginator.back(page > 1)}
+            onClick={handlePage(page - 1)}
+            data-testid={gen("back")}
+            disabled={page <= 1}
+          ></button>
           <button
             className={Styles.paginator.forward(rounds.length > 0)}
+            onClick={handlePage(page + 1)}
             data-testid={gen("forward")}
             disabled={rounds.length <= 0}
           ></button>

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { openFinishedRoundsSuccess } from "../actions/round";
+import { changePageOfFinishedRoundsSuccess, openFinishedRoundsSuccess } from "../actions/round";
 import { createPureStore } from "../store";
 import { tryAuthenticateSuccess } from "../actions/signin";
 import { openGameSuccess } from "../actions/game";
@@ -110,5 +110,39 @@ describe("round result information", () => {
         },
       ],
     });
+  });
+});
+
+describe("page of rounds", () => {
+  test("return 1 when default", () => {
+    // Arrange
+    const store = createPureStore();
+
+    // Act
+    const ret = s.selectCurrentPage(store.getState());
+
+    // Assert
+    expect(ret).toEqual(1);
+  });
+
+  test("make anonymous if user is not joined", () => {
+    // Arrange
+    const store = createPureStore();
+    const user = User.create({ id: User.createId(), name: "owner" });
+    const otherUser = User.create({ id: User.createId(), name: "other" });
+    const game = randomGame({ owner: user.id });
+    const round = randomFinishedRound({
+      cards: game.cards,
+      id: game.round,
+      estimations: [{ user: otherUser.id, estimation: estimated(game.cards[0]) }],
+    });
+
+    store.dispatch(changePageOfFinishedRoundsSuccess({ page: 3, rounds: [round] }));
+
+    // Act
+    const ret = s.selectCurrentPage(store.getState());
+
+    // Assert
+    expect(ret).toEqual(3);
   });
 });

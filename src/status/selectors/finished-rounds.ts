@@ -31,6 +31,13 @@ export interface FinishedRoundInfo {
   estimations: UserEstimationInfo[];
 }
 
+/**
+ * select current page of finished rounds
+ */
+export const selectCurrentPage = createDraftSafeSelector(selectFinishedRounds, (rounds): number => {
+  return rounds.page;
+});
+
 export const selectFinishedRoundList = createDraftSafeSelector(
   selectFinishedRounds,
   (rounds): Loadable.T<FinishedRoundInfo[]> => {
