@@ -10,7 +10,9 @@ import { isFinished } from "@/utils/loadable";
 import { selectCurrentPage, selectFinishedRoundList } from "@/status/selectors/finished-rounds";
 import { changePageOfFinishedRounds, closeFinishedRounds, openFinishedRounds } from "@/status/actions/round";
 
-export type Props = BaseProps;
+export interface Props extends BaseProps {
+  onRoundSelect?: (id: string) => void;
+}
 
 const Styles = {
   root: (opened: boolean) =>
@@ -120,6 +122,12 @@ export function FinishedRoundSidebarContainer(props: Props) {
     dispatch(changePageOfFinishedRounds(page));
   };
 
+  const handleRoundSelect = (id: string) => {
+    if (props.onRoundSelect) {
+      props.onRoundSelect(id);
+    }
+  };
+
   let content: JSX.Element;
 
   if (!isFinished(rounds)) {
@@ -136,6 +144,7 @@ export function FinishedRoundSidebarContainer(props: Props) {
               averagePoint={v.averagePoint}
               id={v.id}
               finishedAt={v.finishedAt}
+              onClick={handleRoundSelect}
             />
           ))}
         </ul>

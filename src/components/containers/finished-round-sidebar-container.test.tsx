@@ -156,3 +156,32 @@ test("change page forward", async () => {
   await userEvent.click(screen.getByTestId("pullTab"));
   await userEvent.click(screen.getByTestId("back"));
 });
+
+test("notify event when round clicked", async () => {
+  expect.assertions(1);
+  const store = createPureStore();
+
+  store.dispatch(
+    openFinishedRoundsSuccess([
+      Round.finishedRoundOf({
+        id: Round.createId("id"),
+        cards,
+        estimations: [],
+        finishedAt: "2023-01-02T10:00:01",
+        theme: "theme",
+      }),
+    ])
+  );
+
+  render(
+    <Provider store={store}>
+      <FinishedRoundSidebarContainer
+        onRoundSelect={(id) => {
+          expect(id).toBe("id");
+        }}
+      />
+    </Provider>
+  );
+
+  await userEvent.click(screen.getByTestId("round/id/root"));
+});
