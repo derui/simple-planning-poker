@@ -1,21 +1,35 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { BaseProps, generateTestId } from "../base";
+import { useAppSelector } from "../hooks";
 import { iconize } from "../iconize";
 import { FinishedRound } from "../presentations/finished-round";
+import { Skeleton } from "../presentations/skeleton";
+import { isFinished } from "@/utils/loadable";
+import { selectFinishedRoundList } from "@/status/selectors/finished-rounds";
 
 export type Props = BaseProps;
 
 const Styles = {
-  root: (opened: boolean) =>
-    classNames("absolute", "top-0", "right-0", "z-40", "h-full", "shadow-lg", "transition-[transform_width]", {
-      "border-l": opened,
-      "border-l-0": !opened,
-      "[transform:translateX(100%)]": !opened,
-      "w-0": !opened,
-      "[transform:translateX(0)]": opened,
-      "w-96": opened,
-    }),
+  root: (opened: boolean, loading: boolean) =>
+    classNames(
+      "absolute",
+      "top-0",
+      "right-0",
+      "z-40",
+      "h-full",
+      "shadow-lg",
+      "bg-white",
+      "transition-[transform_width]",
+      {
+        "border-l": opened,
+        "border-l-0": !opened,
+        "[transform:translateX(100%)]": !opened,
+        "w-0": !opened,
+        "[transform:translateX(0)]": opened,
+        "w-96": opened,
+      }
+    ),
 
   container: classNames("flex", "flex-col", "overflow-hidden", "h-full"),
   pullTab: {
@@ -46,20 +60,20 @@ const Styles = {
   list: classNames("flex-auto", "flex", "flex-col", "p-3", "h-full", "w-full", "bg-white", "space-y-3"),
 
   paginator: {
-    root: classNames("flex-none", "flex", "flex-row", "items-center", "justify-center", "pb-2"),
+    root: classNames("flex-none", "flex", "flex-row", "items-center", "justify-center", "px-3", "h-16"),
     back: (enabled: boolean) =>
-      classNames("flex-none", iconize("chevron-left"), "w-6", "h-6", {
+      classNames("flex-none", iconize("chevron-left"), "w-6", "h-6", "transition-shadow", {
         "before:bg-secondary1-400": enabled,
         "hover:before:bg-secondary1-500": enabled,
+        "active:shadow-md": enabled,
         "before:bg-lightgray": !enabled,
-        "cursor-pointer": enabled,
       }),
     forward: (enabled: boolean) =>
-      classNames("flex-none", iconize("chevron-right"), "w-6", "h-6", {
+      classNames("flex-none", iconize("chevron-right"), "w-6", "h-6", "transition-shadow", {
         "before:bg-secondary1-400": enabled,
         "hover:before:bg-secondary1-500": enabled,
+        "active:shadow-md": enabled,
         "before:bg-lightgray": !enabled,
-        "cursor-pointer": enabled,
       }),
   },
 } as const;
@@ -68,36 +82,38 @@ const Styles = {
 export function FinishedRoundSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
+  const rounds = useAppSelector(selectFinishedRoundList);
   const page = 1;
 
-  const rounds = [
-    { theme: "theme", finishedAt: new Date(), id: "1", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "2", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "3", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "4", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "5", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "6", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "7", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "8", averagePoint: 1 },
-    { theme: "theme", finishedAt: new Date(), id: "9", averagePoint: 1 },
+  if (!isFinished(rounds)) {
+    return (
+      <div className={Styles.root(opened, true)} data-testid={gen("root")}>
+        <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
+          <span className={Styles.pullTab.icon(opened)}></span>
+        </span>
 
-    {
-      theme: "veeeeery looooong theme",
-      finishedAt: new Date("2021-01-01T12:00:03"),
-      id: "10",
-      averagePoint: 3,
-      estimations: [],
-    },
-  ];
+        <div className={Styles.container}>
+          <div className={Styles.list}>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </div>
+          <div className={Styles.paginator.root}>
+            <Skeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={Styles.root(opened)} data-testid={gen("root")}>
+    <div className={Styles.root(opened, false)} data-testid={gen("root")}>
       <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
         <span className={Styles.pullTab.icon(opened)}></span>
       </span>
       <div className={Styles.container}>
         <ul className={Styles.list}>
-          {rounds.map((v) => (
+          {rounds[1].map((v) => (
             <FinishedRound
               key={v.id}
               theme={v.theme}
@@ -108,8 +124,12 @@ export function FinishedRoundSidebarContainer(props: Props) {
           ))}
         </ul>
         <div className={Styles.paginator.root}>
-          <span className={Styles.paginator.back(page > 1)}></span>
-          <span className={Styles.paginator.forward(rounds.length > 0)}></span>
+          <button className={Styles.paginator.back(page > 1)} data-testid={gen("back")} disabled={page <= 1}></button>
+          <button
+            className={Styles.paginator.forward(rounds.length > 0)}
+            data-testid={gen("forward")}
+            disabled={rounds.length <= 0}
+          ></button>
         </div>
       </div>
     </div>
