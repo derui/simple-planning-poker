@@ -5,7 +5,13 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { FinishedRoundSidebarContainer } from "./finished-round-sidebar-container";
 import { createPureStore } from "@/status/store";
-import { changePageOfFinishedRounds, openFinishedRounds, openFinishedRoundsSuccess } from "@/status/actions/round";
+import {
+  changePageOfFinishedRounds,
+  changePageOfFinishedRoundsSuccess,
+  closeFinishedRounds,
+  openFinishedRounds,
+  openFinishedRoundsSuccess,
+} from "@/status/actions/round";
 import * as Round from "@/domains/round";
 import * as SC from "@/domains/selectable-cards";
 import * as S from "@/domains/story-point";
@@ -54,12 +60,16 @@ test("list a round if loading finished", () => {
   expect(screen.getByTestId("forward").getAttribute("disabled")).toBeNull();
 });
 
-test("dispatch event when opened", async () => {
-  expect.assertions(1);
+test("dispatch event when opened and closed", async () => {
+  expect.assertions(3);
   const store = createPureStore();
 
   store.replaceReducer((state, action) => {
     if (openFinishedRounds.match(action)) {
+      expect(true);
+    }
+
+    if (closeFinishedRounds.match(action)) {
       expect(true);
     }
 
@@ -76,7 +86,7 @@ test("dispatch event when opened", async () => {
   await userEvent.click(screen.getByTestId("pullTab"));
 });
 
-test("change page", async () => {
+test("change page forward", async () => {
   expect.assertions(1);
   const store = createPureStore();
 
@@ -108,4 +118,41 @@ test("change page", async () => {
 
   await userEvent.click(screen.getByTestId("pullTab"));
   await userEvent.click(screen.getByTestId("forward"));
+});
+
+test("change page forward", async () => {
+  expect.assertions(1);
+  const store = createPureStore();
+
+  store.dispatch(
+    changePageOfFinishedRoundsSuccess({
+      rounds: [
+        Round.finishedRoundOf({
+          id: Round.createId("id"),
+          cards,
+          estimations: [],
+          finishedAt: "2023-01-02T10:00:01",
+          theme: "theme",
+        }),
+      ],
+      page: 2,
+    })
+  );
+
+  store.replaceReducer((state, action) => {
+    if (changePageOfFinishedRounds.match(action)) {
+      expect(action.payload).toBe(1);
+    }
+
+    return state!;
+  });
+
+  render(
+    <Provider store={store}>
+      <FinishedRoundSidebarContainer />
+    </Provider>
+  );
+
+  await userEvent.click(screen.getByTestId("pullTab"));
+  await userEvent.click(screen.getByTestId("back"));
 });

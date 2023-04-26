@@ -8,7 +8,7 @@ import { FinishedRound } from "../presentations/finished-round";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
 import { selectCurrentPage, selectFinishedRoundList } from "@/status/selectors/finished-rounds";
-import { changePageOfFinishedRounds, openFinishedRounds } from "@/status/actions/round";
+import { changePageOfFinishedRounds, closeFinishedRounds, openFinishedRounds } from "@/status/actions/round";
 
 export type Props = BaseProps;
 
@@ -81,6 +81,24 @@ const Styles = {
 } as const;
 
 // eslint-disable-next-line func-style
+function LoadingContent(props: BaseProps) {
+  const gen = generateTestId(props.testid);
+
+  return (
+    <div className={Styles.container}>
+      <div className={Styles.list}>
+        <Skeleton testid={gen("skeleton")} />
+        <Skeleton testid={gen("skeleton")} />
+        <Skeleton testid={gen("skeleton")} />
+      </div>
+      <div className={Styles.paginator.root}>
+        <Skeleton testid={gen("skeleton")} />
+      </div>
+    </div>
+  );
+}
+
+// eslint-disable-next-line func-style
 export function FinishedRoundSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
@@ -91,6 +109,8 @@ export function FinishedRoundSidebarContainer(props: Props) {
   useEffect(() => {
     if (opened) {
       dispatch(openFinishedRounds());
+    } else {
+      dispatch(closeFinishedRounds());
     }
   }, [opened]);
 
@@ -100,32 +120,12 @@ export function FinishedRoundSidebarContainer(props: Props) {
     dispatch(changePageOfFinishedRounds(page));
   };
 
+  let content: JSX.Element;
+
   if (!isFinished(rounds)) {
-    return (
-      <div className={Styles.root(opened)} data-testid={gen("root")}>
-        <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
-          <span className={Styles.pullTab.icon(opened)}></span>
-        </span>
-
-        <div className={Styles.container}>
-          <div className={Styles.list}>
-            <Skeleton testid={gen("skeleton")} />
-            <Skeleton testid={gen("skeleton")} />
-            <Skeleton testid={gen("skeleton")} />
-          </div>
-          <div className={Styles.paginator.root}>
-            <Skeleton testid={gen("skeleton")} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={Styles.root(opened)} data-testid={gen("root")}>
-      <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
-        <span className={Styles.pullTab.icon(opened)}></span>
-      </span>
+    content = <LoadingContent testid={props.testid} />;
+  } else {
+    content = (
       <div className={Styles.container}>
         <ul className={Styles.list}>
           {rounds[0].map((v) => (
@@ -154,6 +154,15 @@ export function FinishedRoundSidebarContainer(props: Props) {
           ></button>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className={Styles.root(opened)} data-testid={gen("root")}>
+      <span className={Styles.pullTab.root} onClick={() => setOpened(!opened)} data-testid={gen("pullTab")}>
+        <span className={Styles.pullTab.icon(opened)}></span>
+      </span>
+      {content}
     </div>
   );
 }
