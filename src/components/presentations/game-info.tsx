@@ -1,5 +1,5 @@
+import type { MouseEvent } from "react";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
 import { BaseProps, generateTestId } from "../base";
 import { iconize } from "../iconize";
 
@@ -7,6 +7,7 @@ interface Props extends BaseProps {
   gameName: string;
   owner?: boolean;
   onLeaveGame?: () => void;
+  onBack?: () => void;
 }
 
 const styles = {
@@ -72,7 +73,7 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function GameInfo({ gameName, onLeaveGame, testid, owner }: Props) {
+export function GameInfo({ gameName, onLeaveGame, testid, owner, onBack }: Props) {
   const gen = generateTestId(testid);
 
   const leaveButton = !owner ? (
@@ -89,12 +90,20 @@ export function GameInfo({ gameName, onLeaveGame, testid, owner }: Props) {
     </div>
   ) : null;
 
+  const handleBackClick = (e: MouseEvent) => {
+    e.stopPropagation();
+
+    if (onBack) {
+      onBack();
+    }
+  };
+
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <div className={styles.backToTop.root}>
-        <Link className={styles.backToTop.container} to="/game">
+        <span className={styles.backToTop.container} onClick={handleBackClick}>
           <span className={styles.backToTop.link} data-testid={gen("backToTop")}></span>
-        </Link>
+        </span>
       </div>
       <div className={styles.name.container}>
         <span className={styles.name.name}> {gameName}</span>

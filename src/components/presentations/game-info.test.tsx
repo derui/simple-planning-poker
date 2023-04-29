@@ -1,28 +1,19 @@
 import { test, expect, afterEach } from "vitest";
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { createMemoryRouter, MemoryRouter, RouterProvider } from "react-router";
 import { GameInfo } from "./game-info";
 
 afterEach(cleanup);
 
 test("should be able to render", async () => {
-  render(
-    <MemoryRouter>
-      <GameInfo gameName="name" onLeaveGame={() => {}} />
-    </MemoryRouter>
-  );
+  render(<GameInfo gameName="name" onLeaveGame={() => {}} />);
 
   expect(screen.queryByTestId("root")).not.toBeNull();
 });
 
 test("render game name", async () => {
-  render(
-    <MemoryRouter>
-      <GameInfo gameName="name" onLeaveGame={() => {}} />
-    </MemoryRouter>
-  );
+  render(<GameInfo gameName="name" onLeaveGame={() => {}} />);
 
   expect(screen.getByText("name")).not.toBeNull();
 });
@@ -30,14 +21,12 @@ test("render game name", async () => {
 test("callback when click leave button", async () => {
   expect.assertions(1);
   render(
-    <MemoryRouter>
-      <GameInfo
-        gameName="name"
-        onLeaveGame={() => {
-          expect(true).toBe(true);
-        }}
-      />
-    </MemoryRouter>
+    <GameInfo
+      gameName="name"
+      onLeaveGame={() => {
+        expect(true).toBe(true);
+      }}
+    />
   );
 
   await userEvent.click(screen.getByRole("button"));
@@ -46,25 +35,20 @@ test("callback when click leave button", async () => {
 test("back to top page", async () => {
   expect.assertions(1);
 
-  const routes = createMemoryRouter([
-    { index: true, path: "/", element: <GameInfo gameName="name" onLeaveGame={() => {}} /> },
-  ]);
-
-  render(<RouterProvider router={routes} />);
+  render(
+    <GameInfo
+      gameName="name"
+      onBack={() => {
+        expect(true);
+      }}
+    />
+  );
 
   await userEvent.click(screen.getByTestId("backToTop"));
-
-  await waitFor(() => {
-    expect(routes.state.location.pathname).toBe("/game");
-  });
 });
 
 test("do not show leave button when owner", async () => {
-  render(
-    <MemoryRouter>
-      <GameInfo owner gameName="name" onLeaveGame={() => {}} />
-    </MemoryRouter>
-  );
+  render(<GameInfo owner gameName="name" onLeaveGame={() => {}} />);
 
   expect(screen.queryByTestId("leave")).toBeNull();
 });
