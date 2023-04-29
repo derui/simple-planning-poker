@@ -3,11 +3,16 @@ import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { RoundThemeEditor } from "../presentations/round-theme-editor";
+import { BaseProps } from "../base";
 import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
 import { AppDispatch } from "@/status/store";
 import { newRound } from "@/status/actions/game";
 import { selectRoundInformation } from "@/status/selectors/round";
+
+interface Props extends BaseProps {
+  readonly?: boolean;
+}
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
@@ -65,7 +70,11 @@ const styles = {
   ),
 };
 
-const GameProgressionButton = (dispatch: AppDispatch) => {
+const GameProgressionButton = (dispatch: AppDispatch, readonly: boolean = false) => {
+  if (readonly) {
+    return <span>Viewing history...</span>;
+  }
+
   return (
     <button className={styles.nextGameButton} onClick={() => dispatch(newRound())}>
       Start next round
@@ -74,7 +83,7 @@ const GameProgressionButton = (dispatch: AppDispatch) => {
 };
 
 // eslint-disable-next-line func-style
-export function GameResultAreaContainer() {
+export function GameResultAreaContainer(props: Props) {
   const estimations = useAppSelector(selectUserEstimationInfos);
   const roundInformation = useAppSelector(selectRoundInformation());
   const dispatch = useAppDispatch();
@@ -100,7 +109,7 @@ export function GameResultAreaContainer() {
     );
   }
 
-  const button = GameProgressionButton(dispatch);
+  const button = GameProgressionButton(dispatch, props.readonly);
   const upper = estimations[0].filter((_, index) => index % 2 === 0);
   const lower = estimations[0].filter((_, index) => index % 2 === 1);
 
