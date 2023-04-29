@@ -34,6 +34,9 @@ export const changePageOfFinishedRoundsSuccess = createAction<{ page: number; ro
   `${prefix}:changePageOfFinishedRoundsSuccess`
 );
 
+// open a round history
+export const openRoundHistory = createAction<string>(`${prefix}:openRoundHistory`);
+
 // close finished rounds
 export const closeFinishedRounds = createAction(`${prefix}:closeFinishedRounds`);
 export const closeFinishedRoundsSuccess = createAction(`${prefix}:closeFinishedRoundsSuccess`);

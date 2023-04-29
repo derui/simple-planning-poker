@@ -18,12 +18,14 @@ interface FinishedRoundState {
 
 interface FinishedRoundsState {
   rounds: Record<Round.Id, FinishedRoundState>;
+  currentRound: FinishedRoundState | undefined;
   page: number;
   state: State;
 }
 
 const initialState = {
   rounds: {},
+  currentRound: undefined,
   page: 1,
   state: "initial",
 } as FinishedRoundsState satisfies FinishedRoundsState;
@@ -71,6 +73,10 @@ const slice = createSlice({
 
     builder.addCase(RoundAction.changePageOfFinishedRounds, (draft, action) => {
       draft.state = { kind: "pendingPage", page: action.payload };
+    });
+
+    builder.addCase(RoundAction.openRoundHistory, (draft, action) => {
+      draft.currentRound = draft.rounds[Round.createId(action.payload)];
     });
 
     builder.addCase(RoundAction.changePageOfFinishedRoundsSuccess, (draft, action) => {

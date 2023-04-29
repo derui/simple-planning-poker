@@ -85,3 +85,27 @@ describe("change page", () => {
     );
   });
 });
+
+describe("current round", () => {
+  test("change current round via id", () => {
+    const cards = SelectableCards.create([1].map(StoryPoint.create));
+    const round = randomFinishedRound({ cards });
+    const round2 = randomFinishedRound({ cards });
+    let state = getInitialState();
+    state = reducer(state, RoundAction.changePageOfFinishedRounds(3));
+    state = reducer(state, RoundAction.changePageOfFinishedRoundsSuccess({ page: 3, rounds: [round, round2] }));
+    state = reducer(state, RoundAction.openRoundHistory(round2.id));
+
+    expect(getInitialState().currentRound).toBeUndefined();
+    expect(state.currentRound).toEqual({
+      id: round2.id,
+      cards: {
+        1: { card: cards[0], order: 0 },
+      },
+      estimations: {},
+      finishedAt: round2.finishedAt,
+      averagePoint: 0,
+      theme: round2.theme,
+    });
+  });
+});
