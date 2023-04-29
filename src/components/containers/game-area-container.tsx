@@ -29,7 +29,7 @@ const styles = {
     "border-primary-400",
     "bg-secondary1-300",
     "h-20",
-    "px-6",
+    "px-12",
     "min-w-fit",
     "flex-col",
     "items-center",
