@@ -6,11 +6,12 @@ import { useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { AveragePointShowcase } from "../presentations/average-point-showcase";
 import { GameResultAreaContainer } from "../containers/game-result-area-container";
+import { FinishedRoundSidebarContainer } from "../containers/finished-round-sidebar-container";
 import { isFinished } from "@/utils/loadable";
 import { selectRoundResult, selectRoundStatus } from "@/status/selectors/game";
 
 const styles = {
-  root: classNames("flex", "flex-col", "h-full"),
+  root: classNames("flex", "flex-col", "h-full", "overflow-hidden"),
   main: classNames("flex", "flex-auto", "p-2", "z-20"),
   showcase: classNames("flex", "flex-auto", "p-2", "z-20"),
 };
@@ -45,7 +46,9 @@ export function RoundResultPage() {
       <main className={styles.main}>
         <GameResultAreaContainer />
       </main>
+
       {showcase}
+      <FinishedRoundSidebarContainer testid="sidebar" />
     </div>
   );
 }
