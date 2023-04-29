@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { changePageOfFinishedRoundsSuccess, openFinishedRoundsSuccess } from "../actions/round";
+import { changePageOfFinishedRoundsSuccess, openFinishedRoundsSuccess, openRoundHistory } from "../actions/round";
 import { createPureStore } from "../store";
 import { tryAuthenticateSuccess } from "../actions/signin";
 import { openGameSuccess } from "../actions/game";
@@ -55,9 +55,10 @@ describe("round result information", () => {
     store.dispatch(tryAuthenticateSuccess({ user }));
     store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
     store.dispatch(openFinishedRoundsSuccess([round]));
+    store.dispatch(openRoundHistory(round.id));
 
     // Act
-    const [ret] = s.selectFinishedRoundInfo(round.id)(store.getState());
+    const [ret] = s.selectOpenedRoundHistory(store.getState());
 
     // Assert
     expect(ret).toEqual({
@@ -91,9 +92,10 @@ describe("round result information", () => {
     store.dispatch(tryAuthenticateSuccess({ user }));
     store.dispatch(openGameSuccess({ game, players: [user] }));
     store.dispatch(openFinishedRoundsSuccess([round]));
+    store.dispatch(openRoundHistory(round.id));
 
     // Act
-    const [ret] = s.selectFinishedRoundInfo(round.id)(store.getState());
+    const [ret] = s.selectOpenedRoundHistory(store.getState());
 
     // Assert
     expect(ret).toEqual({
