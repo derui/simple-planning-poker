@@ -53,12 +53,17 @@ export function GameHeaderContainer(props: Props) {
     dispatch(showMessage("invitation token copied"));
   };
 
+  const handleBack = () => {
+    navigate("/game");
+  };
+
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <GameInfo
         owner={userInfo[0].owner}
         gameName={gameName[0]}
         onLeaveGame={handleLeaveGame}
+        onBack={handleBack}
         testid={gen("game-info")}
       />
 
