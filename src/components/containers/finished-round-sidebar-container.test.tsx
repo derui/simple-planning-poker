@@ -157,7 +157,7 @@ test("change page forward", async () => {
   await userEvent.click(screen.getByTestId("back"));
 });
 
-test("notify event when round clicked", async () => {
+test("dispatch event when round clicked", async () => {
   expect.assertions(1);
   const store = createPureStore();
 
