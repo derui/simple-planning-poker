@@ -4,13 +4,13 @@ repos:
   hooks:
     - id: prettier
       name: prettier
-      entry: yarn run prettier
+      entry: pnpm exec prettier
       language: system
       files: "\\.tsx?$"
       args: ["-w"]
     - id: eslint
       name: eslint
-      entry: yarn run eslint
+      entry: pnpm exec eslint
       language: system
       files: "\\.tsx?$"
       args: ["--fix", "--ext", ".ts,.tsx"]
