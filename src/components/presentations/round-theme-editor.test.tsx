@@ -30,6 +30,12 @@ describe("initial theme", () => {
 
     expect(screen.getByTestId("theme").textContent).include("updated theme");
   });
+
+  test("show loading", () => {
+    render(<RoundThemeEditor initialTheme="updated theme" loading />);
+
+    expect(screen.getByTestId("loading/root")).not.toBeNull();
+  });
 });
 
 describe("edit theme", () => {

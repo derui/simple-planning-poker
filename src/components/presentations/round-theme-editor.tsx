@@ -4,8 +4,10 @@ import type { MouseEvent, FormEvent, KeyboardEvent } from "react";
 import { BaseProps, generateTestId } from "../base";
 import { iconize } from "../iconize";
 import { baseInput } from "../common-styles";
+import { Skeleton } from "./skeleton";
 
 export interface Props extends BaseProps {
+  loading?: boolean;
   editable?: boolean;
   initialTheme?: string | null;
   onThemeChange?: (theme: string) => void;
@@ -156,6 +158,10 @@ export function RoundThemeEditor(props: Props) {
     }
     props.onThemeChange(theme);
   };
+
+  if (props.loading) {
+    return <Skeleton testid={gen("loading")} />;
+  }
 
   return (
     <div className={Styles.root} data-testid={gen("root")}>

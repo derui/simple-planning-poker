@@ -33,3 +33,9 @@ export const NotEditable: Story = {
     return <RoundThemeEditor initialTheme="Initial theme" editable={false} />;
   },
 };
+
+export const Loading: Story = {
+  render() {
+    return <RoundThemeEditor initialTheme="Initial theme" loading />;
+  },
+};
