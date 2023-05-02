@@ -12,6 +12,9 @@ const meta = {
   title: "Presentational/Player Estimations",
   component: PlayerEstimations,
   tags: ["autodocs"],
+  argTypes: {
+    loading: { type: "boolean" },
+  },
 } satisfies Meta<typeof PlayerEstimations>;
 
 export default meta;

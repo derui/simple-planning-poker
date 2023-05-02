@@ -33,3 +33,13 @@ test("display three estimations", async () => {
   expect(screen.queryByText("name2")).not.toBeNull();
   expect(screen.queryByText("name3")).not.toBeNull();
 });
+
+test("loading", async () => {
+  const estimations = [
+    { userName: "name", userMode: UserMode.inspector, displayValue: "value", state: "notSelected" } as const,
+  ];
+  render(<PlayerEstimations estimations={estimations} loading />);
+
+  expect(screen.queryAllByTestId("name/root")).toHaveLength(0);
+  expect(screen.queryByTestId("loading/root")).not.toBeNull();
+});
