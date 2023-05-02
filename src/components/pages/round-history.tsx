@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { GameResultAreaContainer } from "../containers/game-result-area-container";
-import { FinishedRoundSidebarContainer } from "../containers/finished-round-sidebar-container";
+import { RoundHistoriesSidebarContainer as RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
 import { RoundHistoryHeaderContainer } from "../containers/round-history-header-container";
 import { RoundHistoryAverageShowcase } from "../containers/round-history-average-showcase";
 
@@ -27,7 +27,7 @@ export function RoundHistoryPage() {
         <GameResultAreaContainer readonly={true} />
       </main>
       <RoundHistoryAverageShowcase testid="showcase" />
-      <FinishedRoundSidebarContainer testid="sidebar" />
+      <RoundHistoriesSidebarContainer testid="sidebar" />
     </div>
   );
 }

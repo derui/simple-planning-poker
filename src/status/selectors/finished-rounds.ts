@@ -23,12 +23,19 @@ interface UserEstimationInfo {
   state: UserEstimationState;
 }
 
-export interface FinishedRoundInfo {
+export interface RoundHistoryInfo {
   theme: string;
   finishedAt: Date;
   id: string;
-  averagePoint: number;
+  results: {
+    cardCounts: { point: number; count: number }[];
+    averagePoint: number;
+  };
   estimations: UserEstimationInfo[];
+}
+
+export interface RoundHistoriesInfo {
+  histories: { id: string; theme: string; finishedAt: Date; averagePoint: number }[];
 }
 
 /**
@@ -38,9 +45,9 @@ export const selectCurrentPage = createDraftSafeSelector(selectFinishedRounds, (
   return rounds.page;
 });
 
-export const selectFinishedRoundList = createDraftSafeSelector(
+export const selectRoundHistories = createDraftSafeSelector(
   selectFinishedRounds,
-  (rounds): Loadable.T<FinishedRoundInfo[]> => {
+  (rounds): Loadable.T<RoundHistoriesInfo> => {
     if (rounds.state !== "fetched") {
       return Loadable.loading();
     }
@@ -52,14 +59,13 @@ export const selectFinishedRoundList = createDraftSafeSelector(
           theme: round.theme || "",
           finishedAt: new Date(round.finishedAt),
           averagePoint: round.averagePoint,
-          estimations: [],
         };
       })
       .sort((o1, o2) => {
         return o2.finishedAt.getTime() - o1.finishedAt.getTime();
       });
 
-    return Loadable.finished(_rounds);
+    return Loadable.finished({ histories: _rounds });
   }
 );
 
@@ -70,11 +76,12 @@ export const selectOpenedRoundHistory = createDraftSafeSelector(
   selectCurrentRoundHistory,
   selectUsers,
   selectGame,
-  (round, users, { currentGame: game }): Loadable.T<FinishedRoundInfo> => {
+  (round, users, { currentGame: game }): Loadable.T<RoundHistoryInfo> => {
     if (!round || !game) {
       return Loadable.loading();
     }
 
+    const cardCounts = new Map<number, number>();
     const estimations = Object.entries(round.estimations)
       .map(([userId, estimation]) => {
         const user = users[userId as User.Id];
@@ -86,6 +93,7 @@ export const selectOpenedRoundHistory = createDraftSafeSelector(
 
         if (UserEstimation.isEstimated(estimation)) {
           displayValue = Card.toString(estimation.card);
+          cardCounts.set(estimation.card, cardCounts.get(estimation.card) ?? 1);
         }
 
         return {
@@ -101,7 +109,12 @@ export const selectOpenedRoundHistory = createDraftSafeSelector(
       id: round.id,
       theme: round.theme || "",
       finishedAt: new Date(round.finishedAt),
-      averagePoint: round.averagePoint,
+      results: {
+        averagePoint: round.averagePoint,
+        cardCounts: Array.from(cardCounts.entries())
+          .sort(([v1], [v2]) => v1 - v2)
+          .map(([point, count]) => ({ point, count })),
+      },
       estimations,
     });
   }

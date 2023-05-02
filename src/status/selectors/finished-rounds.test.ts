@@ -11,11 +11,11 @@ import * as Game from "@/domains/game";
 import { estimated } from "@/domains/user-estimation";
 import { UserMode } from "@/domains/game-player";
 
-describe("round list", () => {
+describe("round histories", () => {
   test("should be loading when rounds is fetching", () => {
     const store = createPureStore();
 
-    const ret = s.selectFinishedRoundList(store.getState());
+    const ret = s.selectRoundHistories(store.getState());
 
     expect(isLoading(ret)).toBe(true);
   });
@@ -28,17 +28,19 @@ describe("round list", () => {
     ];
     store.dispatch(openFinishedRoundsSuccess(rounds));
 
-    const ret = s.selectFinishedRoundList(store.getState());
+    const ret = s.selectRoundHistories(store.getState());
 
     expect(isLoading(ret)).toBe(false);
-    expect(ret[0]).toEqual([
-      { id: rounds[1].id, theme: "", finishedAt: new Date(rounds[1].finishedAt), averagePoint: 0, estimations: [] },
-      { id: rounds[0].id, theme: "", finishedAt: new Date(rounds[0].finishedAt), averagePoint: 0, estimations: [] },
-    ]);
+    expect(ret[0]).toEqual({
+      histories: [
+        { id: rounds[1].id, theme: "", finishedAt: new Date(rounds[1].finishedAt), averagePoint: 0 },
+        { id: rounds[0].id, theme: "", finishedAt: new Date(rounds[0].finishedAt), averagePoint: 0 },
+      ],
+    });
   });
 });
 
-describe("round result information", () => {
+describe("round history information", () => {
   test("return estimations with estimated user", () => {
     // Arrange
     const store = createPureStore();
@@ -65,7 +67,10 @@ describe("round result information", () => {
       id: round.id,
       theme: "",
       finishedAt: new Date(round.finishedAt),
-      averagePoint: game.cards[0],
+      results: {
+        averagePoint: game.cards[0],
+        cardCounts: [{ point: game.cards[0], count: 1 }],
+      },
       estimations: [
         {
           displayValue: game.cards[0].toString(),
@@ -102,7 +107,10 @@ describe("round result information", () => {
       id: round.id,
       theme: "",
       finishedAt: new Date(round.finishedAt),
-      averagePoint: game.cards[0],
+      results: {
+        averagePoint: game.cards[0],
+        cardCounts: [{ point: game.cards[0], count: 1 }],
+      },
       estimations: [
         {
           displayValue: game.cards[0].toString(),

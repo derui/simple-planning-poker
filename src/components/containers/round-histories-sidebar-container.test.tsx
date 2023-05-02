@@ -3,7 +3,7 @@ import { render, cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { Provider } from "react-redux";
-import { FinishedRoundSidebarContainer } from "./finished-round-sidebar-container";
+import { RoundHistoriesSidebarContainer } from "./round-histories-sidebar-container";
 import { createPureStore } from "@/status/store";
 import {
   changePageOfFinishedRounds,
@@ -25,7 +25,7 @@ test("should be able to render", () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer />
+      <RoundHistoriesSidebarContainer />
     </Provider>
   );
 
@@ -49,7 +49,7 @@ test("list a round if loading finished", () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer />
+      <RoundHistoriesSidebarContainer />
     </Provider>
   );
 
@@ -78,7 +78,7 @@ test("dispatch event when opened and closed", async () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer />
+      <RoundHistoriesSidebarContainer />
     </Provider>
   );
 
@@ -112,7 +112,7 @@ test("change page forward", async () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer />
+      <RoundHistoriesSidebarContainer />
     </Provider>
   );
 
@@ -149,7 +149,7 @@ test("change page forward", async () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer />
+      <RoundHistoriesSidebarContainer />
     </Provider>
   );
 
@@ -175,7 +175,7 @@ test("dispatch event when round clicked", async () => {
 
   render(
     <Provider store={store}>
-      <FinishedRoundSidebarContainer
+      <RoundHistoriesSidebarContainer
         onRoundSelect={(id) => {
           expect(id).toBe("id");
         }}

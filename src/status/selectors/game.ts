@@ -123,7 +123,7 @@ export const selectCanShowDown = createDraftSafeSelector(selectRoundInstance, (i
 
 interface RoundResultInfo {
   average: number;
-  cardAndCounts: [number, number][];
+  cardAndCounts: { point: number; count: number }[];
 }
 
 export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (round): Loadable.T<RoundResultInfo> => {
@@ -148,7 +148,9 @@ export const selectRoundResult = createDraftSafeSelector(selectRoundInstance, (r
 
   return Loadable.finished({
     average,
-    cardAndCounts: Array.from(estimationMap.entries()).sort(([v1], [v2]) => v1 - v2),
+    cardAndCounts: Array.from(estimationMap.entries())
+      .sort(([v1], [v2]) => v1 - v2)
+      .map(([point, count]) => ({ point, count })),
   });
 });
 

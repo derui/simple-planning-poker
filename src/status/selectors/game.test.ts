@@ -184,8 +184,8 @@ describe("select round result", () => {
       Loadable.finished({
         average: 4,
         cardAndCounts: [
-          [2, 1],
-          [5, 2],
+          { point: 2, count: 1 },
+          { point: 5, count: 2 },
         ],
       })
     );

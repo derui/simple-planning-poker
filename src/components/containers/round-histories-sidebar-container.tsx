@@ -7,7 +7,7 @@ import { iconize } from "../iconize";
 import { FinishedRound } from "../presentations/finished-round";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
-import { selectCurrentPage, selectFinishedRoundList } from "@/status/selectors/finished-rounds";
+import { selectCurrentPage, selectRoundHistories } from "@/status/selectors/finished-rounds";
 import { changePageOfFinishedRounds, closeFinishedRounds, openFinishedRounds } from "@/status/actions/round";
 
 export interface Props extends BaseProps {
@@ -101,10 +101,10 @@ function LoadingContent(props: BaseProps) {
 }
 
 // eslint-disable-next-line func-style
-export function FinishedRoundSidebarContainer(props: Props) {
+export function RoundHistoriesSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
-  const rounds = useAppSelector(selectFinishedRoundList);
+  const rounds = useAppSelector(selectRoundHistories);
   const page = useAppSelector(selectCurrentPage);
   const dispatch = useAppDispatch();
 
@@ -136,7 +136,7 @@ export function FinishedRoundSidebarContainer(props: Props) {
     content = (
       <div className={Styles.container}>
         <ul className={Styles.list}>
-          {rounds[0].map((v) => (
+          {rounds[0].histories.map((v) => (
             <FinishedRound
               testid={gen(`round/${v.id}`)}
               key={v.id}

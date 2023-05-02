@@ -6,7 +6,7 @@ import { useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { AveragePointShowcase } from "../presentations/average-point-showcase";
 import { GameResultAreaContainer } from "../containers/game-result-area-container";
-import { FinishedRoundSidebarContainer } from "../containers/finished-round-sidebar-container";
+import { RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
 import { isFinished } from "@/utils/loadable";
 import { selectRoundResult, selectRoundStatus } from "@/status/selectors/game";
 
@@ -48,7 +48,7 @@ export function RoundResultPage() {
       </main>
 
       {showcase}
-      <FinishedRoundSidebarContainer testid="sidebar" />
+      <RoundHistoriesSidebarContainer testid="sidebar" />
     </div>
   );
 }

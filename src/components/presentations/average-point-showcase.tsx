@@ -3,7 +3,7 @@ import { BaseProps, generateTestId } from "../base";
 import { iconize } from "../iconize";
 
 interface Props extends BaseProps {
-  cardCounts: [number, number][];
+  cardCounts: { point: number; count: number }[];
   averagePoint: string;
 }
 
@@ -60,9 +60,7 @@ export function AveragePointShowcase(props: Props) {
   return (
     <div className={styles.root} data-testid={gen("root")}>
       <div className={styles.results}>
-        {props.cardCounts.map(([storyPoint, count], index) =>
-          createResultDisplay(index, storyPoint, count, gen("resultCard"))
-        )}
+        {props.cardCounts.map(({ point, count }, index) => createResultDisplay(index, point, count, gen("resultCard")))}
       </div>
 
       <div className={styles.equal}> </div>

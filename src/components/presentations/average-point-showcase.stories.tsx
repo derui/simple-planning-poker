@@ -20,10 +20,10 @@ export const DisplayCount: Story = {
   args: {
     averagePoint: "5.32",
     cardCounts: [
-      [1, 3],
-      [2, 3],
-      [3, 1],
-      [5, 1],
+      { point: 1, count: 3 },
+      { point: 2, count: 3 },
+      { point: 3, count: 1 },
+      { point: 5, count: 1 },
     ],
   },
 };

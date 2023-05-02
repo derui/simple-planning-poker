@@ -28,8 +28,8 @@ export function RoundHistoryAverageShowcase(props: Props) {
   return (
     <AveragePointShowcase
       testid={gen("average-point")}
-      averagePoint={`${averageResult[0].averagePoint}`}
-      cardCounts={averageResult[0].estimations}
+      averagePoint={`${averageResult[0].results.averagePoint}`}
+      cardCounts={averageResult[0].results.cardCounts}
     />
   );
 }

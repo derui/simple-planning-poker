@@ -17,8 +17,8 @@ test("display cards with count", () => {
     <AveragePointShowcase
       averagePoint="3"
       cardCounts={[
-        [1, 2],
-        [3, 4],
+        { point: 1, count: 2 },
+        { point: 3, count: 4 },
       ]}
     />
   );
