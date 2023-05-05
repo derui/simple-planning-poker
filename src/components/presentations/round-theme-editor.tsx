@@ -49,7 +49,7 @@ const Styles = {
     input: classNames(baseInput, "pr-9"),
     submit: (canSubmit: boolean) =>
       classNames(
-        "z-1",
+        "z-10",
         "absolute",
         "right-2",
         "inline-flex",

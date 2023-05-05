@@ -18,6 +18,7 @@ const Styles = {
   root: (opened: boolean) =>
     classNames(
       "absolute",
+      "z-20",
       "top-0",
       "right-0",
       "z-40",
@@ -27,6 +28,7 @@ const Styles = {
       "transition-[transform_width]",
       {
         "border-l": opened,
+        "border-l-primary-400": opened,
         "border-l-0": !opened,
         "[transform:translateX(100%)]": !opened,
         "w-0": !opened,
@@ -53,6 +55,7 @@ const Styles = {
       "transition-[width_left]",
       "hover:-left-14",
       "hover:w-14",
+      "bg-white",
       "cursor-pointer"
     ),
     icon: (opened: boolean) =>
