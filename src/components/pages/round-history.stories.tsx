@@ -11,6 +11,7 @@ import { openGameSuccess } from "@/status/actions/game";
 import { randomFinishedRound, randomGame, randomUser } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { openFinishedRoundsSuccess, openRoundHistory } from "@/status/actions/round";
+import { estimated } from "@/domains/user-estimation";
 
 install(twind);
 
@@ -59,7 +60,11 @@ export const Loaded: Story = {
       })
     );
     store.dispatch(tryAuthenticateSuccess({ user: owner }));
-    const round = randomFinishedRound();
+    const round = randomFinishedRound({
+      theme: "something",
+      cards: game.cards,
+      estimations: [{ user: owner.id, estimation: estimated(game.cards[0]) }],
+    });
     store.dispatch(openFinishedRoundsSuccess([round]));
     store.dispatch(openRoundHistory(round.id));
 
