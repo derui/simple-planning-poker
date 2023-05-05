@@ -1,13 +1,10 @@
 import classNames from "classnames";
 import { PlayerEstimations } from "../presentations/player-estimations";
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { RoundThemeEditor } from "../presentations/round-theme-editor";
-import { selectUserEstimationInfos } from "@/status/selectors/user-estimation";
 import { isFinished } from "@/utils/loadable";
-import { AppDispatch } from "@/status/store";
-import { newRound } from "@/status/actions/game";
-import { selectRoundInformation } from "@/status/selectors/round";
+import { selectOpenedRoundHistory } from "@/status/selectors/round-history";
 
 const styles = {
   root: classNames("relative", "w-full", "h-full"),
@@ -64,36 +61,25 @@ const styles = {
     "hover:text-primary-200",
     "hover:bg-primary-500"
   ),
-};
-
-const GameProgressionButton = (dispatch: AppDispatch) => {
-  return (
-    <button className={styles.nextGameButton} onClick={() => dispatch(newRound())}>
-      Start next round
-    </button>
-  );
-};
+} as const;
 
 // eslint-disable-next-line func-style
-export function GameResultAreaContainer() {
-  const estimations = useAppSelector(selectUserEstimationInfos);
-  const roundInformation = useAppSelector(selectRoundInformation());
-  const dispatch = useAppDispatch();
+export function RoundHistoryResultAreaContainer() {
+  const roundInformation = useAppSelector(selectOpenedRoundHistory);
 
-  if (!isFinished(estimations) || !isFinished(roundInformation)) {
+  if (!isFinished(roundInformation)) {
     return (
       <div className={styles.root}>
         <div className={styles.gridContainer}>
           <div className="row-start-1 col-span-full"></div>
           <div className="row-start-2 col-start-2 items-center flex">
-            <Skeleton testid="upper-loading" />
+            <PlayerEstimations estimations={[]} loading={true} testid="upper-estimations" />
           </div>
           <div className={styles.tableLoading}>
             <Skeleton testid="table-loading" />
           </div>
-
           <div className="row-start-4 col-start-2 items-center flex">
-            <Skeleton testid="lower-loading" />
+            <PlayerEstimations estimations={[]} loading={true} testid="lower-estimations" />
           </div>
           <div className="row-start-5 col-span-full"></div>
         </div>
@@ -101,9 +87,9 @@ export function GameResultAreaContainer() {
     );
   }
 
-  const button = GameProgressionButton(dispatch);
-  const upper = estimations[0].filter((_, index) => index % 2 === 0);
-  const lower = estimations[0].filter((_, index) => index % 2 === 1);
+  const estimations = roundInformation[0].estimations;
+  const upper = estimations.filter((_, index) => index % 2 === 0);
+  const lower = estimations.filter((_, index) => index % 2 === 1);
 
   return (
     <div className={styles.root}>
@@ -112,11 +98,11 @@ export function GameResultAreaContainer() {
           <RoundThemeEditor editable={false} initialTheme={roundInformation[0].theme} testid="themeEditor" />
         </div>
         <div className="row-start-2 col-start-2">
-          <PlayerEstimations estimations={upper} testid="estimations" />
+          <PlayerEstimations estimations={upper} testid="upper-estimations" />
         </div>
-        <div className={styles.table}>{button}</div>
+        <div className={styles.table}>Viewing round history</div>
         <div className="row-start-4 col-start-2">
-          <PlayerEstimations estimations={lower} testid="estimations" />
+          <PlayerEstimations estimations={lower} testid="lower-estimations" />
         </div>
         <div className="row-start-5 col-span-full"></div>
       </div>

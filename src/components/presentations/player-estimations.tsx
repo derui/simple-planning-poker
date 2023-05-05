@@ -10,7 +10,7 @@ interface Props extends BaseProps {
 }
 
 const styles = {
-  root: classnames("flex", "justify-around"),
+  root: classnames("flex", "justify-around", "w-full"),
 };
 
 // eslint-disable-next-line func-style

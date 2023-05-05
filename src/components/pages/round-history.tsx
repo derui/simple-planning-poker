@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { generatePath, useNavigate, useParams } from "react-router";
-import { GameResultAreaContainer } from "../containers/game-result-area-container";
-import { RoundHistoriesSidebarContainer as RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
+import { RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
 import { RoundHistoryHeaderContainer } from "../containers/round-history-header-container";
 import { RoundHistoryAverageShowcase } from "../containers/round-history-average-showcase";
+import { RoundHistoryResultAreaContainer } from "../containers/round-history-result-area-container";
 
 const styles = {
   root: classNames("flex", "flex-col", "h-full", "overflow-hidden"),
@@ -24,7 +24,7 @@ export function RoundHistoryPage() {
     <div className={styles.root}>
       <RoundHistoryHeaderContainer onBack={handleBack} />
       <main className={styles.main}>
-        <GameResultAreaContainer readonly={true} />
+        <RoundHistoryResultAreaContainer />
       </main>
       <RoundHistoryAverageShowcase testid="showcase" />
       <RoundHistoriesSidebarContainer testid="sidebar" />
