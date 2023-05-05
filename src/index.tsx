@@ -66,6 +66,7 @@ registrar.register(
   new UserObserverImpl(database, registrar.resolve("userRepository"), registrar.resolve("gameRepository"))
 );
 registrar.register("roundObserver", new RoundObserverImpl(database));
+registrar.register("roundRepository", roundRepository);
 registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(roundRepository));
 registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, roundRepository));
 registrar.register(

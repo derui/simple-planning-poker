@@ -73,13 +73,13 @@ export function RoundHistoryResultAreaContainer() {
         <div className={styles.gridContainer}>
           <div className="row-start-1 col-span-full"></div>
           <div className="row-start-2 col-start-2 items-center flex">
-            <PlayerEstimations estimations={[]} loading={true} testid="upper-estimations" />
+            <PlayerEstimations estimations={[]} loading={true} testid="estimations" />
           </div>
           <div className={styles.tableLoading}>
             <Skeleton testid="table-loading" />
           </div>
           <div className="row-start-4 col-start-2 items-center flex">
-            <PlayerEstimations estimations={[]} loading={true} testid="lower-estimations" />
+            <PlayerEstimations estimations={[]} loading={true} testid="estimations" />
           </div>
           <div className="row-start-5 col-span-full"></div>
         </div>
@@ -98,11 +98,11 @@ export function RoundHistoryResultAreaContainer() {
           <RoundThemeEditor editable={false} initialTheme={roundInformation[0].theme} testid="themeEditor" />
         </div>
         <div className="row-start-2 col-start-2">
-          <PlayerEstimations estimations={upper} testid="upper-estimations" />
+          <PlayerEstimations estimations={upper} testid="estimations" />
         </div>
         <div className={styles.table}>Viewing round history</div>
         <div className="row-start-4 col-start-2">
-          <PlayerEstimations estimations={lower} testid="lower-estimations" />
+          <PlayerEstimations estimations={lower} testid="estimations" />
         </div>
         <div className="row-start-5 col-span-full"></div>
       </div>

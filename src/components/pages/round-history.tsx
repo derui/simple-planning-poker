@@ -1,9 +1,12 @@
 import classNames from "classnames";
 import { generatePath, useNavigate, useParams } from "react-router";
+import { useEffect } from "react";
 import { RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
 import { RoundHistoryHeaderContainer } from "../containers/round-history-header-container";
 import { RoundHistoryAverageShowcase } from "../containers/round-history-average-showcase";
 import { RoundHistoryResultAreaContainer } from "../containers/round-history-result-area-container";
+import { useAppDispatch } from "../hooks";
+import { openRoundHistory } from "@/status/actions/round";
 
 const styles = {
   root: classNames("flex", "flex-col", "h-full", "overflow-hidden"),
@@ -13,8 +16,13 @@ const styles = {
 
 // eslint-disable-next-line func-style
 export function RoundHistoryPage() {
-  const params = useParams<{ gameId: string }>();
+  const params = useParams<{ gameId: string; roundId: string }>();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(openRoundHistory(params.roundId!));
+  }, [params.roundId]);
 
   const handleBack = () => {
     navigate(generatePath("/game/:gameId", { gameId: params.gameId! }));

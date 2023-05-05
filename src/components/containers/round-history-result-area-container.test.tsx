@@ -23,8 +23,7 @@ test("should dsiplay skeleton when loading", () => {
     </Provider>
   );
 
-  expect(screen.getByTestId("upper-estimations/loading/root")).not.toBeNull();
-  expect(screen.getByTestId("lower-estimations/loading/root")).not.toBeNull();
+  expect(screen.getAllByTestId("estimations/loading/root")).toHaveLength(2);
   expect(screen.getByTestId("table-loading/root")).not.toBeNull();
 });
 
