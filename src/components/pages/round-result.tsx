@@ -28,6 +28,7 @@ export function RoundResultPage() {
       <Skeleton />
     </div>
   );
+
   if (isFinished(averageResult)) {
     showcase = (
       <AveragePointShowcase averagePoint={`${averageResult[0].average}`} cardCounts={averageResult[0].cardAndCounts} />
@@ -40,6 +41,10 @@ export function RoundResultPage() {
     }
   }, [roundStatus]);
 
+  const handleRoundSelect = (id: string) => {
+    navigate(generatePath("/game/:gameId/round/:roundId/history", { gameId: params.gameId!, roundId: id }));
+  };
+
   return (
     <div className={styles.root}>
       <GameHeaderContainer />
@@ -48,7 +53,7 @@ export function RoundResultPage() {
       </main>
 
       {showcase}
-      <RoundHistoriesSidebarContainer testid="sidebar" />
+      <RoundHistoriesSidebarContainer testid="sidebar" onRoundSelect={handleRoundSelect} />
     </div>
   );
 }

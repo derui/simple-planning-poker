@@ -20,6 +20,10 @@ export function RoundHistoryPage() {
     navigate(generatePath("/game/:gameId", { gameId: params.gameId! }));
   };
 
+  const handleRoundSelect = (id: string) => {
+    navigate(generatePath("/game/:gameId/round/:roundId/history", { gameId: params.gameId!, roundId: id }));
+  };
+
   return (
     <div className={styles.root}>
       <RoundHistoryHeaderContainer onBack={handleBack} />
@@ -27,7 +31,7 @@ export function RoundHistoryPage() {
         <RoundHistoryResultAreaContainer />
       </main>
       <RoundHistoryAverageShowcase testid="showcase" />
-      <RoundHistoriesSidebarContainer testid="sidebar" />
+      <RoundHistoriesSidebarContainer testid="sidebar" onRoundSelect={handleRoundSelect} />
     </div>
   );
 }
