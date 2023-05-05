@@ -4,7 +4,7 @@ import { Skeleton } from "../presentations/skeleton";
 import { AveragePointShowcase } from "../presentations/average-point-showcase";
 import { useAppSelector } from "../hooks";
 import { isFinished } from "@/utils/loadable";
-import { selectOpenedRoundHistory } from "@/status/selectors/finished-rounds";
+import { selectOpenedRoundHistory } from "@/status/selectors/round-history";
 
 type Props = BaseProps;
 

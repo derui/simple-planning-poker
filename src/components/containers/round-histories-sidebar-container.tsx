@@ -7,7 +7,7 @@ import { iconize } from "../iconize";
 import { FinishedRound } from "../presentations/finished-round";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
-import { selectCurrentPage, selectRoundHistories } from "@/status/selectors/finished-rounds";
+import { selectCurrentPage, selectRoundHistories } from "@/status/selectors/round-history";
 import { changePageOfFinishedRounds, closeFinishedRounds, openFinishedRounds } from "@/status/actions/round";
 
 export interface Props extends BaseProps {

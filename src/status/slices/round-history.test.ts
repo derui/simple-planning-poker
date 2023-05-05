@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { getInitialState, reducer } from "./finished-rounds";
+import { getInitialState, reducer } from "./round-history";
 import * as RoundAction from "@/status/actions/round";
 import { randomFinishedRound } from "@/test-lib";
 import * as SelectableCards from "@/domains/selectable-cards";

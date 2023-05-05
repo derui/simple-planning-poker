@@ -3,7 +3,7 @@ import { changePageOfFinishedRoundsSuccess, openFinishedRoundsSuccess, openRound
 import { createPureStore } from "../store";
 import { tryAuthenticateSuccess } from "../actions/signin";
 import { openGameSuccess } from "../actions/game";
-import * as s from "./finished-rounds";
+import * as s from "./round-history";
 import { randomFinishedRound, randomGame } from "@/test-lib";
 import { isLoading } from "@/utils/loadable";
 import * as User from "@/domains/user";

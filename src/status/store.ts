@@ -2,7 +2,7 @@ import { Action, configureStore } from "@reduxjs/toolkit";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
 // INJECT REDUCER IMPORT HERE
-import * as finishedRounds from "./slices/finished-rounds";
+import * as finishedRounds from "./slices/round-history";
 
 import * as error from "./slices/error";
 
