@@ -64,10 +64,30 @@ const Styles = {
         "before:[transform:rotateZ(0deg)]": !opened,
       }),
   },
-  list: classNames("flex-auto", "flex", "flex-col", "p-3", "h-full", "w-full", "bg-white", "space-y-3"),
+  list: classNames(
+    "flex-auto",
+    "overflow-auto",
+    "flex",
+    "flex-col",
+    "p-3",
+    "h-full",
+    "w-full",
+    "bg-white",
+    "space-y-3"
+  ),
 
   paginator: {
-    root: classNames("flex-none", "flex", "flex-row", "items-center", "justify-center", "px-3", "h-16"),
+    root: classNames(
+      "flex-none",
+      "flex",
+      "flex-row",
+      "items-center",
+      "justify-center",
+      "px-3",
+      "h-16",
+      "border-t",
+      "border-t-primary-400/50"
+    ),
     back: (enabled: boolean) =>
       classNames("flex-none", iconize("chevron-left"), "w-6", "h-6", "transition-shadow", {
         "before:bg-secondary1-400": enabled,
