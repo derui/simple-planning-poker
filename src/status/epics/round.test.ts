@@ -328,7 +328,7 @@ describe("finished rounds", () => {
     const action$ = of(RoundAction.openFinishedRounds());
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.openFinishedRounds(action$, state$, null));
+    const ret = await firstValueFrom(epics.openRoundHistories(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.openFinishedRoundsSuccess([round]));
     expect(fake.callCount).toBe(1);
@@ -369,7 +369,7 @@ describe("finished rounds", () => {
     const action$ = of(RoundAction.changePageOfFinishedRounds(2));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.changePageOfSinishedRounds(action$, state$, null));
+    const ret = await firstValueFrom(epics.changePageOfRoundHistories(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.changePageOfFinishedRoundsSuccess({ rounds: rounds.slice(10), page: 2 }));
   });

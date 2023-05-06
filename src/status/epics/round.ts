@@ -8,7 +8,7 @@ import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
 import { filterUndefined } from "@/utils/basic";
 
-type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openFinishedRounds" | "changePageOfSinishedRounds";
+type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openRoundHistories" | "changePageOfRoundHistories";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -157,7 +157,7 @@ export const roundEpic = (
       commonCatchError
     ),
 
-  openFinishedRounds: (action$, state$) =>
+  openRoundHistories: (action$, state$) =>
     action$.pipe(
       filter(RoundAction.openFinishedRounds.match),
       switchMap(() => {
@@ -183,7 +183,7 @@ export const roundEpic = (
       commonCatchError
     ),
 
-  changePageOfSinishedRounds: (action$, state$) =>
+  changePageOfRoundHistories: (action$, state$) =>
     action$.pipe(
       filter(RoundAction.changePageOfFinishedRounds.match),
       switchMap(({ payload }) => {
