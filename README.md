@@ -40,7 +40,7 @@ $ npx firebase login
 $ npx firebase init
 ```
 
-You must select in initialization below:
+You must select below in `npx firebase init`:
 
 - Realtime database
 - Hosting
