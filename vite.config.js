@@ -9,6 +9,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     polyfillDynamicImport: false,
+    jsx: isProduction ? 'react-jsx' : 'react-jsxdev',
   },
   publicDir: 'dist',
   define:{
