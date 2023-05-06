@@ -61,4 +61,12 @@ test("show history after finished round", async ({ page, newPageOnNewContext: ot
   await expect(page.getByTestId("estimations/test@example.com/card")).toHaveText("3");
   // do not show player if did not estimate on the history
   await expect(page.getByTestId("estimations/test2@example.com/card")).not.toBeVisible();
+
+  // back to current round
+  await page.getByTestId("game-info/backToTop").click();
+  await expect(page).not.toHaveURL(/history$/);
+  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test@example.com/card")).not.toHaveText(/.+/);
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await expect(page.getByTestId("estimations/test2@example.com/card")).toHaveText(/3/);
 });
