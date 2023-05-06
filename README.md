@@ -1,6 +1,17 @@
 # Simple Planning Poker #
 This project provides functions to do planning poker in online.
 
+## Features ##
+
+- Sign in/Sign up with pre-registered email/password
+- Create game with story points, or some numbers what you want
+- Invite other user to game
+- Kick player by game owner
+- Change user name/mode
+- Show average estimations after show down
+- Browse round histories from round result
+- Restore round history and view it
+
 # Requirement #
 
 - Node >= 16
