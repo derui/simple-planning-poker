@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { install } from "@twind/core";
 
-import { FinishedRound } from "./finished-round";
+import { RoundHistory } from "./round-history";
 import twind from "@/twind.config.cjs";
 
 install(twind);
 
 const meta = {
   title: "Presentational/Finished Round",
-  component: FinishedRound,
+  component: RoundHistory,
   tags: ["autodocs"],
-} satisfies Meta<typeof FinishedRound>;
+} satisfies Meta<typeof RoundHistory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

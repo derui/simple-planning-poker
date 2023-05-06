@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BaseProps, generateTestId } from "../base";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { iconize } from "../iconize";
-import { FinishedRound } from "../presentations/finished-round";
+import { RoundHistory } from "../presentations/round-history";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
 import { selectCurrentPage, selectRoundHistories } from "@/status/selectors/round-history";
@@ -160,7 +160,7 @@ export function RoundHistoriesSidebarContainer(props: Props) {
       <div className={Styles.container}>
         <ul className={Styles.list}>
           {rounds[0].histories.map((v) => (
-            <FinishedRound
+            <RoundHistory
               testid={gen(`round/${v.id}`)}
               key={v.id}
               theme={v.theme}

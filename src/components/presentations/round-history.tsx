@@ -60,7 +60,7 @@ const formatToTime = function formatToTime(dateTime: Date) {
 };
 
 // eslint-disable-next-line func-style
-export function FinishedRound(props: Props) {
+export function RoundHistory(props: Props) {
   const gen = generateTestId(props.testid);
   const [showTime, setShowTime] = useState(false);
   const theme = props.theme ?? "No theme";
