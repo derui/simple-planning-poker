@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { Provider } from "react-redux";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import RoundHistoryPage from "./round-history";
-import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomFinishedRound, randomGame, randomUser } from "@/test-lib";
@@ -14,8 +11,6 @@ import { openFinishedRoundsSuccess, openRoundHistory } from "@/status/actions/ro
 import { estimated } from "@/domains/user-estimation";
 import { notifyOtherUserChanged } from "@/status/actions/user";
 import { between } from "@/utils/array";
-
-install(twind);
 
 const meta = {
   title: "Page/Round History",

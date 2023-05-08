@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
 import { RadioButton } from "./radio-button";
-
-import twind from "@/twind.config.cjs";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Radio Button",

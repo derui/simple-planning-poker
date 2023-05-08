@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { NotificationMessage } from "./notification-message";
-import twind from "@/twind.config.cjs";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Notification Message",

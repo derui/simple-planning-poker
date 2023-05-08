@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { Overlay } from "./overlay";
-import twind from "@/twind.config.cjs";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Overlay",

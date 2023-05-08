@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { Provider } from "react-redux";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { RoundResultPage } from "./round-result";
-import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomGame, randomRound, randomUser } from "@/test-lib";
@@ -14,8 +11,6 @@ import { tryAuthenticateSuccess } from "@/status/actions/signin";
 import { giveUp, estimated } from "@/domains/user-estimation";
 import { notifyRoundUpdated, showDownSuccess } from "@/status/actions/round";
 import { Round, showDown, takePlayerEstimation } from "@/domains/round";
-
-install(twind);
 
 const meta = {
   title: "Page/Round Result",

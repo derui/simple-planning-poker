@@ -1,4 +1,8 @@
 import type { Preview } from "@storybook/react";
+import { setup } from "@twind/core";
+import config from "../src/twind.config.cjs";
+
+setup(config);
 
 const preview: Preview = {
   parameters: {

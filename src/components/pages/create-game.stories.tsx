@@ -1,14 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router";
 import { CreateGamePage } from "./create-game";
-import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
-
-install(twind);
 
 const meta = {
   title: "Page/Create Game",

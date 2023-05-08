@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { RoundThemeEditor } from "./round-theme-editor";
-import twind from "@/twind.config.cjs";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Round Theme Editor",

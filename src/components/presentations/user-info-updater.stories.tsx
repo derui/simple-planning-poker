@@ -1,12 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { UserInfoUpdater } from "./user-info-updater";
-import twind from "@/twind.config.cjs";
 import { UserMode } from "@/domains/game-player";
-
-install(twind);
 
 const meta = {
   title: "Presentational/User Info Updater",

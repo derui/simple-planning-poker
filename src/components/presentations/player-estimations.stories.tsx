@@ -1,12 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { PlayerEstimations } from "./player-estimations";
-import twind from "@/twind.config.cjs";
 import { UserMode } from "@/domains/game-player";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Player Estimations",

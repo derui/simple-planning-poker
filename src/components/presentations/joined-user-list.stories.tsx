@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { install } from "@twind/core";
 import { JoinedUserList } from "./joined-user-list";
-import twind from "@/twind.config.cjs";
 import { createId } from "@/domains/user";
-
-install(twind);
 
 const meta = {
   title: "Presentational/Joined User List",

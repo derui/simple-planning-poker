@@ -1,18 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { install } from "@twind/core";
-
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router";
 import { SelectGamePage } from "./select-game";
-import twind from "@/twind.config.cjs";
 import { createPureStore } from "@/status/store";
 import { signInSuccess } from "@/status/actions/signin";
 import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import { JoinedGameState } from "@/domains/game-repository";
-
-install(twind);
 
 const meta = {
   title: "Page/Select Game",
