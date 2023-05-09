@@ -7,7 +7,7 @@ export interface Props extends BaseProps {
   onClick?: (id: string) => void;
   id: string;
   theme?: string;
-  finishedAt: Date;
+  finishedAt: string;
   averagePoint: number;
 }
 
@@ -80,6 +80,8 @@ export function RoundHistory(props: Props) {
     setShowTime(!showTime);
   };
 
+  const finishedAt = new Date(props.finishedAt);
+
   return (
     <li className={Styles.root} onClick={handleClick} data-testid={gen("root")}>
       <span className={Styles.point} data-testid={gen("point")}>
@@ -90,13 +92,9 @@ export function RoundHistory(props: Props) {
           {theme}
         </span>
         <span className={Styles.dateContainer} data-testid={gen("date")}>
-          <span
-            className={Styles.time(props.finishedAt.getHours())}
-            onClick={handleTimeClick}
-            data-testid={gen("time")}
-          >
-            <span className={Styles.dateTime}>{formatToDate(props.finishedAt)}</span>
-            <span className={Styles.timeString(showTime)}> {formatToTime(props.finishedAt)} </span>
+          <span className={Styles.time(finishedAt.getHours() % 12)} onClick={handleTimeClick} data-testid={gen("time")}>
+            <span className={Styles.dateTime}>{formatToDate(finishedAt)}</span>
+            <span className={Styles.timeString(showTime)}> {formatToTime(finishedAt)} </span>
           </span>
         </span>
       </span>

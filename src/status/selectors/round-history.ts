@@ -25,7 +25,7 @@ interface UserEstimationInfo {
 
 export interface RoundHistoryInfo {
   theme: string;
-  finishedAt: Date;
+  finishedAt: string;
   id: string;
   results: {
     cardCounts: { point: number; count: number }[];
@@ -35,7 +35,7 @@ export interface RoundHistoryInfo {
 }
 
 export interface RoundHistoriesInfo {
-  histories: { id: string; theme: string; finishedAt: Date; averagePoint: number }[];
+  histories: { id: string; theme: string; finishedAt: string; averagePoint: number }[];
 }
 
 /**
@@ -57,12 +57,12 @@ export const selectRoundHistories = createDraftSafeSelector(
         return {
           id: round.id,
           theme: round.theme || "",
-          finishedAt: new Date(round.finishedAt),
+          finishedAt: round.finishedAt,
           averagePoint: round.averagePoint,
         };
       })
       .sort((o1, o2) => {
-        return o2.finishedAt.getTime() - o1.finishedAt.getTime();
+        return o2.finishedAt.localeCompare(o1.finishedAt);
       });
 
     return Loadable.finished({ histories: _rounds });
@@ -108,7 +108,7 @@ export const selectOpenedRoundHistory = createDraftSafeSelector(
     return Loadable.finished({
       id: round.id,
       theme: round.theme || "",
-      finishedAt: new Date(round.finishedAt),
+      finishedAt: round.finishedAt,
       results: {
         averagePoint: round.averagePoint,
         cardCounts: Array.from(cardCounts.entries())

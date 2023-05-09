@@ -33,8 +33,8 @@ describe("round histories", () => {
     expect(isLoading(ret)).toBe(false);
     expect(ret[0]).toEqual({
       histories: [
-        { id: rounds[1].id, theme: "", finishedAt: new Date(rounds[1].finishedAt), averagePoint: 0 },
-        { id: rounds[0].id, theme: "", finishedAt: new Date(rounds[0].finishedAt), averagePoint: 0 },
+        { id: rounds[1].id, theme: "", finishedAt: rounds[1].finishedAt, averagePoint: 0 },
+        { id: rounds[0].id, theme: "", finishedAt: rounds[0].finishedAt, averagePoint: 0 },
       ],
     });
   });
@@ -66,7 +66,7 @@ describe("round history information", () => {
     expect(ret).toEqual({
       id: round.id,
       theme: "",
-      finishedAt: new Date(round.finishedAt),
+      finishedAt: round.finishedAt,
       results: {
         averagePoint: game.cards[0],
         cardCounts: [{ point: game.cards[0], count: 1 }],
@@ -106,7 +106,7 @@ describe("round history information", () => {
     expect(ret).toEqual({
       id: round.id,
       theme: "",
-      finishedAt: new Date(round.finishedAt),
+      finishedAt: round.finishedAt,
       results: {
         averagePoint: game.cards[0],
         cardCounts: [{ point: game.cards[0], count: 1 }],
