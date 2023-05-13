@@ -1,23 +1,18 @@
-import * as UserEstimation from "@/domains/user-estimation";
-import * as User from "@/domains/user";
-import * as SelectableCards from "@/domains/selectable-cards";
-
 /**
  * A simple interface for round history.
  */
 export interface T {
-  readonly theme: string;
+  readonly theme: string | null;
   readonly finishedAt: string;
+  readonly averagePoint: number;
   readonly id: string;
-  readonly cards: SelectableCards.T;
-  readonly estimations: Record<User.Id, UserEstimation.T>;
 }
 
 export interface Query {
   /**
    * list round histories of the game.
    *
-   * Argument `options` is optional. Count in `options` must be greater than 0, and page is too.
+   * A `lastKey` attribute in `options` should be `key` of result.
    */
-  listOf(gameId: string, options?: { count: number; page: number }): T | null;
+  listBy(gameId: string, options: { count: number; lastKey?: string }): Promise<{ result: T[]; key: string }>;
 }
