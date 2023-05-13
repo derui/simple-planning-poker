@@ -4,10 +4,11 @@ import * as Card from "@/domains/card";
 import * as User from "@/domains/user";
 import * as UserEstimation from "@/domains/user-estimation";
 import * as RoundAction from "@/status/actions/round";
+import * as RoundHistory from "@/status/query-models/round-history";
 
-type State = "initial" | "fetching" | "fetched" | { kind: "pendingPage"; page: number };
+type State = "initial" | "fetching" | "fetched" | "pendingPage";
 
-interface FinishedRoundState {
+interface OpenedRoundHistoryState {
   readonly id: Round.Id;
   readonly cards: Record<Card.T, { card: Card.T; order: number }>;
   readonly estimations: Record<User.Id, UserEstimation.T>;
@@ -16,9 +17,12 @@ interface FinishedRoundState {
   readonly finishedAt: string;
 }
 
+type RoundHistoryState = RoundHistory.T;
+
 interface FinishedRoundsState {
-  rounds: Record<Round.Id, FinishedRoundState>;
-  currentRound: FinishedRoundState | undefined;
+  rounds: Record<Round.Id, RoundHistoryState>;
+  currentRound: OpenedRoundHistoryState | undefined;
+  lastKey?: string;
   page: number;
   state: State;
 }
@@ -30,7 +34,7 @@ const initialState = {
   state: "initial",
 } as FinishedRoundsState satisfies FinishedRoundsState;
 
-const normalize = function normalize(round: Round.FinishedRound): FinishedRoundState {
+const normalize = function normalize(round: Round.FinishedRound): OpenedRoundHistoryState {
   return {
     id: round.id,
     cards:
@@ -51,41 +55,47 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // use builder to add reducer
-    builder.addCase(RoundAction.openFinishedRounds, (draft) => {
+    builder.addCase(RoundAction.openRoundHistories, (draft) => {
       draft.state = "fetching";
     });
 
     builder.addCase(RoundAction.somethingFailure, (draft) => {
       draft.rounds = {};
-      draft.page = 1;
+      delete draft.lastKey;
       draft.state = "fetched";
     });
 
-    builder.addCase(RoundAction.openFinishedRoundsSuccess, (draft, action) => {
+    builder.addCase(RoundAction.openRoundHistoriesSuccess, (draft, action) => {
       draft.rounds = {};
       draft.page = 1;
       draft.state = "fetched";
+      draft.lastKey = action.payload.lastKey;
 
-      for (let round of action.payload) {
-        draft.rounds[round.id] = normalize(round);
+      for (let round of action.payload.rounds) {
+        draft.rounds[Round.createId(round.id)] = round;
       }
     });
 
-    builder.addCase(RoundAction.changePageOfFinishedRounds, (draft, action) => {
-      draft.state = { kind: "pendingPage", page: action.payload };
+    builder.addCase(RoundAction.nextPageOfRoundHistories, (draft) => {
+      draft.state = "pendingPage";
     });
 
-    builder.addCase(RoundAction.openRoundHistory, (draft, action) => {
-      draft.currentRound = draft.rounds[Round.createId(action.payload)];
+    builder.addCase(RoundAction.openRoundHistory, (draft) => {
+      draft.state = "fetching";
     });
 
-    builder.addCase(RoundAction.changePageOfFinishedRoundsSuccess, (draft, action) => {
+    builder.addCase(RoundAction.openRoundHistorySuccess, (draft, action) => {
+      draft.currentRound = normalize(action.payload);
+    });
+
+    builder.addCase(RoundAction.nextPageOfRoundHistoriesSuccess, (draft, action) => {
       draft.rounds = {};
-      draft.page = action.payload.page;
+      draft.page = draft.page + 1;
+      draft.lastKey = action.payload.lastKey;
       draft.state = "fetched";
 
       for (let round of action.payload.rounds) {
-        draft.rounds[round.id] = normalize(round);
+        draft.rounds[Round.createId(round.id)] = round;
       }
     });
   },

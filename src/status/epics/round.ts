@@ -6,9 +6,8 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
-import { filterUndefined } from "@/utils/basic";
 
-type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openRoundHistories" | "changePageOfRoundHistories";
+type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openRoundHistories" | "nextPageOfRoundHistories";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -159,7 +158,9 @@ export const roundEpic = (
 
   openRoundHistories: (action$, state$) =>
     action$.pipe(
-      filter(RoundAction.openFinishedRounds.match),
+      filter(
+        (action) => RoundAction.openRoundHistories.match(action) || RoundAction.resetPageOfRoundHistories.match(action)
+      ),
       switchMap(() => {
         const {
           game: { currentGame },
@@ -169,40 +170,37 @@ export const roundEpic = (
           return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
         }
 
-        const finishedRoundsOnFirstPage = currentGame.finishedRounds.slice(0, 10);
-        const repository = registrar.resolve("roundRepository");
-        const promise = Promise.all(finishedRoundsOnFirstPage.map((id) => repository.findFinishedRoundBy(id)));
+        const query = registrar.resolve("roundHistoryQuery");
+        const promise = query.listBy(currentGame.id, { count: 10 });
 
         return from(promise).pipe(
-          map((v) => v.filter(filterUndefined)),
           map((output) => {
-            return RoundAction.openFinishedRoundsSuccess(output);
+            return RoundAction.openRoundHistoriesSuccess({ rounds: output.result, lastKey: output.key });
           })
         );
       }),
       commonCatchError
     ),
 
-  changePageOfRoundHistories: (action$, state$) =>
+  nextPageOfRoundHistories: (action$, state$) =>
     action$.pipe(
-      filter(RoundAction.changePageOfFinishedRounds.match),
-      switchMap(({ payload }) => {
+      filter(RoundAction.nextPageOfRoundHistories.match),
+      switchMap(() => {
         const {
           game: { currentGame },
+          finishedRounds: { lastKey },
         } = state$.value;
 
         if (!currentGame) {
           return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
         }
 
-        const finishedRoundsOnFirstPage = currentGame.finishedRounds.slice((payload - 1) * 10, payload * 10);
-        const repository = registrar.resolve("roundRepository");
-        const promise = Promise.all(finishedRoundsOnFirstPage.map((id) => repository.findFinishedRoundBy(id)));
+        const query = registrar.resolve("roundHistoryQuery");
+        const promise = query.listBy(currentGame.id, { count: 10, lastKey });
 
         return from(promise).pipe(
-          map((v) => v.filter(filterUndefined)),
           map((output) => {
-            return RoundAction.changePageOfFinishedRoundsSuccess({ rounds: output, page: payload });
+            return RoundAction.nextPageOfRoundHistoriesSuccess({ rounds: output.result, lastKey: output.key });
           })
         );
       }),

@@ -7,7 +7,7 @@ import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomFinishedRound, randomGame } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
-import { openFinishedRoundsSuccess, openRoundHistory } from "@/status/actions/round";
+import { openRoundHistorySuccess } from "@/status/actions/round";
 
 afterEach(cleanup);
 
@@ -36,8 +36,7 @@ test("do not display any buttons", async () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game: randomGame({ owner: user.id, round: round.id }), players: [user] }));
-  store.dispatch(openFinishedRoundsSuccess([round]));
-  store.dispatch(openRoundHistory(round.id));
+  store.dispatch(openRoundHistorySuccess(round));
 
   render(
     <Provider store={store}>
@@ -55,8 +54,7 @@ test("show round theme and can not change it", async () => {
 
   store.dispatch(tryAuthenticateSuccess({ user }));
   store.dispatch(openGameSuccess({ game: randomGame({ owner: user.id, round: round.id }), players: [user] }));
-  store.dispatch(openFinishedRoundsSuccess([round]));
-  store.dispatch(openRoundHistory(round.id));
+  store.dispatch(openRoundHistorySuccess(round));
 
   render(
     <Provider store={store}>

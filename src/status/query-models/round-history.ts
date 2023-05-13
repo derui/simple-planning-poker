@@ -1,3 +1,5 @@
+import { calculateAverage, FinishedRound } from "@/domains/round";
+
 /**
  * A simple interface for round history.
  */
@@ -7,6 +9,18 @@ export interface T {
   readonly averagePoint: number;
   readonly id: string;
 }
+
+/**
+ * convert `FinishedRound` to `T`
+ */
+export const fromFinishedRound = function fromFinishedRound(round: FinishedRound): T {
+  return {
+    theme: round.theme,
+    finishedAt: round.finishedAt,
+    averagePoint: calculateAverage(round),
+    id: round.id,
+  };
+};
 
 export interface Query {
   /**

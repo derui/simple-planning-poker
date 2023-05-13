@@ -1,8 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { changePageOfFinishedRoundsSuccess, openFinishedRoundsSuccess, openRoundHistory } from "../actions/round";
+import { nextPageOfRoundHistoriesSuccess, openRoundHistoriesSuccess, openRoundHistorySuccess } from "../actions/round";
 import { createPureStore } from "../store";
 import { tryAuthenticateSuccess } from "../actions/signin";
 import { openGameSuccess } from "../actions/game";
+import { fromFinishedRound } from "../query-models/round-history";
 import * as s from "./round-history";
 import { randomFinishedRound, randomGame } from "@/test-lib";
 import { isLoading } from "@/utils/loadable";
@@ -25,8 +26,8 @@ describe("round histories", () => {
     const rounds = [
       randomFinishedRound({ finishedAt: "2023-01-01T00:00:00" }),
       randomFinishedRound({ finishedAt: "2023-01-02T00:00:00" }),
-    ];
-    store.dispatch(openFinishedRoundsSuccess(rounds));
+    ].map(fromFinishedRound);
+    store.dispatch(openRoundHistoriesSuccess({ rounds, lastKey: "key" }));
 
     const ret = s.selectRoundHistories(store.getState());
 
@@ -56,8 +57,7 @@ describe("round history information", () => {
 
     store.dispatch(tryAuthenticateSuccess({ user }));
     store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
-    store.dispatch(openFinishedRoundsSuccess([round]));
-    store.dispatch(openRoundHistory(round.id));
+    store.dispatch(openRoundHistorySuccess(round));
 
     // Act
     const [ret] = s.selectOpenedRoundHistory(store.getState());
@@ -96,8 +96,7 @@ describe("round history information", () => {
 
     store.dispatch(tryAuthenticateSuccess({ user }));
     store.dispatch(openGameSuccess({ game, players: [user] }));
-    store.dispatch(openFinishedRoundsSuccess([round]));
-    store.dispatch(openRoundHistory(round.id));
+    store.dispatch(openRoundHistorySuccess(round));
 
     // Act
     const [ret] = s.selectOpenedRoundHistory(store.getState());
@@ -129,10 +128,10 @@ describe("page of rounds", () => {
     const store = createPureStore();
 
     // Act
-    const ret = s.selectCurrentPage(store.getState());
+    const ret = s.selectTopPage(store.getState());
 
     // Assert
-    expect(ret).toEqual(1);
+    expect(ret).toBe(true);
   });
 
   test("make anonymous if user is not joined", () => {
@@ -147,12 +146,12 @@ describe("page of rounds", () => {
       estimations: [{ user: otherUser.id, estimation: estimated(game.cards[0]) }],
     });
 
-    store.dispatch(changePageOfFinishedRoundsSuccess({ page: 3, rounds: [round] }));
+    store.dispatch(nextPageOfRoundHistoriesSuccess({ lastKey: "key", rounds: [fromFinishedRound(round)] }));
 
     // Act
-    const ret = s.selectCurrentPage(store.getState());
+    const ret = s.selectTopPage(store.getState());
 
     // Assert
-    expect(ret).toEqual(3);
+    expect(ret).toBe(false);
   });
 });

@@ -7,8 +7,15 @@ import { iconize } from "../iconize";
 import { RoundHistory } from "../presentations/round-history";
 import { Skeleton } from "../presentations/skeleton";
 import { isFinished } from "@/utils/loadable";
-import { selectCurrentPage, selectRoundHistories } from "@/status/selectors/round-history";
-import { changePageOfFinishedRounds, closeFinishedRounds, openFinishedRounds } from "@/status/actions/round";
+import { selectTopPage, selectRoundHistories } from "@/status/selectors/round-history";
+import {
+  nextPageOfRoundHistories,
+  closeRoundHistories,
+  openRoundHistories,
+  resetPageOfRoundHistories,
+} from "@/status/actions/round";
+
+const ROUND_HISTORY_COUNT = 10;
 
 export interface Props extends BaseProps {
   onRoundSelect?: (id: string) => void;
@@ -128,21 +135,27 @@ export function RoundHistoriesSidebarContainer(props: Props) {
   const gen = generateTestId(props.testid);
   const [opened, setOpened] = useState(false);
   const rounds = useAppSelector(selectRoundHistories);
-  const page = useAppSelector(selectCurrentPage);
+  const isTopPage = useAppSelector(selectTopPage);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (opened) {
-      dispatch(openFinishedRounds());
+      dispatch(openRoundHistories());
     } else {
-      dispatch(closeFinishedRounds());
+      dispatch(closeRoundHistories());
     }
   }, [opened]);
 
-  const handlePage = (page: number) => (e: MouseEvent) => {
+  const handleNextPage = (e: MouseEvent) => {
     e.stopPropagation();
 
-    dispatch(changePageOfFinishedRounds(page));
+    dispatch(nextPageOfRoundHistories());
+  };
+
+  const handleTopPage = (e: MouseEvent) => {
+    e.stopPropagation();
+
+    dispatch(resetPageOfRoundHistories());
   };
 
   const handleRoundSelect = (id: string) => {
@@ -173,14 +186,14 @@ export function RoundHistoriesSidebarContainer(props: Props) {
         </ul>
         <div className={Styles.paginator.root}>
           <button
-            className={Styles.paginator.back(page > 1)}
-            onClick={handlePage(page - 1)}
+            className={Styles.paginator.back(!isTopPage)}
+            onClick={handleTopPage}
             data-testid={gen("back")}
-            disabled={page <= 1}
+            disabled={isTopPage}
           ></button>
           <button
-            className={Styles.paginator.forward(rounds.length > 0)}
-            onClick={handlePage(page + 1)}
+            className={Styles.paginator.forward(rounds.length < ROUND_HISTORY_COUNT)}
+            onClick={handleNextPage}
             data-testid={gen("forward")}
             disabled={rounds.length <= 0}
           ></button>
