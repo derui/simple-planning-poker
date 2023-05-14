@@ -85,6 +85,7 @@ const slice = createSlice({
     });
 
     builder.addCase(RoundAction.openRoundHistorySuccess, (draft, action) => {
+      draft.state = "fetched";
       draft.currentRound = normalize(action.payload);
     });
 

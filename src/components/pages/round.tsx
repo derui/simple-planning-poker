@@ -7,6 +7,7 @@ import { GameAreaContainer } from "../containers/game-area-container";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
 import { InspectorHolder } from "../presentations/inspector-holder";
+import { RoundHistoriesSidebarContainer } from "../containers/round-histories-sidebar-container";
 import { selectCards, selectPlayerEstimatedCards, selectRoundStatus } from "@/status/selectors/game";
 import { isFinished } from "@/utils/loadable";
 import { estimate } from "@/status/actions/round";
@@ -66,12 +67,17 @@ function CardHolderContainer() {
 export function RoundPage() {
   const param = useParams<{ gameId: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (param.gameId) {
       dispatch(openGame(param.gameId as Game.Id));
     }
   }, [param.gameId]);
+
+  const handleRoundSelect = (id: string) => {
+    navigate(generatePath("/game/:gameId/round/:roundId/history", { gameId: param.gameId!, roundId: id }));
+  };
 
   return (
     <div className={styles.root}>
@@ -80,6 +86,7 @@ export function RoundPage() {
         <GameAreaContainer />
       </main>
       <CardHolderContainer />
+      <RoundHistoriesSidebarContainer testid="sidebar" onRoundSelect={handleRoundSelect} />
     </div>
   );
 }
