@@ -28,6 +28,7 @@ export interface NewRoundStarted extends DomainEvent {
   readonly kind: "NewRoundStarted";
   readonly gameId: Id;
   readonly roundId: Round.Id;
+  readonly previousRoundId: Round.Id;
 }
 
 export const isNewRoundStarted = function isNewRoundStarted(event: DomainEvent): event is NewRoundStarted {
@@ -197,6 +198,7 @@ export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
     kind: DOMAIN_EVENTS.NewRoundStarted,
     gameId: game.id,
     roundId: newRound.id,
+    previousRoundId: game.round,
   };
 
   return [newRound, event];

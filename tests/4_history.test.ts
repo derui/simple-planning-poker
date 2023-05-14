@@ -2,7 +2,7 @@ import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
 
 test("show history after finished round", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);

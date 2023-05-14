@@ -6,15 +6,17 @@ import { Provider } from "react-redux";
 import { RoundHistoriesSidebarContainer } from "./round-histories-sidebar-container";
 import { createPureStore } from "@/status/store";
 import {
-  changePageOfFinishedRounds,
-  changePageOfFinishedRoundsSuccess,
-  closeFinishedRounds,
-  openFinishedRounds,
-  openFinishedRoundsSuccess,
+  nextPageOfRoundHistories,
+  closeRoundHistories,
+  openRoundHistories,
+  openRoundHistoriesSuccess,
+  resetPageOfRoundHistories,
+  nextPageOfRoundHistoriesSuccess,
 } from "@/status/actions/round";
 import * as Round from "@/domains/round";
 import * as SC from "@/domains/selectable-cards";
 import * as S from "@/domains/story-point";
+import { fromFinishedRound } from "@/status/query-models/round-history";
 
 afterEach(cleanup);
 
@@ -36,15 +38,18 @@ test("list a round if loading finished", () => {
   const store = createPureStore();
 
   store.dispatch(
-    openFinishedRoundsSuccess([
-      Round.finishedRoundOf({
-        id: Round.createId("id"),
-        cards,
-        estimations: [],
-        finishedAt: "2023-01-02T10:00:01",
-        theme: "theme",
-      }),
-    ])
+    openRoundHistoriesSuccess({
+      rounds: [
+        Round.finishedRoundOf({
+          id: Round.createId("id"),
+          cards,
+          estimations: [],
+          finishedAt: "2023-01-02T10:00:01",
+          theme: "theme",
+        }),
+      ].map(fromFinishedRound),
+      lastKey: "key",
+    })
   );
 
   render(
@@ -65,11 +70,11 @@ test("dispatch event when opened and closed", async () => {
   const store = createPureStore();
 
   store.replaceReducer((state, action) => {
-    if (openFinishedRounds.match(action)) {
+    if (openRoundHistories.match(action)) {
       expect(true);
     }
 
-    if (closeFinishedRounds.match(action)) {
+    if (closeRoundHistories.match(action)) {
       expect(true);
     }
 
@@ -91,20 +96,23 @@ test("change page forward", async () => {
   const store = createPureStore();
 
   store.dispatch(
-    openFinishedRoundsSuccess([
-      Round.finishedRoundOf({
-        id: Round.createId("id"),
-        cards,
-        estimations: [],
-        finishedAt: "2023-01-02T10:00:01",
-        theme: "theme",
-      }),
-    ])
+    openRoundHistoriesSuccess({
+      rounds: [
+        Round.finishedRoundOf({
+          id: Round.createId("id"),
+          cards,
+          estimations: [],
+          finishedAt: "2023-01-02T10:00:01",
+          theme: "theme",
+        }),
+      ].map(fromFinishedRound),
+      lastKey: "key",
+    })
   );
 
   store.replaceReducer((state, action) => {
-    if (changePageOfFinishedRounds.match(action)) {
-      expect(action.payload).toBe(2);
+    if (nextPageOfRoundHistories.match(action)) {
+      expect(true);
     }
 
     return state!;
@@ -120,12 +128,12 @@ test("change page forward", async () => {
   await userEvent.click(screen.getByTestId("forward"));
 });
 
-test("change page forward", async () => {
+test("change page backward", async () => {
   expect.assertions(1);
   const store = createPureStore();
 
   store.dispatch(
-    changePageOfFinishedRoundsSuccess({
+    openRoundHistoriesSuccess({
       rounds: [
         Round.finishedRoundOf({
           id: Round.createId("id"),
@@ -134,14 +142,28 @@ test("change page forward", async () => {
           finishedAt: "2023-01-02T10:00:01",
           theme: "theme",
         }),
-      ],
-      page: 2,
+      ].map(fromFinishedRound),
+      lastKey: "key",
+    })
+  );
+  store.dispatch(
+    nextPageOfRoundHistoriesSuccess({
+      rounds: [
+        Round.finishedRoundOf({
+          id: Round.createId("id"),
+          cards,
+          estimations: [],
+          finishedAt: "2023-01-02T10:00:01",
+          theme: "theme",
+        }),
+      ].map(fromFinishedRound),
+      lastKey: "key",
     })
   );
 
   store.replaceReducer((state, action) => {
-    if (changePageOfFinishedRounds.match(action)) {
-      expect(action.payload).toBe(1);
+    if (resetPageOfRoundHistories.match(action)) {
+      expect(true);
     }
 
     return state!;
@@ -162,15 +184,18 @@ test("dispatch event when round clicked", async () => {
   const store = createPureStore();
 
   store.dispatch(
-    openFinishedRoundsSuccess([
-      Round.finishedRoundOf({
-        id: Round.createId("id"),
-        cards,
-        estimations: [],
-        finishedAt: "2023-01-02T10:00:01",
-        theme: "theme",
-      }),
-    ])
+    openRoundHistoriesSuccess({
+      rounds: [
+        Round.finishedRoundOf({
+          id: Round.createId("id"),
+          cards,
+          estimations: [],
+          finishedAt: "2023-01-02T10:00:01",
+          theme: "theme",
+        }),
+      ].map(fromFinishedRound),
+      lastKey: "key",
+    })
   );
 
   render(

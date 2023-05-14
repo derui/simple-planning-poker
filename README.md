@@ -48,6 +48,15 @@ You must select below in `npx firebase init`:
 
 > NOTICE: Please do not overwrite firebase.json in a process of initialization. If you overwrite it, this project can not run correctly.
 
+## Make config file for local development ##
+Create `firebase.config.ts` into `src`. Content of it like below.
+
+```javascript
+export const firebaseConfig = { projectId: "foobar", apiKey: "api" };
+```
+
+It is recommended that the projectId in `firebase.config.ts` be set to the same value as the one in `.firebaserc`.
+
 ## Run test ##
 
 ```sh

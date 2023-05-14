@@ -262,5 +262,6 @@ describe("new round", () => {
     expect(changed.cards).toEqual(game.cards);
     expect((event as NewRoundStarted).gameId).toBe(game.id);
     expect((event as NewRoundStarted).roundId).toBe(changed.id);
+    expect((event as NewRoundStarted).previousRoundId).toBe(game.round);
   });
 });

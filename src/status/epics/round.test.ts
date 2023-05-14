@@ -4,6 +4,7 @@ import { StateObservable } from "redux-observable";
 import sinon from "sinon";
 import { createPureStore } from "../store";
 import { signInSuccess } from "../actions/signin";
+import { fromFinishedRound } from "../query-models/round-history";
 import { roundEpic } from "./round";
 import { createDependencyRegistrar } from "@/utils/dependency-registrar";
 import { Dependencies } from "@/dependencies";
@@ -17,6 +18,7 @@ import * as GameAction from "@/status/actions/game";
 import * as UserEstimation from "@/domains/user-estimation";
 import {
   createMockedEstimatePlayerUseCase,
+  createMockedRoundHistoryRepository,
   createMockedRoundRepository,
   createMockedShowDownUseCase,
   createMockedUseCase,
@@ -311,11 +313,11 @@ describe("finished rounds", () => {
     const user = User.create({ id: game.owner, name: "foo" });
     const registrar = createDependencyRegistrar<Dependencies>();
 
-    const fake = sinon.fake.resolves(round);
+    const fake = sinon.fake.resolves({ result: [fromFinishedRound(round)], key: "key" });
     registrar.register(
-      "roundRepository",
-      createMockedRoundRepository({
-        findFinishedRoundBy: fake,
+      "roundHistoryQuery",
+      createMockedRoundHistoryRepository({
+        listBy: fake,
       })
     );
 
@@ -325,14 +327,14 @@ describe("finished rounds", () => {
     store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
     store.dispatch(RoundAction.notifyRoundUpdated(round));
 
-    const action$ = of(RoundAction.openFinishedRounds());
+    const action$ = of(RoundAction.openRoundHistories());
     const state$ = new StateObservable(NEVER, store.getState());
 
     const ret = await firstValueFrom(epics.openRoundHistories(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.openFinishedRoundsSuccess([round]));
+    expect(ret).toEqual(RoundAction.openRoundHistoriesSuccess({ rounds: [fromFinishedRound(round)], lastKey: "key" }));
     expect(fake.callCount).toBe(1);
-    expect(fake.lastCall.firstArg).toBe(round.id);
+    expect(fake.lastCall.args).toEqual([game.id, { count: 10 }]);
   });
 
   test("change page of finished rounds", async () => {
@@ -353,11 +355,9 @@ describe("finished rounds", () => {
     const registrar = createDependencyRegistrar<Dependencies>();
 
     registrar.register(
-      "roundRepository",
-      createMockedRoundRepository({
-        findFinishedRoundBy(id) {
-          return Promise.resolve(rounds.find((v) => v.id === id) || null);
-        },
+      "roundHistoryQuery",
+      createMockedRoundHistoryRepository({
+        listBy: sinon.fake.resolves({ result: rounds.slice(10).map(fromFinishedRound), key: "key" }),
       })
     );
 
@@ -366,11 +366,52 @@ describe("finished rounds", () => {
     store.dispatch(signInSuccess({ user }));
     store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
 
-    const action$ = of(RoundAction.changePageOfFinishedRounds(2));
+    const action$ = of(RoundAction.nextPageOfRoundHistories());
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.changePageOfRoundHistories(action$, state$, null));
+    const ret = await firstValueFrom(epics.nextPageOfRoundHistories(action$, state$, null));
 
-    expect(ret).toEqual(RoundAction.changePageOfFinishedRoundsSuccess({ rounds: rounds.slice(10), page: 2 }));
+    expect(ret).toEqual(
+      RoundAction.nextPageOfRoundHistoriesSuccess({ rounds: rounds.slice(10).map(fromFinishedRound), lastKey: "key" })
+    );
+  });
+});
+
+describe("round history", () => {
+  test("open round history", async () => {
+    let round = randomFinishedRound({ cards: CARDS });
+    let [game] = Game.create({
+      id: Game.createId(),
+      name: "name",
+      owner: User.createId(),
+      finishedRounds: [round.id],
+      cards: CARDS,
+      round: Round.createId(),
+    });
+    const user = User.create({ id: game.owner, name: "foo" });
+    const registrar = createDependencyRegistrar<Dependencies>();
+
+    const fake = sinon.fake.resolves(round);
+    registrar.register(
+      "roundRepository",
+      createMockedRoundRepository({
+        findBy: fake,
+      })
+    );
+
+    const epics = roundEpic(registrar);
+    const store = createPureStore();
+    store.dispatch(signInSuccess({ user }));
+    store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
+    store.dispatch(RoundAction.notifyRoundUpdated(round));
+
+    const action$ = of(RoundAction.openRoundHistory(round.id));
+    const state$ = new StateObservable(NEVER, store.getState());
+
+    const ret = await firstValueFrom(epics.openRoundHistories(action$, state$, null));
+
+    expect(ret).toEqual(RoundAction.openRoundHistorySuccess(round));
+    expect(fake.callCount).toBe(1);
+    expect(fake.lastCall.args).toEqual([round.id]);
   });
 });

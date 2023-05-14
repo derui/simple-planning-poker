@@ -39,10 +39,10 @@ export interface RoundHistoriesInfo {
 }
 
 /**
- * select current page of finished rounds
+ * select top page or not
  */
-export const selectCurrentPage = createDraftSafeSelector(selectFinishedRounds, (rounds): number => {
-  return rounds.page;
+export const selectTopPage = createDraftSafeSelector(selectFinishedRounds, (rounds): boolean => {
+  return rounds.page === 1;
 });
 
 export const selectRoundHistories = createDraftSafeSelector(

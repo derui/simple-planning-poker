@@ -3,7 +3,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { RoundHistoryAverageShowcase } from "./round-history-average-showcase";
 import { createPureStore } from "@/status/store";
-import { openRoundHistory, openFinishedRoundsSuccess } from "@/status/actions/round";
+import { openRoundHistorySuccess } from "@/status/actions/round";
 import { randomFinishedRound, randomGame } from "@/test-lib";
 import { openGameSuccess } from "@/status/actions/game";
 import * as User from "@/domains/user";
@@ -31,8 +31,7 @@ test("should be render average of round history", () => {
       players: [{ id: User.createId("id"), name: "name" }],
     })
   );
-  store.dispatch(openFinishedRoundsSuccess([round]));
-  store.dispatch(openRoundHistory(round.id));
+  store.dispatch(openRoundHistorySuccess(round));
 
   render(
     <Provider store={store}>

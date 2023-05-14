@@ -2,7 +2,7 @@ import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
 
 test("change user name and mode", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -50,7 +50,7 @@ test("change user name and mode", async ({ page, newPageOnNewContext: other, res
 });
 
 test("inspector can show down", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);

@@ -13,6 +13,7 @@ import { LeaveGameUseCase } from "./usecases/leave-game";
 import { ShowDownUseCase } from "./usecases/show-down";
 import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
 import { RoundRepository } from "./domains/round-repository";
+import { RoundHistoryRepository } from "./infrastractures/round-history-repository";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
 import * as Game from "@/domains/game";
@@ -39,6 +40,15 @@ export const createMockedRoundRepository = (mock: Partial<RoundRepository> = {})
     save: mock.save ?? sinon.fake(),
     findBy: mock.findBy ?? sinon.fake(),
     findFinishedRoundBy: mock.findFinishedRoundBy ?? sinon.fake(),
+  };
+};
+
+export const createMockedRoundHistoryRepository = (
+  mock: Partial<RoundHistoryRepository> = {}
+): RoundHistoryRepository => {
+  return {
+    save: mock.save ?? sinon.fake(),
+    listBy: mock.listBy ?? sinon.fake(),
   };
 };
 

@@ -7,10 +7,11 @@ import { createPureStore } from "@/status/store";
 import { openGameSuccess } from "@/status/actions/game";
 import { randomFinishedRound, randomGame, randomUser } from "@/test-lib";
 import { tryAuthenticateSuccess } from "@/status/actions/signin";
-import { openFinishedRoundsSuccess, openRoundHistory } from "@/status/actions/round";
+import { openRoundHistoriesSuccess, openRoundHistorySuccess } from "@/status/actions/round";
 import { estimated } from "@/domains/user-estimation";
 import { notifyOtherUserChanged } from "@/status/actions/user";
 import { between } from "@/utils/array";
+import { fromFinishedRound } from "@/status/query-models/round-history";
 
 const meta = {
   title: "Page/Round History",
@@ -64,8 +65,7 @@ export const Loaded: Story = {
     });
     store.dispatch(notifyOtherUserChanged({ id: users[0].id, name: users[0].name }));
     store.dispatch(notifyOtherUserChanged({ id: users[1].id, name: users[1].name }));
-    store.dispatch(openFinishedRoundsSuccess([round]));
-    store.dispatch(openRoundHistory(round.id));
+    store.dispatch(openRoundHistorySuccess(round));
 
     // this line is hack
     store.replaceReducer((state) => state!);
@@ -110,9 +110,14 @@ export const LargeHistories: Story = {
     store.dispatch(notifyOtherUserChanged({ id: users[0].id, name: users[0].name }));
     store.dispatch(notifyOtherUserChanged({ id: users[1].id, name: users[1].name }));
     store.dispatch(
-      openFinishedRoundsSuccess([round].concat(between(0, 10).map((n) => randomFinishedRound({ theme: `Round ${n}` }))))
+      openRoundHistoriesSuccess({
+        rounds: [round]
+          .concat(between(0, 10).map((n) => randomFinishedRound({ theme: `Round ${n}` })))
+          .map(fromFinishedRound),
+        lastKey: "key",
+      })
     );
-    store.dispatch(openRoundHistory(round.id));
+    store.dispatch(openRoundHistorySuccess(round));
 
     // this line is hack
     store.replaceReducer((state) => state!);

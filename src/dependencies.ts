@@ -2,6 +2,7 @@ import { GameRepository } from "./domains/game-repository";
 import { RoundRepository } from "./domains/round-repository";
 import { UserRepository } from "./domains/user-repository";
 import { GameObserver, RoundObserver, UserObserver } from "./infrastractures/observer";
+import { Query } from "./status/query-models/round-history";
 import { Authenticator } from "./status/type";
 import { ChangeThemeUseCase } from "./usecases/change-theme";
 import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
@@ -20,6 +21,7 @@ export type Dependencies = {
   userObserver: UserObserver;
   roundObserver: RoundObserver;
   changeUserNameUseCase: ChangeUserNameUseCase;
+  roundHistoryQuery: Query;
   gameRepository: GameRepository;
   roundRepository: RoundRepository;
   createGameUseCase: CreateGameUseCase;

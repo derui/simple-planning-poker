@@ -2,7 +2,7 @@ import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
 
 test("change theme", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -48,7 +48,7 @@ test("change theme", async ({ page, newPageOnNewContext: other, resetFirebase })
 });
 
 test("reset theme", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);

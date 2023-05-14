@@ -35,6 +35,8 @@ import { NewRoundStartedListener } from "./infrastractures/event/new-round-start
 import { RemoveGameFromJoinedGameListener } from "./infrastractures/event/remove-game-from-joined-games-listener";
 import { KickPlayerUseCase } from "./usecases/kick-player";
 import { ChangeThemeUseCase } from "./usecases/change-theme";
+import { RoundHistoryRepositoryImpl } from "./infrastractures/round-history-repository";
+import { FinishedRoundRecordingListener } from "./infrastractures/event/finished-round-recording-listener";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -49,6 +51,7 @@ if (location.hostname === "localhost") {
 const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
 const roundRepository = new RoundRepositoryImpl(database);
+const roundHistoryRepository = new RoundHistoryRepositoryImpl(database);
 
 const dispatcher = new EventDispatcherImpl([
   new CreateGameEventListener(database),
@@ -56,6 +59,7 @@ const dispatcher = new EventDispatcherImpl([
   new CreateRoundAfterCreateGameListener(roundRepository),
   new NewRoundStartedListener(gameRepository),
   new RemoveGameFromJoinedGameListener(database),
+  new FinishedRoundRecordingListener(roundRepository, roundHistoryRepository),
 ]);
 
 const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
@@ -85,6 +89,7 @@ registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher
 registrar.register("gameObserver", new GameObserverImpl(database));
 registrar.register("kickPlayerUseCase", new KickPlayerUseCase(dispatcher, gameRepository));
 registrar.register("changeThemeUseCase", new ChangeThemeUseCase(roundRepository));
+registrar.register("roundHistoryQuery", roundHistoryRepository);
 
 install(config, process.env.NODE_ENV === "production");
 
