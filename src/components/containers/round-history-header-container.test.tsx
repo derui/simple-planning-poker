@@ -19,7 +19,6 @@ test("should not open initial", () => {
   const [game] = Game.create({
     id: Game.createId(),
     name: "game",
-    finishedRounds: [],
     owner: user.id,
     cards: randomCards(),
     round: Round.createId(),
@@ -56,7 +55,6 @@ test("should display leave button", async () => {
   let [game] = Game.create({
     id: Game.createId(),
     name: "game",
-    finishedRounds: [],
     owner: User.createId("owner"),
     cards: randomCards(),
     round: Round.createId(),
@@ -83,7 +81,6 @@ test("handle event on back", async () => {
   let [game] = Game.create({
     id: Game.createId(),
     name: "game",
-    finishedRounds: [],
     owner: User.createId("owner"),
     cards: randomCards(),
     round: Round.createId(),

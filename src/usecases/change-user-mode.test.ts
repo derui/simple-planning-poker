@@ -42,7 +42,6 @@ test("should save game", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: userId,
-    finishedRounds: [],
     round: Round.createId(),
   })[0];
 

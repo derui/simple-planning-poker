@@ -15,7 +15,6 @@ const [GAME] = Game.create({
   cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
   owner: User.createId(),
   round: Round.createId(),
-  finishedRounds: [],
 });
 
 test("initial state", () => {

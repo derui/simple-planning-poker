@@ -21,7 +21,6 @@ export interface T {
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: SelectableCards.T;
   readonly round: Round.Id;
-  readonly finishedRounds: Round.Id[];
 }
 
 export interface NewRoundStarted extends DomainEvent {
@@ -75,7 +74,6 @@ export const create = ({
   cards,
   owner,
   round,
-  finishedRounds,
   joinedPlayers,
 }: {
   id: Id;
@@ -84,7 +82,6 @@ export const create = ({
   cards: SelectableCards.T;
   joinedPlayers?: GamePlayer.T[];
   round: Round.Id;
-  finishedRounds: Round.Id[];
 }): [T, DomainEvent] => {
   const distinctedPlayers = new Map<User.Id, any>();
   if (!joinedPlayers) {
@@ -111,7 +108,6 @@ export const create = ({
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
     round,
-    finishedRounds,
   };
 
   return [game, event];
@@ -143,8 +139,6 @@ export const changeName = function changeName(game: T, name: string) {
  */
 export const applyNewRound = function applyNewRound(game: T, round: Round.Id): T {
   return produce(game, (draft) => {
-    draft.finishedRounds.push(draft.round);
-
     draft.round = round;
   });
 };

@@ -41,7 +41,6 @@ test("should add joined user as owner", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: Round.createId(),
   });
   const userRepository = new UserRepositoryImpl(database);

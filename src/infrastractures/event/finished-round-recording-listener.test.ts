@@ -16,7 +16,6 @@ test("should create round history with finished round", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: round.id,
   });
   const repository = createMockedRoundRepository({
@@ -45,7 +44,6 @@ test("should not save if round is not found", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: round.id,
   });
   const repository = createMockedRoundRepository({

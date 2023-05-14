@@ -40,7 +40,6 @@ test("should create round with id", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: round.id,
   });
   const repository = new GameRepositoryImpl(database);
@@ -54,5 +53,4 @@ test("should create round with id", async () => {
 
   // Assert
   expect(actual?.round).toBe(newRound.id);
-  expect(actual?.finishedRounds).toEqual([round.id]);
 });

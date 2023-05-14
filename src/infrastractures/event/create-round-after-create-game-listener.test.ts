@@ -40,7 +40,6 @@ test("should create round with id", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: roundId,
   });
   const repository = new RoundRepositoryImpl(database);

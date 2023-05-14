@@ -16,7 +16,6 @@ export class GameRepositoryImpl implements GameRepository {
     updates[resolver.name(game.id)] = game.name;
     updates[resolver.cards(game.id)] = game.cards;
     updates[resolver.round(game.id)] = game.round;
-    updates[resolver.finishedRounds(game.id)] = game.finishedRounds;
     updates[resolver.owner(game.id)] = game.owner;
     updates[resolver.joinedPlayers(game.id)] = game.joinedPlayers.reduce<Record<any, any>>((accum, val) => {
       const { user, ...rest } = val;

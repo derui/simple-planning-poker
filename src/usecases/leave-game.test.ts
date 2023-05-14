@@ -38,7 +38,6 @@ test("should return success if user leaved from a game", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: User.createId("id"),
-    finishedRounds: [],
     round: Round.createId(),
   })[0];
   game = Game.joinUserAsPlayer(game, user.id, Game.makeInvitation(game))[0];
@@ -77,7 +76,6 @@ test("should return error when a user is owner of the game", async () => {
     name: "name",
     cards: SelectableCards.create([StoryPoint.create(1)]),
     owner: user.id,
-    finishedRounds: [],
     round: Round.createId(),
   })[0];
 

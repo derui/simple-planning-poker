@@ -41,7 +41,6 @@ test("should be able to save and find a game", async () => {
     name: "test",
     owner: User.createId("id"),
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: Round.createId(),
   });
   game = Game.joinUserAsPlayer(game, User.createId("other"), Game.makeInvitation(game))[0];
@@ -57,7 +56,6 @@ test("should be able to save and find a game", async () => {
   expect(instance?.name).toEqual(game.name);
   expect(instance?.cards).toEqual(game.cards);
   expect(instance?.round).toEqual(game.round);
-  expect(instance?.finishedRounds).toEqual(game.finishedRounds);
   expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
 });
 
@@ -79,7 +77,6 @@ test("should save invitation in key", async () => {
     name: "test",
     owner: User.createId("id"),
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: Round.createId(),
   });
   game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];

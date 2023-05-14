@@ -23,7 +23,6 @@ test("should return current user info ", () => {
     id: Game.createId(),
     name: "test",
     owner: user.id,
-    finishedRounds: [],
     cards: CARDS,
     round: Round.createId(),
   });
@@ -52,7 +51,6 @@ test("should not return value when the user was not joined before", () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("2"),
-    finishedRounds: [],
     cards: CARDS,
     round: Round.createId(),
   });
@@ -125,7 +123,6 @@ test("return user info that not owner ", () => {
     id: Game.createId(),
     name: "test",
     owner: owner,
-    finishedRounds: [],
     cards: CARDS,
     round: Round.createId(),
   });

@@ -223,7 +223,6 @@ describe("show down", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -264,7 +263,6 @@ describe("change theme", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -306,7 +304,6 @@ describe("finished rounds", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [round.id],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -347,7 +344,6 @@ describe("finished rounds", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: rounds.map((v) => v.id),
       cards: CARDS,
       round: Round.createId(),
     });
@@ -384,7 +380,6 @@ describe("round history", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [round.id],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -395,7 +390,7 @@ describe("round history", () => {
     registrar.register(
       "roundRepository",
       createMockedRoundRepository({
-        findBy: fake,
+        findFinishedRoundBy: fake,
       })
     );
 
@@ -403,12 +398,11 @@ describe("round history", () => {
     const store = createPureStore();
     store.dispatch(signInSuccess({ user }));
     store.dispatch(GameAction.openGameSuccess({ game, players: [] }));
-    store.dispatch(RoundAction.notifyRoundUpdated(round));
 
     const action$ = of(RoundAction.openRoundHistory(round.id));
     const state$ = new StateObservable(NEVER, store.getState());
 
-    const ret = await firstValueFrom(epics.openRoundHistories(action$, state$, null));
+    const ret = await firstValueFrom(epics.openRoundHistory(action$, state$, null));
 
     expect(ret).toEqual(RoundAction.openRoundHistorySuccess(round));
     expect(fake.callCount).toBe(1);

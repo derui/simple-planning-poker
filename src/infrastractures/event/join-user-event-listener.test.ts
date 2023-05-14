@@ -42,7 +42,6 @@ test("should add joined user as owner", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: Round.createId(),
   });
   const [, event] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));

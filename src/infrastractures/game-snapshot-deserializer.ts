@@ -21,7 +21,6 @@ export const deserializeFrom = async function deserializeFrom(
   const name = val.name as string;
   const cards = val.cards as number[];
   const roundId = val.round as Round.Id;
-  const finishedRounds = (val.finishedRounds ?? []) as Round.Id[];
   const owner = val.owner as string;
   const joinedPlayers = (val.joinedPlayers as Record<User.Id, { type: PlayerType; mode: UserMode }> | undefined) ?? {};
 
@@ -37,7 +36,6 @@ export const deserializeFrom = async function deserializeFrom(
       user: User.createId(k),
       mode,
     })),
-    finishedRounds,
   });
 
   return game;

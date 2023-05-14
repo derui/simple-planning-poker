@@ -36,7 +36,6 @@ test("should save game showed down", async () => {
     name: "name",
     owner: User.createId(),
     round: Round.createId(),
-    finishedRounds: [],
     cards,
   });
 
@@ -64,7 +63,6 @@ test("should dispatch NewRound event", async () => {
     id: Game.createId(),
     name: "name",
     owner: User.createId(),
-    finishedRounds: [],
     cards,
     round: Round.createId(),
   });

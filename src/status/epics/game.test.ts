@@ -41,7 +41,6 @@ describe("leave game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -76,7 +75,6 @@ describe("join game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -109,7 +107,6 @@ describe("open game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -143,7 +140,6 @@ describe("create game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -183,7 +179,6 @@ describe("observe game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -215,7 +210,6 @@ describe("observe game", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: round.id,
     });
@@ -248,7 +242,6 @@ describe("new round", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });
@@ -284,7 +277,6 @@ describe("change user mode", () => {
       id: Game.createId(),
       name: "name",
       owner: User.createId(),
-      finishedRounds: [],
       cards: CARDS,
       round: Round.createId(),
     });

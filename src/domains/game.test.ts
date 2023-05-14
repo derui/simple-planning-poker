@@ -30,7 +30,6 @@ test("get aggregate and event when game created ", () => {
     id: createId("id"),
     name: "name",
     owner: User.createId("user"),
-    finishedRounds: [],
     cards,
     round: Round.createId(),
   });
@@ -45,7 +44,6 @@ test("get aggregate and event when game created ", () => {
     GamePlayer.createOwner({ user: User.createId("user"), mode: GamePlayer.UserMode.normal }),
   ]);
   expect(game.owner).toEqual(User.createId("user"));
-  expect(game.finishedRounds).toHaveLength(0);
 });
 
 test("apply new round", () => {
@@ -63,14 +61,12 @@ test("apply new round", () => {
     name: "name",
     round: finishedRound.id,
     owner: User.createId("user"),
-    finishedRounds: [],
     cards,
   });
 
   const updated = applyNewRound(game, Round.createId());
 
   expect(updated).not.toBe(finishedRound.id);
-  expect(updated.finishedRounds[0]).toBe(finishedRound.id);
 });
 
 describe("game name", () => {
@@ -78,7 +74,6 @@ describe("game name", () => {
     id: createId("id"),
     name: "name",
     owner: User.createId("user"),
-    finishedRounds: [],
     cards,
     round: Round.createId(),
   });
@@ -101,7 +96,6 @@ describe("declare player mode to", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -122,7 +116,6 @@ describe("declare player mode to", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -139,7 +132,6 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -172,7 +164,6 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -187,7 +178,6 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -205,7 +195,6 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -220,7 +209,6 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });
@@ -241,7 +229,6 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      finishedRounds: [],
       cards,
       round: Round.createId(),
     });

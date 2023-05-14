@@ -38,7 +38,6 @@ export class CreateGameUseCase implements UseCase<CreateGameUseCaseInput, Promis
     const [game, event] = Game.create({
       id: gameId,
       name: input.name,
-      finishedRounds: [],
       owner: input.createdBy,
       cards: selectableCards,
       round: roundId,

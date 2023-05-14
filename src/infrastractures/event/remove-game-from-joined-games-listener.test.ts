@@ -44,7 +44,6 @@ test("should remove game from joined game of left user", async () => {
     name: "test",
     owner: owner.id,
     cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    finishedRounds: [],
     round: Round.createId(),
   });
   let [_game] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
