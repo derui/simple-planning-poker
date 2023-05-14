@@ -11,6 +11,7 @@ ui-debug.log
 firebase-debug.log
 
 src/firebase.config.prod.ts
+src/firebase.config.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
