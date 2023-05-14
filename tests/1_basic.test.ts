@@ -2,7 +2,7 @@ import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
 
 test("sign in and select game", async ({ page, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   await page.goto(`/`);
 
@@ -22,7 +22,7 @@ test("sign in and select game", async ({ page, resetFirebase }) => {
 });
 
 test("create and join game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -80,7 +80,7 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 });
 
 test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -166,7 +166,7 @@ test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) 
 });
 
 test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -215,7 +215,7 @@ test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase
 });
 
 test("re-open and restore current round", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
@@ -258,7 +258,7 @@ test("re-open and restore current round", async ({ page, newPageOnNewContext: ot
 });
 
 test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  resetFirebase();
+  await resetFirebase();
 
   // sign up main
   await page.goto(`/`);

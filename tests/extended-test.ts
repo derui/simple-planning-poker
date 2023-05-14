@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import { test as base, type Page } from "@playwright/test";
 
-export const test = base.extend<{ newPageOnNewContext: Page; resetFirebase: () => void }>({
+export const test = base.extend<{ newPageOnNewContext: Page; resetFirebase: () => Promise<void> }>({
   newPageOnNewContext: async ({ browser }, use) => {
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -12,7 +12,9 @@ export const test = base.extend<{ newPageOnNewContext: Page; resetFirebase: () =
     await context.close();
   },
   resetFirebase: async ({ request }, use) => {
-    await use(() => {});
+    await use(() => {
+      return Promise.resolve();
+    });
 
     const firebaserc = JSON.parse(fs.readFileSync("./.firebaserc"));
 
@@ -20,8 +22,9 @@ export const test = base.extend<{ newPageOnNewContext: Page; resetFirebase: () =
       headers: { authorization: "Bearer owner" },
     });
 
-    await request.put("http://localhost:9000/.json?ns=local-default-rtdb", {
-      data: JSON.parse(fs.readFileSync("./misc/ci/database_export/local-default-rtdb.json")),
+    await request.put(`http://localhost:9000/.json?ns=${firebaserc.projects.default}-default-rtdb`, {
+      data: JSON.parse(fs.readFileSync(`./misc/ci/database_export/${firebaserc.projects.default}-default-rtdb.json`)),
+      headers: { authorization: "Bearer owner" },
     });
   },
 });
