@@ -6,8 +6,16 @@ import type { Dependencies } from "@/dependencies";
 import { DependencyRegistrar } from "@/utils/dependency-registrar";
 import * as RoundAction from "@/status/actions/round";
 import * as UserEstimation from "@/domains/user-estimation";
+import * as Round from "@/domains/round";
 
-type Epics = "giveUp" | "estimate" | "showDown" | "changeTheme" | "openRoundHistories" | "nextPageOfRoundHistories";
+type Epics =
+  | "giveUp"
+  | "estimate"
+  | "showDown"
+  | "changeTheme"
+  | "openRoundHistories"
+  | "nextPageOfRoundHistories"
+  | "openRoundHistory";
 
 const commonCatchError: OperatorFunction<any, Action> = catchError((e, source) => {
   console.error(e);
@@ -201,6 +209,34 @@ export const roundEpic = (
         return from(promise).pipe(
           map((output) => {
             return RoundAction.nextPageOfRoundHistoriesSuccess({ rounds: output.result, lastKey: output.key });
+          })
+        );
+      }),
+      commonCatchError
+    ),
+
+  openRoundHistory: (action$, state$) =>
+    action$.pipe(
+      filter(RoundAction.openRoundHistory.match),
+      switchMap(({ payload }) => {
+        const {
+          game: { currentGame },
+        } = state$.value;
+
+        if (!currentGame) {
+          return of(RoundAction.somethingFailure({ reason: "Do not open game" }));
+        }
+
+        const repository = registrar.resolve("roundRepository");
+        const promise = repository.findFinishedRoundBy(Round.createId(payload));
+
+        return from(promise).pipe(
+          map((output) => {
+            if (!output) {
+              return RoundAction.somethingFailure({ reason: "Not found round" });
+            }
+
+            return RoundAction.openRoundHistorySuccess(output);
           })
         );
       }),
