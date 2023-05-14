@@ -313,6 +313,6 @@ test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) 
   await expect(page.getByTestId("joined-user-list/list")).not.toContainText("test2@example.com");
 
   // kicked user is navigated to select page, and do not display any game
-  await expect(other).toHaveURL(/.*game\/?$/);
+  await expect(other).toHaveURL(/.+\/game\/?$/);
   await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
 });

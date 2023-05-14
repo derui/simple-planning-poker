@@ -23,7 +23,7 @@
     "users": {
       "$user_id": {
         ".read": "auth != null",
-        ".write": "auth != null && $user_id === auth.uid"
+        ".write": "auth != null"
       }
     },
     "roundHistories": {
