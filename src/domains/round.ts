@@ -181,10 +181,11 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
     return 0 as CalculatedStoryPoint;
   }
 
-  const average =
+  let average =
     cards.reduce((point, v) => {
       return point + v;
     }, 0) / cards.length;
+  average = Math.ceil(average * 100) / 100;
 
   return average as CalculatedStoryPoint;
 };

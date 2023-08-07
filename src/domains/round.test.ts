@@ -180,7 +180,7 @@ describe("calculate average", () => {
 
     const average = calculateAverage(finished);
 
-    expect(average).toEqual((2 + 3 + 2) / 3);
+    expect(average).toEqual(2.34);
   });
 });
 

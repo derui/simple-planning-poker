@@ -5,6 +5,8 @@ import * as RoundAction from "@/status/actions/round";
 import { randomFinishedRound } from "@/test-lib";
 import * as SelectableCards from "@/domains/selectable-cards";
 import * as StoryPoint from "@/domains/story-point";
+import * as UserEstimation from "@/domains/user-estimation";
+import * as User from "@/domains/user";
 
 test("initial state", () => {
   expect(getInitialState()).toEqual({ rounds: {}, state: "initial", page: 1 });
@@ -84,6 +86,39 @@ describe("current round", () => {
       estimations: {},
       finishedAt: round.finishedAt,
       averagePoint: 0,
+      theme: round.theme,
+    });
+  });
+
+  test("calculate average", () => {
+    const cards = SelectableCards.create([1, 2, 3].map(StoryPoint.create));
+    const round = randomFinishedRound({
+      cards,
+      estimations: [
+        { user: User.createId("1"), estimation: UserEstimation.estimated(cards[0]) },
+        { user: User.createId("2"), estimation: UserEstimation.estimated(cards[0]) },
+        { user: User.createId("3"), estimation: UserEstimation.estimated(cards[2]) },
+      ],
+    });
+    let state = getInitialState();
+    state = reducer(state, RoundAction.openRoundHistory(round.id));
+    state = reducer(state, RoundAction.openRoundHistorySuccess(round));
+
+    expect(getInitialState().currentRound).toBeUndefined();
+    expect(state.currentRound).toEqual({
+      id: round.id,
+      cards: {
+        1: { card: cards[0], order: 0 },
+        2: { card: cards[1], order: 1 },
+        3: { card: cards[2], order: 2 },
+      },
+      estimations: {
+        "1": UserEstimation.estimated(cards[0]),
+        "2": UserEstimation.estimated(cards[0]),
+        "3": UserEstimation.estimated(cards[2]),
+      },
+      finishedAt: round.finishedAt,
+      averagePoint: 1.67,
       theme: round.theme,
     });
   });
