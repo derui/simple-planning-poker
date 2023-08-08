@@ -47,6 +47,7 @@ test("should be able to save and list round history", async () => {
       { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
       { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
       { user: User.createId("user4"), estimation: UserEstimation.unselected() },
+      { user: User.createId("user5"), estimation: UserEstimation.estimated(cards[1]) },
     ],
   });
 
@@ -58,7 +59,7 @@ test("should be able to save and list round history", async () => {
 
   // Assert
   expect(instance).toEqual({
-    result: [{ id: round.id, finishedAt: round.finishedAt, theme: null, averagePoint: 1.5 }],
+    result: [{ id: round.id, finishedAt: round.finishedAt, theme: null, averagePoint: 1.67 }],
     key: round.finishedAt,
   });
 });

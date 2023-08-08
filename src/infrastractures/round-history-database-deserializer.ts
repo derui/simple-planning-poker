@@ -18,7 +18,7 @@ export const deserializeFrom = function deserializeFrom(snapshot: DataSnapshot):
   return {
     id: key,
     finishedAt,
-    averagePoint: averagePoint,
+    averagePoint: Math.ceil(averagePoint * 100) / 100,
     theme: theme ?? null,
   };
 };
