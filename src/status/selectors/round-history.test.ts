@@ -11,6 +11,8 @@ import * as User from "@/domains/user";
 import * as Game from "@/domains/game";
 import { estimated } from "@/domains/user-estimation";
 import { UserMode } from "@/domains/game-player";
+import * as SelectableCards from "@/domains/selectable-cards";
+import * as StoryPoint from "@/domains/story-point";
 
 describe("round histories", () => {
   test("should be loading when rounds is fetching", () => {
@@ -47,16 +49,25 @@ describe("round history information", () => {
     const store = createPureStore();
     const user = User.create({ id: User.createId(), name: "owner" });
     const otherUser = User.create({ id: User.createId(), name: "other" });
-    let game = randomGame({ owner: user.id });
+    const otherUser2 = User.create({ id: User.createId(), name: "other2" });
+
+    const cards = SelectableCards.create([1, 2, 3].map(StoryPoint.create));
+    let game = randomGame({ owner: user.id, cards });
     game = Game.joinUserAsPlayer(game, otherUser.id, Game.makeInvitation(game))[0];
+    game = Game.joinUserAsPlayer(game, otherUser2.id, Game.makeInvitation(game))[0];
+
     const round = randomFinishedRound({
       cards: game.cards,
       id: game.round,
-      estimations: [{ user: user.id, estimation: estimated(game.cards[0]) }],
+      estimations: [
+        { user: user.id, estimation: estimated(game.cards[0]) },
+        { user: otherUser.id, estimation: estimated(game.cards[1]) },
+        { user: otherUser2.id, estimation: estimated(game.cards[1]) },
+      ],
     });
 
     store.dispatch(tryAuthenticateSuccess({ user }));
-    store.dispatch(openGameSuccess({ game, players: [user, otherUser] }));
+    store.dispatch(openGameSuccess({ game, players: [user, otherUser, otherUser2] }));
     store.dispatch(openRoundHistorySuccess(round));
 
     // Act
@@ -68,8 +79,11 @@ describe("round history information", () => {
       theme: "",
       finishedAt: round.finishedAt,
       results: {
-        averagePoint: game.cards[0],
-        cardCounts: [{ point: game.cards[0], count: 1 }],
+        averagePoint: 1.67,
+        cardCounts: [
+          { point: game.cards[0], count: 1 },
+          { point: game.cards[1], count: 2 },
+        ],
       },
       estimations: [
         {
@@ -77,6 +91,18 @@ describe("round history information", () => {
           state: "result",
           userMode: UserMode.normal,
           userName: "owner",
+        },
+        {
+          displayValue: game.cards[1].toString(),
+          state: "result",
+          userMode: UserMode.normal,
+          userName: "other",
+        },
+        {
+          displayValue: game.cards[1].toString(),
+          state: "result",
+          userMode: UserMode.normal,
+          userName: "other2",
         },
       ],
     });

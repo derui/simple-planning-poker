@@ -93,7 +93,7 @@ export const selectOpenedRoundHistory = createDraftSafeSelector(
 
         if (UserEstimation.isEstimated(estimation)) {
           displayValue = Card.toString(estimation.card);
-          cardCounts.set(estimation.card, cardCounts.get(estimation.card) ?? 1);
+          cardCounts.set(estimation.card, (cardCounts.get(estimation.card) ?? 0) + 1);
         }
 
         return {
