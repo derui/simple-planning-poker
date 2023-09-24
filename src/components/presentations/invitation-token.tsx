@@ -79,9 +79,9 @@ const styles = {
     "flex-none",
     "whitespace-nowrap",
     "text-center",
+    "text-sm",
     "px-3",
     "py-2",
-    "w-12",
     "bg-secondary1-400",
     "text-secondary1-200"
   ),
@@ -144,7 +144,7 @@ export function InvitationToken(props: Props) {
       <span className={styles.tipArrow(opened)}></span>
       <div className={styles.container(opened)} data-testid={gen("container")}>
         <div className={styles.item}>
-          <span className={styles.label}>Invitation Token</span>
+          <span className={styles.label}>Token</span>
           <input className={styles.input} type="text" readOnly value={props.invitationToken} />
           <button
             onClick={onCopyButtonClick}
