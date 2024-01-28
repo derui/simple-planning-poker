@@ -16,7 +16,7 @@ test("show history after finished round", async ({ page, newPageOnNewContext: ot
 
   // create game
   await page.getByRole("button", { name: "Create Game" }).click();
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
   await page.getByRole("button", { name: "Submit" }).click();
 
   // open game
@@ -25,7 +25,7 @@ test("show history after finished round", async ({ page, newPageOnNewContext: ot
   // join game with other
   await page.getByTestId("invitation/opener").click();
   const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByPlaceholder(/Paste invitation token/).fill(token);
   await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
@@ -86,7 +86,7 @@ test("show history on round that is not showed down", async ({ page, newPageOnNe
 
   // create game
   await page.getByRole("button", { name: "Create Game" }).click();
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
   await page.getByRole("button", { name: "Submit" }).click();
 
   // open game
@@ -95,7 +95,7 @@ test("show history on round that is not showed down", async ({ page, newPageOnNe
   // join game with other
   await page.getByTestId("invitation/opener").click();
   const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByPlaceholder(/Paste invitation token/).fill(token);
   await other.getByRole("button", { name: "Join" }).click();
   await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
   await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();

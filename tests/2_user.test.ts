@@ -16,7 +16,7 @@ test("change user name and mode", async ({ page, newPageOnNewContext: other, res
 
   // create game
   await page.getByRole("button", { name: "Create Game" }).click();
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
   await page.getByRole("button", { name: "Submit" }).click();
 
   // move to select game page
@@ -28,7 +28,7 @@ test("change user name and mode", async ({ page, newPageOnNewContext: other, res
   // join game with other
   await page.getByTestId("invitation/opener").click();
   const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByPlaceholder(/Paste invitation token/).fill(token);
   await other.getByRole("button", { name: "Join" }).click();
 
   // update joined user in other page
@@ -39,7 +39,7 @@ test("change user name and mode", async ({ page, newPageOnNewContext: other, res
   await page.getByTestId("user-info/indicator").click();
   await page.getByTestId("user-info/updater/inspector/root").click();
   await page.getByTestId("user-info/updater/nameEditorInput").clear();
-  await page.getByTestId("user-info/updater/nameEditorInput").type("changed");
+  await page.getByTestId("user-info/updater/nameEditorInput").fill("changed");
   await page.getByTestId("user-info/updater/submit").click();
 
   // change user mode
@@ -64,7 +64,7 @@ test("inspector can show down", async ({ page, newPageOnNewContext: other, reset
 
   // create game
   await page.getByRole("button", { name: "Create Game" }).click();
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
   await page.getByRole("button", { name: "Submit" }).click();
 
   // move to select game page
@@ -76,7 +76,7 @@ test("inspector can show down", async ({ page, newPageOnNewContext: other, reset
   // join game with other
   await page.getByTestId("invitation/opener").click();
   const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
+  await other.getByPlaceholder(/Paste invitation token/).fill(token);
   await other.getByRole("button", { name: "Join" }).click();
 
   // update joined user in other page
