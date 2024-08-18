@@ -9,17 +9,19 @@
     "./dist/"
   ],
   "exports": {
-    "style.css": "./dist/style.css"
+      ".": {
+          "import": "src/index.ts",
+          "require": "src/index.ts"
+      }
   },
-  "main": "src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "type": "module",
-  "types": "./index.ts",
   "scripts": {
     "build": "tailwindcss -i src/style.css -o dist/style.css",
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build",
-    "build-storybook": "storybook build"
+    "build:storybook": "storybook build"
   },
   "keywords": [],
   "author": "",

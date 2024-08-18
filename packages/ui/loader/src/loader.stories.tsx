@@ -1,33 +1,40 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Icon, Icons } from "./index";
+import { Loader } from "./loader";
 
 const meta = {
-  title: "UI/Icon",
-  component: Icon,
+  title: "Presentational/Loader",
+  component: Loader,
   tags: ["autodocs"],
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<typeof Loader>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const Invisible: Story = {
+  args: {
+    shown: false,
+    size: "s",
+  },
+};
+
 export const Small: Story = {
   args: {
-    type: Icons.check,
+    shown: true,
     size: "s",
   },
 };
 
 export const Medium: Story = {
   args: {
-    type: Icons.check,
+    shown: true,
     size: "m",
   },
 };
 
 export const Large: Story = {
   args: {
-    type: Icons.check,
+    shown: true,
     size: "l",
   },
 };

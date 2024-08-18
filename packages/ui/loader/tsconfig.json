@@ -1,6 +1,6 @@
 {
     "extends": "@spp/typescript-config/library.json",
-    "compilerOptions": {
+     "compilerOptions": {
         "composite": true,
         "rootDir": "src",
         "outDir": "dist"

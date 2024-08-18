@@ -1,8 +1,6 @@
 import { clsx } from "clsx";
 import { Icons } from "./icons";
 
-export { Icons };
-
 export interface IconProps {
   /**
    * Size of icon. Default value is `m`

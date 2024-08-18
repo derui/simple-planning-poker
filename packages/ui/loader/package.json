@@ -1,0 +1,44 @@
+{
+    "name": "@spp/ui-loader",
+    "version": "1.0.0",
+    "description": "",
+    "sideEffects": [
+        "dist/*"
+    ],
+    "exports": {
+        ".": {
+            "import": "./src/index.ts",
+            "require": "./src/index.ts"
+        }
+    },
+    "module": "src/index.ts",
+    "scripts": {
+        "test": "vitest",
+        "build": "tailwindcss -i src/style.css -o dist/style.css",
+        "storybook": "storybook dev -p 6006",
+        "build:storybook": "storybook build"
+    },
+    "type": "module",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@spp/tailwind-config": "workspace:^",
+        "@spp/typescript-config": "workspace:^",
+        "@spp/ui-icon": "workspace:^",
+        "@storybook/addon-controls": "catalog:",
+        "@storybook/cli": "catalog:",
+        "@storybook/react": "catalog:",
+        "@storybook/react-vite": "catalog:",
+        "@testing-library/react": "catalog:",
+        "@vitejs/plugin-react": "catalog:",
+        "jsdom": "catalog:",
+        "tailwindcss": "catalog:",
+        "vite": "catalog:",
+        "vitest": "catalog:"
+    },
+  "dependencies": {
+    "clsx": "catalog:",
+    "react": "catalog:"
+  }
+}
