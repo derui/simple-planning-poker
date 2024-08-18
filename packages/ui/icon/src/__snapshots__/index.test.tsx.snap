@@ -3,7 +3,7 @@
 exports[`render other size small 1`] = `
 <div>
   <span
-    class="before:inline-block before:flex-none before:[mask-image:url("/static/svg/tabler-icons/check.svg")] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-5 before:h-5 w-5 h-5 flex"
+    class="flex before:bg-gray before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/check.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-5 before:h-5 w-5 h-5"
   />
 </div>
 `;
@@ -11,7 +11,7 @@ exports[`render other size small 1`] = `
 exports[`render size large 1`] = `
 <div>
   <span
-    class="before:inline-block before:flex-none before:[mask-image:url("/static/svg/tabler-icons/chevron-down.svg")] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-7 before:h-7 w-7 h-7 flex"
+    class="flex before:bg-gray before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/chevron-down.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-7 before:h-7 w-7 h-7"
   />
 </div>
 `;
@@ -19,7 +19,7 @@ exports[`render size large 1`] = `
 exports[`should be able to render 1`] = `
 <div>
   <span
-    class="before:inline-block before:flex-none before:[mask-image:url("/static/svg/tabler-icons/arrow-back-up.svg")] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6 flex"
+    class="flex before:bg-gray before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/arrow-back-up.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
   />
 </div>
 `;
