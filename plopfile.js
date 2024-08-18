@@ -17,6 +17,11 @@ export default function (plop) {
             },
             {
                 type: 'add',
+                path: 'packages/ui/{{name}}/src/style.css',
+                templateFile: 'plop-templates/ui/style.css.hbs',
+            },
+            {
+                type: 'add',
                 path: 'packages/ui/{{name}}/src/{{name}}.test.tsx',
                 templateFile: 'plop-templates/ui/component.test.hbs'
             },
