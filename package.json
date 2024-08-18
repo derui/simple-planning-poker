@@ -21,8 +21,8 @@
     "test:watch": "firebase emulators:exec 'npx vitest watch'",
     "test:watch:noemu": "npx vitest watch",
     "storybook": "storybook dev -p 6006",
-      "build-storybook": "storybook build",
-      "g": "plop"
+    "build-storybook": "storybook build",
+    "g": "plop"
   },
   "author": "derui",
   "license": "MIT",
