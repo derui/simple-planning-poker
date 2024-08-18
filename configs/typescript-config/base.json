@@ -1,4 +1,6 @@
 {
+    "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "The common base settings",
   "compilerOptions": {
     "outDir": "${configDir}/dist",
     "target": "es2020",
@@ -16,12 +18,10 @@
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "declaration": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsxdev",
-    "incremental": true,
-    "baseUrl": "./"
+    "incremental": true
   }
 }

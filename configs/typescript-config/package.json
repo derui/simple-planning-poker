@@ -1,12 +1,9 @@
 {
-  "name": "@spp/tsconfig",
+  "name": "@spp/typescript-config",
   "version": "1.0.0",
+    "private": true,
   "description": "repository-global tsconfig management",
-    "exports": "./tsconfig.json",
     "sideEffects": false,
-    "files": [
-        "tsconfig.json"
-    ],
     "keywords": [],
   "author": "",
   "license": "ISC"
