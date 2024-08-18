@@ -85,22 +85,24 @@ const toUrl = function toUrl(icon: Icons): string {
 export const Icon = function Icon(props: IconProps) {
   const size = props.size ?? "m";
 
-  const styles = {
-    "before:bg-gray": true,
-    "before:inline-block": true,
-    "before:flex-none": true,
-    [toUrl(props.type)]: true,
-    "before:[mask-size:cover]": true,
-    "before:[mask-position:center]": true,
-    "before:[mask-repeat:no-repeat]": true,
-    "before:w-5 before:h-5": size == "s",
-    "before:w-6 before:h-6": size == "m",
-    "before:w-7 before:h-7": size == "l",
-    "w-5 h-5": size == "s",
-    "w-6 h-6": size == "m",
-    "w-7 h-7": size == "l",
-    flex: true,
-  };
+  const styles = clsx(
+    "flex",
+    "before:bg-gray",
+    "before:inline-block",
+    "before:flex-none",
+    toUrl(props.type),
+    "before:[mask-size:cover]",
+    "before:[mask-position:center]",
+    "before:[mask-repeat:no-repeat]",
+    {
+      "before:w-5 before:h-5": size == "s",
+      "before:w-6 before:h-6": size == "m",
+      "before:w-7 before:h-7": size == "l",
+      "w-5 h-5": size == "s",
+      "w-6 h-6": size == "m",
+      "w-7 h-7": size == "l",
+    }
+  );
 
   return <span className={clsx(styles)}></span>;
 };

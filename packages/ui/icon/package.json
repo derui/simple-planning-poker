@@ -30,7 +30,6 @@
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
     "@storybook/react": "catalog:",
-   
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
