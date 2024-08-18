@@ -1,6 +1,6 @@
 export default {
- theme: {
-   colors: {
+    theme: {
+     colors: {
      transparent: 'transparent',
      primary: {
        100:"#6d8e94",
