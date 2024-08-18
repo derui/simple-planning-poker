@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "exports": "./tailwind.config.cjs",
+    "main": "./tailwind.config.cjs",
   "keywords": [],
   "author": "",
   "license": "ISC",
