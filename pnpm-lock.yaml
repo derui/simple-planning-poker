@@ -322,6 +322,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.2.1(vite@5.0.12(@types/node@20.11.8))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
