@@ -18,9 +18,6 @@ export default [
                     jsx: true // Allows for the parsing of JSX
                 }
             },
-            globals: {
-                ...globals.browser,
-            },
         },
 
         rules: {
