@@ -1,0 +1,13 @@
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { {{camelCase name}} } from "./{{name}}";
+
+const meta = {
+  title: "UI/{{camelCase name}}",
+  component: Icon,
+  tags: ["autodocs"],
+} satisfies Meta<typeof {{camelCase name}}>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
