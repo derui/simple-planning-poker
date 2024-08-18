@@ -3,7 +3,7 @@ yarn-error.log
 .log/
 .firebase/
 .firebaserc
-/dist/
+dist/
 generated/
 
 database-debug.log
