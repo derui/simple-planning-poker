@@ -1,0 +1,19 @@
+{
+  "name": "@spp/eslint-config",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "exports": "./eslint.config.js",
+  "main": "./eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-unused-imports": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}
