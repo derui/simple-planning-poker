@@ -1,0 +1,14 @@
+{
+  "name": "@spp/tailwind-config",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "exports": "./tailwind.config.cjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "catalog:"
+  }
+}

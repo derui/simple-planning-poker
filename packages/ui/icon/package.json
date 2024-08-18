@@ -1,26 +1,46 @@
 {
-    "name": "@spp/ui-icon",
-    "version": "1.0.0",
-    "description": "",
-    "main": "src/index.ts",
-    "type": "module",
-    "types": "./index.ts",
-    "scripts": {
-        "test": "vitest"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@spp/typescript-config": "workspace:^",
-        "@testing-library/react": "catalog:",
-        "@vitejs/plugin-react": "catalog:",
-        "jsdom": "catalog:",
-        "vite": "catalog:",
-        "vitest": "catalog:"
-    },
-    "dependencies": {
-        "clsx": "catalog:",
-        "react": "catalog:"
-    }
+  "name": "@spp/ui-icon",
+  "version": "1.0.0",
+  "description": "",
+  "sideEffects": [
+    "./dist/style.css"
+  ],
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    "style.css": "./dist/style.css"
+  },
+  "main": "src/index.ts",
+  "type": "module",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "tailwindcss -i src/style.css -o dist/style.css",
+    "test": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "build-storybook": "storybook build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/tailwind-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@storybook/addon-controls": "catalog:",
+    "@storybook/cli": "catalog:",
+    "@storybook/react": "catalog:",
+   
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "jsdom": "catalog:",
+      "tailwindcss": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "clsx": "catalog:",
+    "react": "catalog:"
+  }
 }

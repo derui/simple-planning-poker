@@ -3,7 +3,7 @@ import { Icons } from "./icons";
 
 export { Icons };
 
-interface IconProps {
+export interface IconProps {
   /**
    * Size of icon. Default value is `m`
    */
