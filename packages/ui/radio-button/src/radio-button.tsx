@@ -6,7 +6,7 @@ export interface Props {
   name: string;
   value: string;
   checked?: boolean;
-  onCheck: () => void;
+  onChange: () => void;
 }
 
 const styles = {
@@ -52,7 +52,7 @@ export function RadioButton(props: Props) {
           checked={props.checked}
           onChange={(e) => {
             if (e.target.value === props.value) {
-              props.onCheck();
+              props.onChange();
             }
           }}
         />

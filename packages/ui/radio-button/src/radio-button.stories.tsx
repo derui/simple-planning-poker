@@ -21,7 +21,7 @@ export const Default: Story = {
     name: "name",
     value: "value",
     label: "label",
-    onCheck: () => {},
+    onChange: () => {},
     checked: false,
   },
 };

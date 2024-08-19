@@ -7,19 +7,19 @@ import { RadioButton } from "./radio-button";
 afterEach(cleanup);
 
 test("should be able to render", () => {
-  render(<RadioButton label="label" name="name" value="foo" onCheck={() => {}} />);
+  render(<RadioButton label="label" name="name" value="foo" onChange={() => {}} />);
 
   expect(screen.queryByRole("radio")).not.toBeNull();
 });
 
 test("render label", () => {
-  render(<RadioButton label="label" name="name" value="foo" onCheck={() => {}} />);
+  render(<RadioButton label="label" name="name" value="foo" onChange={() => {}} />);
 
-  expect(screen.getByRole("radio").textContent).toMatch(/label/);
+  expect(screen.queryByText("label")).not.toBeNull();
 });
 
 test("checked radio button", () => {
-  const container = render(<RadioButton checked label="label" name="name" value="foo" onCheck={() => {}} />);
+  const container = render(<RadioButton checked label="label" name="name" value="foo" onChange={() => {}} />);
 
   const element = container.container.querySelector("input");
 
@@ -33,7 +33,7 @@ test("should be able to handle change if it is not checked", async () => {
       label="label"
       name="name"
       value="foo"
-      onCheck={() => {
+      onChange={() => {
         expect(true);
       }}
     />
@@ -49,7 +49,7 @@ test("do not raise event if checked", async () => {
       label="label"
       name="name"
       value="foo"
-      onCheck={() => {
+      onChange={() => {
         expect.fail();
       }}
     />
