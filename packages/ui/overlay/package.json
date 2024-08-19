@@ -31,7 +31,6 @@
     "@spp/eslint-config": "workspace:^",
     "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@spp/eslint-config": "workspace:^",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
     "@storybook/react": "catalog:",
