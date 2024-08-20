@@ -460,6 +460,64 @@ importers:
         specifier: 'catalog:'
         version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
 
+  packages/ui/radio-group:
+    dependencies:
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: 'catalog:'
+        version: 18.2.0
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/tailwind-config':
+        specifier: workspace:^
+        version: link:../../../configs/tailwind-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      '@spp/ui-radio-button':
+        specifier: workspace:^
+        version: link:../radio-button
+      '@storybook/addon-controls':
+        specifier: 'catalog:'
+        version: 8.2.0(storybook@8.2.0(@babel/preset-env@7.25.3(@babel/core@7.25.2)))
+      '@storybook/cli':
+        specifier: 'catalog:'
+        version: 8.2.0(@babel/preset-env@7.25.3(@babel/core@7.25.2))
+      '@storybook/react':
+        specifier: 'catalog:'
+        version: 8.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(storybook@8.2.0(@babel/preset-env@7.25.3(@babel/core@7.25.2)))(typescript@5.3.3)
+      '@storybook/react-vite':
+        specifier: 'catalog:'
+        version: 8.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rollup@4.9.6)(storybook@8.2.0(@babel/preset-env@7.25.3(@babel/core@7.25.2)))(typescript@5.3.3)(vite@5.0.12(@types/node@20.11.8))
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 14.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 4.2.1(vite@5.0.12(@types/node@20.11.8))
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
+      jsdom:
+        specifier: 'catalog:'
+        version: 24.0.0
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 3.4.10
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@20.11.8)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
+
 packages:
 
   '@aashutoshrathi/word-wrap@1.2.6':

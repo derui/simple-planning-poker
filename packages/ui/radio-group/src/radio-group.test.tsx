@@ -8,7 +8,7 @@ afterEach(cleanup);
 test("should be able to render", async () => {
   render(<RadioGroup />);
 
-  expect(screen.queryByTestId("root")).not.toBeNull();
+  expect(screen.queryByRole("radiogroup")).not.toBeNull();
 });
 
 test("render children", async () => {
