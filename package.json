@@ -24,6 +24,9 @@
     "build-storybook": "storybook build",
     "g": "plop"
   },
+    "volta": {
+        "node": "22.6.0"  
+    },
   "author": "derui",
   "license": "MIT",
   "devDependencies": {
