@@ -12,5 +12,5 @@ repos:
       name: eslint
       entry: pnpm exec eslint
       language: system
-      files: "\\.tsx?$"
-      args: ["--fix", "--ext", ".ts,.tsx"]
+      files: "\\.[tj]sx?$"
+      args: ["--fix", "-c", "configs/eslint-config/eslint.config.js"]
