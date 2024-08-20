@@ -18,11 +18,14 @@
   "types": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tailwindcss -i src/style.css -o dist/style.css",
-    "test": "vitest",
+    "build:css": "tailwindcss -i src/style.css -o dist/style.css",
+    "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
-    "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "dev:storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "dev": "concurrently \"npm:dev:*\""
   },
   "keywords": [],
   "author": "",
@@ -37,6 +40,7 @@
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
     "tailwindcss": "catalog:",
