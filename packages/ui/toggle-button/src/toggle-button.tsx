@@ -1,35 +1,15 @@
 import classNames from "classnames";
 import { useRef, useState } from "react";
-import { BaseProps, generateTestId } from "../base";
 
-interface Props extends BaseProps {
+interface Props {
   initialChecked: boolean;
   onToggle: (checked: boolean) => void;
 }
 
 const styles = {
-  container: classNames(
-    "flex",
-    "flex-auto",
-    "w-full",
-    "outline-none",
-    "border-none",
-    "p-0",
-    "h-8",
-    "items-center",
-    "rounded"
-  ),
+  container: classNames("flex", "flex-none", "outline-none", "border-none", "p-0", "h-8", "items-center", "rounded"),
   switch: {
-    root: classNames(
-      "flex",
-      "relative",
-      "inline-block",
-      "bg-transparent",
-      "w-full",
-      "max-w-full",
-      "h-6",
-      "justify-items-center"
-    ),
+    root: classNames("flex", "relative", "inline-block", "bg-transparent", "h-6", "justify-items-center"),
     rail: (checked: boolean) =>
       classNames(
         "relative",
@@ -68,22 +48,16 @@ const styles = {
 
 // eslint-disable-next-line func-style
 export function ToggleButton(props: Props) {
-  const testid = generateTestId(props.testid);
   const ref = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(props.initialChecked);
 
   return (
-    <div data-testid={testid("root")} className={styles.container}>
+    <span className={styles.container} role="switch" onClick={() => ref?.current?.click()}>
       <span className={styles.switch.root}>
-        <span
-          className={styles.switch.rail(checked)}
-          data-testid={testid("rail")}
-          onClick={() => ref?.current?.click()}
-        >
+        <span className={styles.switch.rail(checked)}>
           <span className={styles.switch.box(checked)}></span>
         </span>
         <input
-          data-testid={testid("input")}
           ref={ref}
           className={styles.switch.input}
           type="checkbox"
@@ -97,6 +71,6 @@ export function ToggleButton(props: Props) {
           }}
         />
       </span>
-    </div>
+    </span>
   );
 }

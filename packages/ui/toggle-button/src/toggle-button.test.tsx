@@ -8,8 +8,8 @@ afterEach(cleanup);
 test("apply initial checked", () => {
   render(<ToggleButton initialChecked={true} onToggle={() => {}} />);
 
-  expect(screen.queryByTestId("root")).not.toBeNull();
-  expect((screen.getByTestId("input") as HTMLInputElement).checked).toBe(true);
+  expect(screen.queryByRole("checkbox")).not.toBeNull();
+  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
 });
 
 test("change checking when rail clicked", async () => {
@@ -23,19 +23,19 @@ test("change checking when rail clicked", async () => {
     />
   );
 
-  await userEvent.click(screen.getByTestId("rail"));
+  await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByTestId("input") as HTMLInputElement).checked).toBe(true);
+  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
 });
 
 test("toggle checked state", async () => {
   render(<ToggleButton initialChecked={false} onToggle={() => {}} />);
 
-  await userEvent.click(screen.getByTestId("rail"));
+  await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByTestId("input") as HTMLInputElement).checked).toBe(true);
+  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
 
-  await userEvent.click(screen.getByTestId("rail"));
+  await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByTestId("input") as HTMLInputElement).checked).toBe(false);
+  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(false);
 });

@@ -1,0 +1,54 @@
+{
+  "name": "@spp/ui-toggle-button",
+  "version": "1.0.0",
+  "description": "",
+  "sideEffects": [
+    "./dist/style.css"
+  ],
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": "src/index.ts",
+      "require": "src/index.ts"
+    }
+  },
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i src/style.css -o dist/style.css",
+    "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev:storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "dev": "concurrently \"npm:dev:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/tailwind-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@storybook/addon-controls": "catalog:",
+    "@storybook/cli": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "tailwindcss": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "clsx": "catalog:",
+    "react": "catalog:"
+  }
+}
