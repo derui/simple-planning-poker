@@ -24,9 +24,9 @@
     "build-storybook": "storybook build",
     "g": "plop"
   },
-    "volta": {
-        "node": "22.6.0"  
-    },
+  "volta": {
+    "node": "22.6.0"
+  },
   "author": "derui",
   "license": "MIT",
   "devDependencies": {
@@ -52,7 +52,6 @@
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-unused-imports": "catalog:",
     "firebase-tools": "^13.1.0",
-    "hygen": "^6.2.11",
     "jsdom": "^24.0.0",
     "plop": "^4.0.1",
     "prettier": "^3.2.4",
