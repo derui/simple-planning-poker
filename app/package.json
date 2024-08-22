@@ -12,7 +12,7 @@
     "ci": "CI=true firebase emulators:exec --ui 'npx vite'",
     "dev:emulators": "firebase emulators:start --import ./misc/local",
     "build:bundle": "NODE_ENV=production vite build",
-    "build:css": "tailwindcss -i src/style.css -o dist/style.css",
+    "build:css": "tailwindcss -i public/static/css/root.css -o dist/static/css/root.css",
     "build": "concurrently \"pnpm:dev:*\"",
     "deploy:preview": "firebase hosting:channel:deploy preview_name",
     "deploy:production": "firebase deploy",

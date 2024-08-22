@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import * as ReactDOM from "react-dom/client";
-import { install } from "@twind/core";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router";
 import { firebaseConfig } from "./firebase.config";
@@ -21,7 +20,6 @@ import { ApplicationDependencyRegistrar } from "./dependencies";
 import { UserObserverImpl } from "./infrastractures/user-observer";
 import { CreateGameUseCase } from "./usecases/create-game";
 import { LeaveGameUseCase } from "./usecases/leave-game";
-import config from "./twind.config.cjs";
 import { RoundRepositoryImpl } from "./infrastractures/round-repository";
 import { NewRoundUseCase } from "./usecases/new-round";
 import { createStore } from "./status/store";
@@ -90,8 +88,6 @@ registrar.register("gameObserver", new GameObserverImpl(database));
 registrar.register("kickPlayerUseCase", new KickPlayerUseCase(dispatcher, gameRepository));
 registrar.register("changeThemeUseCase", new ChangeThemeUseCase(roundRepository));
 registrar.register("roundHistoryQuery", roundHistoryRepository);
-
-install(config, process.env.NODE_ENV === "production");
 
 const store = createStore(registrar, process.env.NODE_ENV === "production");
 
