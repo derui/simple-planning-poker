@@ -48,6 +48,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "jotai": "catalog:",
     "clsx": "catalog:",
     "react": "catalog:"
   }

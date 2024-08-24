@@ -84,6 +84,12 @@ const registerAtomToPackage = function registerAtomToPackage(plop) {
         path: "features/{{feature}}/src/atoms/{{name}}.ts",
         templateFile: "plop-templates/feature/atom/atom.ts.hbs",
       },
+      {
+        type: "append",
+        path: "features/{{feature}}/package.json",
+        pattern: /\s*"dependencies"\s*:\s*\{/,
+        template: '"jotai": "catalog:",',
+      },
     ],
   });
 };

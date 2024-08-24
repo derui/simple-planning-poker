@@ -2,6 +2,7 @@ packages:
   - 'packages/**/*'
   - 'configs/**/*'
   - 'app'
+  - 'features/**/*'
 
 catalog:
   clsx: 2.1.1
