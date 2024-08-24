@@ -8,6 +8,7 @@
   "volta": {
     "node": "22.6.0"
   },
+  "type": "module",
   "author": "derui",
   "license": "MIT",
   "devDependencies": {
