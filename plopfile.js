@@ -93,11 +93,56 @@ const registerAtomToPackage = function registerAtomToPackage(plop) {
     ],
   });
 };
+const registerSharedLogicPackage = function registerSharedLogicPackage(plop) {
+  plop.setGenerator("shared-logic", {
+    description: "Skeleton of shared-logic package",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "name of shared logic",
+      },
+    ],
+    actions: [
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/src/index.ts",
+        templateFile: "plop-templates/package/shared-logic/index.ts.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/package.json",
+        templateFile: "plop-templates/package/shared-logic/package.json.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/vite.config.js",
+        templateFile: "plop-templates/common/vite-non-react.config.js.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/vitest.config.js",
+        templateFile: "plop-templates/common/vitest-non-react.config.js.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/eslint.config.js",
+        templateFile: "plop-templates/common/eslint.config.js.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/ui/{{name}}/tsconfig.json",
+        templateFile: "plop-templates/common/tsconfig.json.hbs",
+      },
+    ],
+  });
+};
 
 export default function (plop) {
   // create your generators here
   registerFeaturePackage(plop);
   registerAtomToPackage(plop);
+  registerSharedLogicPackage(plop);
 
   plop.setGenerator("simple-ui-component", {
     description: "skeleton of simple UI component package",
@@ -112,7 +157,7 @@ export default function (plop) {
       {
         type: "add",
         path: "packages/ui/{{name}}/src/{{name}}.tsx",
-        templateFile: "plop-templates/ui/component.hbs",
+        templateFile: "plop-templates/package/ui/component.hbs",
       },
       {
         type: "add",
@@ -122,22 +167,22 @@ export default function (plop) {
       {
         type: "add",
         path: "packages/ui/{{name}}/src/{{name}}.test.tsx",
-        templateFile: "plop-templates/ui/component.test.hbs",
+        templateFile: "plop-templates/package/ui/component.test.hbs",
       },
       {
         type: "add",
         path: "packages/ui/{{name}}/src/{{name}}.stories.tsx",
-        templateFile: "plop-templates/ui/component.stories.hbs",
+        templateFile: "plop-templates/package/ui/component.stories.hbs",
       },
       {
         type: "add",
         path: "packages/ui/{{name}}/src/index.ts",
-        templateFile: "plop-templates/ui/index.hbs",
+        templateFile: "plop-templates/package/ui/index.hbs",
       },
       {
         type: "add",
         path: "packages/ui/{{name}}/package.json",
-        templateFile: "plop-templates/ui/package.json.hbs",
+        templateFile: "plop-templates/package/ui/package.json.hbs",
       },
       {
         type: "add",

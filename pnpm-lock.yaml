@@ -21,6 +21,9 @@ catalogs:
     '@testing-library/react':
       specifier: 14.1.2
       version: 14.1.2
+    '@types/react':
+      specifier: ^18.2.48
+      version: 18.2.48
     '@vitejs/plugin-react':
       specifier: 4.2.1
       version: 4.2.1
@@ -315,6 +318,12 @@ importers:
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config
+      '@spp/ui-loader':
+        specifier: workspace:^
+        version: link:../../packages/ui/loader
+      '@spp/ui-overlay':
+        specifier: workspace:^
+        version: link:../../packages/ui/overlay
       '@storybook/addon-controls':
         specifier: 'catalog:'
         version: 8.2.0(storybook@8.2.0(@babel/preset-env@7.25.3(@babel/core@7.25.2)))
@@ -330,6 +339,9 @@ importers:
       '@testing-library/react':
         specifier: 'catalog:'
         version: 14.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 18.2.48
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.2.1(vite@5.0.12(@types/node@20.11.8))
