@@ -34,11 +34,14 @@
     "@spp/eslint-config": "workspace:^",
     "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
+    "@spp/ui-loader": "workspace:^",
+    "@spp/ui-overlay": "workspace:^",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
@@ -48,8 +51,8 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "jotai": "catalog:",
     "clsx": "catalog:",
+    "jotai": "catalog:",
     "react": "catalog:"
   }
 }

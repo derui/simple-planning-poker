@@ -1,17 +1,16 @@
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom } from "jotai";
 
-const messageAtom = atom("hello");
-
-const writeMessageAtom = atom(null, (_get, set, value: string) => {
-  set(messageAtom, value);
-});
+/**
+ * login state of the user
+ */
+const loginedAtom = atom(false);
 
 export const useMessage = () => {
-  const atom = useAtomValue(messageAtom);
-  const [, updateMessage] = useAtom(writeMessageAtom);
+  const [logined, setLogined] = useAtom(loginedAtom);
 
   return {
-    message: atom,
-    updateMessage: (value: string) => updateMessage(value),
+    logined: logined,
+    login: () => {},
+    logout: () => setLogined(false),
   };
 };
