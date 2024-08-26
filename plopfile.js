@@ -106,32 +106,32 @@ const registerSharedLogicPackage = function registerSharedLogicPackage(plop) {
     actions: [
       {
         type: "add",
-        path: "packages/ui/{{name}}/src/index.ts",
+        path: "packages/shared-logic/{{name}}/src/index.ts",
         templateFile: "plop-templates/package/shared-logic/index.ts.hbs",
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/package.json",
+        path: "packages/shared-logic/{{name}}/package.json",
         templateFile: "plop-templates/package/shared-logic/package.json.hbs",
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/vite.config.js",
+        path: "packages/shared-logic/{{name}}/vite.config.js",
         templateFile: "plop-templates/common/vite-non-react.config.js.hbs",
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/vitest.config.js",
+        path: "packages/shared-logic/{{name}}/vitest.config.js",
         templateFile: "plop-templates/common/vitest-non-react.config.js.hbs",
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/eslint.config.js",
+        path: "packages/shared-logic/{{name}}/eslint.config.js",
         templateFile: "plop-templates/common/eslint.config.js.hbs",
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/tsconfig.json",
+        path: "packages/shared-logic/{{name}}/tsconfig.json",
         templateFile: "plop-templates/common/tsconfig.json.hbs",
       },
     ],
