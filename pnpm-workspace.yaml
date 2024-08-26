@@ -30,3 +30,5 @@ catalog:
   "@types/react-router": "^5.1.20"
   "@types/react-router-dom": "^5.3.3"
   "@types/react-transition-group": "^4.4.10"
+  "sinon": "18.0.0"
+  "@types/sinon": "^17.0.3"

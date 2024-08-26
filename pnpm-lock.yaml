@@ -24,6 +24,9 @@ catalogs:
     '@types/react':
       specifier: ^18.2.48
       version: 18.2.48
+    '@types/sinon':
+      specifier: ^17.0.3
+      version: 17.0.3
     '@vitejs/plugin-react':
       specifier: 4.2.1
       version: 4.2.1
@@ -57,6 +60,9 @@ catalogs:
     react-dom:
       specifier: 18.2.0
       version: 18.2.0
+    sinon:
+      specifier: 18.0.0
+      version: 18.0.0
     tailwindcss:
       specifier: 3.4.10
       version: 3.4.10
@@ -223,7 +229,7 @@ importers:
         specifier: ^4.4.10
         version: 4.4.11
       '@types/sinon':
-        specifier: ^17.0.3
+        specifier: 'catalog:'
         version: 17.0.3
       '@types/uuid':
         specifier: ^9.0.8
@@ -259,8 +265,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4
       sinon:
-        specifier: ^17.0.1
-        version: 17.0.2
+        specifier: 'catalog:'
+        version: 18.0.0
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -357,6 +363,31 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@20.11.8)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
+
+  packages/shared-logic/login:
+    dependencies:
+      jotai:
+        specifier: 'catalog:'
+        version: 2.9.3(@types/react@18.2.48)(react@18.2.0)
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
       vite:
         specifier: 'catalog:'
         version: 5.0.12(@types/node@20.11.8)
@@ -470,6 +501,31 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@20.11.8)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
+
+  packages/ui/login:
+    dependencies:
+      jotai:
+        specifier: 'catalog:'
+        version: 2.9.3(@types/react@18.2.48)(react@18.2.0)
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
       vite:
         specifier: 'catalog:'
         version: 5.0.12(@types/node@20.11.8)
@@ -5076,8 +5132,8 @@ packages:
   nice-try@1.0.5:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
 
-  nise@5.1.9:
-    resolution: {integrity: sha512-qOnoujW4SV6e40dYxJOb3uvuoPHtmLzIk4TFo+j0jPJoC+5Z9xja5qH5JZobEPsa8+YYphMrOSwnrshEhG2qww==}
+  nise@6.0.0:
+    resolution: {integrity: sha512-K8ePqo9BFvN31HXwEtTNGzgrPpmvgciDsFz8aztFjt4LqKO/JeFD8tBOeuDiCMXrIl/m1YvfH8auSpxfaD09wg==}
 
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
@@ -6102,9 +6158,8 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
-  sinon@17.0.2:
-    resolution: {integrity: sha512-uihLiaB9FhzesElPDFZA7hDcNABzsVHwr3YfmM9sBllVwab3l0ltGlRV1XhpNfIacNDLGD1QRZNLs5nU5+hTuA==}
-    deprecated: There
+  sinon@18.0.0:
+    resolution: {integrity: sha512-+dXDXzD1sBO6HlmZDd7mXZCR/y5ECiEiGCBSGuFD/kZ0bDTofPYc6JaeGmPSF+1j1MejGUWkORbYOLDyvqCWpA==}
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
@@ -12263,7 +12318,7 @@ snapshots:
 
   nice-try@1.0.5: {}
 
-  nise@5.1.9:
+  nise@6.0.0:
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 11.2.2
@@ -13410,13 +13465,13 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
-  sinon@17.0.2:
+  sinon@18.0.0:
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 11.2.2
       '@sinonjs/samsam': 8.0.0
       diff: 5.2.0
-      nise: 5.1.9
+      nise: 6.0.0
       supports-color: 7.2.0
 
   sisteransi@1.0.5: {}

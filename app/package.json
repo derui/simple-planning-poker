@@ -46,7 +46,7 @@
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-transition-group": "^4.4.10",
-    "@types/sinon": "^17.0.3",
+    "@types/sinon": "catalog:",
     "@types/uuid": "^9.0.8",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
@@ -63,7 +63,7 @@
     "jsdom": "catalog:",
     "prettier": "^3.2.4",
     "tailwindcss": "catalog:",
-    "sinon": "^17.0.1",
+    "sinon": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
