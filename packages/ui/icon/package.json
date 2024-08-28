@@ -26,7 +26,7 @@
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "dev": "concurrently \"npm:dev:*\"",
-    "build": "concurrently \"npm:bulid:*\""
+    "build": "concurrently \"npm:build:*\""
   },
   "keywords": [],
   "author": "",

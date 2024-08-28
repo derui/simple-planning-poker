@@ -27,7 +27,7 @@
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "dev": "concurrently \"npm:dev:*\"",
-    "build": "concurrently \"npm:bulid:*\""
+    "build": "concurrently \"npm:build:*\""
   },
   "keywords": [],
   "author": "",
@@ -41,6 +41,7 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { useRef, useState } from "react";
 
 interface Props {
@@ -7,11 +7,11 @@ interface Props {
 }
 
 const styles = {
-  container: classNames("flex", "flex-none", "outline-none", "border-none", "p-0", "h-8", "items-center", "rounded"),
+  container: clsx("flex", "flex-none", "outline-none", "border-none", "p-0", "h-8", "items-center", "rounded"),
   switch: {
-    root: classNames("flex", "relative", "inline-block", "bg-transparent", "h-6", "justify-items-center"),
+    root: clsx("flex", "relative", "inline-block", "bg-transparent", "h-6", "justify-items-center"),
     rail: (checked: boolean) =>
-      classNames(
+      clsx(
         "relative",
         "inline-block",
         "m-0",
@@ -27,22 +27,12 @@ const styles = {
         }
       ),
     box: (checked: boolean) =>
-      classNames(
-        "absolute",
-        "inline-block",
-        "bg-primary-400",
-        "h-full",
-        "w-6",
-        "left-0",
-        "top-0",
-        "transition-transform",
-        {
-          "translate-x-6": checked,
-          "rounded-l": !checked,
-          "rounded-r": checked,
-        }
-      ),
-    input: classNames("hidden"),
+      clsx("absolute", "inline-block", "bg-primary-400", "h-full", "w-6", "left-0", "top-0", "transition-transform", {
+        "translate-x-6": checked,
+        "rounded-l": !checked,
+        "rounded-r": checked,
+      }),
+    input: clsx("hidden"),
   },
 };
 
