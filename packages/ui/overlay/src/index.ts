@@ -1,1 +1,1 @@
-export { overlay } from "./overlay";
+export { Overlay } from "./overlay";
