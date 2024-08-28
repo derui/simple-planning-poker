@@ -12,6 +12,9 @@
   "types": "./src/index.ts",
   "type": "module",
   "scripts": {
+    "build": "tsc",
+    "check-type": "tsc --noEmit",
+    "dev:build": "tsc --watch --noEmit",
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
