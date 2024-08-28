@@ -1,7 +1,7 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 const styles = {
-  root: classNames("flex", "flex-none", "w-full", "h-10", "animate-pulse", "bg-lightgray"),
+  root: clsx("flex", "flex-none", "w-full", "h-10", "animate-pulse", "bg-lightgray"),
 };
 
 // eslint-disable-next-line func-style

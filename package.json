@@ -17,8 +17,10 @@
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-unused-imports": "catalog:",
     "plop": "^4.0.1",
-    "prettier": "^3.2.4",
-    "typescript": "^5.3.3"
+    "prettier": "^3.2.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "turbo": "^2.1.0"
+  },
+    "packageManager": "pnpm@9.6.0"
 }

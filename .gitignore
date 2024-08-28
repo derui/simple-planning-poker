@@ -5,6 +5,8 @@ yarn-error.log
 .firebaserc
 dist/
 generated/
+*.tsbuildinfo
+.turbo/
 
 database-debug.log
 ui-debug.log
