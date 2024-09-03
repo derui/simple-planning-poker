@@ -1,0 +1,36 @@
+import { test, expect } from "vitest";
+import { changeUserMode, create, PlayerType, UserMode } from "./game-player";
+import * as User from "./user";
+
+test("create user with id", () => {
+  // Arrange
+  const userId = User.createId();
+
+  // Act
+  const ret = create({
+    type: PlayerType.Owner,
+    mode: UserMode.Normal,
+    user: userId,
+  });
+
+  // Assert
+  expect(ret).toEqual({
+    type: PlayerType.Owner,
+    mode: UserMode.Normal,
+    user: userId,
+  });
+});
+
+test("change mode", () => {
+  // Arrange
+  const player = create({
+    type: PlayerType.Player,
+    user: User.createId(),
+  });
+
+  // Act
+  const ret = changeUserMode(player, UserMode.Inspector);
+
+  // Assert
+  expect(ret.mode).toEqual(UserMode.Inspector);
+});
