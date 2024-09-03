@@ -2,14 +2,16 @@
   "name": "@spp/shared-{{name}}",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
+  "files": [
+    "./dist/"
+  ],
   "exports": {
     ".": {
-      "import": "src/index.ts",
-      "require": "src/index.ts"
+      "default": "src/index.js",
+      "types": "src/index.ts"
     }
   },
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -29,9 +31,10 @@
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "jotai": "catalog:"
+    
   }
 }
