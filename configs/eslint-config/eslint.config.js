@@ -6,6 +6,7 @@ export default [
   ...tseslint.configs.recommended,
   {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
+    ignores: ["**/*.js", "setupTests.ts"],
     plugins: {
       react,
       "unused-imports": unusedImports,
