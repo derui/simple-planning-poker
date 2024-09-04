@@ -23,6 +23,7 @@ export default [
     rules: {
       "func-style": ["error", "expression"],
       "unused-imports/no-unused-imports": "warn",
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
