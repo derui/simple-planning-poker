@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import * as Base from "./base";
 import { DomainEvent, DOMAIN_EVENTS } from "./event";
+import { Branded } from "./type";
 
 export type Id = Base.Id<"User">;
 
@@ -12,15 +13,19 @@ export const createId = (value?: string): Id => {
   }
 };
 
-export interface T {
+const _tag = Symbol("user");
+
+interface Internal {
   readonly id: Id;
   readonly name: string;
 }
 
+export type T = Branded<Internal, typeof _tag>;
+
 export interface UserNameChanged extends DomainEvent {
   readonly kind: DOMAIN_EVENTS.UserNameChanged;
-  userId: Id;
-  name: string;
+  readonly userId: Id;
+  readonly newName: string;
 }
 
 /**
@@ -34,11 +39,21 @@ export const create = ({ id, name }: { id: Id; name: string }): T => {
   return {
     id,
     name,
-  };
+  } as T;
 };
 
+/**
+ * Compare two User is same.
+ */
+export const isEqual = function isEqual(o1: T, o2: T): boolean {
+  return o1.id === o2.id;
+};
+
+/**
+ * Return given name is changed to or not
+ */
 export const canChangeName = (name: string) => {
-  return name !== "";
+  return name.trim() !== "";
 };
 
 export const changeName = (user: T, name: string): [T, DomainEvent] => {
@@ -49,7 +64,7 @@ export const changeName = (user: T, name: string): [T, DomainEvent] => {
   const event: UserNameChanged = {
     kind: DOMAIN_EVENTS.UserNameChanged,
     userId: user.id,
-    name: name.trim(),
+    newName: name.trim(),
   };
 
   return [

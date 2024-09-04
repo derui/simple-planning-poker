@@ -6,6 +6,7 @@ import * as Invitation from "./invitation";
 import * as SelectableCards from "./selectable-cards";
 import * as Round from "./round";
 import * as GamePlayer from "./game-player";
+import { Branded } from "./type";
 
 export type Id = Base.Id<"Game">;
 
@@ -13,8 +14,9 @@ export const createId = function createGameId(v?: string) {
   return Base.create<"Game">(v);
 };
 
-// Game is value object
-export interface T {
+const _tag = Symbol("game");
+
+interface Internal {
   readonly id: Id;
   readonly name: string;
   readonly owner: User.Id;
@@ -23,49 +25,55 @@ export interface T {
   readonly round: Round.Id;
 }
 
+// Game is value object
+export type T = Branded<Internal, typeof _tag>;
+
+/**
+ * event when raised at new round started
+ */
 export interface NewRoundStarted extends DomainEvent {
-  readonly kind: "NewRoundStarted";
+  readonly kind: DOMAIN_EVENTS.NewRoundStarted;
   readonly gameId: Id;
   readonly roundId: Round.Id;
   readonly previousRoundId: Round.Id;
 }
 
 export const isNewRoundStarted = function isNewRoundStarted(event: DomainEvent): event is NewRoundStarted {
-  return event.kind === "NewRoundStarted";
+  return event.kind === DOMAIN_EVENTS.NewRoundStarted;
 };
 
 export interface GameCreated extends DomainEvent {
-  readonly kind: "GameCreated";
-  gameId: Id;
-  owner: User.Id;
-  name: string;
-  createdBy: User.Id;
-  selectableCards: SelectableCards.T;
-  round: Round.Id;
+  readonly kind: DOMAIN_EVENTS.GameCreated;
+  readonly gameId: Id;
+  readonly owner: User.Id;
+  readonly name: string;
+  readonly createdBy: User.Id;
+  readonly selectableCards: SelectableCards.T;
+  readonly round: Round.Id;
 }
 
 export const isGameCreated = function isGameCreated(event: DomainEvent): event is GameCreated {
-  return event.kind === "GameCreated";
+  return event.kind === DOMAIN_EVENTS.GameCreated;
 };
 
 export interface UserJoined extends DomainEvent {
-  readonly kind: "UserJoined";
-  gameId: Id;
-  userId: User.Id;
+  readonly kind: DOMAIN_EVENTS.UserJoined;
+  readonly gameId: Id;
+  readonly userId: User.Id;
 }
 
 export const isUserJoined = function isUserJoined(event: DomainEvent): event is UserJoined {
-  return event.kind === "UserJoined";
+  return event.kind === DOMAIN_EVENTS.UserJoined;
 };
 
 export interface UserLeftFromGame extends DomainEvent {
-  readonly kind: "UserLeftFromGame";
-  gameId: Id;
-  userId: User.Id;
+  readonly kind: DOMAIN_EVENTS.UserLeftFromGame;
+  readonly gameId: Id;
+  readonly userId: User.Id;
 }
 
 export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent): event is UserLeftFromGame {
-  return event.kind === "UserLeftFromGame";
+  return event.kind === DOMAIN_EVENTS.UserLeftFromGame;
 };
 
 export const create = ({
@@ -92,7 +100,7 @@ export const create = ({
   }
 
   const event: GameCreated = {
-    kind: "GameCreated",
+    kind: DOMAIN_EVENTS.GameCreated,
     gameId: id,
     owner,
     name: name,
@@ -182,6 +190,9 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   return [newObj, event];
 };
 
+/**
+ * Start new round in this game.
+ */
 export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
   const newRound = Round.roundOf({
     id: Round.createId(),
@@ -199,7 +210,7 @@ export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
 };
 
 /**
- * An user leave from this round
+ * An user leave from this game
  */
 export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent | undefined] {
   if (user === game.owner) {

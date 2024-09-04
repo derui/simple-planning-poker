@@ -96,6 +96,6 @@ test("should return event to notify user name changed", () => {
 
   // Assert
   expect(event.kind).toEqual(DOMAIN_EVENTS.UserNameChanged);
-  expect((event as UserNameChanged).name).toEqual("foobar");
+  expect((event as UserNameChanged).newName).toEqual("foobar");
   expect((event as UserNameChanged).userId).toBe(user.id);
 });

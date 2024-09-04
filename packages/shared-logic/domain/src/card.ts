@@ -1,7 +1,7 @@
 import * as StoryPoint from "./story-point";
 import { Branded } from "./type";
 
-const tag = Symbol("card");
+const _tag = Symbol("card");
 
 interface Internal {
   storyPoint: number;
@@ -10,7 +10,7 @@ interface Internal {
 /**
  * Type of `Card`. This type can not generate from other package.
  */
-export type T = Branded<Internal, typeof tag>;
+export type T = Branded<Internal, typeof _tag>;
 
 /**
  * factory function for Card
