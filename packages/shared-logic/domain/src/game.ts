@@ -8,13 +8,15 @@ import * as Round from "./round";
 import * as GamePlayer from "./game-player";
 import { Branded } from "./type";
 
-export type Id = Base.Id<"Game">;
-
-export const createId = function createGameId(v?: string) {
-  return Base.create<"Game">(v);
-};
-
 const _tag = Symbol("game");
+export type Id = Base.Id<typeof _tag>;
+
+/**
+ * create new ID for `Id`
+ */
+export const createId = function createGameId(v?: string): Id {
+  return Base.create(v);
+};
 
 interface Internal {
   readonly id: Id;
@@ -91,7 +93,7 @@ export const create = ({
   joinedPlayers?: GamePlayer.T[];
   round: Round.Id;
 }): [T, DomainEvent] => {
-  const distinctedPlayers = new Map<User.Id, any>();
+  const distinctedPlayers = new Map<User.Id, unknown>();
   if (!joinedPlayers) {
     distinctedPlayers.set(
       owner,
@@ -116,7 +118,7 @@ export const create = ({
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
     round,
-  };
+  } as T;
 
   return [game, event];
 };

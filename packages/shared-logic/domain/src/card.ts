@@ -19,14 +19,16 @@ export const create = (storyPoint: StoryPoint.T): T => {
   return { storyPoint: StoryPoint.value(storyPoint) } as T;
 };
 
-export const equals = (v1: T, v2: T) => {
+export const isEqual = function isEqual(v1: T, v2: T) {
   return v1.storyPoint === v2.storyPoint;
 };
 
 /**
  * Get a story point of the card
  */
-export const storyPoint = (card: T): StoryPoint.T => StoryPoint.create(card.storyPoint);
+export const storyPoint = function storyPoint(card: T): StoryPoint.T {
+  return StoryPoint.create(card.storyPoint);
+};
 
 /**
  * Get string representation of card

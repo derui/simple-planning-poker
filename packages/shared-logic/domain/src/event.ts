@@ -1,9 +1,13 @@
-// A base event interface
+/**
+ * base interface for DomainEvent
+ */
 export interface DomainEvent {
   kind: DOMAIN_EVENTS;
 }
 
-// define event kinds
+/**
+ * Kind of domain event.
+ */
 export enum DOMAIN_EVENTS {
   GameCreated,
   NewRoundStarted,
