@@ -374,8 +374,35 @@ importers:
         specifier: 'catalog:'
         version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
 
+  packages/shared-logic/array:
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.3.3
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@20.11.8)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@20.11.8)(jsdom@24.0.0)
+
   packages/shared-logic/domain:
     dependencies:
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       immer:
         specifier: ^10.0.3
         version: 10.1.1
@@ -389,6 +416,9 @@ importers:
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../../configs/typescript-config
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
