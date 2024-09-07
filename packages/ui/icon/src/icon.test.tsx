@@ -1,7 +1,7 @@
 import { test, afterEach, expect } from "vitest";
 import { render, cleanup } from "@testing-library/react";
-import { Icons } from "./icons";
-import { Icon } from "./icon";
+import { Icons } from "./icons.js";
+import { Icon } from "./icon.js";
 
 afterEach(cleanup);
 

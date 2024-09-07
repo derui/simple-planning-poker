@@ -1,7 +1,7 @@
 import { test, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 
-import { Overlay } from "./overlay";
+import { Overlay } from "./overlay.js";
 
 afterEach(cleanup);
 

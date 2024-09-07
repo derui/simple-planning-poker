@@ -1,1 +1,1 @@
-export { Overlay } from "./overlay";
+export { Overlay } from "./overlay.js";

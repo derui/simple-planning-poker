@@ -1,6 +1,6 @@
 import { test, afterEach, expect } from "vitest";
 import { render, cleanup, screen } from "@testing-library/react";
-import { Loader } from "./loader";
+import { Loader } from "./loader.js";
 
 afterEach(cleanup);
 

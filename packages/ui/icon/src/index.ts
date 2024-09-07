@@ -1,2 +1,2 @@
-export { Icon } from "./icon";
-export { Icons } from "./icons";
+export { Icon } from "./icon.js";
+export { Icons } from "./icons.js";

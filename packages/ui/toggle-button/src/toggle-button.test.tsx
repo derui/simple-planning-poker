@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
-import userEvent from "@testing-library/user-event";
-import { ToggleButton } from "./toggle-button";
+import { userEvent } from "@testing-library/user-event";
+import { ToggleButton } from "./toggle-button.js";
 
 afterEach(cleanup);
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ToggleButton } from "./toggle-button";
+import { ToggleButton } from "./toggle-button.js";
 
 const meta = {
   title: "Presentational/ToggleButton",

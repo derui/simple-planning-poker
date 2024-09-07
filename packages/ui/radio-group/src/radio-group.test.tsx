@@ -1,7 +1,7 @@
 import { test, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 
-import { RadioGroup } from "./radio-group";
+import { RadioGroup } from "./radio-group.js";
 
 afterEach(cleanup);
 

@@ -1,7 +1,7 @@
 import { test, expect, afterEach } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 
-import { Skeleton } from "./skeleton";
+import { Skeleton } from "./skeleton.js";
 
 afterEach(cleanup);
 

@@ -1,8 +1,8 @@
 import { test, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 
-import { RadioButton } from "./radio-button";
+import { RadioButton } from "./radio-button.js";
 
 afterEach(cleanup);
 

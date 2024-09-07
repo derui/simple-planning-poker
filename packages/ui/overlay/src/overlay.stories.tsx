@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Overlay } from "./overlay";
+import { Overlay } from "./overlay.js";
 
 const meta = {
   title: "Presentational/Overlay",
