@@ -65,12 +65,12 @@ export const createId = function createId(id?: string): Id {
  */
 export const roundOf = function roundOf({
   id,
-  cards,
+  points,
   estimations = [],
   theme,
 }: {
   id: Id;
-  cards: ApplicablePoints.T;
+  points: ApplicablePoints.T;
   estimations?: PlayerEstimation[];
   theme?: string;
 }): Round {
@@ -78,7 +78,7 @@ export const roundOf = function roundOf({
     _tag: _round,
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
-    points: ApplicablePoints.clone(cards),
+    points: ApplicablePoints.clone(points),
     theme: !theme ? null : theme,
   };
 };
@@ -88,13 +88,13 @@ export const roundOf = function roundOf({
  */
 export const finishedRoundOf = function finishedRoundOf({
   id,
-  cards,
+  points: points,
   estimations,
   finishedAt,
   theme,
 }: {
   id: Id;
-  cards: ApplicablePoints.T;
+  points: ApplicablePoints.T;
   finishedAt: DateTime;
   estimations: PlayerEstimation[];
   theme?: string;
@@ -104,7 +104,7 @@ export const finishedRoundOf = function finishedRoundOf({
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
-    points: ApplicablePoints.clone(cards),
+    points: ApplicablePoints.clone(points),
     theme: !theme ? null : theme,
   };
 };
@@ -186,7 +186,7 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
 
   let average =
     points.reduce((point, v) => {
-      return point + v.storyPoint;
+      return point + v;
     }, 0) / points.length;
   average = Math.ceil(average * 100) / 100;
 

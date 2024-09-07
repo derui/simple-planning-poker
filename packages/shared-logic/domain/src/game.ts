@@ -3,7 +3,7 @@ import * as Base from "./base.js";
 import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
 import * as User from "./user.js";
 import * as Invitation from "./invitation.js";
-import * as SelectableCards from "./selectable-cards.js";
+import * as ApplicablePoints from "./applicable-points.js";
 import * as Round from "./round.js";
 import * as GamePlayer from "./game-player.js";
 import { Branded } from "./type.js";
@@ -23,7 +23,7 @@ interface Internal {
   readonly name: string;
   readonly owner: User.Id;
   readonly joinedPlayers: GamePlayer.T[];
-  readonly cards: SelectableCards.T;
+  readonly cards: ApplicablePoints.T;
   readonly round: Round.Id;
 }
 
@@ -50,7 +50,7 @@ export interface GameCreated extends DomainEvent {
   readonly owner: User.Id;
   readonly name: string;
   readonly createdBy: User.Id;
-  readonly selectableCards: SelectableCards.T;
+  readonly selectableCards: ApplicablePoints.T;
   readonly round: Round.Id;
 }
 
@@ -89,7 +89,7 @@ export const create = ({
   id: Id;
   name: string;
   owner: User.Id;
-  cards: SelectableCards.T;
+  cards: ApplicablePoints.T;
   joinedPlayers?: GamePlayer.T[];
   round: Round.Id;
 }): [T, DomainEvent] => {
@@ -198,7 +198,7 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
 export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
   const newRound = Round.roundOf({
     id: Round.createId(),
-    cards: game.cards,
+    points: game.cards,
   });
 
   const event: NewRoundStarted = {

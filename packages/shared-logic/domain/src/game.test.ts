@@ -13,7 +13,7 @@ import {
   NewRoundStarted,
   UserLeftFromGame,
 } from "./game.js";
-import * as SelectableCards from "./selectable-cards.js";
+import * as ApplicablePoints from "./applicable-points.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
 import * as Round from "./round.js";
@@ -22,7 +22,7 @@ import * as GamePlayer from "./game-player.js";
 import * as Invitation from "./invitation.js";
 import { DOMAIN_EVENTS } from "./event.js";
 
-const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
+const cards = ApplicablePoints.create([1, 2].map(StoryPoint.create));
 
 test("get aggregate and event when game created ", () => {
   const [game, event] = create({
@@ -49,7 +49,7 @@ test("apply new round", () => {
   const [finishedRound] = Round.showDown(
     Round.roundOf({
       id: Round.createId(),
-      cards: cards,
+      points: cards,
       estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUpOf() }],
     }),
     new Date()
