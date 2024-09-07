@@ -514,6 +514,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -578,6 +581,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -639,6 +645,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -703,6 +712,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -767,6 +779,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -828,6 +843,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10
@@ -892,6 +910,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.10

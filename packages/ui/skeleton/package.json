@@ -11,8 +11,8 @@
   "exports": {
     ".": {
       "import": {
-        "default": "dist/index.js",
-        "types": "dist/index.d.ts"
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
       }
     }
   },
@@ -51,7 +51,8 @@
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "react-dom": "catalog:"
   },
   "dependencies": {
     "clsx": "catalog:",
