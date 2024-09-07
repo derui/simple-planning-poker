@@ -27,7 +27,12 @@ export default [
       "func-style": ["error", "expression"],
       "unused-imports/no-unused-imports": "warn",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unnecessary-type-assertion": "error",
+      "@typescript-eslint/consistent-type-assertions": [
+        "error",
+        {
+          assertionStyle: "never",
+        },
+      ],
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

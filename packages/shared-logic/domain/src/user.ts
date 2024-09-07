@@ -3,12 +3,13 @@ import * as Base from "./base.js";
 import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
 import { Branded } from "./type.js";
 
-const _tag = Symbol();
+const _tag: unique symbol = Symbol();
 type tag = typeof _tag;
 export type Id = Base.Id<tag>;
 
 export const createId = (value?: string): Id => {
   if (value) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return value as Id;
   } else {
     return Base.create<tag>();
@@ -36,6 +37,7 @@ export const create = ({ id, name }: { id: Id; name: string }): T => {
     throw new Error("can not create user with empty name");
   }
 
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
     id,
     name,
@@ -54,6 +56,10 @@ export const isEqual = function isEqual(o1: T, o2: T): boolean {
  */
 export const canChangeName = (name: string) => {
   return name.trim() !== "";
+};
+
+export const isUserNameChanged = function isUserNameChanged(obj: DomainEvent): obj is UserNameChanged {
+  return obj.kind == DOMAIN_EVENTS.UserNameChanged;
 };
 
 export const changeName = (user: T, name: string): [T, DomainEvent] => {

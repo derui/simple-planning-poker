@@ -17,7 +17,7 @@ export const create = function createApplicablePoints(numbers: StoryPoint.T[]): 
 
   const points = unique(numbers, StoryPoint.isEqual).sort(StoryPoint.compare);
 
-  return <T>Object.freeze(Array.from(points));
+  return Object.freeze(Array.from(points)) as T;
 };
 
 /**
@@ -37,7 +37,7 @@ export const pick = function pick(obj: T, storyPoint: StoryPoint.T): StoryPoint.
 export const clone = function clone(obj: T) {
   const value: internal = obj;
 
-  return <T>Object.freeze(Array.from(value));
+  return Object.freeze(Array.from(value)) as T;
 };
 
 export const contains = function contains(obj: T, point: StoryPoint.T) {

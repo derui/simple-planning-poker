@@ -32,24 +32,24 @@ export type T = Branded<Unsubmit | Giveup | Submitted, tag>;
  * Get `Unsubmit` status of estimation
  */
 export const unsubmitOf = function unsubmitOf(): T {
-  return <T>{ _tag: unsubmit };
+  return { _tag: unsubmit } as T;
 };
 
 /**
  * Get `Giveup` status of estimation
  */
 export const giveUpOf = function giveUpOf(): T {
-  return <T>{ _tag: giveup };
+  return { _tag: giveup } as T;
 };
 
 /**
  * Get `Submitted` status of estimation
  */
 export const submittedOf = function submittedOf(point: StoryPoint.T): T {
-  return <T>{
+  return {
     _tag: submitted,
     point: point,
-  };
+  } as T;
 };
 
 /**

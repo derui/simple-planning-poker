@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import { DOMAIN_EVENTS } from "./event.js";
-import { create, createId, changeName, canChangeName, UserNameChanged } from "./user.js";
+import { create, createId, changeName, canChangeName, UserNameChanged, isUserNameChanged } from "./user.js";
 
 test("create user with id", () => {
   // Arrange
@@ -96,6 +96,10 @@ test("should return event to notify user name changed", () => {
 
   // Assert
   expect(event.kind).toEqual(DOMAIN_EVENTS.UserNameChanged);
-  expect((event as UserNameChanged).newName).toEqual("foobar");
-  expect((event as UserNameChanged).userId).toBe(user.id);
+  if (isUserNameChanged(event)) {
+    expect((event as UserNameChanged).newName).toEqual("foobar");
+    expect((event as UserNameChanged).userId).toBe(user.id);
+  } else {
+    expect.fail("should be UserNameChanged");
+  }
 });
