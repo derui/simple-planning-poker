@@ -10,8 +10,10 @@
   ],
   "exports": {
     ".": {
-      "import": "dist/index.ts",
-      "require": "src/index.ts"
+      "import": {
+        "default": "dist/index.js",
+        "types": "src/index.ts"
+      }
     }
   },
   "type": "module",
