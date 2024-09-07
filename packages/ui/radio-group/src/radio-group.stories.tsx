@@ -7,7 +7,7 @@ const meta = {
   title: "UI/Radio Group",
   component: RadioGroup,
   tags: ["autodocs"],
-} satisfies Meta<typeof RadioButton>;
+} satisfies Meta<typeof RadioGroup>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
