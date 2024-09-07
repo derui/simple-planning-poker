@@ -1,5 +1,5 @@
-import * as Card from "./card";
-import { Branded } from "./type";
+import * as Card from "./card.js";
+import { Branded } from "./type.js";
 
 const UserEstimation = Symbol();
 type UserEstimation = typeof UserEstimation;

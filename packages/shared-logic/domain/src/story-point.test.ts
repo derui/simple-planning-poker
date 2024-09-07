@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { create, value } from "./story-point";
+import { create, value } from "./story-point.js";
 
 test("create story point with positive number", () => {
   // Arrange

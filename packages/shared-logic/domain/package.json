@@ -36,6 +36,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/shared-array": "workspace:^",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
     "uuid": "^9.0.1"

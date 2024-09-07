@@ -1,5 +1,5 @@
-import * as StoryPoint from "./story-point";
-import { Branded } from "./type";
+import * as StoryPoint from "./story-point.js";
+import { Branded } from "./type.js";
 
 const _tag = Symbol("card");
 

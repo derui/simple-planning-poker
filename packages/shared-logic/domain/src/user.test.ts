@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { DOMAIN_EVENTS } from "./event";
-import { create, createId, changeName, canChangeName, UserNameChanged } from "./user";
+import { DOMAIN_EVENTS } from "./event.js";
+import { create, createId, changeName, canChangeName, UserNameChanged } from "./user.js";
 
 test("create user with id", () => {
   // Arrange
@@ -79,8 +79,8 @@ test("validate name", () => {
   // Act
 
   // Assert
-  expect(canChangeName("")).toBeFalsy;
-  expect(canChangeName("foo")).toBeTruthy;
+  expect(canChangeName("")).toBeFalsy();
+  expect(canChangeName("foo")).toBeTruthy();
 });
 
 test("should return event to notify user name changed", () => {

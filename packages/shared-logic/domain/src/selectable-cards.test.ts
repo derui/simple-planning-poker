@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
-import * as Card from "./card";
-import { clone, contains, create } from "./selectable-cards";
-import * as StoryPoint from "./story-point";
+import * as Card from "./card.js";
+import { clone, contains, create } from "./selectable-cards.js";
+import * as StoryPoint from "./story-point.js";
 
 test("make cards from numbers", () => {
   // Arrange

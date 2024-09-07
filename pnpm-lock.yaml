@@ -400,6 +400,9 @@ importers:
 
   packages/shared-logic/domain:
     dependencies:
+      '@spp/shared-array':
+        specifier: workspace:^
+        version: link:../array
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0

@@ -1,6 +1,6 @@
 import { produce } from "immer";
-import * as User from "./user";
-import { Branded } from "./type";
+import * as User from "./user.js";
+import { Branded } from "./type.js";
 
 export enum UserMode {
   Normal,
@@ -12,7 +12,7 @@ export enum PlayerType {
   Owner,
 }
 
-const tag: symbol = Symbol("gamePlayer");
+const _tag: symbol = Symbol("gamePlayer");
 interface Internal {
   readonly type: PlayerType;
   readonly user: User.Id;
@@ -22,7 +22,7 @@ interface Internal {
 /**
  * The type of GamePlayer domain. This type can not be generate from other modules
  */
-export type T = Branded<Internal, typeof tag>;
+export type T = Branded<Internal, typeof _tag>;
 
 /**
    create user from id and name

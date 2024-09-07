@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { create } from "./invitation";
+import { create } from "./invitation.js";
 
 test("should create unique invitation of a game", () => {
   // Arrange

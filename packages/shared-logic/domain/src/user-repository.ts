@@ -1,4 +1,4 @@
-import { T, Id } from "./user";
+import { T, Id } from "./user.js";
 
 export interface UserRepository {
   // save user

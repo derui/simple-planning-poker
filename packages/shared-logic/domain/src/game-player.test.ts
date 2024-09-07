@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { changeUserMode, create, PlayerType, UserMode } from "./game-player";
-import * as User from "./user";
+import { changeUserMode, create, PlayerType, UserMode } from "./game-player.js";
+import * as User from "./user.js";
 
 test("create user with id", () => {
   // Arrange

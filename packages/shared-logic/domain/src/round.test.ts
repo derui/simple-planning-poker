@@ -11,14 +11,14 @@ import {
   canShowDown,
   T,
   changeTheme,
-} from "./round";
-import * as SelectableCards from "./selectable-cards";
-import * as StoryPoint from "./story-point";
-import * as User from "./user";
-import * as UserEstimation from "./user-estimation";
-import * as Card from "./card";
-import { DOMAIN_EVENTS } from "./event";
-import { dateTimeToString as formatToDateTime } from "./type";
+} from "./round.js";
+import * as SelectableCards from "./selectable-cards.js";
+import * as StoryPoint from "./story-point.js";
+import * as User from "./user.js";
+import * as UserEstimation from "./user-estimation.js";
+import * as Card from "./card.js";
+import { DOMAIN_EVENTS } from "./event.js";
+import { dateTimeToString as formatToDateTime } from "./type.js";
 
 const cards = SelectableCards.create([StoryPoint.create(2), StoryPoint.create(3)]);
 

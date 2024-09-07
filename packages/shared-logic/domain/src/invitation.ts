@@ -1,11 +1,11 @@
-import sha256 from "crypto-js/sha256";
-import { Branded } from "./type";
+import { SHA256 } from "crypto-js";
+import { Branded } from "./type.js";
 
 const _tag = Symbol("InvitationSignature");
 export type T = Branded<string, typeof _tag>;
 
 export const create = (base: string): T => {
-  const hash = sha256(base);
+  const hash = SHA256(base);
 
   return hash.toString() as T;
 };

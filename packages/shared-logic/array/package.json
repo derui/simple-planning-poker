@@ -8,11 +8,13 @@
   ],
   "exports": {
     ".": {
-      "default": "src/index.js",
-      "types": "src/index.ts"
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
-  "scripts": {
+    "scripts": {
     "build": "tsc",
     "check-type": "tsc --noEmit",
     "dev:build": "tsc --watch --noEmit",
@@ -33,7 +35,5 @@
     "vitest": "catalog:",
     "typescript": "catalog:"
   },
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }

@@ -1,6 +1,6 @@
-import * as Game from "./game";
-import * as User from "./user";
-import * as Invitation from "./invitation";
+import * as Game from "./game.js";
+import * as User from "./user.js";
+import * as Invitation from "./invitation.js";
 
 /**
  * state of joined game.

@@ -1,4 +1,4 @@
-import * as Round from "./round";
+import * as Round from "./round.js";
 
 /**
  * A respository for round

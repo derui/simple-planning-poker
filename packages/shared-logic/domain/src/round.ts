@@ -1,15 +1,17 @@
 import { produce } from "immer";
-import * as UserEstimation from "./user-estimation";
-import * as User from "./user";
-import * as SelectableCards from "./selectable-cards";
-import { Branded, DateTime, dateTimeToString } from "./type";
-import { DomainEvent, DOMAIN_EVENTS } from "./event";
-import * as Base from "@/domains/base";
+import * as UserEstimation from "./user-estimation.js";
+import * as User from "./user.js";
+import * as SelectableCards from "./selectable-cards.js";
+import { Branded, DateTime, dateTimeToString } from "./type.js";
+import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import * as Base from "./base.js";
 
+const _tag = Symbol();
+type tag = typeof _tag;
 /**
  * Id of round
  */
-export type Id = Base.Id<"RoundId">;
+export type Id = Base.Id<tag>;
 
 interface PlayerEstimation {
   readonly user: User.Id;
@@ -47,14 +49,14 @@ export interface Round extends CommonRound {
 export type T = Round | FinishedRound;
 
 export interface RoundFinished extends DomainEvent {
-  readonly kind: "RoundFinished";
-  roundId: Id;
+  readonly kind: DOMAIN_EVENTS.RoundFinished;
+  readonly roundId: Id;
 }
 
 // functions
 
 export const createId = function createId(id?: string): Id {
-  return Base.create<"RoundId">(id);
+  return Base.create<tag>(id);
 };
 
 /**
@@ -183,7 +185,7 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
 
   let average =
     cards.reduce((point, v) => {
-      return point + v;
+      return point + v.storyPoint;
     }, 0) / cards.length;
   average = Math.ceil(average * 100) / 100;
 

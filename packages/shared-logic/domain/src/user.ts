@@ -1,26 +1,26 @@
 import { produce } from "immer";
-import * as Base from "./base";
-import { DomainEvent, DOMAIN_EVENTS } from "./event";
-import { Branded } from "./type";
+import * as Base from "./base.js";
+import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import { Branded } from "./type.js";
 
-export type Id = Base.Id<"User">;
+const _tag = Symbol();
+type tag = typeof _tag;
+export type Id = Base.Id<tag>;
 
 export const createId = (value?: string): Id => {
   if (value) {
     return value as Id;
   } else {
-    return Base.create<"User">();
+    return Base.create<tag>();
   }
 };
-
-const _tag = Symbol("user");
 
 interface Internal {
   readonly id: Id;
   readonly name: string;
 }
 
-export type T = Branded<Internal, typeof _tag>;
+export type T = Branded<Internal, tag>;
 
 export interface UserNameChanged extends DomainEvent {
   readonly kind: DOMAIN_EVENTS.UserNameChanged;

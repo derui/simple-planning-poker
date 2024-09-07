@@ -12,16 +12,15 @@ import {
   newRound,
   NewRoundStarted,
   UserLeftFromGame,
-} from "./game";
-import * as SelectableCards from "./selectable-cards";
-import * as StoryPoint from "./story-point";
-import * as User from "./user";
-import * as Round from "./round";
-import * as UserEstimation from "./user-estimation";
-import * as GamePlayer from "./game-player";
-import * as Invitation from "./invitation";
-import { DOMAIN_EVENTS } from "./event";
-import { randomGame } from "@/test-lib";
+} from "./game.js";
+import * as SelectableCards from "./selectable-cards.js";
+import * as StoryPoint from "./story-point.js";
+import * as User from "./user.js";
+import * as Round from "./round.js";
+import * as UserEstimation from "./user-estimation.js";
+import * as GamePlayer from "./game-player.js";
+import * as Invitation from "./invitation.js";
+import { DOMAIN_EVENTS } from "./event.js";
 
 const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
 
@@ -242,7 +241,13 @@ describe("leave", () => {
 
 describe("new round", () => {
   test("get new round", () => {
-    const game = randomGame({});
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      owner: User.createId("user"),
+      cards,
+      round: Round.createId(),
+    });
 
     const [changed, event] = newRound(game);
 

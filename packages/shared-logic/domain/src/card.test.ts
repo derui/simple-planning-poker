@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { storyPoint, create, equals } from "./card";
-import * as StoryPoint from "./story-point";
+import { storyPoint, create, isEqual } from "./card.js";
+import * as StoryPoint from "./story-point.js";
 
 test("create story point card", () => {
   // Arrange
@@ -18,7 +18,7 @@ test("should return true if cards are same", () => {
   const card2 = create(StoryPoint.create(10));
 
   // Act
-  const ret = equals(card1, card2);
+  const ret = isEqual(card1, card2);
 
   // Assert
   expect(ret).toBeTruthy();
@@ -30,7 +30,7 @@ test("should return false if story point is different", () => {
   const card2 = create(StoryPoint.create(11));
 
   // Act
-  const ret = equals(card1, card2);
+  const ret = isEqual(card1, card2);
 
   // Assert
   expect(ret).toBeFalsy();

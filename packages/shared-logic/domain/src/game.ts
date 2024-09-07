@@ -1,12 +1,12 @@
 import { produce } from "immer";
-import * as Base from "./base";
-import { DomainEvent, DOMAIN_EVENTS } from "./event";
-import * as User from "./user";
-import * as Invitation from "./invitation";
-import * as SelectableCards from "./selectable-cards";
-import * as Round from "./round";
-import * as GamePlayer from "./game-player";
-import { Branded } from "./type";
+import * as Base from "./base.js";
+import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import * as User from "./user.js";
+import * as Invitation from "./invitation.js";
+import * as SelectableCards from "./selectable-cards.js";
+import * as Round from "./round.js";
+import * as GamePlayer from "./game-player.js";
+import { Branded } from "./type.js";
 
 const _tag = Symbol("game");
 export type Id = Base.Id<typeof _tag>;

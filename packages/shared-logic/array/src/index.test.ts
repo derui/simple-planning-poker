@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { between, unique } from "./index";
+import { between, unique } from "./index.js";
 
 test("get empty array", () => {
   // Arrange
