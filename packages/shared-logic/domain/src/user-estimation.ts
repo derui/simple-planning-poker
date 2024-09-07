@@ -1,64 +1,100 @@
-import * as Card from "./card.js";
+import * as StoryPoint from "./story-point.js";
 import { Branded } from "./type.js";
 
-const UserEstimation = Symbol();
-type UserEstimation = typeof UserEstimation;
+const _tag = Symbol();
+type tag = typeof _tag;
 
-interface Unselected {
-  _tag: "unselected";
-}
+const unsubmit: unique symbol = Symbol();
+type unsubmit = typeof unsubmit;
 
-interface Giveup {
-  _tag: "giveup";
-}
-interface Estimated {
-  _tag: "estimated";
-  card: Card.T;
-}
+const giveup: unique symbol = Symbol();
+type giveup = typeof giveup;
 
-export type T = Branded<Unselected | Giveup | Estimated, UserEstimation>;
+const submitted: unique symbol = Symbol();
+type submitted = typeof submitted;
 
-export const unselected = function unselected(): T {
-  return { _tag: "unselected" } as T;
+type Unsubmit = {
+  readonly _tag: unsubmit;
 };
 
-export const giveUp = function giveUp(): T {
-  return { _tag: "giveup" } as T;
-};
-export const estimated = function estimated(card: Card.T): T {
-  return {
-    _tag: "estimated",
-    card,
-  } as T;
+type Giveup = {
+  readonly _tag: giveup;
 };
 
-export type Kind = "unselected" | "giveup" | "estimated";
+interface Submitted {
+  readonly _tag: submitted;
+  point: StoryPoint.T;
+}
 
-export const kindOf = function kindOf(estimation: T): Kind {
+export type T = Branded<Unsubmit | Giveup | Submitted, tag>;
+
+/**
+ * Get `Unsubmit` status of estimation
+ */
+export const unsubmitOf = function unsubmitOf(): T {
+  return <T>{ _tag: unsubmit };
+};
+
+/**
+ * Get `Giveup` status of estimation
+ */
+export const giveUpOf = function giveUpOf(): T {
+  return <T>{ _tag: giveup };
+};
+
+/**
+ * Get `Submitted` status of estimation
+ */
+export const submittedOf = function submittedOf(point: StoryPoint.T): T {
+  return <T>{
+    _tag: submitted,
+    point: point,
+  };
+};
+
+/**
+ * Get estimated point from `obj` .
+ */
+export const estimatedPoint = function estimatedPoint(obj: T): StoryPoint.T | undefined {
+  if (isSubmitted(obj)) {
+    return obj.point;
+  } else {
+    return;
+  }
+};
+
+type Kind = "unsubmit" | "giveup" | "submitted";
+
+const kindOf = function kindOf(estimation: T): Kind {
   switch (estimation._tag) {
-    case "giveup":
+    case giveup:
       return "giveup";
-    case "estimated":
-      return "estimated";
-    case "unselected":
-      return "unselected";
+    case submitted:
+      return "submitted";
+    case unsubmit:
+      return "unsubmit";
     default:
       throw new Error("unknown estimation");
   }
 };
 
-export const isEstimated = function isEstimated(
-  estimation: T
-): estimation is Branded<Estimated, typeof UserEstimation> {
-  return kindOf(estimation) === "estimated";
+/**
+ * Type guard for `Submitted`
+ */
+export const isSubmitted = function isSubmitted(estimation: T): estimation is Branded<Submitted, typeof _tag> {
+  return kindOf(estimation) === "submitted";
 };
 
-export const isGiveUp = function isGiveUp(estimation: T): estimation is Branded<Giveup, typeof UserEstimation> {
+/**
+ * Type guard for `Giveup`
+ */
+export const isGiveUp = function isGiveUp(estimation: T): estimation is Branded<Giveup, typeof _tag> {
   return kindOf(estimation) === "giveup";
 };
 
-export const isUnselected = function isUnselected(
-  estimation: T
-): estimation is Branded<Unselected, typeof UserEstimation> {
-  return kindOf(estimation) === "unselected";
+/**
+ * Type guard for `Unsubmit`
+ */
+export const isUnsubmit = function isUnsubmit(estimation: T): estimation is Branded<Unsubmit, typeof _tag> {
+  return kindOf(estimation) === "unsubmit";
 };

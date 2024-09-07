@@ -1,13 +1,14 @@
 import { produce } from "immer";
 import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
-import * as SelectableCards from "./selectable-cards.js";
+import * as ApplicablePoints from "./applicable-points.js";
 import { Branded, DateTime, dateTimeToString } from "./type.js";
 import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
 import * as Base from "./base.js";
 
 const _tag = Symbol();
 type tag = typeof _tag;
+
 /**
  * Id of round
  */
@@ -27,7 +28,7 @@ const _round = "Round";
 interface CommonRound {
   readonly id: Id;
   readonly estimations: Record<User.Id, UserEstimation.T>;
-  readonly cards: SelectableCards.T;
+  readonly points: ApplicablePoints.T;
   readonly theme: string | null;
 }
 
@@ -69,7 +70,7 @@ export const roundOf = function roundOf({
   theme,
 }: {
   id: Id;
-  cards: SelectableCards.T;
+  cards: ApplicablePoints.T;
   estimations?: PlayerEstimation[];
   theme?: string;
 }): Round {
@@ -77,7 +78,7 @@ export const roundOf = function roundOf({
     _tag: _round,
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
-    cards: SelectableCards.clone(cards),
+    points: ApplicablePoints.clone(cards),
     theme: !theme ? null : theme,
   };
 };
@@ -93,7 +94,7 @@ export const finishedRoundOf = function finishedRoundOf({
   theme,
 }: {
   id: Id;
-  cards: SelectableCards.T;
+  cards: ApplicablePoints.T;
   finishedAt: DateTime;
   estimations: PlayerEstimation[];
   theme?: string;
@@ -103,7 +104,7 @@ export const finishedRoundOf = function finishedRoundOf({
     id,
     estimations: Object.fromEntries(estimations.map((v) => [v.user, v.estimation])),
     finishedAt,
-    cards: SelectableCards.clone(cards),
+    points: ApplicablePoints.clone(cards),
     theme: !theme ? null : theme,
   };
 };
@@ -120,7 +121,7 @@ export const takePlayerEstimation = function takePlayerEstimation(
     return round;
   }
 
-  if (UserEstimation.isEstimated(estimation) && !SelectableCards.contains(round.cards, estimation.card)) {
+  if (UserEstimation.isSubmitted(estimation) && !ApplicablePoints.contains(round.points, estimation.point)) {
     throw new Error("Can not accept this card");
   }
 
@@ -175,18 +176,18 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
  * calculate averate on round.
  */
 export const calculateAverage = function calculateAverage(round: FinishedRound) {
-  const cards = Object.values(round.estimations)
-    .filter(UserEstimation.isEstimated)
-    .map((v) => v.card);
+  const points = Object.values(round.estimations)
+    .filter(UserEstimation.isSubmitted)
+    .map((v) => v.point);
 
-  if (cards.length === 0) {
+  if (points.length == 0) {
     return 0 as CalculatedStoryPoint;
   }
 
   let average =
-    cards.reduce((point, v) => {
+    points.reduce((point, v) => {
       return point + v.storyPoint;
-    }, 0) / cards.length;
+    }, 0) / points.length;
   average = Math.ceil(average * 100) / 100;
 
   return average as CalculatedStoryPoint;

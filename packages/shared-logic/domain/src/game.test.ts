@@ -50,7 +50,7 @@ test("apply new round", () => {
     Round.roundOf({
       id: Round.createId(),
       cards: cards,
-      estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUp() }],
+      estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUpOf() }],
     }),
     new Date()
   );
@@ -251,7 +251,7 @@ describe("new round", () => {
 
     const [changed, event] = newRound(game);
 
-    expect(changed.cards).toEqual(game.cards);
+    expect(changed.points).toEqual(game.cards);
     expect((event as NewRoundStarted).gameId).toBe(game.id);
     expect((event as NewRoundStarted).roundId).toBe(changed.id);
     expect((event as NewRoundStarted).previousRoundId).toBe(game.round);

@@ -30,7 +30,7 @@ test("get round", () => {
 
   expect(ret.estimations).toEqual({});
   expect(ret.id).toBe(createId("id"));
-  expect(ret.cards).toEqual(cards);
+  expect(ret.points).toEqual(cards);
 });
 
 test("get finished round", () => {
@@ -44,33 +44,33 @@ test("get finished round", () => {
 
   expect(ret.estimations).toEqual({});
   expect(ret.finishedAt).toBe(now);
-  expect(ret.cards).toEqual(cards);
+  expect(ret.points).toEqual(cards);
   expect(ret.id).toBe(createId("id"));
 });
 
 test("round can accept user estimation", () => {
   const round = roundOf({ id: createId("id"), cards: cards });
-  const changed = takePlayerEstimation(round, User.createId("id"), UserEstimation.estimated(cards[0]));
+  const changed = takePlayerEstimation(round, User.createId("id"), UserEstimation.submitted(cards[0]));
 
   expect(round).not.toBe(changed);
   expect(round.id).toBe(changed.id);
-  expect(round.cards).toBe(changed.cards);
-  expect(changed.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[0])]]));
+  expect(round.points).toBe(changed.points);
+  expect(changed.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.submitted(cards[0])]]));
 });
 
 test("update estimation if user already take their estimation before", () => {
   const round = roundOf({ id: createId("id"), cards: cards });
-  let changed = takePlayerEstimation(round, User.createId("id"), UserEstimation.estimated(cards[0]));
-  changed = takePlayerEstimation(changed, User.createId("id"), UserEstimation.estimated(cards[1]));
+  let changed = takePlayerEstimation(round, User.createId("id"), UserEstimation.submitted(cards[0]));
+  changed = takePlayerEstimation(changed, User.createId("id"), UserEstimation.submitted(cards[1]));
 
-  expect(changed.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[1])]]));
+  expect(changed.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.submitted(cards[1])]]));
 });
 
 test("throw error when a card user took is not contained selectable cards", () => {
   const round = roundOf({ id: createId("id"), cards: cards });
 
   expect(() => {
-    takePlayerEstimation(round, User.createId("id"), UserEstimation.estimated(Card.create(StoryPoint.create(5))));
+    takePlayerEstimation(round, User.createId("id"), UserEstimation.submitted(Card.create(StoryPoint.create(5))));
   }).toThrowError();
 });
 
@@ -78,14 +78,14 @@ test("round can accept user giveup", () => {
   let round: T = roundOf({
     id: createId("id"),
     cards: cards,
-    estimations: [{ user: User.createId("id"), estimation: UserEstimation.estimated(cards[0]) }],
+    estimations: [{ user: User.createId("id"), estimation: UserEstimation.submitted(cards[0]) }],
   });
-  round = takePlayerEstimation(round, User.createId("id2"), UserEstimation.giveUp());
+  round = takePlayerEstimation(round, User.createId("id2"), UserEstimation.giveUpOf());
 
   expect(round.estimations).toEqual(
     Object.fromEntries([
-      [User.createId("id"), UserEstimation.estimated(cards[0])],
-      [User.createId("id2"), UserEstimation.giveUp()],
+      [User.createId("id"), UserEstimation.submitted(cards[0])],
+      [User.createId("id2"), UserEstimation.giveUpOf()],
     ])
   );
 });
@@ -94,11 +94,11 @@ test("give upped user can take other estimation", () => {
   let round: T = roundOf({
     id: createId("id"),
     cards: cards,
-    estimations: [{ user: User.createId("id"), estimation: UserEstimation.giveUp() }],
+    estimations: [{ user: User.createId("id"), estimation: UserEstimation.giveUpOf() }],
   });
-  round = takePlayerEstimation(round, User.createId("id"), UserEstimation.estimated(cards[0]));
+  round = takePlayerEstimation(round, User.createId("id"), UserEstimation.submitted(cards[0]));
 
-  expect(round.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.estimated(cards[0])]]));
+  expect(round.estimations).toEqual(Object.fromEntries([[User.createId("id"), UserEstimation.submitted(cards[0])]]));
 });
 
 describe("show down", () => {
@@ -106,7 +106,7 @@ describe("show down", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.estimated(cards[0]) }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.submitted(cards[0]) }],
     });
 
     const now = new Date();
@@ -137,7 +137,7 @@ describe("calculate average", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.estimated(cards[0]) }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.submitted(cards[0]) }],
     });
 
     const [finished] = showDown(round, new Date());
@@ -152,9 +152,9 @@ describe("calculate average", () => {
       id: createId("id"),
       cards: cards,
       estimations: [
-        { user: User.createId("id1"), estimation: UserEstimation.giveUp() },
-        { user: User.createId("id2"), estimation: UserEstimation.unselected() },
-        { user: User.createId("id3"), estimation: UserEstimation.giveUp() },
+        { user: User.createId("id1"), estimation: UserEstimation.giveUpOf() },
+        { user: User.createId("id2"), estimation: UserEstimation.unsubmitOf() },
+        { user: User.createId("id3"), estimation: UserEstimation.giveUpOf() },
       ],
     });
 
@@ -170,9 +170,9 @@ describe("calculate average", () => {
       id: createId("id"),
       cards: cards,
       estimations: [
-        { user: User.createId("id1"), estimation: UserEstimation.estimated(cards[0]) },
-        { user: User.createId("id2"), estimation: UserEstimation.estimated(cards[1]) },
-        { user: User.createId("id3"), estimation: UserEstimation.estimated(cards[0]) },
+        { user: User.createId("id1"), estimation: UserEstimation.submitted(cards[0]) },
+        { user: User.createId("id2"), estimation: UserEstimation.submitted(cards[1]) },
+        { user: User.createId("id3"), estimation: UserEstimation.submitted(cards[0]) },
       ],
     });
 
@@ -189,7 +189,7 @@ describe("guards", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unsubmitOf() }],
     });
 
     const [finished] = showDown(round, new Date());
@@ -202,7 +202,7 @@ describe("guards", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unsubmitOf() }],
     });
 
     const [finished] = showDown(round, new Date());
@@ -217,7 +217,7 @@ describe("theme", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unsubmitOf() }],
     });
 
     const newRound = changeTheme(round, "new theme");
@@ -231,7 +231,7 @@ describe("theme", () => {
     const round = finishedRoundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unsubmitOf() }],
       finishedAt: new Date().toISOString(),
       theme: "finished",
     });
@@ -246,7 +246,7 @@ describe("theme", () => {
     const round = roundOf({
       id: createId("id"),
       cards: cards,
-      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unselected() }],
+      estimations: [{ user: User.createId("id"), estimation: UserEstimation.unsubmitOf() }],
       theme: "theme",
     });
 
