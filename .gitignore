@@ -7,6 +7,7 @@ dist/
 generated/
 *.tsbuildinfo
 .turbo/
+storybook-static/
 
 database-debug.log
 ui-debug.log
