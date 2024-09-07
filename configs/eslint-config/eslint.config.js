@@ -3,7 +3,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default [
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
     ignores: ["**/*.js", "setupTests.ts"],
@@ -18,6 +18,8 @@ export default [
         ecmaFeatures: {
           jsx: true, // Allows for the parsing of JSX
         },
+        tsconfigRootDir: import.meta.dirname,
+        projectService: true,
       },
     },
 
