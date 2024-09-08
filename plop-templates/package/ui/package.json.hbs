@@ -20,7 +20,7 @@
   "scripts": {
     "check-type": "tsc --noEmit",
     "build:tsc": "tsc",
-    "dev:build:tsc": "tsc --watch --noEmit",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
     "build:css": "tailwindcss -i src/style.css -o dist/style.css",
     "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
     "test": "vitest run",

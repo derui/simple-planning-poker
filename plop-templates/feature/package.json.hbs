@@ -18,14 +18,18 @@
   },
   "type": "module",
   "scripts": {
+    "build:tsc": "tsc",
+    "check-type": "tsc --noEmit",
     "build:css": "tailwindcss -i src/style.css -o dist/style.css",
     "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "dev": "concurrently \"npm:dev:*\""
+    "dev": "concurrently \"npm:dev:*\"",
+    "build": "concurrently \"npm:build:*\""
   },
   "keywords": [],
   "author": "",
@@ -45,7 +49,8 @@
     "jsdom": "catalog:",
     "tailwindcss": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "clsx": "catalog:",
