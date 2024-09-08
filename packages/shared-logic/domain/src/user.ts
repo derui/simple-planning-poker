@@ -1,7 +1,6 @@
 import { produce } from "immer";
 import * as Base from "./base.js";
 import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
-import { Branded } from "./type.js";
 
 const _tag: unique symbol = Symbol();
 type tag = typeof _tag;
@@ -16,12 +15,10 @@ export const createId = (value?: string): Id => {
   }
 };
 
-interface Internal {
+export type T = {
   readonly id: Id;
   readonly name: string;
-}
-
-export type T = Branded<Internal, tag>;
+};
 
 export interface UserNameChanged extends DomainEvent {
   readonly kind: DOMAIN_EVENTS.UserNameChanged;
@@ -37,11 +34,10 @@ export const create = ({ id, name }: { id: Id; name: string }): T => {
     throw new Error("can not create user with empty name");
   }
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  return {
+  return Object.freeze({
     id,
     name,
-  } as T;
+  });
 };
 
 /**

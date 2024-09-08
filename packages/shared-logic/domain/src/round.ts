@@ -152,7 +152,7 @@ export const showDown = function showDown(round: Round, now: Date): [FinishedRou
 
   const estimations = Object.entries(round.estimations).map(([user, estimation]) => {
     return {
-      user: user as User.Id,
+      user: User.createId(user),
       estimation,
     };
   });
@@ -181,6 +181,7 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
     .map((v) => v.point);
 
   if (points.length == 0) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return 0 as CalculatedStoryPoint;
   }
 
@@ -190,6 +191,7 @@ export const calculateAverage = function calculateAverage(round: FinishedRound) 
     }, 0) / points.length;
   average = Math.ceil(average * 100) / 100;
 
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return average as CalculatedStoryPoint;
 };
 

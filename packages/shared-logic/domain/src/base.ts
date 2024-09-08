@@ -17,3 +17,10 @@ export const toString = <T extends symbol>(v: Id<T>): string => v as string;
  */
 export const create = <T extends symbol>(constant: string | undefined = undefined): Id<T> =>
   (constant || v4()) as Id<T>;
+
+/**
+ * Compare two identifiers as generic.
+ */
+export const isEqual = function isEqual<T extends symbol>(o1: Id<T>, o2: Id<T>) {
+  return o1 == o2;
+};

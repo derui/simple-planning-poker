@@ -1,8 +1,4 @@
 import * as StoryPoint from "./story-point.js";
-import { Branded } from "./type.js";
-
-const _tag = Symbol();
-type tag = typeof _tag;
 
 const unsubmit: unique symbol = Symbol();
 type unsubmit = typeof unsubmit;
@@ -23,33 +19,33 @@ type Giveup = {
 
 interface Submitted {
   readonly _tag: submitted;
-  point: StoryPoint.T;
+  readonly point: StoryPoint.T;
 }
 
-export type T = Branded<Unsubmit | Giveup | Submitted, tag>;
+export type T = Unsubmit | Giveup | Submitted;
 
 /**
  * Get `Unsubmit` status of estimation
  */
 export const unsubmitOf = function unsubmitOf(): T {
-  return { _tag: unsubmit } as T;
+  return Object.freeze({ _tag: unsubmit });
 };
 
 /**
  * Get `Giveup` status of estimation
  */
 export const giveUpOf = function giveUpOf(): T {
-  return { _tag: giveup } as T;
+  return Object.freeze({ _tag: giveup });
 };
 
 /**
  * Get `Submitted` status of estimation
  */
 export const submittedOf = function submittedOf(point: StoryPoint.T): T {
-  return {
+  return Object.freeze({
     _tag: submitted,
     point: point,
-  } as T;
+  });
 };
 
 /**
@@ -81,20 +77,20 @@ const kindOf = function kindOf(estimation: T): Kind {
 /**
  * Type guard for `Submitted`
  */
-export const isSubmitted = function isSubmitted(estimation: T): estimation is Branded<Submitted, typeof _tag> {
+export const isSubmitted = function isSubmitted(estimation: T): estimation is Submitted {
   return kindOf(estimation) === "submitted";
 };
 
 /**
  * Type guard for `Giveup`
  */
-export const isGiveUp = function isGiveUp(estimation: T): estimation is Branded<Giveup, typeof _tag> {
+export const isGiveUp = function isGiveUp(estimation: T): estimation is Giveup {
   return kindOf(estimation) === "giveup";
 };
 
 /**
  * Type guard for `Unsubmit`
  */
-export const isUnsubmit = function isUnsubmit(estimation: T): estimation is Branded<Unsubmit, typeof _tag> {
+export const isUnsubmit = function isUnsubmit(estimation: T): estimation is Unsubmit {
   return kindOf(estimation) === "unsubmit";
 };

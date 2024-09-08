@@ -1,5 +1,12 @@
 // type for nominal typing
-export type Branded<T, U extends symbol> = T & { [key in U]: never };
+const _brand: unique symbol = Symbol.for("spp/brand");
+
+export type Branded<T, U extends symbol> = T & { [_brand]: U };
+
+/**
+ * Unbrand of type `T` with brand.
+ */
+export type Unbranded<T, U extends symbol> = T extends Branded<T, U> ? T : never;
 
 // alias of string of DateTime. This type is base type of operations.
 // format is `YYYY-MM-DDTHH:mm:ss.MMMMMMMZ`

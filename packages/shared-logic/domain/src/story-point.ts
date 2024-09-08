@@ -1,6 +1,6 @@
-import { Branded } from "./type.js";
+import { Branded, Unbranded } from "./type.js";
 
-const _tag = Symbol("StoryPoint");
+const _tag: unique symbol = Symbol("StoryPoint");
 export type T = Branded<number, typeof _tag>;
 
 export const create = (v: number): T => {
@@ -8,10 +8,11 @@ export const create = (v: number): T => {
     throw new Error("Can not create story point");
   }
 
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return v as T;
 };
 
-export const value = (v: T) => v as number;
+export const value = (v: T): Unbranded<T, typeof _tag> => v;
 
 export const isValid = (v: number) => {
   return v >= 0 && !isNaN(v);

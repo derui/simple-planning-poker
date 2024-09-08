@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc",
     "check-type": "tsc --noEmit",
-    "dev:build": "tsc --watch --noEmit",
+    "dev:build": "tsc --watch --noEmit --preserveWatchOutput",
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
