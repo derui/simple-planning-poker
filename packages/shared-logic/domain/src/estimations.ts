@@ -39,10 +39,29 @@ export const create = function create(users: User.Id[]): T {
 };
 
 /**
+ * Get resetted estimations with same user.
+ */
+export const reset = function reset(obj: T): T {
+  const newMap = new Map();
+  for (const user of obj.userEstimations.keys()) {
+    newMap.set(user, UserEstimation.unsubmitOf());
+  }
+
+  return { userEstimations: newMap };
+};
+
+/**
  * Return argument is valid or not
  */
 export const isValid = function isValid(users: User.Id[]) {
   return unique(users, Base.isEqual).length > 0;
+};
+
+/**
+ * Return the estimations have least one estimation from user.
+ */
+export const isLeastOneEstimation = function isLeastOneEstimation(obj: T) {
+  return Array.from(obj.userEstimations.values()).some((v) => !UserEstimation.isUnsubmit(v));
 };
 
 /**

@@ -4,7 +4,7 @@ import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
 import * as User from "./user.js";
 import * as Invitation from "./invitation.js";
 import * as ApplicablePoints from "./applicable-points.js";
-import * as Round from "./round.js";
+import * as Voting from "./voting.js";
 import * as GamePlayer from "./game-player.js";
 
 const _tag = Symbol("game");
@@ -24,21 +24,7 @@ export type T = {
   readonly owner: User.Id;
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: ApplicablePoints.T;
-  readonly round: Round.Id;
-};
-
-/**
- * event when raised at new round started
- */
-export interface NewRoundStarted extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.NewRoundStarted;
-  readonly gameId: Id;
-  readonly roundId: Round.Id;
-  readonly previousRoundId: Round.Id;
-}
-
-export const isNewRoundStarted = function isNewRoundStarted(event: DomainEvent): event is NewRoundStarted {
-  return event.kind === DOMAIN_EVENTS.NewRoundStarted;
+  readonly voting: Voting.Id;
 };
 
 export interface GameCreated extends DomainEvent {
@@ -47,8 +33,8 @@ export interface GameCreated extends DomainEvent {
   readonly owner: User.Id;
   readonly name: string;
   readonly createdBy: User.Id;
-  readonly selectableCards: ApplicablePoints.T;
-  readonly round: Round.Id;
+  readonly applicablePoints: ApplicablePoints.T;
+  readonly voting: Voting.Id;
 }
 
 export const isGameCreated = function isGameCreated(event: DomainEvent): event is GameCreated {
@@ -80,7 +66,7 @@ export const create = ({
   name,
   cards,
   owner,
-  round,
+  voting: voting,
   joinedPlayers,
 }: {
   id: Id;
@@ -88,7 +74,7 @@ export const create = ({
   owner: User.Id;
   cards: ApplicablePoints.T;
   joinedPlayers?: GamePlayer.T[];
-  round: Round.Id;
+  voting: Voting.Id;
 }): [T, DomainEvent] => {
   const distinctedPlayers = new Map<User.Id, GamePlayer.T>();
   if (!joinedPlayers) {
@@ -101,8 +87,8 @@ export const create = ({
     owner,
     name: name,
     createdBy: owner,
-    selectableCards: cards,
-    round,
+    applicablePoints: cards,
+    voting: voting,
   };
 
   const game = {
@@ -111,7 +97,7 @@ export const create = ({
     cards,
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
-    round,
+    voting: voting,
   } satisfies T;
 
   return [game, event];
@@ -139,14 +125,8 @@ export const changeName = function changeName(game: T, name: string) {
 };
 
 /**
- * apply new round
+ * Declare player mode from notification
  */
-export const applyNewRound = function applyNewRound(game: T, round: Round.Id): T {
-  return produce(game, (draft) => {
-    draft.round = round;
-  });
-};
-
 export const declarePlayerAs = function declarePlayerAs(game: T, user: User.Id, mode: GamePlayer.UserMode): T {
   return produce(game, (draft) => {
     const player = draft.joinedPlayers.findIndex((v) => v.user === user);
@@ -158,6 +138,9 @@ export const declarePlayerAs = function declarePlayerAs(game: T, user: User.Id, 
   });
 };
 
+/**
+ * Join a new user to the game with invitation
+ */
 export const joinUserAsPlayer = function joinUserAsPlayer(
   game: T,
   user: User.Id,
@@ -182,25 +165,6 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   };
 
   return [newObj, event];
-};
-
-/**
- * Start new round in this game.
- */
-export const newRound = function newRound(game: T): [Round.T, DomainEvent] {
-  const newRound = Round.roundOf({
-    id: Round.createId(),
-    points: game.cards,
-  });
-
-  const event: NewRoundStarted = {
-    kind: DOMAIN_EVENTS.NewRoundStarted,
-    gameId: game.id,
-    roundId: newRound.id,
-    previousRoundId: game.round,
-  };
-
-  return [newRound, event];
 };
 
 /**

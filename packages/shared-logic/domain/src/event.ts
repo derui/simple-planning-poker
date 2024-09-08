@@ -10,7 +10,7 @@ export interface DomainEvent {
  */
 export enum DOMAIN_EVENTS {
   GameCreated,
-  NewRoundStarted,
+  VotingStarted,
   UserNameChanged,
   GamePlayerModeChanged,
   UserJoined,
@@ -18,5 +18,5 @@ export enum DOMAIN_EVENTS {
   GamePlayerCardSelected,
   UserLeftFromGame,
   GamePlayerGiveUp,
-  RoundFinished,
+  VotingRevealed,
 }

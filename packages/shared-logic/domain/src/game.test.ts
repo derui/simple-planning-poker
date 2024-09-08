@@ -1,26 +1,19 @@
 import { test, expect, describe } from "vitest";
 import {
   acceptLeaveFrom,
-  applyNewRound,
   changeName,
   create,
   createId,
   declarePlayerAs,
-  GameCreated,
   isGameCreated,
-  isNewRoundStarted,
   isUserLeftFromGame,
   joinUserAsPlayer,
   makeInvitation,
-  newRound,
-  NewRoundStarted,
-  UserLeftFromGame,
 } from "./game.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
-import * as Round from "./round.js";
-import * as UserEstimation from "./user-estimation.js";
+import * as Voting from "./voting.js";
 import * as GamePlayer from "./game-player.js";
 import * as Invitation from "./invitation.js";
 import { DOMAIN_EVENTS } from "./event.js";
@@ -33,7 +26,7 @@ test("get aggregate and event when game created ", () => {
     name: "name",
     owner: User.createId("user"),
     cards,
-    round: Round.createId(),
+    voting: Voting.createId(),
   });
 
   expect(game.id).toBe(createId("id"));
@@ -52,36 +45,13 @@ test("get aggregate and event when game created ", () => {
   expect(game.owner).toEqual(User.createId("user"));
 });
 
-test("apply new round", () => {
-  const [finishedRound] = Round.showDown(
-    Round.roundOf({
-      id: Round.createId(),
-      points: cards,
-      estimations: [{ user: User.createId("user"), estimation: UserEstimation.giveUpOf() }],
-    }),
-    new Date()
-  );
-
-  const [game] = create({
-    id: createId("id"),
-    name: "name",
-    round: finishedRound.id,
-    owner: User.createId("user"),
-    cards,
-  });
-
-  const updated = applyNewRound(game, Round.createId());
-
-  expect(updated).not.toBe(finishedRound.id);
-});
-
 describe("game name", () => {
   const [game] = create({
     id: createId("id"),
     name: "name",
     owner: User.createId("user"),
     cards,
-    round: Round.createId(),
+    voting: Voting.createId(),
   });
 
   test("can change name of game", () => {
@@ -103,7 +73,7 @@ describe("declare player mode to", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     const changed = declarePlayerAs(game, User.createId("user"), GamePlayer.UserMode.Inspector);
@@ -122,7 +92,7 @@ describe("declare player mode to", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     const ret = declarePlayerAs(game, User.createId("not found"), GamePlayer.UserMode.Inspector);
@@ -138,7 +108,7 @@ describe("join user", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     const [changed, event] = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game));
@@ -168,7 +138,7 @@ describe("join user", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     expect(() => {
@@ -182,7 +152,7 @@ describe("join user", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
@@ -199,7 +169,7 @@ describe("leave", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     const [ret] = acceptLeaveFrom(game, User.createId("not found"));
@@ -213,7 +183,7 @@ describe("leave", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
 
@@ -237,36 +207,12 @@ describe("leave", () => {
       name: "name",
       owner: User.createId("user"),
       cards,
-      round: Round.createId(),
+      voting: Voting.createId(),
     });
 
     const [ret, event] = acceptLeaveFrom(game, User.createId("user"));
 
     expect(ret).toBe(game);
     expect(event).toBeUndefined();
-  });
-});
-
-describe("new round", () => {
-  test("get new round", () => {
-    const [game] = create({
-      id: createId("id"),
-      name: "name",
-      owner: User.createId("user"),
-      cards,
-      round: Round.createId(),
-    });
-
-    const [changed, event] = newRound(game);
-
-    expect(changed.points).toEqual(game.cards);
-
-    if (isNewRoundStarted(event)) {
-      expect(event.gameId).toBe(game.id);
-      expect(event.roundId).toBe(changed.id);
-      expect(event.previousRoundId).toBe(game.round);
-    } else {
-      expect.fail("event should be NewRoundStarted");
-    }
   });
 });

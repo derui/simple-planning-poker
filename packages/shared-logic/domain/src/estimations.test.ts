@@ -2,7 +2,7 @@ import { test, expect } from "vitest";
 import * as UserEstimation from "./user-estimation.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
-import { averageEstimation, calculateAverate, create, update } from "./estimations.js";
+import { averageEstimation, calculateAverate, create, isLeastOneEstimation, update, reset } from "./estimations.js";
 import { enableMapSet } from "immer";
 
 enableMapSet();
@@ -71,4 +71,42 @@ test("get average estimation", () => {
 
   // Assert
   expect(averageEstimation(value)).toBe(4);
+});
+
+test("allow checking any estimations are not given", () => {
+  // Arrange
+  const obj = create([User.createId("id1")]);
+
+  // Act
+  const actual = isLeastOneEstimation(obj);
+
+  // Assert
+  expect(actual).toBeFalsy();
+});
+
+test("allow checking estimations are given", () => {
+  // Arrange
+  let obj = create([User.createId("id1"), User.createId("id2")]);
+  obj = update(obj, User.createId("id1"), UserEstimation.submittedOf(StoryPoint.create(3)));
+
+  // Act
+  const actual = isLeastOneEstimation(obj);
+
+  // Assert
+  expect(actual).toBeTruthy();
+});
+
+test("reset estimation", () => {
+  // Arrange
+  let obj = create([User.createId("id1"), User.createId("id2")]);
+  obj = update(obj, User.createId("id1"), UserEstimation.submittedOf(StoryPoint.create(3)));
+  const resetted = reset(obj);
+
+  // Act
+  const actual = isLeastOneEstimation(obj);
+
+  // Assert
+  expect(actual).toBeFalsy();
+  expect(Array.from(resetted.userEstimations.values())).toContain(UserEstimation.unsubmitOf());
+  expect(Array.from(resetted.userEstimations.keys())).toEqual(Array.from(obj.userEstimations.keys()));
 });
