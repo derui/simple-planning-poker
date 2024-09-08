@@ -103,10 +103,10 @@ test("reset estimation", () => {
   const resetted = reset(obj);
 
   // Act
-  const actual = isLeastOneEstimation(obj);
+  const actual = isLeastOneEstimation(resetted);
 
   // Assert
   expect(actual).toBeFalsy();
-  expect(Array.from(resetted.userEstimations.values())).toContain(UserEstimation.unsubmitOf());
+  expect(Array.from(resetted.userEstimations.values())).containSubset([UserEstimation.unsubmitOf()]);
   expect(Array.from(resetted.userEstimations.keys())).toEqual(Array.from(obj.userEstimations.keys()));
 });
