@@ -1,12 +1,18 @@
 import { T, Id } from "./user.js";
 
 export interface UserRepository {
-  // save user
+  /**
+   * Save user state
+   */
   save(user: T): Promise<void>;
 
-  // find user by id
+  /**
+   * Find user by ID
+   */
   findBy(id: Id): Promise<T | undefined>;
 
-  // find user by id
+  /**
+   * List users in list of identifiers
+   */
   listIn(ids: Id[]): Promise<T[]>;
 }
