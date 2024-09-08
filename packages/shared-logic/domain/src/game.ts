@@ -6,7 +6,6 @@ import * as Invitation from "./invitation.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as Round from "./round.js";
 import * as GamePlayer from "./game-player.js";
-import { Branded } from "./type.js";
 
 const _tag = Symbol("game");
 export type Id = Base.Id<typeof _tag>;
@@ -18,17 +17,15 @@ export const createId = function createGameId(v?: string): Id {
   return Base.create(v);
 };
 
-interface Internal {
+// Game is value object
+export type T = {
   readonly id: Id;
   readonly name: string;
   readonly owner: User.Id;
   readonly joinedPlayers: GamePlayer.T[];
   readonly cards: ApplicablePoints.T;
   readonly round: Round.Id;
-}
-
-// Game is value object
-export type T = Branded<Internal, typeof _tag>;
+};
 
 /**
  * event when raised at new round started
@@ -93,12 +90,9 @@ export const create = ({
   joinedPlayers?: GamePlayer.T[];
   round: Round.Id;
 }): [T, DomainEvent] => {
-  const distinctedPlayers = new Map<User.Id, unknown>();
+  const distinctedPlayers = new Map<User.Id, GamePlayer.T>();
   if (!joinedPlayers) {
-    distinctedPlayers.set(
-      owner,
-      GamePlayer.create({ type: GamePlayer.PlayerType.Owner, user: owner, mode: GamePlayer.UserMode.Normal })
-    );
+    distinctedPlayers.set(owner, GamePlayer.createOwner({ user: owner, mode: GamePlayer.UserMode.Normal }));
   }
 
   const event: GameCreated = {
@@ -118,7 +112,7 @@ export const create = ({
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
     round,
-  } as T;
+  } satisfies T;
 
   return [game, event];
 };
@@ -178,9 +172,7 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
       return;
     }
 
-    draft.joinedPlayers.push(
-      GamePlayer.create({ type: GamePlayer.PlayerType.Player, user, mode: GamePlayer.UserMode.Normal })
-    );
+    draft.joinedPlayers.push(GamePlayer.createPlayer({ user, mode: GamePlayer.UserMode.Normal }));
   });
 
   const event: UserJoined = {

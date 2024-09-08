@@ -1,6 +1,5 @@
 import { produce } from "immer";
 import * as User from "./user.js";
-import { Branded } from "./type.js";
 
 export enum UserMode {
   Normal,
@@ -12,37 +11,35 @@ export enum PlayerType {
   Owner,
 }
 
-const _tag: symbol = Symbol("gamePlayer");
-interface Internal {
-  readonly type: PlayerType;
-  readonly user: User.Id;
-  readonly mode: UserMode;
-}
-
 /**
  * The type of GamePlayer domain. This type can not be generate from other modules
  */
-export type T = Branded<Internal, typeof _tag>;
+export type T = {
+  readonly type: PlayerType;
+  readonly user: User.Id;
+  readonly mode: UserMode;
+};
 
 /**
    create user from id and name
  */
-export const create = ({
-  type,
+export const createPlayer = function createPlayer({
   user,
   mode = UserMode.Normal,
 }: {
-  type: PlayerType;
   user: User.Id;
   mode?: UserMode;
-}): T => {
-  return {
-    type,
+}): T {
+  return Object.freeze({
+    type: PlayerType.Player,
     user,
     mode,
-  } as T;
+  });
 };
 
+/**
+ * create owner player
+ */
 export const createOwner = function createOwner({
   user,
   mode = UserMode.Normal,
@@ -50,7 +47,7 @@ export const createOwner = function createOwner({
   user: User.Id;
   mode?: UserMode;
 }): T {
-  return create({ type: PlayerType.Owner, user, mode });
+  return Object.freeze({ type: PlayerType.Owner, user, mode });
 };
 
 /**

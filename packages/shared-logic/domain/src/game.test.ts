@@ -7,6 +7,9 @@ import {
   createId,
   declarePlayerAs,
   GameCreated,
+  isGameCreated,
+  isNewRoundStarted,
+  isUserLeftFromGame,
   joinUserAsPlayer,
   makeInvitation,
   newRound,
@@ -34,9 +37,13 @@ test("get aggregate and event when game created ", () => {
   });
 
   expect(game.id).toBe(createId("id"));
-  expect(game.id).toBe((event as GameCreated).gameId);
-  expect((event as GameCreated).createdBy).toBe(User.createId("user"));
-  expect((event as GameCreated).name).toBe("name");
+  if (isGameCreated(event)) {
+    expect(game.id).toBe(event.gameId);
+    expect(event.createdBy).toBe(User.createId("user"));
+    expect(event.name).toBe("name");
+  } else {
+    expect.fail("event should be GameCreated");
+  }
   expect(game.name).toBe("name");
   expect(game.joinedPlayers).toHaveLength(1);
   expect(game.joinedPlayers).toEqual([
@@ -102,8 +109,7 @@ describe("declare player mode to", () => {
     const changed = declarePlayerAs(game, User.createId("user"), GamePlayer.UserMode.Inspector);
 
     expect(changed.joinedPlayers[0]).toEqual(
-      GamePlayer.create({
-        type: GamePlayer.PlayerType.Owner,
+      GamePlayer.createOwner({
         user: User.createId("user"),
         mode: GamePlayer.UserMode.Inspector,
       })
@@ -139,13 +145,11 @@ describe("join user", () => {
 
     expect(changed.joinedPlayers).toEqual(
       expect.arrayContaining([
-        GamePlayer.create({
-          type: GamePlayer.PlayerType.Owner,
+        GamePlayer.createOwner({
           user: User.createId("user"),
           mode: GamePlayer.UserMode.Normal,
         }),
-        GamePlayer.create({
-          type: GamePlayer.PlayerType.Player,
+        GamePlayer.createPlayer({
           user: User.createId("new"),
           mode: GamePlayer.UserMode.Normal,
         }),
@@ -168,7 +172,7 @@ describe("join user", () => {
     });
 
     expect(() => {
-      joinUserAsPlayer(game, User.createId("new"), "invitation" as Invitation.T);
+      joinUserAsPlayer(game, User.createId("new"), Invitation.create("invitation"));
     }).toThrowError(/signature is invalid/);
   });
 
@@ -220,7 +224,11 @@ describe("leave", () => {
     expect(ret.joinedPlayers).toHaveLength(1);
     expect(ret.joinedPlayers[0].user).toBe(User.createId("user"));
     expect(event!.kind).toBe(DOMAIN_EVENTS.UserLeftFromGame);
-    expect((event as UserLeftFromGame).gameId).toBe(game.id);
+    if (isUserLeftFromGame(event!)) {
+      expect(event.gameId).toBe(game.id);
+    } else {
+      expect.fail("event should be UserLeftFromGame");
+    }
   });
 
   test("can not leave owner from the game owner having", () => {
@@ -252,8 +260,13 @@ describe("new round", () => {
     const [changed, event] = newRound(game);
 
     expect(changed.points).toEqual(game.cards);
-    expect((event as NewRoundStarted).gameId).toBe(game.id);
-    expect((event as NewRoundStarted).roundId).toBe(changed.id);
-    expect((event as NewRoundStarted).previousRoundId).toBe(game.round);
+
+    if (isNewRoundStarted(event)) {
+      expect(event.gameId).toBe(game.id);
+      expect(event.roundId).toBe(changed.id);
+      expect(event.previousRoundId).toBe(game.round);
+    } else {
+      expect.fail("event should be NewRoundStarted");
+    }
   });
 });
