@@ -16,7 +16,7 @@ export type AverageEstimation = Branded<number, typeof _tag>;
 /**
  * Type of all estimations
  */
-type T = {
+export type T = {
   readonly userEstimations: ReadonlyMap<User.Id, UserEstimation.T>;
 };
 
