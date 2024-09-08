@@ -4,7 +4,7 @@ import { Loader } from "./loader.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   render(<Loader size="s" shown={false} />);
 
   const ret = screen.queryByRole("alert");
@@ -13,7 +13,7 @@ test("should be able to render", async () => {
   expect(ret?.dataset).toHaveProperty("shown", "false");
 });
 
-test("display loader", async () => {
+test("display loader", () => {
   render(<Loader size="s" shown={true} />);
 
   const ret = screen.queryByRole("alert");

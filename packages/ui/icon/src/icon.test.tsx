@@ -5,13 +5,13 @@ import { Icon } from "./icon.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<Icon type={Icons.allowBackUp} />);
 
   expect(ret.container).toMatchSnapshot();
 });
 
-test("render other size small", async () => {
+test("render other size small", () => {
   const ret = render(<Icon size="s" type={Icons.check} />);
 
   expect(ret.container).toMatchSnapshot();

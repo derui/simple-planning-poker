@@ -5,7 +5,7 @@ import { Skeleton } from "./skeleton.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const { container } = render(<Skeleton />);
 
   expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();

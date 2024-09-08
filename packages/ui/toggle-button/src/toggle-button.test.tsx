@@ -9,7 +9,7 @@ test("apply initial checked", () => {
   render(<ToggleButton initialChecked={true} onToggle={() => {}} />);
 
   expect(screen.queryByRole("checkbox")).not.toBeNull();
-  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
+  expect(screen.getByRole("checkbox").checked).toBe(true);
 });
 
 test("change checking when rail clicked", async () => {
@@ -25,7 +25,7 @@ test("change checking when rail clicked", async () => {
 
   await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
+  expect(screen.getByRole("checkbox").checked).toBe(true);
 });
 
 test("toggle checked state", async () => {
@@ -33,9 +33,9 @@ test("toggle checked state", async () => {
 
   await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
+  expect(screen.getByRole("checkbox").checked).toBe(true);
 
   await userEvent.click(screen.getByRole("switch"));
 
-  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(false);
+  expect(screen.getByRole("checkbox").checked).toBe(false);
 });

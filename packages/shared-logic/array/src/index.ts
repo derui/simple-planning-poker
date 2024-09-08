@@ -32,7 +32,7 @@ export const between = function between(start: number, end: number): number[] {
     return [];
   }
 
-  const array = new Array(end - start);
+  const array = new Array<number>(end - start);
 
   for (let i = 0; i < end - start; i++) {
     array[i] = start + i;

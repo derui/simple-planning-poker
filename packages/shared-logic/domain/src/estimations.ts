@@ -93,6 +93,7 @@ export const calculateAverate = function calculateAverate(obj: T): AverageEstima
       return accum + StoryPoint.value(point);
     }, 0) / estimations.length;
 
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return average as AverageEstimation;
 };
 

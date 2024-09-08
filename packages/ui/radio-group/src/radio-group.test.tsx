@@ -5,13 +5,13 @@ import { RadioGroup } from "./radio-group.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   render(<RadioGroup />);
 
   expect(screen.queryByRole("radiogroup")).not.toBeNull();
 });
 
-test("render children", async () => {
+test("render children", () => {
   render(
     <RadioGroup>
       <span>foo</span>
