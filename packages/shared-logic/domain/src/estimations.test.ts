@@ -17,6 +17,17 @@ test("should be able to create estimations", () => {
   expect(actual.userEstimations.size).toBe(1);
 });
 
+test("allow containing same id", () => {
+  // Arrange
+
+  // Act
+  const actual = create([User.createId("id1"), User.createId("id1")]);
+
+  // Assert
+  expect(actual.userEstimations.size).toBe(1);
+  expect(actual.userEstimations.get(User.createId("id1"))).toEqual(UserEstimation.unsubmitOf());
+});
+
 test("should throw error if users is empty", () => {
   // Arrange
 
