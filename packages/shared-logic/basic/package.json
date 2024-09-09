@@ -1,7 +1,8 @@
 {
-  "name": "@spp/shared-domain",
+  "name": "@spp/shared-basic",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "files": [
     "./dist/"
   ],
@@ -9,11 +10,10 @@
     ".": {
       "import": {
         "default": "./dist/index.js",
-        "types": "./src/index.ts"
+        "types": "./dist/index.d.ts"
       }
     }
   },
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "check-type": "tsc --noEmit",
@@ -29,18 +29,13 @@
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@types/crypto-js": "^4.2.2",
-    "@types/uuid": "^9.0.8",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-array": "workspace:^",
-    "crypto-js": "^4.2.0",
-    "immer": "^10.0.3",
-    "uuid": "^9.0.1"
+    
   }
 }
