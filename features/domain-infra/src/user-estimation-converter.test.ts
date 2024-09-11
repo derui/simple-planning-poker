@@ -1,12 +1,10 @@
 import { test, expect } from "vitest";
-import { deserialize, serialize } from "./user-estimation-converter";
-import * as Card from "@/domains/card";
-import * as StoryPoint from "@/domains/story-point";
-import * as UserEstimation from "@/domains/user-estimation";
+import { deserialize, serialize } from "./user-estimation-converter.js";
+import { StoryPoint, UserEstimation } from "@spp/shared-domain";
 
 test("serialize and deserialize give up estimation", () => {
   // Arrange
-  const estimation = UserEstimation.giveUp();
+  const estimation = UserEstimation.giveUpOf();
 
   // Act
   const ret = deserialize(serialize(estimation));
@@ -17,7 +15,7 @@ test("serialize and deserialize give up estimation", () => {
 
 test("serialize and deserialize estimationed", () => {
   // Arrange
-  const estimation = UserEstimation.estimated(Card.create(StoryPoint.create(3)));
+  const estimation = UserEstimation.submittedOf(StoryPoint.create(3));
 
   // Act
   const ret = deserialize(serialize(estimation));
@@ -28,7 +26,7 @@ test("serialize and deserialize estimationed", () => {
 
 test("serialize and deserialize unselected", () => {
   // Arrange
-  const estimation = UserEstimation.unselected();
+  const estimation = UserEstimation.unsubmitOf();
 
   // Act
   const ret = deserialize(serialize(estimation));

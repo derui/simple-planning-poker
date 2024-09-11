@@ -3,13 +3,8 @@ import * as User from "./user.js";
 import * as Invitation from "./invitation.js";
 
 /**
- * state of joined game.
+ * Interface for GameRepository
  */
-export enum JoinedGameState {
-  joined,
-  left,
-}
-
 export interface T {
   // save game entity into repository
   save(game: Game.T): Promise<void>;

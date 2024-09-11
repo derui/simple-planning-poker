@@ -1,28 +1,28 @@
-import * as Game from "@/domains/game";
-import * as User from "@/domains/user";
-import * as Round from "@/domains/round";
-import { JoinedGameState } from "@/domains/game-repository";
+import { Game, User, Voting } from "@spp/shared-domain";
 
 export interface GameObserver {
   subscribe(gameId: Game.Id, subscriber: (game: Game.T) => void): void;
 
+  /**
+   * unsubscribe **all* subscriptions
+   */
   unsubscribe(): void;
 }
 
-export interface RoundObserver {
-  subscribe(gameId: Round.Id, subscriber: (round: Round.T) => void): void;
+export interface VotingObserver {
+  subscribe(votingId: Voting.Id, subscriber: (voting: Voting.T) => void): void;
 
+  /**
+   * unsubscribe **all** subscriptions
+   */
   unsubscribe(): void;
 }
 
 export interface UserObserver {
-  subscribe(
-    id: User.Id,
-    subscriber: (user: User.T, joinedGames: { id: Game.Id; state: JoinedGameState }[]) => void
-  ): void;
+  subscribe(id: User.Id, subscriber: (user: User.T, joinedGames: Game.T[]) => void): void;
 
   /**
-   * unsubscribe *all* subscriptions.
+   * unsubscribe **all** subscriptions.
    */
   unsubscribe(): void;
 }

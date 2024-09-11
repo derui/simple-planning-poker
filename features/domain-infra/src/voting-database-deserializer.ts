@@ -1,26 +1,23 @@
 import { DataSnapshot } from "firebase/database";
 import { deserialize as deserializeEstimation, Serialized } from "./user-estimation-converter";
-import * as Round from "@/domains/round";
-import * as StoryPoint from "@/domains/story-point";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as User from "@/domains/user";
-import { filterUndefined } from "@/utils/basic";
+import { Voting, StoryPoint, ApplicablePoints, User } from "@spp/shared-domain";
+import { filterUndefined } from "@spp/shared-basic";
 
 /**
  * deserialize from firebase's snapshot
  */
-export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: DataSnapshot): Round.T | null {
+export const deserializeFrom = function deserializeFrom(id: Voting.Id, snapshot: DataSnapshot): Voting.T | null {
   const val = snapshot.val();
   if (!val) {
     return null;
   }
 
-  const cards = val.cards as number[];
+  const points = val.cards as number[];
   const estimations = val.userEstimations as { [key: User.Id]: Serialized } | undefined;
   const finishedAt = val.finishedAt as string | undefined;
   const theme = val.theme as string | undefined;
 
-  const selectableCards = SelectableCards.create(cards.map(StoryPoint.create));
+  const selectableCards = ApplicablePoints.create(points.map(StoryPoint.create));
   const deserializedEstimations = estimations
     ? Object.entries(estimations)
         .map(([k, estimation]) => {
@@ -36,18 +33,18 @@ export const deserializeFrom = function deserializeFrom(id: Round.Id, snapshot: 
     : [];
 
   if (finishedAt) {
-    return Round.finishedRoundOf({
+    return Voting.revealedOf({
       id,
       finishedAt,
-      cards: selectableCards,
+      points: selectableCards,
       estimations: deserializedEstimations,
       theme,
     });
   }
 
-  return Round.roundOf({
+  return Voting.votingOf({
     id,
-    cards: selectableCards,
+    points: selectableCards,
     estimations: deserializedEstimations,
     theme,
   });
