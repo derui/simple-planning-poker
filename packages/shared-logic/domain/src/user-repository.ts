@@ -1,18 +1,18 @@
-import { T, Id } from "./user.js";
+import * as User from "./user.js";
 
-export interface UserRepository {
+export interface T {
   /**
    * Save user state
    */
-  save(user: T): Promise<void>;
+  save(user: User.T): Promise<void>;
 
   /**
    * Find user by ID
    */
-  findBy(id: Id): Promise<T | undefined>;
+  findBy(id: User.Id): Promise<User.T | undefined>;
 
   /**
    * List users in list of identifiers
    */
-  listIn(ids: Id[]): Promise<T[]>;
+  listIn(ids: User.Id[]): Promise<User.T[]>;
 }
