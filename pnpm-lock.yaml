@@ -306,6 +306,9 @@ importers:
       firebase:
         specifier: 'catalog:'
         version: 10.13.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@spp/eslint-config':
         specifier: workspace:^
