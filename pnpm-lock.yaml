@@ -343,15 +343,9 @@ importers:
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
       firebase:
         specifier: 'catalog:'
         version: 10.13.1
-      react:
-        specifier: 'catalog:'
-        version: 18.3.1
     devDependencies:
       '@spp/eslint-config':
         specifier: workspace:^
@@ -362,21 +356,6 @@ importers:
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config
-      '@storybook/addon-controls':
-        specifier: 'catalog:'
-        version: 8.2.0(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
-      '@storybook/cli':
-        specifier: 'catalog:'
-        version: 8.2.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
-      '@storybook/react':
-        specifier: 'catalog:'
-        version: 8.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))(typescript@5.3.3)
-      '@storybook/react-vite':
-        specifier: 'catalog:'
-        version: 8.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.21.2)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))(typescript@5.3.3)(vite@5.0.12(@types/node@22.5.4))
-      '@testing-library/react':
-        specifier: 'catalog:'
-        version: 14.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.2.1(vite@5.0.12(@types/node@22.5.4))
@@ -389,12 +368,6 @@ importers:
       firebase-tools:
         specifier: 'catalog:'
         version: 13.16.0(encoding@0.1.13)
-      jsdom:
-        specifier: 'catalog:'
-        version: 24.0.0
-      tailwindcss:
-        specifier: 'catalog:'
-        version: 3.4.10
       typescript:
         specifier: 'catalog:'
         version: 5.3.3
@@ -403,7 +376,7 @@ importers:
         version: 5.0.12(@types/node@22.5.4)
       vitest:
         specifier: 'catalog:'
-        version: 1.2.2(@types/node@22.5.4)(jsdom@24.0.0)
+        version: 1.2.2(@types/node@22.5.4)(jsdom@25.0.0)
 
   features/login:
     dependencies:
