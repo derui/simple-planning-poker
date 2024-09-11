@@ -1,18 +1,12 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
-import { get, push, ref, set } from "firebase/database";
+import { Database, get, push, ref, set } from "firebase/database";
 import { v4 } from "uuid";
-import { GameRepositoryImpl } from "./game-repository";
-import { joinedGames } from "./user-ref-resolver";
-import * as Game from "@/domains/game";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as StoryPoint from "@/domains/story-point";
-import * as User from "@/domains/user";
-import * as Round from "@/domains/round";
-import { randomGame } from "@/test-lib";
-import { JoinedGameState } from "@/domains/game-repository";
+import { GameRepositoryImpl } from "./game-repository.js";
+import { joinedGames } from "./user-ref-resolver.js";
+import { Game, ApplicablePoints, StoryPoint, User, Voting } from "@spp/shared-domain";
 
-let database: any;
+let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -23,11 +17,13 @@ beforeAll(async () => {
       port: 9000,
     },
   });
-  database = testEnv.authenticatedContext("alice").database();
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
 });
 
 afterAll(async () => {
-  testEnv.cleanup();
+  await testEnv.cleanup();
 });
 
 afterEach(async () => {
@@ -40,8 +36,8 @@ test("should be able to save and find a game", async () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    round: Round.createId(),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId("id"),
   });
   game = Game.joinUserAsPlayer(game, User.createId("other"), Game.makeInvitation(game))[0];
 
@@ -55,7 +51,7 @@ test("should be able to save and find a game", async () => {
   expect(instance?.id).toEqual(game.id);
   expect(instance?.name).toEqual(game.name);
   expect(instance?.cards).toEqual(game.cards);
-  expect(instance?.round).toEqual(game.round);
+  expect(instance?.voting).toEqual(game.voting);
   expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
 });
 
@@ -76,8 +72,8 @@ test("should save invitation in key", async () => {
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
-    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    round: Round.createId(),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId(),
   });
   game = Game.joinUserAsPlayer(game, User.createId("id"), Game.makeInvitation(game))[0];
 
@@ -95,15 +91,27 @@ test("should be able to list games an user joined", async () => {
   // Arrange
   const repository = new GameRepositoryImpl(database);
 
-  const game = randomGame({ id: Game.createId("1"), name: "name" });
-  const otherGame = randomGame({ id: Game.createId("2"), name: "name2" });
+  const [game] = Game.create({
+    id: Game.createId("1"),
+    name: "name",
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId(),
+  });
+  const [otherGame] = Game.create({
+    id: Game.createId("2"),
+    name: "name2",
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId(),
+  });
 
   await repository.save(game);
   await repository.save(otherGame);
 
   const data = [
-    { id: User.createId("1"), relation: "player", gameId: game.id, state: JoinedGameState.joined },
-    { id: User.createId("1"), relation: "player", gameId: otherGame.id, state: JoinedGameState.joined },
+    { id: User.createId("1"), relation: "player", gameId: game.id },
+    { id: User.createId("1"), relation: "player", gameId: otherGame.id },
     { id: User.createId("2"), relation: "player", gameId: game.id },
     { id: User.createId("3"), relation: "player", gameId: otherGame.id },
     { id: User.createId("4"), relation: "player", gameId: otherGame.id },
@@ -119,10 +127,5 @@ test("should be able to list games an user joined", async () => {
   const ret = await repository.listUserJoined(User.createId("1"));
 
   // Assert
-  expect(ret).toEqual(
-    expect.arrayContaining([
-      { id: game.id, name: "name", state: JoinedGameState.joined },
-      { id: otherGame.id, name: "name2", state: JoinedGameState.joined },
-    ])
-  );
+  expect(ret.map((v) => v.id)).toEqual(expect.arrayContaining([game.id, otherGame.id]));
 });

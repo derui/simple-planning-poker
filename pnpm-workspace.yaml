@@ -35,4 +35,4 @@ catalog:
   typescript: "5.3.3"
   firebase-tools: "^13.1.0"
   firebase: "^10.7.2"
-
+  "@firebase/rules-unit-testing": "^3.0.1"

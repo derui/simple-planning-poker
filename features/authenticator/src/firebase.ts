@@ -32,7 +32,7 @@ export class FirebaseAuthenticator implements Authenticator {
 
       const userId = User.createId(uid);
       const user = User.create({ id: userId, name });
-      this.userRepository.save(user);
+      await this.userRepository.save(user);
 
       return userId;
     } catch (e) {

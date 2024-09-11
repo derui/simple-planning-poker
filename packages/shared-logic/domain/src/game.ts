@@ -64,7 +64,7 @@ export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent
 export const create = ({
   id,
   name,
-  cards,
+  points: cards,
   owner,
   voting: voting,
   joinedPlayers,
@@ -72,7 +72,7 @@ export const create = ({
   id: Id;
   name: string;
   owner: User.Id;
-  cards: ApplicablePoints.T;
+  points: ApplicablePoints.T;
   joinedPlayers?: GamePlayer.T[];
   voting: Voting.Id;
 }): [T, DomainEvent] => {

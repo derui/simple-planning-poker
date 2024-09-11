@@ -34,7 +34,7 @@ export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: D
     id,
     name,
     owner: User.createId(owner),
-    cards: selectableCards,
+    points: selectableCards,
     voting,
     joinedPlayers: Object.entries(joinedPlayers ?? {}).map(([k, { mode, type }]) => ({
       type,

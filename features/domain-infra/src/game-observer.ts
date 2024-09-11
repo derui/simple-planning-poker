@@ -1,19 +1,19 @@
 import { Database, ref, onValue, Unsubscribe, DataSnapshot } from "firebase/database";
-import { GameObserver } from "./observer";
-import { deserializeFrom } from "./game-snapshot-deserializer";
-import { T, Id } from "@/domains/game";
+import { GameObserver } from "./observer.js";
+import { deserializeFrom } from "./game-snapshot-deserializer.js";
+import { Game } from "@spp/shared-domain";
 
 export class GameObserverImpl implements GameObserver {
   private _unsubscribe: Unsubscribe | null = null;
-  private subscribingGameId: Id | null = null;
+  private subscribingGameId: Game.Id | null = null;
   constructor(private database: Database) {}
 
-  subscribe(gameId: Id, subscriber: (game: T) => void): void {
+  subscribe(gameId: Game.Id, subscriber: (game: Game.T) => void): void {
     this.unsubscribe();
 
     this.subscribingGameId = gameId;
-    const _subscriber: (data: DataSnapshot) => void = async (data) => {
-      const game = await deserializeFrom(gameId, data);
+    const _subscriber: (data: DataSnapshot) => void = (data) => {
+      const game = deserializeFrom(gameId, data);
 
       if (!game) {
         return;

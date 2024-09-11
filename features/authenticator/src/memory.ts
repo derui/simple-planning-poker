@@ -25,7 +25,7 @@ export class MemoryAuthenticator implements Authenticator {
     try {
       const userId = User.createId(`${email}/${password}`);
       const user = User.create({ id: userId, name });
-      this.userRepository.save(user);
+      await this.userRepository.save(user);
 
       return userId;
     } catch (e) {

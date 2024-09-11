@@ -9,9 +9,7 @@ const parseGameIdOrNull = function parseGameIdOrNull(_value: unknown): _value is
   return true;
 };
 
-const parseUserJoined = function parseUserJoined(
-  _value: unknown
-): _value is Record<string, { gameId: Game.Id; state: GameRepository.JoinedGameState }> {
+const parseUserJoined = function parseUserJoined(_value: unknown): _value is Record<string, Game.T> {
   return _value != null;
 };
 
@@ -75,7 +73,7 @@ export class GameRepositoryImpl implements GameRepository.T {
 
     const games = await Promise.all(
       Object.values(val).map(async (v) => {
-        return this.findBy(v.gameId).then((game) => (game ? ([game, v] as const) : undefined));
+        return this.findBy(v.id).then((game) => (game ? ([game, v] as const) : undefined));
       })
     );
 
