@@ -1,0 +1,38 @@
+{
+  "name": "@spp/shared-basic",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
+  "scripts": {
+    "_start-emulator": "firebase -c $SPP_PNPM_ROOT/firebase.json emulators:start",
+    "start-emulator": "dotenvx run -- pnpm run _start-emulator",
+    "wait-emulator": "node ./dist/index.js",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@dotenvx/dotenvx": "catalog:",
+    "@spp/eslint-config": "workspace:^",
+    "@spp/shared-get-pnpm-root": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@types/node": "^22.5.5",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "firebase-tools": "catalog:"
+  }
+}
