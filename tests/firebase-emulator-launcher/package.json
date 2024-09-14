@@ -1,5 +1,5 @@
 {
-  "name": "@spp/shared-basic",
+  "name": "@spp/tests-firebase-emulator-launcher",
   "version": "1.0.0",
   "description": "",
   "type": "module",

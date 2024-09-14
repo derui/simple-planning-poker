@@ -11,6 +11,17 @@
     "check-type": {
       "dependsOn": ["^check-type"]
     },
+    "launch-emulator": {
+      "persistent": true,
+      "cache": false
+    },
+    "wait-emulator": {
+      "dependsOn": ["@spp/tests-firebase-emulator-launcher#build"],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["build", "wait-emulator"]
+    },
     "dev": {
       "persistent": true,
       "cache": false
