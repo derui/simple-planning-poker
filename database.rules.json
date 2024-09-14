@@ -1,0 +1,37 @@
+{
+  "rules": {
+    "games": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "rounds": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "authenticated": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "invitations": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "defined-users": {
+      ".read": true,
+      ".write": false
+    },
+    "users": {
+      "$user_id": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "roundHistories": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$game": {
+        ".indexOn": "finishedAt"
+      }
+    }
+  }
+}

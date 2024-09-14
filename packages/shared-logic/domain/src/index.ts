@@ -10,3 +10,4 @@ export * as ApplicablePoints from "./applicable-points.js";
 export * as StoryPoint from "./story-point.js";
 export * as UserEstimation from "./user-estimation.js";
 export * as UserRepository from "./user-repository.js";
+export * as Estimations from "./estimations.js";
