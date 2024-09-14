@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import * as Base from "./base.js";
-import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import * as Event from "./event.js";
 
 const _tag: unique symbol = Symbol();
 type tag = typeof _tag;
@@ -20,8 +20,8 @@ export type T = {
   readonly name: string;
 };
 
-export interface UserNameChanged extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.UserNameChanged;
+export interface UserNameChanged extends Event.T {
+  readonly kind: Event.DOMAIN_EVENTS.UserNameChanged;
   readonly userId: Id;
   readonly newName: string;
 }
@@ -54,17 +54,17 @@ export const canChangeName = (name: string) => {
   return name.trim() !== "";
 };
 
-export const isUserNameChanged = function isUserNameChanged(obj: DomainEvent): obj is UserNameChanged {
-  return obj.kind == DOMAIN_EVENTS.UserNameChanged;
+export const isUserNameChanged = function isUserNameChanged(obj: Event.T): obj is UserNameChanged {
+  return obj.kind == Event.DOMAIN_EVENTS.UserNameChanged;
 };
 
-export const changeName = (user: T, name: string): [T, DomainEvent] => {
+export const changeName = (user: T, name: string): [T, Event.T] => {
   if (!canChangeName(name)) {
     throw new Error("can not change name");
   }
 
   const event: UserNameChanged = {
-    kind: DOMAIN_EVENTS.UserNameChanged,
+    kind: Event.DOMAIN_EVENTS.UserNameChanged,
     userId: user.id,
     newName: name.trim(),
   };

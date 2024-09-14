@@ -3,7 +3,7 @@ import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as Estimations from "./estimations.js";
-import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import * as Event from "./event.js";
 import * as Base from "./base.js";
 
 const _tag = Symbol();
@@ -37,22 +37,22 @@ export type T = {
 /**
  * event when raised at new round started
  */
-export interface VotingStarted extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.VotingStarted;
+export interface VotingStarted extends Event.T {
+  readonly kind: Event.DOMAIN_EVENTS.VotingStarted;
   readonly votingId: Id;
 }
 
-export const isVotingStarted = function isVotingStarted(event: DomainEvent): event is VotingStarted {
-  return event.kind === DOMAIN_EVENTS.VotingStarted;
+export const isVotingStarted = function isVotingStarted(event: Event.T): event is VotingStarted {
+  return event.kind === Event.DOMAIN_EVENTS.VotingStarted;
 };
 
-export interface VotingRevealed extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.VotingRevealed;
+export interface VotingRevealed extends Event.T {
+  readonly kind: Event.DOMAIN_EVENTS.VotingRevealed;
   readonly votingId: Id;
 }
 
-export const isVotingRevealed = function isVotingRevealed(event: DomainEvent): event is VotingRevealed {
-  return event.kind === DOMAIN_EVENTS.VotingRevealed;
+export const isVotingRevealed = function isVotingRevealed(event: Event.T): event is VotingRevealed {
+  return event.kind === Event.DOMAIN_EVENTS.VotingRevealed;
 };
 
 // functions
@@ -106,14 +106,14 @@ export const revealedOf = function revealedOf({
   } satisfies T;
 };
 
-export const reset = function reset(obj: T): [T, DomainEvent] {
+export const reset = function reset(obj: T): [T, Event.T] {
   const newObj = produce(obj, (draft) => {
     draft.estimations = castDraft(Estimations.reset(obj.estimations));
     draft.status = VotingStatus.Voting;
   });
 
   const event: VotingStarted = {
-    kind: DOMAIN_EVENTS.VotingStarted,
+    kind: Event.DOMAIN_EVENTS.VotingStarted,
     votingId: obj.id,
   };
 
@@ -148,13 +148,13 @@ export const canReveal = function canReveal(voting: T) {
 /**
  * finish a voting. Throw error if voting has no estimation.
  */
-export const reveal = function reveal(voting: T): [T, DomainEvent] {
+export const reveal = function reveal(voting: T): [T, Event.T] {
   if (!canReveal(voting)) {
     throw new Error("Can not reveal this voting because it has no estimation");
   }
 
   const event: VotingRevealed = {
-    kind: DOMAIN_EVENTS.VotingRevealed,
+    kind: Event.DOMAIN_EVENTS.VotingRevealed,
     votingId: voting.id,
   };
   return [

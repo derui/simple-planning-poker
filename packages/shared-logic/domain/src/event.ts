@@ -1,7 +1,7 @@
 /**
  * base interface for DomainEvent
  */
-export interface DomainEvent {
+export interface T {
   kind: DOMAIN_EVENTS;
 }
 

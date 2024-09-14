@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import * as Base from "./base.js";
-import { DomainEvent, DOMAIN_EVENTS } from "./event.js";
+import * as DomainEvent from "./event.js";
 import * as User from "./user.js";
 import * as Invitation from "./invitation.js";
 import * as ApplicablePoints from "./applicable-points.js";
@@ -27,8 +27,8 @@ export type T = {
   readonly voting: Voting.Id;
 };
 
-export interface GameCreated extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.GameCreated;
+export interface GameCreated extends DomainEvent.T {
+  readonly kind: DomainEvent.DOMAIN_EVENTS.GameCreated;
   readonly gameId: Id;
   readonly owner: User.Id;
   readonly name: string;
@@ -37,28 +37,28 @@ export interface GameCreated extends DomainEvent {
   readonly voting: Voting.Id;
 }
 
-export const isGameCreated = function isGameCreated(event: DomainEvent): event is GameCreated {
-  return event.kind === DOMAIN_EVENTS.GameCreated;
+export const isGameCreated = function isGameCreated(event: DomainEvent.T): event is GameCreated {
+  return event.kind === DomainEvent.DOMAIN_EVENTS.GameCreated;
 };
 
-export interface UserJoined extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.UserJoined;
+export interface UserJoined extends DomainEvent.T {
+  readonly kind: DomainEvent.DOMAIN_EVENTS.UserJoined;
   readonly gameId: Id;
   readonly userId: User.Id;
 }
 
-export const isUserJoined = function isUserJoined(event: DomainEvent): event is UserJoined {
-  return event.kind === DOMAIN_EVENTS.UserJoined;
+export const isUserJoined = function isUserJoined(event: DomainEvent.T): event is UserJoined {
+  return event.kind === DomainEvent.DOMAIN_EVENTS.UserJoined;
 };
 
-export interface UserLeftFromGame extends DomainEvent {
-  readonly kind: DOMAIN_EVENTS.UserLeftFromGame;
+export interface UserLeftFromGame extends DomainEvent.T {
+  readonly kind: DomainEvent.DOMAIN_EVENTS.UserLeftFromGame;
   readonly gameId: Id;
   readonly userId: User.Id;
 }
 
-export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent): event is UserLeftFromGame {
-  return event.kind === DOMAIN_EVENTS.UserLeftFromGame;
+export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent.T): event is UserLeftFromGame {
+  return event.kind === DomainEvent.DOMAIN_EVENTS.UserLeftFromGame;
 };
 
 export const create = ({
@@ -75,14 +75,14 @@ export const create = ({
   points: ApplicablePoints.T;
   joinedPlayers?: GamePlayer.T[];
   voting: Voting.Id;
-}): [T, DomainEvent] => {
+}): [T, DomainEvent.T] => {
   const distinctedPlayers = new Map<User.Id, GamePlayer.T>();
   if (!joinedPlayers) {
     distinctedPlayers.set(owner, GamePlayer.createOwner({ user: owner, mode: GamePlayer.UserMode.Normal }));
   }
 
   const event: GameCreated = {
-    kind: DOMAIN_EVENTS.GameCreated,
+    kind: DomainEvent.DOMAIN_EVENTS.GameCreated,
     gameId: id,
     owner,
     name: name,
@@ -145,7 +145,7 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   game: T,
   user: User.Id,
   invitation: Invitation.T
-): [T, DomainEvent] {
+): [T, DomainEvent.T] {
   if (invitation !== makeInvitation(game)) {
     throw new Error("This signature is invalid");
   }
@@ -159,7 +159,7 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
   });
 
   const event: UserJoined = {
-    kind: DOMAIN_EVENTS.UserJoined,
+    kind: DomainEvent.DOMAIN_EVENTS.UserJoined,
     gameId: game.id,
     userId: user,
   };
@@ -170,7 +170,7 @@ export const joinUserAsPlayer = function joinUserAsPlayer(
 /**
  * An user leave from this game
  */
-export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent | undefined] {
+export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id): [T, DomainEvent.T | undefined] {
   if (user === game.owner) {
     return [game, undefined];
   }
@@ -180,7 +180,7 @@ export const acceptLeaveFrom = function acceptLeaveFrom(game: T, user: User.Id):
   });
 
   const event: UserLeftFromGame = {
-    kind: DOMAIN_EVENTS.UserLeftFromGame,
+    kind: DomainEvent.DOMAIN_EVENTS.UserLeftFromGame,
     gameId: game.id,
     userId: user,
   };

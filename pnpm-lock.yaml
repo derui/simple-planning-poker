@@ -345,7 +345,7 @@ importers:
     dependencies:
       '@spp/shared-basic':
         specifier: workspace:^
-        version: link:../../tests/firebase-emulator-launcher
+        version: link:../../packages/shared-logic/basic
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
