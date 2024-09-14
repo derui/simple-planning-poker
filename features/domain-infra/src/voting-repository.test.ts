@@ -1,16 +1,11 @@
-import { test, expect, beforeAll, afterAll, afterEach, describe } from "vitest";
+import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
-import { RoundRepositoryImpl } from "./round-repository";
-import * as R from "@/domains/round";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as StoryPoint from "@/domains/story-point";
-import * as User from "@/domains/user";
-import * as UserEstimation from "@/domains/user-estimation";
-import { parseDateTime } from "@/domains/type";
-import { randomFinishedRound } from "@/test-lib";
+import { VotingRepositoryImpl } from "./voting-repository.js";
+import { Voting, ApplicablePoints, StoryPoint, User, UserEstimation, Estimations } from "@spp/shared-domain";
+import { Database } from "firebase/database";
 
-let database: any;
+let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -21,11 +16,13 @@ beforeAll(async () => {
       port: 9000,
     },
   });
-  database = testEnv.authenticatedContext("alice").database();
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
 });
 
 afterAll(async () => {
-  testEnv.cleanup();
+  await testEnv.cleanup();
 });
 
 afterEach(async () => {
@@ -34,105 +31,101 @@ afterEach(async () => {
 
 test("should be able to save and find a round", async () => {
   // Arrange
-  const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
-  const round = R.roundOf({
-    id: R.createId(),
-    cards: cards,
-    estimations: [
-      { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
-      { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
-      { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
-      { user: User.createId("user4"), estimation: UserEstimation.unselected() },
-    ],
+  const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
+  const voting = Voting.votingOf({
+    id: Voting.createId(),
+    points,
+    estimations: Estimations.from({
+      [User.createId("user1")]: UserEstimation.submittedOf(points[0]),
+      [User.createId("user2")]: UserEstimation.submittedOf(points[1]),
+      [User.createId("user3")]: UserEstimation.giveUpOf(),
+      [User.createId("user4")]: UserEstimation.unsubmitOf(),
+    }),
   });
 
-  const repository = new RoundRepositoryImpl(database);
+  const repository = new VotingRepositoryImpl(database);
 
   // Act
-  await repository.save(round);
-  const instance = (await repository.findBy(round.id)) as R.Round;
+  await repository.save(voting);
+  const instance = await repository.findBy(voting.id);
 
   // Assert
-  expect(instance?.id).toEqual(round.id);
-  expect(instance?.estimations).toEqual(
-    Object.fromEntries([
-      [User.createId("user1"), UserEstimation.estimated(cards[0])],
-      [User.createId("user2"), UserEstimation.estimated(cards[1])],
-      [User.createId("user3"), UserEstimation.giveUp()],
-      [User.createId("user4"), UserEstimation.unselected()],
-    ])
-  );
-  expect(instance?.cards).toEqual(round.cards);
+  expect(instance?.id).toEqual(voting.id);
+  expect(instance?.estimations.userEstimations.entries()).toEqual([
+    [User.createId("user1"), UserEstimation.submittedOf(points[0])],
+    [User.createId("user2"), UserEstimation.submittedOf(points[1])],
+    [User.createId("user3"), UserEstimation.giveUpOf()],
+    [User.createId("user4"), UserEstimation.unsubmitOf()],
+  ]);
+  expect(instance?.points).toEqual(voting.points);
   expect(instance?.theme).toBeNull();
 });
 
 test("should be able to save and find a finished round", async () => {
   // Arrange
-  const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
-  const round = R.roundOf({
-    id: R.createId(),
-    cards: cards,
-    estimations: [
-      { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
-      { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
-      { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
-      { user: User.createId("user4"), estimation: UserEstimation.unselected() },
-    ],
-    theme: "theme",
+  const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
+  const voting = Voting.votingOf({
+    id: Voting.createId(),
+    points,
+    estimations: Estimations.from({
+      [User.createId("user1")]: UserEstimation.submittedOf(points[0]),
+      [User.createId("user2")]: UserEstimation.submittedOf(points[1]),
+      [User.createId("user3")]: UserEstimation.giveUpOf(),
+      [User.createId("user4")]: UserEstimation.unsubmitOf(),
+    }),
   });
-  const [finished] = R.showDown(round, parseDateTime("2023-02-25T00:01:01.000Z"));
+  const [finished] = Voting.reveal(voting);
 
-  const repository = new RoundRepositoryImpl(database);
+  const repository = new VotingRepositoryImpl(database);
 
   // Act
-  await repository.save(round);
+  await repository.save(voting);
   await repository.save(finished);
-  const instance = (await repository.findBy(round.id)) as R.FinishedRound;
+  const instance = await repository.findBy(voting.id);
 
   // Assert
-  expect(R.isFinishedRound(instance)).toBe(true);
-  expect(instance?.id).toEqual(round.id);
-  expect(instance?.estimations).toEqual(
-    Object.fromEntries([
-      [User.createId("user1"), UserEstimation.estimated(cards[0])],
-      [User.createId("user2"), UserEstimation.estimated(cards[1])],
-      [User.createId("user3"), UserEstimation.giveUp()],
-      [User.createId("user4"), UserEstimation.unselected()],
+  expect(instance?.status).toBe(Voting.VotingStatus.Revealed);
+  expect(instance?.id).toEqual(voting.id);
+  expect(instance?.estimations.userEstimations).toEqual(
+    new Map([
+      [User.createId("user1"), UserEstimation.submittedOf(points[0])],
+      [User.createId("user2"), UserEstimation.submittedOf(points[1])],
+      [User.createId("user3"), UserEstimation.giveUpOf()],
+      [User.createId("user4"), UserEstimation.unsubmitOf()],
     ])
   );
-  expect(instance?.finishedAt).toBe("2023-02-25T00:01:01.000Z");
   expect(instance?.theme).toBe("theme");
 });
 
 test("empty theme as undefined", async () => {
   // Arrange
-  const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
-  const round = R.roundOf({
-    id: R.createId(),
-    cards: cards,
-    estimations: [
-      { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
-      { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
-      { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
-      { user: User.createId("user4"), estimation: UserEstimation.unselected() },
-    ],
+  const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
+  const voting = Voting.votingOf({
+    id: Voting.createId(),
+    points,
+    estimations: Estimations.from({
+      [User.createId("user1")]: UserEstimation.submittedOf(points[0]),
+      [User.createId("user2")]: UserEstimation.submittedOf(points[1]),
+      [User.createId("user3")]: UserEstimation.giveUpOf(),
+      [User.createId("user4")]: UserEstimation.unsubmitOf(),
+    }),
     theme: "",
   });
 
-  const repository = new RoundRepositoryImpl(database);
+  const repository = new VotingRepositoryImpl(database);
 
   // Act
-  await repository.save(round);
-  const instance = (await repository.findBy(round.id)) as R.FinishedRound;
+  await repository.save(voting);
+  const instance = await repository.findBy(voting.id);
 
   // Assert
-  expect(instance?.id).toEqual(round.id);
-  expect(instance?.estimations).toEqual(
-    Object.fromEntries([
-      [User.createId("user1"), UserEstimation.estimated(cards[0])],
-      [User.createId("user2"), UserEstimation.estimated(cards[1])],
-      [User.createId("user3"), UserEstimation.giveUp()],
-      [User.createId("user4"), UserEstimation.unselected()],
+  expect(instance?.id).toEqual(voting.id);
+  expect(instance?.estimations?.userEstimations).toEqual(
+    new Map([
+      [User.createId("user1"), UserEstimation.submittedOf(points[0])],
+      [User.createId("user2"), UserEstimation.submittedOf(points[1])],
+      [User.createId("user3"), UserEstimation.giveUpOf()],
+      [User.createId("user4"), UserEstimation.unsubmitOf()],
     ])
   );
   expect(instance?.theme).toBeNull();
@@ -140,51 +133,11 @@ test("empty theme as undefined", async () => {
 
 test("should not be able find a game if it did not save before", async () => {
   // Arrange
-  const repository = new RoundRepositoryImpl(database);
+  const repository = new VotingRepositoryImpl(database);
 
   // Act
-  const instance = await repository.findBy(R.createId());
+  const instance = await repository.findBy(Voting.createId());
 
   // Assert
   expect(instance).toBeNull();
-});
-
-describe("find finished round by", () => {
-  test("should return null when the round is not finished", async () => {
-    // Arrange
-    const cards = SelectableCards.create([1, 2].map(StoryPoint.create));
-    const repository = new RoundRepositoryImpl(database);
-    const round = R.roundOf({
-      id: R.createId(),
-      cards: cards,
-      estimations: [
-        { user: User.createId("user1"), estimation: UserEstimation.estimated(cards[0]) },
-        { user: User.createId("user2"), estimation: UserEstimation.estimated(cards[1]) },
-        { user: User.createId("user3"), estimation: UserEstimation.giveUp() },
-        { user: User.createId("user4"), estimation: UserEstimation.unselected() },
-      ],
-      theme: "",
-    });
-
-    await repository.save(round);
-
-    // Act
-    const ret = await repository.findFinishedRoundBy(round.id);
-
-    // Assert
-    expect(ret).toBeNull();
-  });
-  test("should return finished round if it is finished", async () => {
-    // Arrange
-    const repository = new RoundRepositoryImpl(database);
-    const round = randomFinishedRound({ theme: "theme" });
-
-    await repository.save(round);
-
-    // Act
-    const ret = await repository.findFinishedRoundBy(round.id);
-
-    // Assert
-    expect(ret).toEqual(round);
-  });
 });

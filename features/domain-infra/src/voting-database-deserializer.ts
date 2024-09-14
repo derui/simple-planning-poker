@@ -1,6 +1,6 @@
 import { DataSnapshot } from "firebase/database";
 import { deserialize as deserializeEstimation, Serialized } from "./user-estimation-converter.js";
-import { Estimations, Voting, StoryPoint, ApplicablePoints, User, UserEstimation } from "@spp/shared-domain";
+import { Estimations, Voting, StoryPoint, ApplicablePoints, User } from "@spp/shared-domain";
 
 type VotingData = {
   revealed: boolean;
