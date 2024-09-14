@@ -11,3 +11,4 @@ export * as StoryPoint from "./story-point.js";
 export * as UserEstimation from "./user-estimation.js";
 export * as UserRepository from "./user-repository.js";
 export * as Estimations from "./estimations.js";
+export * as VotingRepository from "./voting-repository.js";

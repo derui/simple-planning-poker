@@ -18,14 +18,14 @@ import * as GamePlayer from "./game-player.js";
 import * as Invitation from "./invitation.js";
 import { DOMAIN_EVENTS } from "./event.js";
 
-const cards = ApplicablePoints.create([1, 2].map(StoryPoint.create));
+const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
 
 test("get aggregate and event when game created ", () => {
   const [game, event] = create({
     id: createId("id"),
     name: "name",
     owner: User.createId("user"),
-    cards,
+    points,
     voting: Voting.createId(),
   });
 
@@ -50,7 +50,7 @@ describe("game name", () => {
     id: createId("id"),
     name: "name",
     owner: User.createId("user"),
-    cards,
+    points: points,
     voting: Voting.createId(),
   });
 
@@ -72,7 +72,7 @@ describe("declare player mode to", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 
@@ -91,7 +91,7 @@ describe("declare player mode to", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 
@@ -107,7 +107,7 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 
@@ -137,7 +137,7 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 
@@ -151,7 +151,7 @@ describe("join user", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
@@ -168,7 +168,7 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 
@@ -182,7 +182,7 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
     game = joinUserAsPlayer(game, User.createId("new"), makeInvitation(game))[0];
@@ -206,7 +206,7 @@ describe("leave", () => {
       id: createId("id"),
       name: "name",
       owner: User.createId("user"),
-      cards,
+      points: points,
       voting: Voting.createId(),
     });
 

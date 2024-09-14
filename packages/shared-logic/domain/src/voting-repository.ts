@@ -3,7 +3,7 @@ import * as Voting from "./voting.js";
 /**
  * A respository for round
  */
-export interface VotingRepositoy {
+export interface T {
   /**
    * find a round by id
    */

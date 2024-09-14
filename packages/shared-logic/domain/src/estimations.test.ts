@@ -2,7 +2,15 @@ import { test, expect } from "vitest";
 import * as UserEstimation from "./user-estimation.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
-import { averageEstimation, calculateAverate, create, isLeastOneEstimation, update, reset } from "./estimations.js";
+import {
+  averageEstimation,
+  calculateAverate,
+  create,
+  isLeastOneEstimation,
+  update,
+  reset,
+  from,
+} from "./estimations.js";
 import { enableMapSet } from "immer";
 
 enableMapSet();
@@ -35,6 +43,28 @@ test("should throw error if users is empty", () => {
 
   // Assert
   expect(() => create([])).toThrowError("Can not create estimation");
+});
+
+test("create from estimation like object", () => {
+  // Arrange
+
+  // Act
+  const actual = from({
+    [User.createId("id1")]: UserEstimation.giveUpOf(),
+  });
+
+  // Assert
+  expect(actual.userEstimations.size).toBe(1);
+  expect(actual.userEstimations.get(User.createId("id1"))).toEqual(UserEstimation.giveUpOf());
+});
+
+test("should throw error if users is empty", () => {
+  // Arrange
+
+  // Act
+
+  // Assert
+  expect(() => from({})).toThrowError("Can not create estimation");
 });
 
 test("should be able to update estimations with user estimation", () => {

@@ -39,6 +39,24 @@ export const create = function create(users: User.Id[]): T {
 };
 
 /**
+ * Create new estimations with current estimations
+ */
+export const from = function from(estimations: Record<User.Id, UserEstimation.T>): T {
+  if (!isValid(Array.from<User.Id>(Object.keys(estimations).map(User.createId)))) {
+    throw new Error("Can not create estimation");
+  }
+
+  const map = new Map();
+  for (const [id, value] of Object.entries(estimations)) {
+    map.set(id, value);
+  }
+
+  return Object.freeze({
+    userEstimations: map,
+  });
+};
+
+/**
  * Get resetted estimations with same user.
  */
 export const reset = function reset(obj: T): T {
