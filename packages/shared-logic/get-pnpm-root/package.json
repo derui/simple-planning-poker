@@ -10,7 +10,7 @@
     "get-pnpm-root": "./dist/index.js"
   },
   "scripts": {
-    "postinstall": "node -e 'console.log(\"Do `npx get-pnpm-root`\")",
+    "postinstall": "node -e 'console.log(\"Do `npx get-pnpm-root`\")'",
     "build": "tsc",
     "check-type": "tsc --noEmit",
     "dev:build": "tsc --watch --noEmit --preserveWatchOutput",
