@@ -19,8 +19,8 @@
     "build:tsc": "tsc",
     "check-type": "tsc --noEmit",
     "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
-    "test": "firebase emulators:exec 'npx vitest run'",
-    "dev:test": "firebase emulators:exec 'npx vitest watch'",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
     "dev": "concurrently \"npm:dev:*\"",
     "build": "concurrently \"npm:build:*\""

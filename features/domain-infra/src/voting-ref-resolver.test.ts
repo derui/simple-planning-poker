@@ -1,45 +1,39 @@
 import { expect, test } from "vitest";
-import { cards, count, finished, finishedAt, joinedPlayers, theme, userEstimations } from "./round-ref-resolver";
-import { createId } from "@/domains/round";
+import { points, count, revealed, joinedPlayers, theme, userEstimations } from "./voting-ref-resolver.js";
+import { Voting } from "@spp/shared-domain";
 
 test("get count", () => {
-  const ret = count(createId("id"));
+  const ret = count(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/count");
+  expect(ret).toBe("/voting/id/count");
 });
 
 test("get finished", () => {
-  const ret = finished(createId("id"));
+  const ret = revealed(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/finished");
+  expect(ret).toBe("/voting/id/revealed");
 });
 
 test("get user estimations", () => {
-  const ret = userEstimations(createId("id"));
+  const ret = userEstimations(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/userEstimations");
+  expect(ret).toBe("/voting/id/userEstimations");
 });
 
 test("get cards", () => {
-  const ret = cards(createId("id"));
+  const ret = points(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/cards");
-});
-
-test("finished at", () => {
-  const ret = finishedAt(createId("id"));
-
-  expect(ret).toBe("/rounds/id/finishedAt");
+  expect(ret).toBe("/voting/id/points");
 });
 
 test("joined player", () => {
-  const ret = joinedPlayers(createId("id"));
+  const ret = joinedPlayers(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/joinedPlayers");
+  expect(ret).toBe("/voting/id/joinedPlayers");
 });
 
 test("theme", () => {
-  const ret = theme(createId("id"));
+  const ret = theme(Voting.createId("id"));
 
-  expect(ret).toBe("/rounds/id/theme");
+  expect(ret).toBe("/voting/id/theme");
 });

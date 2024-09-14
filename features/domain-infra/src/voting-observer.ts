@@ -1,34 +1,35 @@
 import { Database, ref, onValue, Unsubscribe, DataSnapshot } from "firebase/database";
-import { deserializeFrom } from "./round-database-deserializer";
-import { RoundObserver } from "./observer";
-import { T, Id } from "@/domains/round";
+import { deserializeFrom } from "./voting-database-deserializer.js";
+import { VotingObserver } from "./observer.js";
+import { Voting } from "@spp/shared-domain";
 
-export class RoundObserverImpl implements RoundObserver {
+export class RoundObserverImpl implements VotingObserver {
   private _unsubscriber: Unsubscribe | null = null;
-  private _subscribingRoundId: Id | null = null;
+  private _subscribingVotingId: Voting.Id | null = null;
+
   constructor(private database: Database) {}
 
-  subscribe(roundId: Id, subscriber: (round: T) => void): void {
+  subscribe(votingId: Voting.Id, subscriber: (voting: Voting.T) => void): void {
     this.unsubscribe();
 
-    this._subscribingRoundId = roundId;
+    this._subscribingVotingId = votingId;
     const _subscriber = (snapshot: DataSnapshot) => {
-      const round = deserializeFrom(roundId, snapshot);
-      if (!round) {
+      const voting = deserializeFrom(votingId, snapshot);
+      if (!voting) {
         return;
       }
 
-      subscriber(round);
+      subscriber(voting);
     };
 
-    this._unsubscriber = onValue(ref(this.database, `rounds/${roundId}`), _subscriber);
+    this._unsubscriber = onValue(ref(this.database, `voting/${votingId}`), _subscriber);
   }
 
   unsubscribe(): void {
-    if (this._unsubscriber && this._subscribingRoundId) {
+    if (this._unsubscriber && this._subscribingVotingId) {
       this._unsubscriber();
       this._unsubscriber = null;
-      this._subscribingRoundId = null;
+      this._subscribingVotingId = null;
     }
   }
 }

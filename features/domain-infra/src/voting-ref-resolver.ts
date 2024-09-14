@@ -1,29 +1,25 @@
-import { Id } from "@/domains/round";
+import { Voting } from "@spp/shared-domain";
 
-export const count = function count(id: Id) {
-  return `/rounds/${id}/count`;
+export const count = function count(id: Voting.Id) {
+  return `/voting/${id}/count`;
 };
 
-export const userEstimations = function userEstimations(id: Id) {
-  return `/rounds/${id}/userEstimations`;
+export const userEstimations = function userEstimations(id: Voting.Id) {
+  return `/voting/${id}/userEstimations`;
 };
 
-export const cards = function cards(id: Id) {
-  return `/rounds/${id}/cards`;
+export const points = function points(id: Voting.Id) {
+  return `/voting/${id}/points`;
 };
 
-export const finished = function finished(id: Id) {
-  return `/rounds/${id}/finished`;
+export const revealed = function revealed(id: Voting.Id) {
+  return `/voting/${id}/revealed`;
 };
 
-export const finishedAt = function finishedAt(id: Id) {
-  return `/rounds/${id}/finishedAt`;
+export const joinedPlayers = function joinedPlayers(id: Voting.Id) {
+  return `/voting/${id}/joinedPlayers`;
 };
 
-export const joinedPlayers = function joinedPlayers(id: Id) {
-  return `/rounds/${id}/joinedPlayers`;
-};
-
-export const theme = function theme(id: Id) {
-  return `/rounds/${id}/theme`;
+export const theme = function theme(id: Voting.Id) {
+  return `/voting/${id}/theme`;
 };
