@@ -36,3 +36,4 @@ catalog:
   firebase-tools: "^13.1.0"
   firebase: "^10.7.2"
   "@firebase/rules-unit-testing": "^3.0.1"
+  '@dotenvx/dotenvx': "^1.14.1"

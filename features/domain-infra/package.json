@@ -19,8 +19,8 @@
     "build:tsc": "tsc",
     "check-type": "tsc --noEmit",
     "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
-    "test": "vitest run",
-    "dev:test": "vitest watch",
+    "test": "firebase emulators:exec 'npx vitest run'",
+    "dev:test": "firebase emulators:exec 'npx vitest watch'",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
     "dev": "concurrently \"npm:dev:*\"",
     "build": "concurrently \"npm:build:*\""
@@ -29,8 +29,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@dotenvx/dotenvx": "catalog:",
     "@firebase/rules-unit-testing": "catalog:",
     "@spp/eslint-config": "workspace:^",
+    "@spp/shared-get-pnpm-root": "workspace:^",
     "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@types/uuid": "^9.0.8",
