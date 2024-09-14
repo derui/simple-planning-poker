@@ -1,6 +1,9 @@
-import { DomainEvent } from "@/domains/event";
+import { DomainEvent } from "@spp/shared-domain";
 
 // listener interface for domain events
 export interface DomainEventListener {
-  handle(event: DomainEvent): void;
+  /**
+   * Handle domain event
+   */
+  handle(event: DomainEvent.T): Promise<void>;
 }

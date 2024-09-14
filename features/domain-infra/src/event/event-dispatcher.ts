@@ -1,4 +1,4 @@
-import { DomainEventListener } from "./domain-event-listener";
+import { DomainEventListener } from "./domain-event-listener.js";
 import { DomainEvent } from "@/domains/event";
 import { EventDispatcher } from "@/usecases/base";
 

@@ -1,9 +1,7 @@
 import { Database, push, ref, set } from "firebase/database";
-import { joinedGames } from "../user-ref-resolver";
-import { DomainEventListener } from "./domain-event-listener";
-import { isUserJoined } from "@/domains/game";
-import { DomainEvent } from "@/domains/event";
-import { JoinedGameState } from "@/domains/game-repository";
+import { joinedGames } from "../user-ref-resolver.js";
+import { DomainEventListener } from "./domain-event-listener.js";
+import { Game, DomainEvent } from "@spp/shared-domain";
 
 /**
  * update created game as joined game
@@ -11,8 +9,8 @@ import { JoinedGameState } from "@/domains/game-repository";
 export class JoinUserEventListener implements DomainEventListener {
   constructor(private database: Database) {}
 
-  async handle(event: DomainEvent): Promise<void> {
-    if (!isUserJoined(event)) {
+  async handle(event: DomainEvent.T): Promise<void> {
+    if (!Game.isUserJoined(event)) {
       return;
     }
 
@@ -22,7 +20,6 @@ export class JoinUserEventListener implements DomainEventListener {
     await set(value, {
       relation: "player",
       gameId: event.gameId,
-      state: JoinedGameState.joined,
     });
   }
 }
