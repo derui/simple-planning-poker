@@ -33,7 +33,7 @@ test("get round", () => {
   expect(ret.status).toEqual(VotingStatus.Voting);
   expect(ret.id).toBe(createId("id"));
   expect(ret.points).toEqual(points);
-  expect(ret.theme).toBeNull();
+  expect(ret.theme).toBeUndefined();
 });
 
 test("get revealed voting", () => {
@@ -45,7 +45,7 @@ test("get revealed voting", () => {
 
   expect(ret.points).toEqual(points);
   expect(ret.id).toBe(createId("id"));
-  expect(ret.theme).toBeNull();
+  expect(ret.theme).toBeUndefined();
   expect(ret.status).toEqual(VotingStatus.Revealed);
 });
 
@@ -129,7 +129,7 @@ describe("theme", () => {
 
     const newVoting = changeTheme(voting, "new theme");
 
-    expect(voting.theme).toBeNull();
+    expect(voting.theme).toBeUndefined();
     expect(newVoting.theme).toBe("new theme");
   });
 
@@ -157,6 +157,6 @@ describe("theme", () => {
 
     const changed = changeTheme(voting, "");
 
-    expect(changed.theme).toBeNull();
+    expect(changed.theme).toBeUndefined();
   });
 });

@@ -11,6 +11,24 @@
         "default": "./dist/index.js",
         "types": "./src/index.ts"
       }
+    },
+    "./mock/voting-repository": {
+      "import": {
+        "default": "./dist/mock/voting-repository.js",
+        "types": "./src/mock/voting-repository.ts"
+      }
+    },
+    "./mock/game-repository": {
+      "import": {
+        "default": "./dist/mock/game-repository.js",
+        "types": "./src/mock/game-repository.ts"
+      }
+    },
+    "./mock/user-repository": {
+      "import": {
+        "default": "./dist/mock/user-repository.js",
+        "types": "./src/mock/user-repository.ts"
+      }
     }
   },
   "type": "module",
@@ -39,6 +57,7 @@
   },
   "dependencies": {
     "@spp/shared-array": "workspace:^",
+    "@spp/shared-basic": "workspace:^",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
     "uuid": "^9.0.1"

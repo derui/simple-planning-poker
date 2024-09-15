@@ -510,6 +510,9 @@ importers:
       '@spp/shared-array':
         specifier: workspace:^
         version: link:../array
+      '@spp/shared-basic':
+        specifier: workspace:^
+        version: link:../basic
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -566,6 +569,40 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.9.0(jiti@1.21.6)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.3.3
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@22.5.5)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@22.5.5)(jsdom@25.0.0)
+
+  packages/shared-logic/use-case:
+    dependencies:
+      '@spp/shared-domain':
+        specifier: workspace:^
+        version: link:../domain
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      '@types/sinon':
+        specifier: 'catalog:'
+        version: 17.0.3
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
+      sinon:
+        specifier: 'catalog:'
+        version: 18.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.3.3

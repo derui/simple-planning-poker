@@ -30,7 +30,7 @@ export type T = {
   readonly id: Id;
   readonly estimations: Estimations.T;
   readonly points: ApplicablePoints.T;
-  readonly theme: string | null;
+  readonly theme?: string;
   readonly status: VotingStatus;
 };
 
@@ -78,7 +78,7 @@ export const votingOf = function votingOf({
     id,
     estimations,
     points: ApplicablePoints.clone(points),
-    theme: !theme ? null : theme,
+    theme,
     status: VotingStatus.Voting,
   } satisfies T;
 };
@@ -101,7 +101,7 @@ export const revealedOf = function revealedOf({
     id,
     estimations,
     points: ApplicablePoints.clone(points),
-    theme: !theme ? null : theme,
+    theme,
     status: VotingStatus.Revealed,
   } satisfies T;
 };
@@ -173,7 +173,7 @@ export const changeTheme = function changeTheme(voting: T, theme: string): T {
     if (theme) {
       draft.theme = theme;
     } else {
-      draft.theme = null;
+      draft.theme = undefined;
     }
   });
 };

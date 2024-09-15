@@ -7,7 +7,7 @@ export interface T {
   /**
    * find a round by id
    */
-  findBy(id: Voting.Id): Promise<Voting.T | null>;
+  findBy(id: Voting.Id): Promise<Voting.T | undefined>;
 
   /**
    * save a round
