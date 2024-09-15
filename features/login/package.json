@@ -2,10 +2,7 @@
   "name": "@spp/feature-login",
   "version": "1.0.0",
   "description": "",
-  "sideEffects": [
-    "./dist/style.css"
-  ],
-  "files": [
+    "files": [
     "./dist/"
   ],
   "exports": {

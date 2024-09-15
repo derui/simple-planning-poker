@@ -2,9 +2,6 @@
   "name": "@spp/ui-overlay",
   "version": "1.0.0",
   "description": "",
-  "sideEffects": [
-    "./dist/*"
-  ],
   "files": [
     "./dist/"
   ],
