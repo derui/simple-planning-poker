@@ -8,3 +8,4 @@ export * from "./kick-player.js";
 export * from "./leave-game.js";
 export * from "./reset-voting.js";
 export * from "./reveal.js";
+export * from "./base.js";
