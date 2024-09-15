@@ -2,7 +2,7 @@ import { DomainEventListener } from "./domain-event-listener.js";
 import { Game, DomainEvent, VotingRepository, Voting, Estimations } from "@spp/shared-domain";
 
 /**
- * create round with new id
+ * create voting with new id
  */
 export class CreateVotingAfterCreateGameListener implements DomainEventListener {
   constructor(private votingRepository: VotingRepository.T) {}

@@ -4,7 +4,7 @@ import { Estimations, Voting, StoryPoint, ApplicablePoints, User } from "@spp/sh
 
 type VotingData = {
   revealed: boolean;
-  cards: number[];
+  points: number[];
   userEstimations: Record<User.Id, Serialized> | undefined;
   theme: string | undefined;
 };
@@ -22,7 +22,7 @@ export const deserializeFrom = function deserializeFrom(id: Voting.Id, snapshot:
     return;
   }
 
-  const { revealed, cards: points, userEstimations, theme } = val;
+  const { revealed, points, userEstimations, theme } = val;
 
   const applicablePoints = ApplicablePoints.create(points.map(StoryPoint.create));
   const users = Object.keys(userEstimations ?? {}).map(User.createId);

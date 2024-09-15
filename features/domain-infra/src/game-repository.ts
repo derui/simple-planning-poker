@@ -15,7 +15,7 @@ type UserJoined = {
 };
 
 const parseUserJoined = function parseUserJoined(_value: unknown): _value is Record<string, UserJoined> {
-  return _value != null;
+  return !!_value;
 };
 
 /**
@@ -77,7 +77,7 @@ export class GameRepositoryImpl implements GameRepository.T {
     }
 
     const games = await Promise.all(
-      Object.values(val).map(async (v) => {
+      Object.values(val).map((v) => {
         return this.findBy(v.gameId);
       })
     );

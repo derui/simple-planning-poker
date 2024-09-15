@@ -5,7 +5,7 @@ import { deserializeFrom } from "./voting-database-deserializer.js";
 import { User, Voting, VotingRepository } from "@spp/shared-domain";
 
 /**
- * Implementation of `RoundRepository`
+ * Implementation of `VotingRepository`
  */
 export class VotingRepositoryImpl implements VotingRepository.T {
   constructor(private database: Database) {}
@@ -22,10 +22,10 @@ export class VotingRepositoryImpl implements VotingRepository.T {
     }, {});
     updates[resolver.points(voting.id)] = voting.points;
 
-    if (voting.theme !== undefined) {
-      updates[resolver.theme(voting.id)] = voting.theme;
-    } else {
+    if (!voting.theme || voting.theme == "") {
       updates[resolver.theme(voting.id)] = null;
+    } else {
+      updates[resolver.theme(voting.id)] = voting.theme;
     }
 
     await update(ref(this.database), updates);
@@ -35,7 +35,7 @@ export class VotingRepositoryImpl implements VotingRepository.T {
     if (id === "") {
       return;
     }
-    const snapshot = await get(child(ref(this.database, "rounds"), id));
+    const snapshot = await get(child(ref(this.database, "voting"), id));
 
     return deserializeFrom(id, snapshot);
   }

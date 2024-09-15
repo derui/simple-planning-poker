@@ -3,7 +3,10 @@ import { deserializeFrom } from "./voting-database-deserializer.js";
 import { VotingObserver } from "./observer.js";
 import { Voting } from "@spp/shared-domain";
 
-export class RoundObserverImpl implements VotingObserver {
+/**
+ * Implementation of `VotingObserver`
+ */
+export class VotingObserverImpl implements VotingObserver {
   private _unsubscriber: Unsubscribe | null = null;
   private _subscribingVotingId: Voting.Id | null = null;
 

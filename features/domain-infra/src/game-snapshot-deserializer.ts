@@ -6,7 +6,7 @@ import { Game, StoryPoint, ApplicablePoints, User, Voting, GamePlayer } from "@s
  */
 interface Snapshot {
   name: string;
-  cards: number[];
+  points: number[];
   voting: Voting.Id;
   owner: string;
   joinedPlayers: Record<User.Id, { type: GamePlayer.PlayerType; mode: GamePlayer.UserMode }> | undefined;
@@ -22,14 +22,15 @@ const parseSnapshot = function parseSnapshot(_value: unknown): _value is Snapsho
 /**
  * deserialize from firebase's snapshot
  */
-export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: DataSnapshot): Game.T | null {
+export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: DataSnapshot): Game.T | undefined {
   const val: unknown = snapshot.val();
-  if (!parseSnapshot(val)) {
-    return null;
+  if (!val || !parseSnapshot(val)) {
+    return;
   }
-  const { name, cards, voting, owner, joinedPlayers } = val;
 
-  const selectableCards = ApplicablePoints.create(cards.map(StoryPoint.create));
+  const { name, points, voting, owner, joinedPlayers } = val;
+
+  const selectableCards = ApplicablePoints.create(points.map(StoryPoint.create));
   const [game] = Game.create({
     id,
     name,

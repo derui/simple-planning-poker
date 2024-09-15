@@ -5,6 +5,9 @@ import { VotingRepositoryImpl } from "../voting-repository.js";
 import { CreateVotingAfterCreateGameListener } from "./create-voting-after-create-game-listener.js";
 import { Database } from "firebase/database";
 import { User, Voting, Game, ApplicablePoints, StoryPoint } from "@spp/shared-domain";
+import { enableMapSet } from "immer";
+
+enableMapSet();
 
 let database: Database;
 let testEnv: RulesTestEnvironment;
@@ -18,7 +21,7 @@ beforeAll(async () => {
     },
   });
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  database = testEnv.authenticatedContext(v4()).database() as unknown as Database;
 });
 
 afterAll(async () => {
@@ -29,7 +32,7 @@ afterEach(async () => {
   await testEnv.clearDatabase();
 });
 
-test("should create round with id", async () => {
+test("should create voting with id", async () => {
   // Arrange
   const owner = User.create({ id: User.createId(), name: "name" });
   const votingId = Voting.createId();
@@ -45,8 +48,9 @@ test("should create round with id", async () => {
 
   // Act
   await listener.handle(event);
-  const round = await repository.findBy(votingId);
+  const voting = await repository.findBy(votingId);
 
   // Assert
-  expect(round?.points).toEqual(game.points);
+  expect(voting).not.toBeUndefined();
+  expect(voting?.points).toEqual(game.points);
 });

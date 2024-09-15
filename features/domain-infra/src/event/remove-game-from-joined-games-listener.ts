@@ -34,6 +34,9 @@ export class RemoveGameFromJoinedGameListener implements DomainEventListener {
     const updater = Object.entries(val).reduce<Record<string, unknown>>((accum, [key, value]) => {
       if (value.gameId != event.gameId) {
         accum[key] = value;
+      } else {
+        // need to set null remove key from firebase
+        accum[key] = null;
       }
 
       return accum;

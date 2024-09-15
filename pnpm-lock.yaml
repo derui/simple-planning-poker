@@ -389,6 +389,9 @@ importers:
       firebase-tools:
         specifier: 'catalog:'
         version: 13.16.0(encoding@0.1.13)
+      immer:
+        specifier: ^10.0.3
+        version: 10.1.1
       typescript:
         specifier: 'catalog:'
         version: 5.3.3

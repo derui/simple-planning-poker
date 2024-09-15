@@ -5,7 +5,7 @@ export const name = function name(id: Game.Id) {
 };
 
 export const cards = function cards(id: Game.Id) {
-  return `/games/${id}/cards`;
+  return `/games/${id}/points`;
 };
 
 export const owner = function owner(id: Game.Id) {

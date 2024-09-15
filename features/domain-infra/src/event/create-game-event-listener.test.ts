@@ -19,7 +19,7 @@ beforeAll(async () => {
     },
   });
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  database = testEnv.authenticatedContext(v4()).database() as unknown as Database;
 });
 
 afterAll(async () => {
