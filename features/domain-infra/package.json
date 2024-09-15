@@ -48,6 +48,7 @@
   "dependencies": {
     "@spp/shared-basic": "workspace:^",
     "@spp/shared-domain": "workspace:^",
+    "@spp/shared-use-case": "workspace:^",
     "firebase": "catalog:"
   }
 }

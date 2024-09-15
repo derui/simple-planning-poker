@@ -1,24 +1,21 @@
 import { Database, onValue, ref, type Unsubscribe } from "firebase/database";
-import { UserObserver } from "./observer";
-import { T, Id } from "@/domains/user";
-import * as Game from "@/domains/game";
-import { UserRepository } from "@/domains/user-repository";
-import { GameRepository, JoinedGameState } from "@/domains/game-repository";
+import { UserObserver } from "./observer.js";
+import { Game, User, GameRepository, UserRepository } from "@spp/shared-domain";
 
 export class UserObserverImpl implements UserObserver {
-  private _subscriptions = new Map<Id, Unsubscribe>();
+  private _subscriptions = new Map<User.Id, Unsubscribe>();
 
   constructor(
     private database: Database,
-    private userRepository: UserRepository,
-    private gameRepository: GameRepository
+    private userRepository: UserRepository.T,
+    private gameRepository: GameRepository.T
   ) {}
   unsubscribe(): void {
     this._subscriptions.forEach((f) => f());
     this._subscriptions = new Map();
   }
 
-  subscribe(userId: Id, subscriber: (user: T, joinedGames: { id: Game.Id; state: JoinedGameState }[]) => void) {
+  subscribe(userId: User.Id, subscriber: (user: User.T, joinedGames: Game.T[]) => void) {
     const oldSubscription = this._subscriptions.get(userId);
     if (oldSubscription) {
       oldSubscription();

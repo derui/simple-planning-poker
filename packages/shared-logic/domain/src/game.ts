@@ -23,7 +23,7 @@ export type T = {
   readonly name: string;
   readonly owner: User.Id;
   readonly joinedPlayers: GamePlayer.T[];
-  readonly cards: ApplicablePoints.T;
+  readonly points: ApplicablePoints.T;
   readonly voting: Voting.Id;
 };
 
@@ -64,7 +64,7 @@ export const isUserLeftFromGame = function isUserLeftFromGame(event: DomainEvent
 export const create = ({
   id,
   name,
-  points: cards,
+  points,
   owner,
   voting: voting,
   joinedPlayers,
@@ -87,14 +87,14 @@ export const create = ({
     owner,
     name: name,
     createdBy: owner,
-    applicablePoints: cards,
+    applicablePoints: points,
     voting: voting,
   };
 
   const game = {
     id,
     name,
-    cards,
+    points,
     owner,
     joinedPlayers: joinedPlayers ?? Array.from(distinctedPlayers.values()),
     voting: voting,

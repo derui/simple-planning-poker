@@ -27,7 +27,7 @@ export class GameRepositoryImpl implements GameRepository.T {
   async save(game: Game.T): Promise<void> {
     const updates: { [key: string]: unknown } = {};
     updates[resolver.name(game.id)] = game.name;
-    updates[resolver.cards(game.id)] = game.cards;
+    updates[resolver.cards(game.id)] = game.points;
     updates[resolver.voting(game.id)] = game.voting;
     updates[resolver.owner(game.id)] = game.owner;
     updates[resolver.joinedPlayers(game.id)] = game.joinedPlayers.reduce<Record<string, unknown>>((accum, val) => {

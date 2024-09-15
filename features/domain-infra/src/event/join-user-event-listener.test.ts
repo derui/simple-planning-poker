@@ -1,17 +1,13 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
-import { UserRepositoryImpl } from "../user-repository";
-import { GameRepositoryImpl } from "../game-repository";
-import { JoinUserEventListener } from "./join-user-event-listener";
-import * as Game from "@/domains/game";
-import * as Round from "@/domains/round";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as StoryPoint from "@/domains/story-point";
-import * as User from "@/domains/user";
-import { JoinedGameState } from "@/domains/game-repository";
+import { UserRepositoryImpl } from "../user-repository.js";
+import { GameRepositoryImpl } from "../game-repository.js";
+import { JoinUserEventListener } from "./join-user-event-listener.js";
+import { Game, Voting, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
+import { Database } from "firebase/database";
 
-let database: any;
+let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -22,11 +18,13 @@ beforeAll(async () => {
       port: 9000,
     },
   });
-  database = testEnv.authenticatedContext("alice").database();
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
 });
 
 afterAll(async () => {
-  testEnv.cleanup();
+  await testEnv.cleanup();
 });
 
 afterEach(async () => {
@@ -41,8 +39,8 @@ test("should add joined user as owner", async () => {
     id: Game.createId(),
     name: "test",
     owner: owner.id,
-    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    round: Round.createId(),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId(),
   });
   const [, event] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
   const userRepository = new UserRepositoryImpl(database);
@@ -57,5 +55,5 @@ test("should add joined user as owner", async () => {
   const joinedGames = await repository.listUserJoined(player.id);
 
   // Assert
-  expect(joinedGames).toEqual([{ id: game.id, name: "test", state: JoinedGameState.joined }]);
+  expect(joinedGames).toEqual([game]);
 });

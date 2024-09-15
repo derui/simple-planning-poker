@@ -16,10 +16,10 @@ const isVotingData = function isVotingData(val: unknown): val is VotingData {
 /**
  * deserialize from firebase's snapshot
  */
-export const deserializeFrom = function deserializeFrom(id: Voting.Id, snapshot: DataSnapshot): Voting.T | null {
+export const deserializeFrom = function deserializeFrom(id: Voting.Id, snapshot: DataSnapshot): Voting.T | undefined {
   const val: unknown = snapshot.val();
   if (!isVotingData(val)) {
-    return null;
+    return;
   }
 
   const { revealed, cards: points, userEstimations, theme } = val;

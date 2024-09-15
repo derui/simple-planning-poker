@@ -1,15 +1,12 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
-import { RoundRepositoryImpl } from "../round-repository";
-import { CreateRoundAfterCreateGameListener } from "./create-round-after-create-game-listener";
-import * as Game from "@/domains/game";
-import * as Round from "@/domains/round";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as StoryPoint from "@/domains/story-point";
-import * as User from "@/domains/user";
+import { VotingRepositoryImpl } from "../voting-repository.js";
+import { CreateVotingAfterCreateGameListener } from "./create-voting-after-create-game-listener.js";
+import { Database } from "firebase/database";
+import { User, Voting, Game, ApplicablePoints, StoryPoint } from "@spp/shared-domain";
 
-let database: any;
+let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -20,11 +17,12 @@ beforeAll(async () => {
       port: 9000,
     },
   });
-  database = testEnv.authenticatedContext("alice").database();
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
 });
 
 afterAll(async () => {
-  testEnv.cleanup();
+  await testEnv.cleanup();
 });
 
 afterEach(async () => {
@@ -34,21 +32,21 @@ afterEach(async () => {
 test("should create round with id", async () => {
   // Arrange
   const owner = User.create({ id: User.createId(), name: "name" });
-  const roundId = Round.createId();
+  const votingId = Voting.createId();
   const [game, event] = Game.create({
     id: Game.createId(),
     name: "test",
     owner: owner.id,
-    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    round: roundId,
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: votingId,
   });
-  const repository = new RoundRepositoryImpl(database);
-  const listener = new CreateRoundAfterCreateGameListener(repository);
+  const repository = new VotingRepositoryImpl(database);
+  const listener = new CreateVotingAfterCreateGameListener(repository);
 
   // Act
   await listener.handle(event);
-  const round = await repository.findBy(roundId);
+  const round = await repository.findBy(votingId);
 
   // Assert
-  expect(round?.cards).toEqual(game.cards);
+  expect(round?.points).toEqual(game.points);
 });

@@ -1,11 +1,13 @@
 import { DomainEventListener } from "./domain-event-listener.js";
-import { DomainEvent } from "@/domains/event";
-import { EventDispatcher } from "@/usecases/base";
+import { EventDispatcher } from "@spp/shared-use-case";
 
-export class EventDispatcherImpl implements EventDispatcher {
-  constructor(private listeners: DomainEventListener[]) {}
-
-  dispatch(event: DomainEvent): void {
-    this.listeners.forEach((v) => v.handle(event));
-  }
-}
+/**
+ * Get new event dispatcher
+ */
+export const newEventDispatcher = function newEventDispatcher(listeners: DomainEventListener[]): EventDispatcher {
+  return (event): void => {
+    Promise.allSettled(listeners.map((v) => v.handle(event)))
+      .then(() => {})
+      .catch(() => {});
+  };
+};

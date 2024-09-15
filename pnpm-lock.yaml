@@ -349,6 +349,9 @@ importers:
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
+      '@spp/shared-use-case':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/use-case
       firebase:
         specifier: 'catalog:'
         version: 10.13.1

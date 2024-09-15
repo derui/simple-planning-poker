@@ -1,19 +1,14 @@
 import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
-import { push, ref, set } from "firebase/database";
-import { UserRepositoryImpl } from "../user-repository";
-import { GameRepositoryImpl } from "../game-repository";
-import { joinedGames } from "../user-ref-resolver";
-import { RemoveGameFromJoinedGameListener } from "./remove-game-from-joined-games-listener";
-import * as Game from "@/domains/game";
-import * as Round from "@/domains/round";
-import * as SelectableCards from "@/domains/selectable-cards";
-import * as StoryPoint from "@/domains/story-point";
-import * as User from "@/domains/user";
-import { JoinedGameState } from "@/domains/game-repository";
+import { Database, push, ref, set } from "firebase/database";
+import { UserRepositoryImpl } from "../user-repository.js";
+import { GameRepositoryImpl } from "../game-repository.js";
+import { joinedGames } from "../user-ref-resolver.js";
+import { RemoveGameFromJoinedGameListener } from "./remove-game-from-joined-games-listener.js";
+import { Game, Voting, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
 
-let database: any;
+let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -24,11 +19,12 @@ beforeAll(async () => {
       port: 9000,
     },
   });
-  database = testEnv.authenticatedContext("alice").database();
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
 });
 
 afterAll(async () => {
-  testEnv.cleanup();
+  await testEnv.cleanup();
 });
 
 afterEach(async () => {
@@ -43,8 +39,8 @@ test("should remove game from joined game of left user", async () => {
     id: Game.createId(),
     name: "test",
     owner: owner.id,
-    cards: SelectableCards.create([1, 2].map(StoryPoint.create)),
-    round: Round.createId(),
+    points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
+    voting: Voting.createId(),
   });
   const [_game] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
   const [, event] = Game.acceptLeaveFrom(_game, player.id);
@@ -68,11 +64,5 @@ test("should remove game from joined game of left user", async () => {
   const ret = await repository.listUserJoined(player.id);
 
   // Assert
-  expect(ret).toEqual([
-    {
-      name: "test",
-      id: game.id,
-      state: JoinedGameState.left,
-    },
-  ]);
+  expect(ret).toEqual([]);
 });

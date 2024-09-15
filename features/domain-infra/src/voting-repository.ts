@@ -31,9 +31,9 @@ export class VotingRepositoryImpl implements VotingRepository.T {
     await update(ref(this.database), updates);
   }
 
-  async findBy(id: Voting.Id): Promise<Voting.T | null> {
+  async findBy(id: Voting.Id): Promise<Voting.T | undefined> {
     if (id === "") {
-      return null;
+      return;
     }
     const snapshot = await get(child(ref(this.database, "rounds"), id));
 

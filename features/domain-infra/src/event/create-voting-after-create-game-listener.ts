@@ -4,7 +4,7 @@ import { Game, DomainEvent, VotingRepository, Voting, Estimations } from "@spp/s
 /**
  * create round with new id
  */
-export class CreateRoundAfterCreateGameListener implements DomainEventListener {
+export class CreateVotingAfterCreateGameListener implements DomainEventListener {
   constructor(private votingRepository: VotingRepository.T) {}
 
   async handle(event: DomainEvent.T): Promise<void> {

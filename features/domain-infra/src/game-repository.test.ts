@@ -50,7 +50,7 @@ test("should be able to save and find a game", async () => {
   // Assert
   expect(instance?.id).toEqual(game.id);
   expect(instance?.name).toEqual(game.name);
-  expect(instance?.cards).toEqual(game.cards);
+  expect(instance?.points).toEqual(game.points);
   expect(instance?.voting).toEqual(game.voting);
   expect(instance?.joinedPlayers).toEqual(game.joinedPlayers);
 });
