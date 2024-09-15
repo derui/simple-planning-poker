@@ -1,5 +1,5 @@
 {
-  "name": "@spp/feature-login",
+  "name": "@spp/ui-dialog",
   "version": "1.0.0",
   "description": "",
   "files": [
@@ -8,18 +8,18 @@
   "exports": {
     ".": {
       "import": {
-        "default": "dist/index.js",
-        "types": "src/index.ts"
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
       }
     }
   },
   "type": "module",
   "scripts": {
-    "build:tsc": "tsc",
     "check-type": "tsc --noEmit",
+    "build:tsc": "tsc",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
     "build:css": "tailwindcss -i src/style.css -o dist/style.css",
     "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
-    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
@@ -40,10 +40,12 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "^14.5.2",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
+    "react-dom": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
@@ -51,7 +53,6 @@
   },
   "dependencies": {
     "@spp/ui-loader": "workspace:^",
-    "@spp/ui-overlay": "workspace:^",
     "@types/react": "catalog:",
     "clsx": "catalog:",
     "react": "catalog:"
