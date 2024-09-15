@@ -11,7 +11,7 @@
     "check-type": {
       "dependsOn": ["^check-type"]
     },
-    "launch-emulator": {
+    "start-emulator": {
       "persistent": true,
       "cache": false
     },
