@@ -50,6 +50,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/ui-dialog": "workspace:^",
     "@spp/ui-loader": "workspace:^",
     "@spp/ui-overlay": "workspace:^",
     "@types/react": "catalog:",

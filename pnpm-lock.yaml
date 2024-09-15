@@ -407,6 +407,9 @@ importers:
 
   features/login:
     dependencies:
+      '@spp/ui-dialog':
+        specifier: workspace:^
+        version: link:../../packages/ui/dialog
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../../packages/ui/loader
