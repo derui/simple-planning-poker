@@ -4,8 +4,8 @@ import * as Game from "../game.js";
 /**
  * Make In-memory version `GameRepository.T` for testing purpose.
  */
-export const newMemoryGameRepository = function newMemoryGameRepository(initial: Record<Game.Id, Game.T> = {}): R.T {
-  const data = new Map<Game.Id, Game.T>(Object.entries(initial).map(([k, v]) => [Game.createId(k), v]));
+export const newMemoryGameRepository = function newMemoryGameRepository(initial: Game.T[] = []): R.T {
+  const data = new Map<Game.Id, Game.T>(initial.map((v) => [v.id, v]));
 
   return {
     save(voting: Game.T) {

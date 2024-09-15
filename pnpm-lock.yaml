@@ -600,6 +600,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.9.0(jiti@1.21.6)
+      immer:
+        specifier: ^10.0.3
+        version: 10.1.1
       sinon:
         specifier: 'catalog:'
         version: 18.0.0

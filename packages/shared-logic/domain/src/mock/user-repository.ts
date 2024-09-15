@@ -5,8 +5,8 @@ import * as User from "../user.js";
 /**
  * Make In-memory version `UserRepository.T` for testing purpose.
  */
-export const newMemoryUserRepository = function newMemoryUserRepository(initial: Record<User.Id, User.T> = {}): R.T {
-  const data = new Map<User.Id, User.T>(Object.entries(initial).map(([k, v]) => [User.createId(k), v]));
+export const newMemoryUserRepository = function newMemoryUserRepository(initial: User.T[] = []): R.T {
+  const data = new Map<User.Id, User.T>(initial.map((v) => [v.id, v]));
 
   return {
     save(voting: User.T) {
