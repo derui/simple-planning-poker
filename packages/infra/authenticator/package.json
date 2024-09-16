@@ -1,5 +1,5 @@
 {
-  "name": "@spp/feature-domain-infra",
+  "name": "@spp/infra-authenticator",
   "version": "1.0.0",
   "description": "",
   "sideEffects": [],
@@ -11,6 +11,18 @@
       "import": {
         "default": "dist/index.js",
         "types": "src/index.ts"
+      }
+    },
+    "./firebase.js": {
+      "import": {
+        "default": "dist/firebase.js",
+        "types": "src/firebase.ts"
+      }
+    },
+    "./memory.js": {
+      "import": {
+        "default": "dist/memory.js",
+        "types": "src/memory.ts"
       }
     }
   },
@@ -29,27 +41,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@dotenvx/dotenvx": "catalog:",
-    "@firebase/rules-unit-testing": "catalog:",
     "@spp/eslint-config": "workspace:^",
-    "@spp/shared-get-pnpm-root": "workspace:^",
-    "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-    "firebase-tools": "catalog:",
-    "immer": "^10.0.3",
     "typescript": "catalog:",
-    "uuid": "^9.0.1",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-basic": "workspace:^",
     "@spp/shared-domain": "workspace:^",
-    "@spp/shared-use-case": "workspace:^",
-    "firebase": "catalog:"
+    "firebase": "catalog:",
+    "uuid": "^9.0.1"
   }
 }
