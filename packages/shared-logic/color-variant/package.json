@@ -1,0 +1,41 @@
+{
+  "name": "@spp/shared-color-variant",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "check-type": "tsc --noEmit",
+    "dev:build": "tsc --watch --noEmit --preserveWatchOutput",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev": "concurrently \"npm:dev:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    
+  }
+}
