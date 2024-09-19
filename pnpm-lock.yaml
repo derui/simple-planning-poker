@@ -640,6 +640,70 @@ importers:
         specifier: 'catalog:'
         version: 1.2.2(@types/node@22.5.5)(jsdom@25.0.0)
 
+  packages/ui/button-style:
+    dependencies:
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: 'catalog:'
+        version: 18.3.1
+    devDependencies:
+      '@spp/eslint-config':
+        specifier: workspace:^
+        version: link:../../../configs/eslint-config
+      '@spp/tailwind-config':
+        specifier: workspace:^
+        version: link:../../../configs/tailwind-config
+      '@spp/typescript-config':
+        specifier: workspace:^
+        version: link:../../../configs/typescript-config
+      '@storybook/addon-controls':
+        specifier: 'catalog:'
+        version: 8.2.0(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
+      '@storybook/cli':
+        specifier: 'catalog:'
+        version: 8.2.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+      '@storybook/react':
+        specifier: 'catalog:'
+        version: 8.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))(typescript@5.3.3)
+      '@storybook/react-vite':
+        specifier: 'catalog:'
+        version: 8.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.21.2)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))(typescript@5.3.3)(vite@5.0.12(@types/node@22.5.5))
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 14.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 18.3.5
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 4.2.1(vite@5.0.12(@types/node@22.5.5))
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.9.0(jiti@1.21.6)
+      jsdom:
+        specifier: 'catalog:'
+        version: 24.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.3.1(react@18.3.1)
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 3.4.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.3.3
+      vite:
+        specifier: 'catalog:'
+        version: 5.0.12(@types/node@22.5.5)
+      vitest:
+        specifier: 'catalog:'
+        version: 1.2.2(@types/node@22.5.5)(jsdom@24.0.0)
+
   packages/ui/dialog:
     dependencies:
       '@spp/ui-loader':
@@ -4534,7 +4598,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
 
   fsevents@2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
