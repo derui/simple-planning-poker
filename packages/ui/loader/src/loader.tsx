@@ -1,11 +1,13 @@
 import { clsx } from "clsx";
 import { Icon, Icons } from "@spp/ui-icon";
+import { VariantName } from "@spp/shared-color-variant";
 
 type Size = "s" | "m" | "l";
 
 interface Props {
   shown: boolean;
   size: Size;
+  variant?: VariantName;
 }
 
 const sizeStyle = (size: Size) =>
@@ -39,11 +41,11 @@ const styles = {
 };
 
 // eslint-disable-next-line func-style
-export function Loader({ size, shown }: Props) {
+export function Loader({ size, shown, variant }: Props) {
   return (
     <span className={styles.root(size, shown)} data-shown={shown} role="alert">
       <span className={styles.spinLoader(size)}>
-        <Icon type={Icons.loader2} size={size} />
+        <Icon type={Icons.loader2} size={size} variant={variant} />
       </span>
     </span>
   );

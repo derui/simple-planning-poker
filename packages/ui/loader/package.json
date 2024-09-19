@@ -43,13 +43,14 @@
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
+    "react-dom": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:",
-    "react-dom": "catalog:"
+    "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/shared-color-variant": "workspace:^",
     "clsx": "catalog:",
     "react": "catalog:"
   }

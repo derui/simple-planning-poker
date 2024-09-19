@@ -873,6 +873,9 @@ importers:
 
   packages/ui/loader:
     dependencies:
+      '@spp/shared-color-variant':
+        specifier: workspace:^
+        version: link:../../shared-logic/color-variant
       clsx:
         specifier: 'catalog:'
         version: 2.1.1

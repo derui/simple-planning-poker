@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`display loader with variant 1`] = `
+<div>
+  <span
+    class="relative inline-block w-5 h-5"
+    data-shown="true"
+    role="alert"
+  >
+    <span
+      class="absolute top-0 left-0 inline-block z-10 animate-spin w-5 h-5"
+    >
+      <span
+        class="flex before:bg-cerise-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/loader-2.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-5 before:h-5 w-5 h-5"
+      />
+    </span>
+  </span>
+</div>
+`;

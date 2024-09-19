@@ -1,6 +1,7 @@
 import { test, afterEach, expect } from "vitest";
 import { render, cleanup, screen } from "@testing-library/react";
 import { Loader } from "./loader.js";
+import { Variant } from "@spp/shared-color-variant";
 
 afterEach(cleanup);
 
@@ -20,4 +21,10 @@ test("display loader", () => {
 
   expect(ret).not.toBeNull();
   expect(ret?.dataset).toHaveProperty("shown", "true");
+});
+
+test("display loader with variant", () => {
+  const ret = render(<Loader size="s" shown={true} variant={Variant.cerise} />);
+
+  expect(ret.container).toMatchSnapshot();
 });
