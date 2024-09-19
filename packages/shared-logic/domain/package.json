@@ -48,7 +48,7 @@
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@types/crypto-js": "^4.2.2",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
@@ -60,6 +60,6 @@
     "@spp/shared-basic": "workspace:^",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   }
 }
