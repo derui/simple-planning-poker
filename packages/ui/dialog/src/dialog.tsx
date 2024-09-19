@@ -1,129 +1,100 @@
 import clsx from "clsx";
 import React, { PropsWithChildren } from "react";
 import { Loader } from "@spp/ui-loader";
+import { buttonStyle } from "@spp/ui-button-style";
 
-type ButtonState = "disabled" | "enabled" | "loading";
+type ButtonState = "disabled" | "loading";
 
 interface Props {
   title: string;
-  onSubmitClick: () => void;
+  onCancel?: () => void;
+  onSubmit: () => void;
   buttonLabel?: string;
-  buttonState: ButtonState;
+  buttonState?: ButtonState;
 }
 
 const styles = {
   root: clsx(
-    "flex",
+    "grid",
+    "grid-rows-3",
+    "grid-cols-1",
     "absolute",
-    "flex-col",
     "w-96",
     "max-w-md",
     "m-auto",
     "border",
-    "border-primary-400",
+    "border-emerald-400",
     "rounded",
     "shadow-md",
     "z-0",
     "top-1/2",
     "left-1/2",
+    "overflow-hidden",
     "[transform:translate(-50%,-50%)]"
   ),
 
   header: clsx(
+    "row-start-1",
+    "row-end-2",
+    "flex",
     "flex-auto",
-    "p-2",
+    "p-4",
     "text-lg",
     "font-bold",
-    "rounded",
-    "rounded-r-none",
-    "rounded-b-none",
-    "bg-primary-400",
-    "text-secondary1-200"
+    "bg-emerald-100",
+    "text-emerald-800"
   ),
 
-  main: clsx("flex-auto", "bg-white", "relative", "p-4"),
-
-  inputContainer: clsx("flex", "flex-col", "w-full", "mx-auto", "list-none", "py-0", "px-3"),
-
-  inputTerm: clsx("flex", "flex-auto", "items-center", "mb-4", "last:mb-0"),
-
-  inputLabel: clsx("flex-[0_0_auto]", "w-24"),
-
-  input: clsx(
-    "flex-auto",
-    "w-full",
-    "p-2",
-    "outline-none",
-    "rounded",
-    "border",
-    "border-lightgray/40",
-    "bg-lightgray/20",
-    "transition-colors",
-    "focus:border-secondary2-500",
-    "focus:bg-white"
-  ),
+  main: clsx("row-start-2", "row-end-3", "bg-white", "relative", "w-full", "h-full"),
 
   footer: clsx(
-    "flex",
-    "flex-col",
-    "items-end",
-    "flex-auto",
+    "row-start-3",
+    "row-end-4",
+    "grid",
+    "grid-rows-1",
+    "grid-cols-3",
     "p-2",
     "bg-white",
     "text-lg",
     "font-bold",
-    "rounded-b",
     "text-right",
-    "border",
-    "border-t-primary-400",
-    "text-secondary1-200"
+    "border-t",
+    "border-t-emerald-400",
+    "text-emerald-800"
   ),
 
-  submit: (state: ButtonState) =>
-    clsx(
-      "flex",
-      "flex-none",
-      "outline-none",
-      "border",
-      "px-3",
-      "py-2",
-      "rounded",
-      "cursor-pointer",
-      "items-center",
-      "justify-center",
-      "transition-all",
-      {
-        "text-gray": state !== "enabled",
-        "bg-lightgray/20": state !== "enabled",
-      },
-      {
-        "text-secondary1-500": state === "enabled",
-        "active:shadow-md": state === "enabled",
-        "hover:text-secondary1-200": state === "enabled",
-        "hover:bg-secondary1-500": state === "enabled",
-        "bg-secondary1-200": state === "enabled",
-        "border-secondary1-500": state === "enabled",
-      }
-    ),
+  action: (disabled: boolean) => clsx(buttonStyle({ variant: "emerald", disabled }), "col-start-3", "col-end-4"),
+
+  cancel: clsx(buttonStyle({ variant: "gray" }), "col-start-1", "col-end-2"),
 };
 
 // eslint-disable-next-line func-style
 export function Dialog(props: PropsWithChildren<Props>) {
-  const handleClick = (e: React.MouseEvent) => {
+  const handleActionClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
-    props.onSubmitClick();
+    props.onSubmit();
   };
 
-  const disabled = props.buttonState !== "enabled";
+  const handleCancelClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    props?.onCancel?.();
+  };
+
+  const disabled = !!props.buttonState;
 
   return (
     <div className={styles.root} role="dialog">
       <header className={styles.header}>{props.title}</header>
       <main className={styles.main}>{props.children}</main>
       <footer className={styles.footer}>
-        <button type="button" className={styles.submit(props.buttonState)} disabled={disabled} onClick={handleClick}>
+        <button type="button" className={styles.cancel} onClick={handleCancelClick}>
+          Cancel
+        </button>
+        <button type="button" className={styles.action(disabled)} disabled={disabled} onClick={handleActionClick}>
           <Loader size="s" shown={props.buttonState === "loading"} />
           {props.buttonLabel ?? "Submit"}
         </button>

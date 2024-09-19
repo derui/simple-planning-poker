@@ -52,6 +52,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/ui-button-style": "workspace:^",
     "@spp/ui-loader": "workspace:^",
     "@types/react": "catalog:",
     "clsx": "catalog:",

@@ -706,6 +706,9 @@ importers:
 
   packages/ui/dialog:
     dependencies:
+      '@spp/ui-button-style':
+        specifier: workspace:^
+        version: link:../button-style
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../loader
