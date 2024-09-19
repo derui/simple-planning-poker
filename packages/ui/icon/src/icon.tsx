@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { Icons } from "./icons.js";
+import { VariantName } from "@spp/shared-color-variant";
 
 export interface IconProps {
   /**
@@ -10,7 +11,7 @@ export interface IconProps {
   /**
    * variant of icon color.
    */
-  variant?: "gray" | "blue" | "teal" | "emerald" | "orange" | "chestnut" | "cerise" | "purple" | "indigo";
+  variant?: VariantName;
 
   /**
    * Type of icon.

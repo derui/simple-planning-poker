@@ -38,18 +38,19 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
     "@types/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
+    "react-dom": "catalog:",
     "tailwindcss": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:",
     "typescript": "catalog:",
-    "react-dom": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/shared-color-variant": "workspace:^",
     "clsx": "catalog:",
     "react": "catalog:"
   }

@@ -1,10 +1,11 @@
+import { VariantName } from "@spp/shared-color-variant";
 import clsx from "clsx";
 
 export interface Props {
   /**
    * Base color of button. These colors are based on color system.
    */
-  variant: "gray" | "blue" | "teal" | "emerald" | "orange" | "chestnut" | "cerise" | "purple" | "indigo";
+  variant: VariantName;
 
   /**
    * Add style for disabled state.

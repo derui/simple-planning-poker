@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { buttonStyle, Props } from "./button-style.js";
+import { Variant } from "@spp/shared-color-variant";
 
 const B = (props: Props) => {
   const style = buttonStyle(props);
@@ -24,47 +25,47 @@ type Story = StoryObj<typeof meta>;
 
 export const Gray: Story = {
   args: {
-    variant: "gray",
+    variant: Variant.gray,
   },
 };
 export const Blue: Story = {
   args: {
-    variant: "blue",
+    variant: Variant.blue,
   },
 };
 export const Teal: Story = {
   args: {
-    variant: "teal",
+    variant: Variant.teal,
   },
 };
 export const Emerald: Story = {
   args: {
-    variant: "emerald",
+    variant: Variant.emerald,
   },
 };
 export const Orange: Story = {
   args: {
-    variant: "orange",
+    variant: Variant.orange,
   },
 };
 export const Chestnut: Story = {
   args: {
-    variant: "chestnut",
+    variant: Variant.chestnut,
   },
 };
 export const Cerise: Story = {
   args: {
-    variant: "cerise",
+    variant: Variant.cerise,
   },
 };
 export const Purple: Story = {
   args: {
-    variant: "purple",
+    variant: Variant.purple,
   },
 };
 
 export const Indigo: Story = {
   args: {
-    variant: "indigo",
+    variant: Variant.indigo,
   },
 };
