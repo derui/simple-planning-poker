@@ -1,4 +1,4 @@
- import type { StorybookConfig } from "@storybook/react-vite";
+import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.tsx"],
@@ -7,11 +7,6 @@ const config: StorybookConfig = {
   docs: {
     autodocs: "tag",
   },
-
-  previewHead: (head) => `
-    ${head}
-    <link rel="stylesheet" href="/style.css">
-    `,
 
   staticDirs: [
     { from: "../../../../app/public/static", to: "/static" },

@@ -8,12 +8,6 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
 
-  previewHead: (head) => `
-    ${head}
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/ui-icon/style.css">
-    `,
-
   staticDirs: [
     { from: "../../../../app/public/static", to: "/static" },
     { from: "../dist/style.css", to: "/style.css" },

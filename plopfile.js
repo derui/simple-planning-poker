@@ -51,8 +51,8 @@ const registerFeaturePackage = function registerFeaturePackage(plop) {
       },
       {
         type: "add",
-        path: "features/{{name}}/.storybook/preview.ts",
-        templateFile: "plop-templates/common/storybook/preview.ts.hbs",
+        path: "features/{{name}}/.storybook/preview.tsx",
+        templateFile: "plop-templates/common/storybook/preview.tsx.hbs",
       },
       {
         type: "add",
@@ -211,8 +211,8 @@ export default function (plop) {
       },
       {
         type: "add",
-        path: "packages/ui/{{name}}/.storybook/preview.ts",
-        templateFile: "plop-templates/common/storybook/preview.ts.hbs",
+        path: "packages/ui/{{name}}/.storybook/preview.tsx",
+        templateFile: "plop-templates/common/storybook/preview.tsx.hbs",
       },
       {
         type: "add",
