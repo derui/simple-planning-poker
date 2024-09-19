@@ -8,26 +8,26 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/index.js",
-        "types": "./src/index.ts"
+        "types": "./src/index.ts",
+        "default": "./dist/index.js"
       }
     },
     "./mock/voting-repository": {
       "import": {
-        "default": "./dist/mock/voting-repository.js",
-        "types": "./src/mock/voting-repository.ts"
+        "types": "./src/mock/voting-repository.ts",
+        "default": "./dist/mock/voting-repository.js"
       }
     },
     "./mock/game-repository": {
       "import": {
-        "default": "./dist/mock/game-repository.js",
-        "types": "./src/mock/game-repository.ts"
+        "types": "./src/mock/game-repository.ts",
+        "default": "./dist/mock/game-repository.js"
       }
     },
     "./mock/user-repository": {
       "import": {
-        "default": "./dist/mock/user-repository.js",
-        "types": "./src/mock/user-repository.ts"
+        "types": "./src/mock/user-repository.ts",
+        "default": "./dist/mock/user-repository.js"
       }
     }
   },

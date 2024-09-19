@@ -9,20 +9,20 @@
   "exports": {
     ".": {
       "import": {
-        "default": "dist/index.js",
-        "types": "src/index.ts"
+        "types": "src/index.ts",
+        "default": "dist/index.js"
       }
     },
     "./firebase.js": {
       "import": {
-        "default": "dist/firebase.js",
-        "types": "src/firebase.ts"
+        "types": "src/firebase.ts",
+        "default": "dist/firebase.js"
       }
     },
     "./memory.js": {
       "import": {
-        "default": "dist/memory.js",
-        "types": "src/memory.ts"
+        "types": "src/memory.ts",
+        "default": "dist/memory.js"
       }
     }
   },

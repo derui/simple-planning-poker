@@ -9,8 +9,8 @@
   "exports": {
     ".": {
       "import": {
-        "default": "dist/index.js",
-        "types": "src/index.ts"
+        "types": "src/index.ts",
+        "default": "dist/index.js"
       }
     }
   },
@@ -35,14 +35,14 @@
     "@spp/shared-get-pnpm-root": "workspace:^",
     "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "firebase-tools": "catalog:",
     "immer": "^10.0.3",
     "typescript": "catalog:",
-    "uuid": "^10.0.0",
+    "uuid": "^9.0.1",
     "vite": "catalog:",
     "vitest": "catalog:"
   },

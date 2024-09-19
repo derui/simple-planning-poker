@@ -9,8 +9,8 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/index.js",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       }
     }
   },
@@ -35,7 +35,5 @@
     "vitest": "catalog:",
     "typescript": "catalog:"
   },
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }
