@@ -10,7 +10,7 @@ const styles = {
     clsx(
       "absolute",
       "z-10",
-      "bg-gray/20",
+      "bg-gray-500/80",
       "w-full",
       "h-full",
       "top-0",
