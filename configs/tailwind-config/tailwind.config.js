@@ -112,7 +112,6 @@ export default {
       },
 
       darkgray: "#404040",
-      gray: "#808080",
       lightgray: "#D0D0D0",
       white: "#FFF",
     },
