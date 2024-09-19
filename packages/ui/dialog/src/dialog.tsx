@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React, { PropsWithChildren } from "react";
 import { Loader } from "@spp/ui-loader";
 import { buttonStyle } from "@spp/ui-button-style";
+import { Variant } from "@spp/shared-color-variant";
 
 type ButtonState = "disabled" | "loading";
 
@@ -63,7 +64,17 @@ const styles = {
     "text-emerald-800"
   ),
 
-  action: (disabled: boolean) => clsx(buttonStyle({ variant: "emerald", disabled }), "col-start-3", "col-end-4"),
+  action: (disabled: boolean) =>
+    clsx(
+      buttonStyle({ variant: "emerald", disabled }),
+      "col-start-3",
+      "col-end-4",
+      "flex",
+      "items-center",
+      "flex-row",
+      "gap-2",
+      "justify-center"
+    ),
 
   cancel: clsx(buttonStyle({ variant: "gray" }), "col-start-1", "col-end-2"),
 };
@@ -95,7 +106,7 @@ export function Dialog(props: PropsWithChildren<Props>) {
           Cancel
         </button>
         <button type="button" className={styles.action(disabled)} disabled={disabled} onClick={handleActionClick}>
-          <Loader size="s" shown={props.buttonState === "loading"} />
+          <Loader size="s" shown={props.buttonState === "loading"} variant={Variant.emerald} />
           {props.buttonLabel ?? "Submit"}
         </button>
       </footer>

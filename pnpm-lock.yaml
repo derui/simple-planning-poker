@@ -733,6 +733,9 @@ importers:
 
   packages/ui/dialog:
     dependencies:
+      '@spp/shared-color-variant':
+        specifier: workspace:^
+        version: link:../../shared-logic/color-variant
       '@spp/ui-button-style':
         specifier: workspace:^
         version: link:../button-style
