@@ -22,3 +22,9 @@ test("render size large", () => {
 
   expect(ret.container).toMatchSnapshot();
 });
+
+test("render change icon color variant", () => {
+  const ret = render(<Icon size="l" type={Icons.chevronDown} variant="teal" />);
+
+  expect(ret.container).toMatchSnapshot();
+});

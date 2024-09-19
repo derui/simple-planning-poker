@@ -8,6 +8,11 @@ export interface IconProps {
   size?: "s" | "m" | "l";
 
   /**
+   * variant of icon color.
+   */
+  variant?: "gray" | "blue" | "teal" | "emerald" | "orange" | "chestnut" | "cerise" | "purple" | "indigo";
+
+  /**
    * Type of icon.
    */
   type: Icons;
@@ -80,12 +85,24 @@ const toUrl = function toUrl(icon: Icons): string {
   }
 };
 
+const variantStyle = {
+  gray: clsx("before:bg-gray-700"),
+  blue: clsx("before:bg-blue-700"),
+  teal: clsx("before:bg-teal-700"),
+  emerald: clsx("before:bg-emerald-700"),
+  orange: clsx("before:bg-orange-700"),
+  chestnut: clsx("before:bg-chestnut-700"),
+  cerise: clsx("before:bg-cerise-700"),
+  purple: clsx("before:bg-purple-700"),
+  indigo: clsx("before:bg-indigo-700"),
+} as const;
+
 export const Icon = function Icon(props: IconProps) {
   const size = props.size ?? "m";
 
   const styles = clsx(
     "flex",
-    "before:bg-gray",
+    variantStyle[props.variant ?? "gray"],
     "before:inline-block",
     "before:flex-none",
     toUrl(props.type),
