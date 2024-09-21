@@ -4,7 +4,10 @@ import { Authenticator } from "./type.js";
 /**
  * In memory version authenticator
  */
-export const newMemoryAuthenticator = function newMemoryAuthenticator(userRepository: UserRepository.T): Authenticator {
+export const newMemoryAuthenticator = function newMemoryAuthenticator(
+  userRepository: UserRepository.T,
+  loginedUser?: User.Id
+): Authenticator {
   return {
     async signIn(email: string, password: string): Promise<User.Id | undefined> {
       try {
@@ -40,7 +43,7 @@ export const newMemoryAuthenticator = function newMemoryAuthenticator(userReposi
     },
 
     async currentUserIdIfExists(): Promise<User.Id | undefined> {
-      return Promise.resolve(undefined);
+      return Promise.resolve(loginedUser);
     },
   };
 };

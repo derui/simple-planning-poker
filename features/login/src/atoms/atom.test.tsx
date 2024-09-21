@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createUseLogin, useAuth } from "./atom.js";
+import { createUseLogin, createUseAuth } from "./atom.js";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { newMemoryAuthenticator } from "@spp/infra-authenticator/memory.js";
@@ -13,34 +13,50 @@ const createWrapper =
 describe("UseAuth", () => {
   test("all status points not logined", () => {
     // Arrange
+    const authenticator = newMemoryAuthenticator(newMemoryUserRepository());
     const store = createStore();
 
     // Act
-    const { result } = renderHook(() => useAuth(), { wrapper: createWrapper(store) });
+    const { result } = renderHook(() => createUseAuth(authenticator)(), { wrapper: createWrapper(store) });
 
     // Assert
     expect(result.current.currentUserId).toBeUndefined();
-    expect(result.current.logined).toBeFalsy();
+    expect(result.current.status).toEqual("notAuthenticated");
   });
 
-  test("logined status", async () => {
+  test("authenticated status", async () => {
     // Arrange
-    const authenticator = newMemoryAuthenticator(newMemoryUserRepository());
+    const authenticator = newMemoryAuthenticator(newMemoryUserRepository(), User.createId("foo"));
 
     const store = createStore();
     const wrapper = createWrapper(store);
-    const login = renderHook(() => createUseLogin(authenticator)(), { wrapper });
 
-    login.result.current.signUp("test@example.com", "foo");
+    // Act
+    const { result } = renderHook(() => createUseAuth(authenticator)(), { wrapper });
+
+    act(() => result.current.checkLogined());
 
     await waitFor(() => Promise.resolve());
 
-    // Act
-    const { result } = renderHook(() => useAuth(), { wrapper });
-
     // Assert
     expect(result.current.currentUserId).not.toBeUndefined();
-    expect(result.current.logined).toBeTruthy();
+    expect(result.current.status).toEqual("authenticated");
+  });
+  test("checking status", async () => {
+    // Arrange
+    const authenticator = newMemoryAuthenticator(newMemoryUserRepository(), User.createId("foo"));
+
+    const store = createStore();
+    const wrapper = createWrapper(store);
+
+    // Act
+    const { result } = renderHook(() => createUseAuth(authenticator)(), { wrapper });
+
+    act(() => result.current.checkLogined());
+
+    // Assert
+    expect(result.current.currentUserId).toBeUndefined();
+    expect(result.current.status).toEqual("checking");
   });
 });
 

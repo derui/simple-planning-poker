@@ -8,11 +8,6 @@ import { atom, useAtom } from "jotai";
 const currentUserIdAtom = atom<User.Id | undefined>();
 
 /**
- * An user is logined or not
- */
-const loginedAtom = atom((get) => get(currentUserIdAtom) != undefined);
-
-/**
  * Login status
  */
 enum LoginStatus {
@@ -28,18 +23,34 @@ const loginStatusAtom = atom<LoginStatus>(LoginStatus.NotLogined);
 const loginErrorAtom = atom<string | undefined>();
 
 /**
+ * Authentication status. Not same as login status.
+ */
+enum AuthStatus {
+  Checking = "checking",
+  NotAuthenticated = "notAuthenticated",
+  Authenticated = "authenticated",
+}
+
+const authStatusAtom = atom<AuthStatus>(AuthStatus.NotAuthenticated);
+
+/**
  * Hook interface
  */
 export type UseAuth = () => {
   /**
    * logined or not
    */
-  logined: boolean;
+  status: AuthStatus;
 
   /**
    * Logined user id
    */
   currentUserId: User.Id | undefined;
+
+  /**
+   * Start checking login or not
+   */
+  checkLogined(): void;
 
   /**
    * Logout user
@@ -50,17 +61,36 @@ export type UseAuth = () => {
 /**
  * Hook factory for `useAuth`
  */
-export const useAuth: UseAuth = () => {
-  const [logined] = useAtom(loginedAtom);
-  const [currentUserId, setCurrentUserId] = useAtom(currentUserIdAtom);
+export const createUseAuth = function createUseAuth(authenticator: Authenticator): UseAuth {
+  return () => {
+    const [currentUserId, setCurrentUserId] = useAtom(currentUserIdAtom);
+    const [status, setStatus] = useAtom(authStatusAtom);
 
-  return {
-    logined,
-    currentUserId,
-    logout: () => {
-      setCurrentUserId(undefined);
-      return Promise.resolve();
-    },
+    return {
+      status,
+      currentUserId,
+      checkLogined() {
+        setStatus(AuthStatus.Checking);
+
+        authenticator
+          .currentUserIdIfExists()
+          .then((userId) => {
+            if (!userId) {
+              setStatus(AuthStatus.NotAuthenticated);
+            } else {
+              setCurrentUserId(userId);
+              setStatus(AuthStatus.Authenticated);
+            }
+          })
+          .catch(() => {
+            setStatus(AuthStatus.NotAuthenticated);
+          });
+      },
+      logout: () => {
+        setCurrentUserId(undefined);
+        return Promise.resolve();
+      },
+    };
   };
 };
 
