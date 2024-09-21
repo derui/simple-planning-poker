@@ -25,7 +25,7 @@ const loginErrorAtom = atom<string | undefined>();
 /**
  * Authentication status. Not same as login status.
  */
-enum AuthStatus {
+export enum AuthStatus {
   Checking = "checking",
   NotAuthenticated = "notAuthenticated",
   Authenticated = "authenticated",

@@ -1,12 +1,13 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
-import { userEvent } from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { SignUp } from "./signup.js";
 import { createStore, Provider } from "jotai";
 import { Hooks, ImplementationProvider } from "../hooks/facade.js";
 import sinon from "sinon";
 import { gameIndexPage } from "@spp/shared-app-url";
+import { AuthStatus } from "../atoms/atom.js";
+import { Login } from "./login.js";
+import * as Url from "@spp/shared-app-url";
 
 afterEach(cleanup);
 
@@ -14,75 +15,75 @@ test("render page", () => {
   const store = createStore();
 
   const mock: Hooks = {
-    useLogin() {
+    useLogin: sinon.fake(),
+    useAuth() {
       return {
-        signIn: sinon.fake(),
-        signUp: sinon.fake(),
-        status: "notLogined",
-        loginError: undefined,
+        status: AuthStatus.NotAuthenticated,
+        checkLogined: sinon.fake(),
+        logout: sinon.fake(),
+        currentUserId: undefined,
       };
     },
-    useAuth: sinon.fake(),
   };
 
   render(
     <ImplementationProvider implementation={mock}>
       <Provider store={store}>
         <MemoryRouter>
-          <SignUp />
+          <Login />
         </MemoryRouter>
       </Provider>
     </ImplementationProvider>
   );
 
-  expect(screen.getByRole("main")).not.toBeNull();
-  expect(screen.queryByText(/Sign Up/)).not.toBeNull();
+  expect(screen.getByText("Sign In").tagName.toLowerCase()).toEqual("a");
+  expect(screen.getByText<HTMLAnchorElement>("Sign In").href).toContain(Url.signInPage());
+  expect(screen.getByText(/Sign Up/).tagName.toLowerCase()).toEqual("a");
+  expect(screen.getByText<HTMLAnchorElement>("Sign Up").href).toContain(Url.signUpPage());
 });
 
-test("call hook after submit", async () => {
+test("call hook on mount", async () => {
   // Arrange
-  const signUpFake = sinon.fake();
+  const checkFake = sinon.fake();
   const mock: Hooks = {
-    useLogin() {
+    useLogin: sinon.fake(),
+    useAuth() {
       return {
-        signIn: sinon.fake(),
-        signUp: signUpFake,
-        status: "notLogined",
-        loginError: undefined,
+        status: AuthStatus.NotAuthenticated,
+        checkLogined: checkFake,
+        logout: sinon.fake(),
+        currentUserId: undefined,
       };
     },
-    useAuth: sinon.fake(),
   };
 
   // Act
   render(
     <ImplementationProvider implementation={mock}>
       <MemoryRouter>
-        <SignUp />
+        <Login />
       </MemoryRouter>
     </ImplementationProvider>
   );
 
-  await userEvent.type(screen.getByPlaceholderText("e.g. yourname@yourdomain.com"), "email");
-  await userEvent.type(screen.getByPlaceholderText("Password"), "password");
-  await userEvent.click(screen.getByText("Submit"));
+  await waitFor(() => Promise.resolve());
 
   // Assert
-  expect(signUpFake.lastCall.args).toEqual(["email", "password"]);
+  expect(checkFake.callCount).toEqual(1);
 });
 
-test("navigate game if user already logined", async () => {
+test("navigate game if user already authenticated", async () => {
   // Arrange
   const mock: Hooks = {
-    useLogin() {
+    useLogin: sinon.fake(),
+    useAuth() {
       return {
-        signIn: sinon.fake(),
-        signUp: sinon.fake(),
-        status: "logined",
-        loginError: undefined,
+        status: AuthStatus.Authenticated,
+        checkLogined: sinon.fake(),
+        logout: sinon.fake(),
+        currentUserId: undefined,
       };
     },
-    useAuth: sinon.fake(),
   };
 
   // Act
@@ -91,7 +92,7 @@ test("navigate game if user already logined", async () => {
       <MemoryRouter>
         <Routes>
           <Route path={gameIndexPage()} element={"Game"} />
-          <Route path="/" element={<SignUp />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       </MemoryRouter>
     </ImplementationProvider>
