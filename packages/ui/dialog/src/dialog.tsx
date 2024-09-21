@@ -8,6 +8,7 @@ type ButtonState = "disabled" | "loading";
 
 interface Props {
   title: string;
+  rootElement?: keyof React.ReactHTML;
   onCancel?: () => void;
   onSubmit: () => void;
   buttonLabel?: string;
@@ -19,7 +20,6 @@ const styles = {
     "grid",
     "grid-rows-3",
     "grid-cols-1",
-    "absolute",
     "w-96",
     "max-w-md",
     "m-auto",
@@ -28,10 +28,7 @@ const styles = {
     "rounded",
     "shadow-md",
     "z-0",
-    "top-1/2",
-    "left-1/2",
-    "overflow-hidden",
-    "[transform:translate(-50%,-50%)]"
+    "overflow-hidden"
   ),
 
   header: clsx(
@@ -46,7 +43,9 @@ const styles = {
     "text-emerald-800"
   ),
 
-  main: clsx("row-start-2", "row-end-3", "bg-white", "relative", "w-full", "h-full"),
+  main: clsx("row-start-2", "row-end-4", "w-full", "h-full", "grid", "grid-rows-2", "grid-cols-1"),
+
+  content: clsx("w-full", "h-full", "relative", "bg-white"),
 
   footer: clsx(
     "row-start-3",
@@ -61,7 +60,8 @@ const styles = {
     "text-right",
     "border-t",
     "border-t-emerald-400",
-    "text-emerald-800"
+    "text-emerald-800",
+    "h-16"
   ),
 
   action: (disabled: boolean) =>
@@ -96,20 +96,23 @@ export function Dialog(props: PropsWithChildren<Props>) {
   };
 
   const disabled = !!props.buttonState;
+  const R = props.rootElement ?? "div";
 
   return (
     <div className={styles.root} role="dialog">
-      <header className={styles.header}>{props.title}</header>
-      <main className={styles.main}>{props.children}</main>
-      <footer className={styles.footer}>
-        <button type="button" className={styles.cancel} onClick={handleCancelClick}>
-          Cancel
-        </button>
-        <button type="button" className={styles.action(disabled)} disabled={disabled} onClick={handleActionClick}>
-          <Loader size="s" shown={props.buttonState === "loading"} variant={Variant.emerald} />
-          {props.buttonLabel ?? "Submit"}
-        </button>
-      </footer>
+      <div className={styles.header}>{props.title}</div>
+      <R className={styles.main} role="article">
+        <div className={styles.content}>{props.children}</div>
+        <div className={styles.footer}>
+          <button type="button" className={styles.cancel} onClick={handleCancelClick}>
+            Cancel
+          </button>
+          <button type="button" className={styles.action(disabled)} disabled={disabled} onClick={handleActionClick}>
+            <Loader size="s" shown={props.buttonState === "loading"} variant={Variant.emerald} />
+            {props.buttonLabel ?? "Submit"}
+          </button>
+        </div>
+      </R>
     </div>
   );
 }

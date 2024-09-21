@@ -137,6 +137,9 @@ importers:
       '@spp/infra-authenticator':
         specifier: workspace:^
         version: link:../../packages/infra/authenticator
+      '@spp/shared-app-url':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/app-url
       '@spp/shared-color-variant':
         specifier: workspace:^
         version: link:../../packages/shared-logic/color-variant

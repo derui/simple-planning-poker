@@ -49,3 +49,9 @@ test("show loader when loading", async () => {
   expect(screen.getByText("Submit")).toHaveProperty("disabled", true);
   expect(screen.getByRole("alert")).not.toBeNull();
 });
+
+test("change element of content", async () => {
+  render(<Dialog title="title" onSubmit={() => {}} buttonState="loading" rootElement="form" />);
+
+  expect(screen.getByRole("article").tagName.toLowerCase()).toEqual("form");
+});
