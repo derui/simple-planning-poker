@@ -11,7 +11,6 @@ export const createFacade = function createFacade<Hooks extends Record<string, (
 } {
   const providerNotFound: unique symbol = Symbol();
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const Context = createContext<Hooks | typeof providerNotFound>(providerNotFound);
 
   const implementationHandler: ProxyHandler<Hooks> = {

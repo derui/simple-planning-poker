@@ -140,6 +140,9 @@ importers:
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
+      '@spp/shared-hook-facade':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/hook-facade
       '@spp/ui-button-style':
         specifier: workspace:^
         version: link:../../packages/ui/button-style

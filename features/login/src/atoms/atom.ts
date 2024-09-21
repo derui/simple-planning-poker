@@ -67,7 +67,7 @@ export const useAuth: UseAuth = () => {
 /**
  * Hook to login
  */
-export type useLogin = () => {
+export type UseLogin = () => {
   /**
    * sign in existance user
    */
@@ -92,7 +92,7 @@ export type useLogin = () => {
 /**
  * Factory function to create `useLogin` hook
  */
-export const createUseLogin = function createUseLogin(authenticator: Authenticator): useLogin {
+export const createUseLogin = function createUseLogin(authenticator: Authenticator): UseLogin {
   return () => {
     const [, setCurrentUserId] = useAtom(currentUserIdAtom);
     const [status, setStatus] = useAtom(loginStatusAtom);
