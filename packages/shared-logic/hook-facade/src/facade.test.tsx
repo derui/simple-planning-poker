@@ -30,7 +30,7 @@ test("should throw error when do not provide implementation", () => {
     useAString(): string;
   };
 
-  const { hooks, ImplementationProvider } = createFacade<T>();
+  const { hooks } = createFacade<T>();
 
   // Act
 
