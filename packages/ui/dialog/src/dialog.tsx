@@ -1,8 +1,5 @@
 import clsx from "clsx";
-import React, { PropsWithChildren } from "react";
-import { Loader } from "@spp/ui-loader";
-import { buttonStyle } from "@spp/ui-button-style";
-import { Variant } from "@spp/shared-color-variant";
+import { PropsWithChildren } from "react";
 
 interface Props {
   title: string;
@@ -11,7 +8,7 @@ interface Props {
 const styles = {
   root: clsx(
     "grid",
-    "grid-rows-3",
+    "grid-rows-[auto_1fr]",
     "grid-cols-1",
     "w-96",
     "max-w-md",
@@ -30,6 +27,7 @@ const styles = {
     "flex",
     "flex-auto",
     "p-4",
+    "h-16",
     "text-lg",
     "font-bold",
     "bg-emerald-100",

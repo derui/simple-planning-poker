@@ -1,5 +1,6 @@
 import { Variant } from "@spp/shared-color-variant";
 import { buttonStyle } from "@spp/ui-button-style";
+import { Loader } from "@spp/ui-loader";
 import { clsx } from "clsx";
 import { useState } from "react";
 
@@ -8,22 +9,17 @@ interface Props {
    * Call hook after submit
    */
   onSubmit?: (email: string, password: string) => void;
+
+  /**
+   * loading or not. Default is not loading
+   */
+  loading?: boolean;
 }
 
 const styles = {
-  root: clsx("h-full", "w-full", "grid", "grid-rows-3", "grid-cols-4", "gap-4"),
+  root: clsx("h-full", "w-full", "grid", "grid-rows-3", "grid-cols-1", "gap-4", "px-4", "py-2"),
   dialogText: clsx("ml-3"),
-  inputContainer: clsx(
-    "grid",
-    "grid-rows-2",
-    "grid-cols-1",
-    "w-full",
-    "mx-auto",
-    "list-none",
-    "py-0",
-    "px-3",
-    "col-span-4"
-  ),
+  inputContainer: clsx("grid", "grid-rows-2", "grid-cols-1", "w-full", "mx-auto", "list-none", "col-span-4"),
 
   inputTerm: clsx("grid", "place-content-center"),
 
@@ -42,7 +38,7 @@ const styles = {
     "focus:bg-white"
   ),
 
-  submitContainer: clsx("col-start-4", "col-end-4", "grid", "place-content-center"),
+  submitContainer: clsx("col-start-4", "col-end-5", "grid", "place-content-center"),
   submit: clsx(buttonStyle({ variant: Variant.emerald })),
 };
 
@@ -56,18 +52,19 @@ export function LoginForm(props: Props) {
 
     props.onSubmit?.(email, password);
   };
+  const loading = props.loading ?? false;
 
   return (
     <form className={styles.root} onSubmit={handleSubmit}>
       <div className={styles.inputContainer}>
         <label className={styles.inputLabel}>Email</label>
         <input
-          type="text"
           name="email"
           className={styles.input}
           value={email}
           placeholder="e.g. yourname@yourdomain.com"
           onChange={(e) => setEmail(e.target.value)}
+          tabindex={0}
         />
       </div>
       <div className={styles.inputContainer}>
@@ -80,10 +77,12 @@ export function LoginForm(props: Props) {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          tabindex={0}
         />
       </div>
       <div className={styles.submitContainer}>
         <button type="submit" className={styles.submit}>
+          <Loader size="s" shown={loading} />
           Submit
         </button>
       </div>
