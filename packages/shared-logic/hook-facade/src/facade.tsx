@@ -35,7 +35,7 @@ export const createFacade = function createFacade<Hooks extends Record<string, (
       return [];
     },
     getOwnPropertyDescriptor() {
-      return;
+      return undefined;
     },
     getPrototypeOf() {
       return null;

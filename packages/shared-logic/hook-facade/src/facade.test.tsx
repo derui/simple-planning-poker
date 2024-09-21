@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { createFacade } from "./facade.js";
-import { renderHook, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 
 test("pass implementation", () => {
   // Arrange
