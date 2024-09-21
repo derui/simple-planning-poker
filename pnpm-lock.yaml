@@ -6,12 +6,6 @@ settings:
 
 catalogs:
   default:
-    '@dotenvx/dotenvx':
-      specifier: ^1.14.1
-      version: 1.14.1
-    '@firebase/rules-unit-testing':
-      specifier: ^3.0.1
-      version: 3.0.4
     '@storybook/addon-controls':
       specifier: ^8.3.1
       version: 8.3.1
@@ -30,9 +24,6 @@ catalogs:
     '@types/react':
       specifier: ^18.3.7
       version: 18.3.7
-    '@types/sinon':
-      specifier: ^17.0.3
-      version: 17.0.3
     '@vitejs/plugin-react':
       specifier: 4.3.1
       version: 4.3.1
@@ -45,42 +36,18 @@ catalogs:
     eslint:
       specifier: ^9.10.0
       version: 9.10.0
-    eslint-config-prettier:
-      specifier: ^9.1.0
-      version: 9.1.0
-    eslint-plugin-react:
-      specifier: ^7.36.1
-      version: 7.36.1
-    eslint-plugin-unused-imports:
-      specifier: ^4.1.4
-      version: 4.1.4
-    firebase:
-      specifier: ^10.13.2
-      version: 10.13.2
-    firebase-tools:
-      specifier: ^13.17.0
-      version: 13.17.0
     jsdom:
       specifier: 25.0.0
       version: 25.0.0
     react:
       specifier: 18.3.1
       version: 18.3.1
-    react-dom:
-      specifier: 18.3.1
-      version: 18.3.1
-    sinon:
-      specifier: 19.0.2
-      version: 19.0.2
     tailwindcss:
       specifier: 3.4.12
       version: 3.4.12
     typescript:
       specifier: 5.6.2
       version: 5.6.2
-    typescript-eslint:
-      specifier: ^8.6.0
-      version: 8.6.0
     vite:
       specifier: 5.4.6
       version: 5.4.6
