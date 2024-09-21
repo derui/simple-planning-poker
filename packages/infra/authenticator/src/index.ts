@@ -1,3 +1,3 @@
-import type { Authenticator } from "./type.js";
+import { Authenticator } from "./type.js";
 
-export { Authenticator };
+export type { Authenticator };
