@@ -64,7 +64,7 @@ export function LoginForm(props: Props) {
           value={email}
           placeholder="e.g. yourname@yourdomain.com"
           onChange={(e) => setEmail(e.target.value)}
-          tabindex={0}
+          tabIndex={0}
         />
       </div>
       <div className={styles.inputContainer}>
@@ -77,7 +77,7 @@ export function LoginForm(props: Props) {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          tabindex={0}
+          tabIndex={0}
         />
       </div>
       <div className={styles.submitContainer}>
