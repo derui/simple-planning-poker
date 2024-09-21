@@ -1,3 +1,5 @@
+import { Variant } from "@spp/shared-color-variant";
+import { buttonStyle } from "@spp/ui-button-style";
 import { clsx } from "clsx";
 import { useState } from "react";
 
@@ -9,29 +11,39 @@ interface Props {
 }
 
 const styles = {
-  root: clsx("h-full", "w-full", "grid-rows-3", "grid-cols-4"),
+  root: clsx("h-full", "w-full", "grid", "grid-rows-3", "grid-cols-4", "gap-4"),
   dialogText: clsx("ml-3"),
-  inputContainer: clsx("flex", "flex-col", "w-full", "mx-auto", "list-none", "py-0", "px-3"),
+  inputContainer: clsx(
+    "grid",
+    "grid-rows-2",
+    "grid-cols-1",
+    "w-full",
+    "mx-auto",
+    "list-none",
+    "py-0",
+    "px-3",
+    "col-span-4"
+  ),
 
-  inputTerm: clsx("flex", "flex-auto", "items-center", "mb-4", "last:mb-0"),
+  inputTerm: clsx("grid", "place-content-center"),
 
-  inputLabel: clsx("flex-[0_0_auto]", "w-24"),
+  inputLabel: clsx("grid", "place-content-start", "w-24"),
 
   input: clsx(
-    "flex-auto",
     "w-full",
     "p-2",
     "outline-none",
     "rounded",
     "border",
-    "border-lightgray/40",
-    "bg-lightgray/20",
+    "border-emerald-800",
+    "bg-gray-100",
     "transition-colors",
-    "focus:border-secondary2-500",
+    "focus:border-emerald-600",
     "focus:bg-white"
   ),
 
-  submit: clsx("col-start-3", "col-end-4", "rounded"),
+  submitContainer: clsx("col-start-4", "col-end-4", "grid", "place-content-center"),
+  submit: clsx(buttonStyle({ variant: Variant.emerald })),
 };
 
 // eslint-disable-next-line func-style
@@ -48,7 +60,7 @@ export function LoginForm(props: Props) {
   return (
     <form className={styles.root} onSubmit={handleSubmit}>
       <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>email</label>
+        <label className={styles.inputLabel}>Email</label>
         <input
           type="text"
           name="email"
@@ -59,7 +71,7 @@ export function LoginForm(props: Props) {
         />
       </div>
       <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>password</label>
+        <label className={styles.inputLabel}>Password</label>
         <input
           type="password"
           name="password"
@@ -70,9 +82,11 @@ export function LoginForm(props: Props) {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit" className={styles.submit}>
-        Submit
-      </button>
+      <div className={styles.submitContainer}>
+        <button type="submit" className={styles.submit}>
+          Submit
+        </button>
+      </div>
     </form>
   );
 }

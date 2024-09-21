@@ -52,11 +52,15 @@
   },
   "dependencies": {
     "@spp/infra-authenticator": "workspace:^",
+    "@spp/shared-color-variant": "workspace:^",
+    "@spp/shared-domain": "workspace:^",
+    "@spp/ui-button-style": "workspace:^",
     "@spp/ui-dialog": "workspace:^",
     "@spp/ui-loader": "workspace:^",
     "@spp/ui-overlay": "workspace:^",
     "@types/react": "catalog:",
     "clsx": "catalog:",
+    "jotai": "^2.10.0",
     "react": "catalog:"
   }
 }
