@@ -42,7 +42,8 @@ describe("UseAuth", () => {
     expect(result.current.currentUserId).not.toBeUndefined();
     expect(result.current.status).toEqual("authenticated");
   });
-  test("checking status", async () => {
+
+  test("checking status", () => {
     // Arrange
     const authenticator = newMemoryAuthenticator(newMemoryUserRepository(), User.createId("foo"));
 
@@ -79,7 +80,7 @@ describe("UseLogin", () => {
     expect(result.current.status).toEqual("logined");
   });
 
-  test("set notLogined before any sign in/up command", async () => {
+  test("set notLogined before any sign in/up command", () => {
     // Arrange
     const authenticator = newMemoryAuthenticator(newMemoryUserRepository());
 
@@ -93,7 +94,7 @@ describe("UseLogin", () => {
     expect(result.current.status).toEqual("notLogined");
   });
 
-  test("set doing while sign up", async () => {
+  test("set doing while sign up", () => {
     // Arrange
     const authenticator = newMemoryAuthenticator(newMemoryUserRepository());
 
@@ -109,7 +110,7 @@ describe("UseLogin", () => {
     expect(result.current.status).toEqual("doing");
   });
 
-  test("set doing while sign in", async () => {
+  test("set doing while sign in", () => {
     // Arrange
     const authenticator = newMemoryAuthenticator(
       newMemoryUserRepository([User.create({ id: User.createId("test/pass"), name: "test" })])
