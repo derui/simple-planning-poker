@@ -6,12 +6,12 @@ import { Authenticator } from "./type.js";
  */
 export const newMemoryAuthenticator = function newMemoryAuthenticator(userRepository: UserRepository.T): Authenticator {
   return {
-    async signIn(email: string, password: string): Promise<User.Id> {
+    async signIn(email: string, password: string): Promise<User.Id | undefined> {
       try {
         const userId = User.createId(`${email}/${password}`);
         const user = await userRepository.findBy(userId);
         if (!user) {
-          throw Error("Not found user");
+          return;
         }
 
         return user.id;
@@ -21,10 +21,15 @@ export const newMemoryAuthenticator = function newMemoryAuthenticator(userReposi
       }
     },
 
-    async signUp(name: string, email: string, password: string): Promise<User.Id> {
+    async signUp(name: string, email: string, password: string): Promise<User.Id | undefined> {
       try {
         const userId = User.createId(`${email}/${password}`);
         const user = User.create({ id: userId, name });
+
+        if (await userRepository.findBy(userId)) {
+          return;
+        }
+
         await userRepository.save(user);
 
         return userId;
