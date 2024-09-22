@@ -1,0 +1,67 @@
+{
+  "name": "@spp/feature-game",
+  "version": "1.0.0",
+  "description": "",
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build:tsc": "tsc",
+    "check-type": "tsc --noEmit",
+    "build:css": "tailwindcss -i src/style.css -o dist/style.css",
+    "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev:storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "dev": "concurrently \"npm:dev:*\"",
+    "build": "concurrently \"npm:build:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/tailwind-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@storybook/addon-controls": "catalog:",
+    "@storybook/cli": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "catalog:",
+    "@types/sinon": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "sinon": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@spp/infra-domain": "workspace:^",
+    "@spp/shared-app-url": "workspace:^",
+    "@spp/shared-domain": "workspace:^",
+    "@spp/shared-use-case": "workspace:^",
+    "@spp/ui-dialog": "workspace:^",
+    "clsx": "catalog:",
+    "jotai": "^2.10.0",
+    "react": "catalog:",
+    "react-router-dom": "catalog:"
+  }
+}
