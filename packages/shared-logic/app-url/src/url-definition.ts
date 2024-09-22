@@ -34,3 +34,10 @@ export const signInPage = function signInPage() {
 export const signUpPage = function signUpPage() {
   return "/signup";
 };
+
+/**
+ * game creation page
+ */
+export const gameCreatePage = function gameCreatePage() {
+  return "/game/create";
+};
