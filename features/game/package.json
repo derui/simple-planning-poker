@@ -47,6 +47,7 @@
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
+    "react-dom": "catalog:",
     "sinon": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

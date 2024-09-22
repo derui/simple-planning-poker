@@ -54,23 +54,23 @@ const styles = {
 export function GameCreator() {
   const [name, setName] = useState("");
   const [points, setPoints] = useState(DEFAULT_POINTS);
-  const [nameError, setNameErrro] = useState<string | undefined>();
+  const [nameError, setNameError] = useState<string | undefined>();
   const [pointsError, setPointsError] = useState<string | undefined>();
   const createGame = hooks.useCreateGame();
   const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setNameErrro(undefined);
+    setNameError(undefined);
     setPointsError(undefined);
 
     const errors = createGame.canCreate(name, points);
     if (errors.length > 0) {
       errors.forEach((v) => {
         if (v == "InvalidName") {
-          setNameErrro("Invalid name");
+          setNameError("Invalid name");
         } else if (v == "NameConflicted") {
-          setNameErrro("This name already exists in your games");
+          setNameError("This name already exists in your games");
         } else if (v == "InvalidPoints") {
           setPointsError("Invalid points");
         }
@@ -129,7 +129,7 @@ export function GameCreator() {
           <button type="button" className={styles.footer.cancel(loading)}>
             Cancel
           </button>
-          <button className={styles.footer.submit(loading)} type="submit">
+          <button className={styles.footer.submit(loading)} type="submit" aria-busy={loading}>
             <Loader size="s" shown={loading} variant="emerald" />
             {loading ? "" : "Submit"}
           </button>

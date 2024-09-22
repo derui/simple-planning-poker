@@ -233,16 +233,15 @@ describe("UseCreateGame", () => {
 
     test("set failed state if create is failed", async () => {
       // Arrange
-      const repository = newMemoryGameRepository();
-      const fakeRepository: GameRepository.T = {
-        ...repository,
+      const repository: GameRepository.T = {
+        ...newMemoryGameRepository(),
         save: sinon.fake.throws(new Error("failed")),
       };
 
       const store = createStore();
       const wrapper = createWrapper(store);
       const dispatcher = sinon.fake();
-      const { result } = renderHook(() => createUseCreateGame(fakeRepository, dispatcher)(), { wrapper });
+      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
 
       // Act
       await act(async () => result.current.prepare(User.createId("foo")));

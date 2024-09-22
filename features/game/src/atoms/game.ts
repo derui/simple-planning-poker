@@ -1,5 +1,5 @@
 import { ApplicablePoints, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
-import { EventDispatcher } from "@spp/shared-use-case";
+import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom } from "jotai";
 
 /**
@@ -158,24 +158,26 @@ export const createUseCreateGame = function createUseCreateGame(
         }
 
         setStatus(CreateGameStatus.Waiting);
-        const [game, event] = Game.create({
-          id: Game.createId(),
+
+        const ret = await newCreateGameUseCase(
+          dispatcher,
+          gameRepository
+        )({
+          createdBy: currentUserId,
           name,
-          points: ApplicablePoints.create(points.split(",").map((v) => StoryPoint.create(Number(v)))),
-          owner: currentUserId,
-          voting: Voting.createId(),
+          points: points.split(",").map((v) => Number(v)),
         });
-        try {
-          await gameRepository.save(game);
-        } catch (e) {
-          setStatus(CreateGameStatus.Failed);
-          console.warn(e);
-          return;
+
+        switch (ret.kind) {
+          case "success":
+            setStatus(CreateGameStatus.Completed);
+            break;
+          case "invalidStoryPoint":
+          case "invalidStoryPoints":
+          case "failed":
+            setStatus(CreateGameStatus.Failed);
+            return;
         }
-
-        dispatcher(event);
-
-        setStatus(CreateGameStatus.Completed);
 
         const games = await gameRepository.listUserJoined(currentUserId);
         setGames(games);

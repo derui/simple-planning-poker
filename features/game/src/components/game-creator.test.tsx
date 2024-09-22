@@ -1,78 +1,197 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { userEvent } from "@testing-library/user-event";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { GameCreator } from "./game-creator.js";
+import { Provider, createStore } from "jotai";
+import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { CreateGameStatus, createUseCreateGame } from "../atoms/game.js";
+import sinon from "sinon";
+import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { PropsWithChildren, useEffect } from "react";
+import { User } from "@spp/shared-domain";
 
 afterEach(cleanup);
 
-const route = createMemoryRouter([{ path: "/", element: <GameCreator /> }]);
-
 test("render page", () => {
-  const store = createPureStore();
+  // Arrange
+  const store = createStore();
 
+  const hooks: Hooks = {
+    useCreateGame() {
+      return {
+        status: CreateGameStatus.Prepared,
+        canCreate: sinon.fake(),
+        create: sinon.fake(),
+        prepare: sinon.fake(),
+      };
+    },
+  };
+
+  // Act
   render(
-    <Provider store={store}>
-      <RouterProvider router={route} />
-    </Provider>
+    <ImplementationProvider implementation={hooks}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameCreator />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  expect(screen.queryByTestId("root")).not.toBeNull();
+  // Assert
   expect(screen.getByLabelText("Name")).toHaveProperty("value", "");
   expect(screen.getByLabelText("Points")).toHaveProperty("value", "1,2,3,5,8,13,21,34,55,89");
-  expect(screen.getByRole("button")).toHaveProperty("disabled", true);
+  expect(screen.getByText("Submit")).toHaveProperty("disabled", false);
+  expect(screen.getByText("Cancel")).toHaveProperty("disabled", false);
 });
 
-test("dispatch event after submit", async () => {
-  expect.assertions(2);
-  const store = createPureStore();
+test("call hook after submit", async () => {
+  // Arrange
+  const store = createStore();
+
+  const createFake = sinon.fake();
+  const mock: Hooks = {
+    useCreateGame() {
+      return {
+        status: CreateGameStatus.Prepared,
+        create: createFake,
+        canCreate: sinon.fake.returns([]),
+        prepare: sinon.fake(),
+      };
+    },
+  };
 
   render(
-    <Provider store={store}>
-      <RouterProvider router={route} />
-    </Provider>
+    <ImplementationProvider implementation={mock}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameCreator />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  store.replaceReducer((state, action) => {
-    if (createGame.match(action)) {
-      expect(action.payload.name).toBe("test");
-      expect(action.payload.points).toEqual([1, 2, 3, 5, 8, 13, 21, 34, 55, 89]);
-    }
-
-    return state!;
-  });
-
+  // Act
   await userEvent.type(screen.getByLabelText("Name"), "test");
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByText("Submit"));
+
+  // Assert
+  expect(createFake.calledOnce).toBeTruthy();
+  expect(createFake.lastCall.args).toEqual(["test", "1,2,3,5,8,13,21,34,55,89"]);
 });
 
-test("should be disabled when points are empty", async () => {
-  const store = createPureStore();
+test("disable submit if loading", async () => {
+  // Arrange
+  const store = createStore();
 
+  const mock: Hooks = {
+    useCreateGame() {
+      return {
+        status: CreateGameStatus.Preparing,
+        create: sinon.fake(),
+        canCreate: sinon.fake.returns([]),
+        prepare: sinon.fake(),
+      };
+    },
+  };
+
+  // Act
   render(
-    <Provider store={store}>
-      <RouterProvider router={route} />
-    </Provider>
+    <ImplementationProvider implementation={mock}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameCreator />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  await userEvent.type(screen.getByLabelText("Name"), "test");
+  // Assert
+  expect(screen.getByRole("button", { busy: true })).toBeTruthy();
+  expect(screen.getByRole("button", { busy: true }).textContent).toEqual("");
+  expect(screen.getByLabelText("Name")).toHaveProperty("disabled", true);
+  expect(screen.getByLabelText("Points")).toHaveProperty("disabled", true);
+});
+
+test("show error if name is invalid", async () => {
+  // Arrange
+  const store = createStore();
+
+  const mock: Hooks = {
+    useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+  };
+
+  const Wrapper = ({ children }: PropsWithChildren) => {
+    const useCreateGame = hooks.useCreateGame();
+
+    useEffect(() => {
+      useCreateGame.prepare(User.createId());
+    }, []);
+
+    return children;
+  };
+
+  // Act
+  render(
+    <ImplementationProvider implementation={mock}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Wrapper>
+            <GameCreator />
+          </Wrapper>
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
+  );
+
+  await screen.findByText("Submit");
+  await userEvent.click(screen.getByText("Submit"));
+
+  // Assert
+  expect(screen.queryByText("Invalid name")).not.toBeNull();
+});
+
+test("show error if points is invalid", async () => {
+  // Arrange
+  const store = createStore();
+
+  const mock: Hooks = {
+    useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+  };
+
+  const Wrapper = ({ children }: PropsWithChildren) => {
+    const useCreateGame = hooks.useCreateGame();
+
+    useEffect(() => {
+      useCreateGame.prepare(User.createId());
+    }, []);
+
+    return children;
+  };
+
+  // Act
+  render(
+    <ImplementationProvider implementation={mock}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Wrapper>
+            <GameCreator />
+          </Wrapper>
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
+  );
+
+  // should be wait to finishd preparation
+  await waitFor(() => Promise.resolve());
+
+  await userEvent.type(screen.getByLabelText("Name"), "foobar");
   await userEvent.clear(screen.getByLabelText("Points"));
+  await userEvent.type(screen.getByLabelText("Points"), "a,b,c");
+  await userEvent.click(screen.getByText("Submit"));
 
-  expect(screen.getByRole("button")).toHaveProperty("disabled", true);
-});
-
-test("should be disabled when points are invalid", async () => {
-  const store = createPureStore();
-
-  render(
-    <Provider store={store}>
-      <RouterProvider router={route} />
-    </Provider>
-  );
-
-  await userEvent.type(screen.getByLabelText("Name"), "test");
-  await userEvent.clear(screen.getByLabelText("Points"));
-  await userEvent.type(screen.getByLabelText("Points"), ",,,");
-
-  expect(screen.getByRole("button")).toHaveProperty("disabled", true);
+  // Assert
+  expect(screen.queryByText("Invalid name")).toBeNull();
+  expect(screen.queryByText("Invalid points")).not.toBeNull();
 });
