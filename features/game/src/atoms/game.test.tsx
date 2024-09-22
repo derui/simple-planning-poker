@@ -103,6 +103,36 @@ describe("UseCreateGame", () => {
       expect(ret).toContain("InvalidPoints");
     });
 
+    test("accept comma-separated list", async () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      await act(async () => result.current.prepare(User.createId("foo")));
+      const ret = result.current.canCreate("foo", "1,2");
+
+      // Assert
+      expect(ret).toHaveLength(0);
+    });
+
+    test("accept large number in points", async () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      await act(async () => result.current.prepare(User.createId("foo")));
+      const ret = result.current.canCreate("foo", "1,30");
+
+      // Assert
+      expect(ret).toHaveLength(0);
+    });
+
     test("get error if name is conflicted in owned games", async () => {
       // Arrange
       const repository = newMemoryGameRepository([

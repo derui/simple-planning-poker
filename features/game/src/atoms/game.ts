@@ -130,7 +130,7 @@ export const createUseCreateGame = function createUseCreateGame(
           errors.push("InvalidPoints");
         }
 
-        if (!normalizedPoints.every((v) => v.match(/^[0-9]$/))) {
+        if (!normalizedPoints.every((v) => v.match(/^[0-9]+$/))) {
           errors.push("InvalidPoints");
         }
 

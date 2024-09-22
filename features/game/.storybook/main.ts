@@ -9,7 +9,7 @@ const config: StorybookConfig = {
   },
 
   staticDirs: [
-    { from: "../../../../app/public/static", to: "/static" },
+    { from: "../../../app/public/static", to: "/static" },
     { from: "../dist/style.css", to: "/style.css" },
   ],
 };

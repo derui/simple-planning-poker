@@ -1,29 +1,103 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router";
-import { CreateGamePage } from "./create-game";
-import { createPureStore } from "@/status/store";
+import { MemoryRouter } from "react-router-dom";
+import { GameCreator } from "./game-creator.js";
+import { createStore, Provider } from "jotai";
+import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { CreateGameStatus, createUseCreateGame } from "../atoms/game.js";
+import sinon from "sinon";
+import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { useEffect } from "react";
+import { User } from "@spp/shared-domain";
 
 const meta = {
-  title: "Page/Create Game",
-  component: CreateGamePage,
+  title: "Page/Game Creator",
+  component: GameCreator,
   tags: ["autodocs"],
-} satisfies Meta<typeof CreateGamePage>;
+} satisfies Meta<typeof GameCreator>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Initial: Story = {
+const InitializeUser = function InitializeUser({ children }: { children: React.ReactNode }) {
+  const createGame = hooks.useCreateGame();
+
+  useEffect(() => {
+    createGame.prepare(User.createId());
+  }, []);
+
+  return children;
+};
+
+export const NormalBehavior: Story = {
   render() {
-    const store = createPureStore();
+    const store = createStore();
+    const hooks: Hooks = {
+      useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+    };
 
     return (
-      <Provider store={store}>
-        <MemoryRouter>
-          <CreateGamePage />
-        </MemoryRouter>
-      </Provider>
+      <ImplementationProvider implementation={hooks}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <InitializeUser>
+              <GameCreator />
+            </InitializeUser>
+          </MemoryRouter>
+        </Provider>
+      </ImplementationProvider>
+    );
+  },
+};
+
+export const Preparing: Story = {
+  render() {
+    const store = createStore();
+    const hooks: Hooks = {
+      useCreateGame() {
+        return {
+          status: CreateGameStatus.Preparing,
+          canCreate: sinon.fake.returns([]),
+          create: sinon.fake(),
+          prepare: sinon.fake(),
+        };
+      },
+    };
+
+    return (
+      <ImplementationProvider implementation={hooks}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <GameCreator />
+          </MemoryRouter>
+        </Provider>
+      </ImplementationProvider>
+    );
+  },
+};
+
+export const Waiting: Story = {
+  render() {
+    const store = createStore();
+    const hooks: Hooks = {
+      useCreateGame() {
+        return {
+          status: CreateGameStatus.Waiting,
+          canCreate: sinon.fake.returns([]),
+          create: sinon.fake(),
+          prepare: sinon.fake(),
+        };
+      },
+    };
+
+    return (
+      <ImplementationProvider implementation={hooks}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <GameCreator />
+          </MemoryRouter>
+        </Provider>
+      </ImplementationProvider>
     );
   },
 };

@@ -143,12 +143,21 @@ importers:
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
+      '@spp/shared-hook-facade':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/hook-facade
       '@spp/shared-use-case':
         specifier: workspace:^
         version: link:../../packages/shared-logic/use-case
+      '@spp/ui-button-style':
+        specifier: workspace:^
+        version: link:../../packages/ui/button-style
       '@spp/ui-dialog':
         specifier: workspace:^
         version: link:../../packages/ui/dialog
+      '@spp/ui-loader':
+        specifier: workspace:^
+        version: link:../../packages/ui/loader
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
