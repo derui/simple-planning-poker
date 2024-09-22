@@ -93,6 +93,42 @@ const registerAtomToPackage = function registerAtomToPackage(plop) {
     ],
   });
 };
+
+const registerPresentationalComponentToFeature = function registerPresentationalComponentToFeature(plop) {
+  plop.setGenerator("feature-presentation", {
+    description: "add new presentational component to feature",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "name of component",
+      },
+      {
+        type: "input",
+        name: "feature",
+        message: "name of feature to add component",
+      },
+    ],
+    actions: [
+      {
+        type: "add",
+        path: "features/{{feature}}/src/components/presentations/{{name}}.tsx",
+        templateFile: "plop-templates/packge/ui/component.hbs",
+      },
+      {
+        type: "add",
+        path: "features/{{feature}}/src/components/presentations/{{name}}.test.tsx",
+        templateFile: "plop-templates/packge/ui/component.test.hbs",
+      },
+      {
+        type: "add",
+        path: "features/{{feature}}/src/components/presentations/{{name}}.stories.ts",
+        templateFile: "plop-templates/packge/ui/component.stories.hbs",
+      },
+    ],
+  });
+};
+
 const registerSharedLogicPackage = function registerSharedLogicPackage(plop) {
   plop.setGenerator("shared-logic", {
     description: "Skeleton of shared-logic package",
@@ -143,6 +179,7 @@ export default function (plop) {
   registerFeaturePackage(plop);
   registerAtomToPackage(plop);
   registerSharedLogicPackage(plop);
+  registerPresentationalComponentToFeature(plop);
 
   plop.setGenerator("simple-ui-component", {
     description: "skeleton of simple UI component package",
