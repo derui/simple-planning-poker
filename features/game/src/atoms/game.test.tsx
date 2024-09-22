@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { CreateGameStatus, createUseCreateGame } from "./game.js";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { ApplicablePoints, DomainEvent, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import sinon from "sinon";
 
@@ -161,6 +161,26 @@ describe("UseCreateGame", () => {
       expect(result.current.status).toEqual(CreateGameStatus.Completed);
       expect(dispatcher.calledOnce).toBeTruthy();
       expect(Game.isGameCreated(dispatcher.lastCall.args[0])).toBeTruthy();
+    });
+
+    test("created game should have valid values", async () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const dispatcher = sinon.fake();
+      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+
+      // Act
+      await act(async () => result.current.prepare(User.createId("foo")));
+      await act(async () => result.current.create("foo", "1"));
+
+      const game = await repository.listUserJoined(User.createId("foo"));
+
+      // Assert
+      expect(game[0].name).toEqual("foo");
+      expect(ApplicablePoints.contains(game[0].points, StoryPoint.create(1))).toBeTruthy();
+      expect(game[0].points).toHaveLength(1);
     });
 
     test("after completed, update owned game list", async () => {
