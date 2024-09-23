@@ -343,6 +343,12 @@ importers:
 
   features/voting:
     dependencies:
+      '@spp/ui-icon':
+        specifier: workspace:^
+        version: link:../../packages/ui/icon
+      '@spp/ui-skeleton':
+        specifier: workspace:^
+        version: link:../../packages/ui/skeleton
       clsx:
         specifier: 'catalog:'
         version: 2.1.1

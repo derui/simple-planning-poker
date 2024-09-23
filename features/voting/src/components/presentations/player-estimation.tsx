@@ -1,23 +1,19 @@
-import { ReactElement } from "react";
-import classnames from "classnames";
-import { BaseProps, generateTestId } from "../base";
-import { iconize } from "../iconize";
-import { UserMode } from "@/domains/game-player";
-import { UserEstimationState } from "@/status/selectors/user-estimation";
+import { PropsWithChildren, ReactElement } from "react";
+import clsx from "clsx";
+import { Icon, Icons } from "@spp/ui-icon";
 
-interface Props extends BaseProps {
-  userName: string;
-  userMode: UserMode;
-  displayValue: string;
-  state: UserEstimationState;
+interface Props {
+  name: string;
+  mode: "player" | "inspector";
+  state: "notSelected" | "estimated" | "revealed";
 }
 
 const styles = {
-  root: classnames("flex", "flex-col", "items-center"),
-  card: (state: UserEstimationState) =>
-    classnames(
-      "flex",
-      "flex-col",
+  root: clsx("grid", "grid-rows-[auto_1fr]", "grid-cols-1", "m-3", "text-center", "max-w-12"),
+  card: (state: Props["state"]) =>
+    clsx(
+      "grid",
+      "place-content-center",
       "h-20",
       "w-14",
       "rounded",
@@ -25,50 +21,46 @@ const styles = {
       "items-center",
       "justify-center",
       "border",
-      "border-primary-400",
-      "m-3",
-      "text-primary-500",
+      "border-orange-400",
+      "text-orange-700",
       "transition-transform",
       {
         "bg-white": state === "notSelected",
       },
       {
-        "bg-primary-400": state === "estimated",
-        "text-secondary1-200": state === "estimated",
+        "bg-orange-200": state === "estimated",
         "[transform:rotateY(180deg)]": state === "estimated",
       },
       {
-        "bg-white": state === "result",
-        "text-primary-500": state === "result",
-        "[transform:rotateY(0deg)]": state === "result",
+        "bg-white": state === "revealed",
+        "[transform:rotateY(0deg)]": state === "revealed",
       }
     ),
 
-  eye: classnames("flex", "items-center", iconize("eye", { size: "l" }), "before:bg-primary-400"),
+  eye: clsx("grid", "place-content-center"),
 };
 
 // eslint-disable-next-line func-style
-export function PlayerEstimation(props: Props) {
-  const gen = generateTestId(props.testid);
-
+export function PlayerEstimation(props: PropsWithChildren<Props>) {
   let card: ReactElement;
-  if (props.userMode === UserMode.inspector) {
+
+  if (props.mode === "inspector") {
     card = (
-      <span className={styles.card("notSelected")} data-testid={gen("card")} data-mode="inspector">
-        <span className={styles.eye} data-testid={gen("eye")}></span>
+      <span className={styles.card("notSelected")} data-mode="inspector">
+        <Icon type={Icons.eye} variant="orange" />
       </span>
     );
   } else {
     card = (
-      <span className={styles.card(props.state)} data-testid={gen("card")} data-mode="normal" data-state={props.state}>
-        {props.state === "result" ? props.displayValue : ""}
+      <span className={styles.card(props.state)} data-mode="player" data-state={props.state}>
+        {props.state === "revealed" ? props.children : null}
       </span>
     );
   }
 
   return (
-    <div className={styles.root} data-testid={gen("root")}>
-      <span>{props.userName}</span>
+    <div className={styles.root}>
+      <span>{props.name}</span>
       {card}
     </div>
   );

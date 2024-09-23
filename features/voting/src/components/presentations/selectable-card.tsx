@@ -9,28 +9,23 @@ interface Props {
 const styles = {
   root: (selected: boolean) =>
     clsx(
-      "flex",
-      "flex-col",
+      "grid",
+      "place-content-center",
       "h-20",
       "w-14",
       "rounded",
-      "border",
-      "border-primary-400",
-      "text-center",
-      "justify-center",
+      "border-2",
+      "border-orange-400",
       "m-3",
       "transition-transform",
       "first-of-type:ml-0",
       "last-of-type:mr-0",
 
       "hover:-translate-y-2",
+      "text-orange-700",
       {
         "bg-white": !selected,
-        "text-primary-400": !selected,
-      },
-      {
-        "bg-primary-400": selected,
-        "text-secondary1-200": selected,
+        "bg-orange-200": selected,
         "-translate-y-2": selected,
       }
     ),

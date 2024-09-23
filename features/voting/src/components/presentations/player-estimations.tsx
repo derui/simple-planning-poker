@@ -1,37 +1,34 @@
-import classnames from "classnames";
-import { BaseProps, generateTestId } from "../base";
-import { PlayerEstimation } from "./player-estimation";
-import { Skeleton } from "./skeleton";
-import { UserEstimationInfo } from "@/status/selectors/user-estimation";
+import clsx from "clsx";
+import { Skeleton } from "@spp/ui-skeleton";
+import { PropsWithChildren } from "react";
 
-interface Props extends BaseProps {
-  estimations: UserEstimationInfo[];
+interface Props {
   loading?: boolean;
 }
 
 const styles = {
-  root: classnames("flex", "justify-around", "w-full"),
+  root: clsx(
+    "grid",
+    "grid-rows-1",
+    "grid-cols-[auto_auto_auto_auto]",
+    "auto-cols-min",
+    "place-content-center",
+    "gap-4"
+  ),
 };
 
+/**
+ * Container presentation for player estimations
+ */
 // eslint-disable-next-line func-style
-export function PlayerEstimations({ estimations, testid, loading }: Props) {
-  const gen = generateTestId(testid);
-
+export function PlayerEstimations({ loading, children }: PropsWithChildren<Props>) {
   if (loading) {
     return (
-      <div className={styles.root} data-testid={gen("root")}>
-        <Skeleton testid={gen("loading")} />
+      <div className={styles.root} data-loading="true">
+        <Skeleton />
       </div>
     );
   }
 
-  const createUserEstimation = (props: UserEstimationInfo, index: number) => {
-    return <PlayerEstimation key={index} testid={gen(props.userName)} {...props} />;
-  };
-
-  return (
-    <div className={styles.root} data-testid={gen("root")}>
-      {estimations.map((v, index) => createUserEstimation(v, index))}
-    </div>
-  );
+  return <div className={styles.root}>{children}</div>;
 }

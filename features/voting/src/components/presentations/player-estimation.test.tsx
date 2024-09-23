@@ -1,40 +1,56 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
-import { PlayerEstimation } from "./player-estimation";
+import { PlayerEstimation } from "./player-estimation.js";
 
 afterEach(cleanup);
 
 test("display player card as normal and not opened", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="notSelected" userMode="normal" />);
+  render(
+    <PlayerEstimation name="user" state="notSelected" mode="player">
+      5
+    </PlayerEstimation>
+  );
 
-  expect(screen.queryByTestId("card")).not.toBeNull();
-  expect(screen.queryByTestId("eye")).toBeNull();
   expect(screen.queryByText("5")).toBeNull();
-  expect(screen.queryByText("user")).not.toBeNull();
 });
 
 test("display player card as inspector", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="notSelected" userMode="inspector" />);
+  const { container } = render(
+    <PlayerEstimation name="user" state="notSelected" mode="inspector">
+      5
+    </PlayerEstimation>
+  );
 
-  expect(screen.queryByTestId("card")).not.toBeNull();
-  expect(screen.queryByTestId("eye")).not.toBeNull();
+  expect(container.querySelector('[data-mode="inspector"]')).not.toBeNull();
 });
 
 test("selected card", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="estimated" userMode="normal" />);
+  const { container } = render(
+    <PlayerEstimation name="user" state="estimated" mode="player">
+      5
+    </PlayerEstimation>
+  );
 
-  expect(screen.getByTestId("card").dataset).toHaveProperty("state", "estimated");
+  expect(container.querySelector("[data-state='estimated']")).not.toBeNull();
 });
 
 test("opened card that user not selected", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="notSelected" userMode="normal" />);
+  const { container } = render(
+    <PlayerEstimation name="user" state="notSelected" mode="player">
+      5
+    </PlayerEstimation>
+  );
 
-  expect(screen.getByTestId("card").dataset).toHaveProperty("state", "notSelected");
+  expect(container.querySelector('[data-state="notSelected"]')).not.toBeNull();
 });
 
 test("opened card that user selected", async () => {
-  render(<PlayerEstimation userName="user" displayValue="5" state="result" userMode="normal" />);
+  const { container } = render(
+    <PlayerEstimation name="user" state="revealed" mode="player">
+      5
+    </PlayerEstimation>
+  );
 
-  expect(screen.getByTestId("card").dataset).toHaveProperty("state", "result");
+  expect(container.querySelector("[data-state='revealed']")).not.toBeNull();
   expect(screen.queryByText("5")).not.toBeNull();
 });

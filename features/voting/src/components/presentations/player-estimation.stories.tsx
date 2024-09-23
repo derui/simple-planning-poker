@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PlayerEstimation } from "./player-estimation";
-import { UserMode } from "@/domains/game-player";
+import { PlayerEstimation } from "./player-estimation.js";
 
 const meta = {
   title: "Presentational/Player Estimation",
@@ -14,54 +13,54 @@ type Story = StoryObj<typeof meta>;
 
 export const Normal: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.normal,
+    name: "name",
+    mode: "player",
     state: "notSelected",
-    displayValue: "value",
+    children: "value",
   },
 };
 
 export const Inspector: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.inspector,
+    name: "name",
+    mode: "inspector",
     state: "notSelected",
-    displayValue: "value",
+    children: "value",
   },
 };
 
 export const InspectorOpened: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.inspector,
+    name: "name",
+    mode: "inspector",
     state: "notSelected",
-    displayValue: "value",
+    children: "value",
   },
 };
 
 export const NormalSelected: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.normal,
+    name: "name",
+    mode: "player",
     state: "estimated",
-    displayValue: "value",
+    children: "value",
   },
 };
 
 export const NormalSelectedAndOpened: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.normal,
-    state: "result",
-    displayValue: "value",
+    name: "name",
+    mode: "player",
+    state: "revealed",
+    children: "value",
   },
 };
 
 export const NormalUnselectedAndOpened: Story = {
   args: {
-    userName: "name",
-    userMode: UserMode.normal,
+    name: "name",
+    mode: "player",
     state: "notSelected",
-    displayValue: "value",
+    children: "value",
   },
 };
