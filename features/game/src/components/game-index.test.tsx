@@ -1,125 +1,151 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
-import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router";
-import userEvent from "@testing-library/user-event";
-import { SelectGamePage } from "./select-game";
-import { createPureStore } from "@/status/store";
-import * as User from "@/domains/user";
-import * as Game from "@/domains/game";
-import { signInSuccess } from "@/status/actions/signin";
-import { JoinedGameState } from "@/domains/game-repository";
+import { MemoryRouter } from "react-router-dom";
+import { userEvent } from "@testing-library/user-event";
+import { GameIndex } from "./game-index.js";
+import sinon from "sinon";
+import { createStore, Provider } from "jotai";
+import { Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { PrepareGameStatus } from "../atoms/game.js";
 
 afterEach(cleanup);
 
 test("render page", () => {
-  const store = createPureStore();
+  // Arrange
+  const store = createStore();
 
+  const hooks: Hooks = {
+    useCreateGame: sinon.fake(),
+    usePrepareGame() {
+      return {
+        status: PrepareGameStatus.Prepared,
+        prepare: sinon.fake(),
+      };
+    },
+    useListGame() {
+      return {
+        games: [],
+      };
+    },
+  };
+
+  // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SelectGamePage />
-      </MemoryRouter>
-    </Provider>
+    <ImplementationProvider implementation={hooks}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameIndex />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
+  // Assert
+  expect(screen.queryByText(/You do not have/)).not.toBeNull();
   expect(screen.queryByText("Create Game")).not.toBeNull();
 });
 
-test("show empty if games is empty", async () => {
-  const store = createPureStore();
+test("show loading while preparing", () => {
+  // Arrange
+  const store = createStore();
 
+  const hooks: Hooks = {
+    useCreateGame: sinon.fake(),
+    usePrepareGame() {
+      return {
+        status: PrepareGameStatus.Preparing,
+        prepare: sinon.fake(),
+      };
+    },
+    useListGame() {
+      return {
+        games: [],
+      };
+    },
+  };
+
+  // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SelectGamePage />
-      </MemoryRouter>
-    </Provider>
+    <ImplementationProvider implementation={hooks}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameIndex />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  expect(screen.queryByText(/You do not have games/)).not.toBeNull();
-});
-
-test("show empty if games is empty", async () => {
-  const store = createPureStore();
-  const user = User.create({ id: User.createId(), name: "foo" });
-
-  store.dispatch(
-    signInSuccess({
-      user,
-      joinedGames: {
-        [Game.createId()]: { name: "name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "long name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "looooong name", state: JoinedGameState.joined },
-      },
-    })
-  );
-
-  render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SelectGamePage />
-      </MemoryRouter>
-    </Provider>
-  );
-
-  expect(screen.getAllByTestId("game-name")).toHaveLength(3);
-  expect(screen.getAllByTestId("game-name").map((v) => v.textContent)).toEqual(
-    expect.arrayContaining(["name", "long name", "looooong name"])
-  );
+  // Assert
+  expect(screen.queryByText(/Loading/)).not.toBeNull();
+  expect(screen.queryByText("Create Game")).toBeNull();
 });
 
 test("disable join button when token is empty", async () => {
-  const store = createPureStore();
-  const user = User.create({ id: User.createId(), name: "foo" });
+  // Arrange
+  const store = createStore();
 
-  store.dispatch(
-    signInSuccess({
-      user,
-      joinedGames: {
-        [Game.createId()]: { name: "name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "long name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "looooong name", state: JoinedGameState.joined },
-      },
-    })
-  );
+  const hooks: Hooks = {
+    useCreateGame: sinon.fake(),
+    usePrepareGame() {
+      return {
+        status: PrepareGameStatus.Prepared,
+        prepare: sinon.fake(),
+      };
+    },
+    useListGame() {
+      return {
+        games: [],
+      };
+    },
+  };
 
+  // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SelectGamePage />
-      </MemoryRouter>
-    </Provider>
+    <ImplementationProvider implementation={hooks}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameIndex />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  expect(screen.getByPlaceholderText(/Paste invitation/)).toHaveProperty("value", "");
-  expect(screen.getByRole("button", { name: "Join" }).getAttribute("disabled")).not.toBeNull();
+  // Assert
+  expect(screen.getByText("Join")).toHaveProperty("disabled", true);
 });
 
 test("enable join button after type invitation", async () => {
-  const store = createPureStore();
-  const user = User.create({ id: User.createId(), name: "foo" });
+  // Arrange
+  const store = createStore();
 
-  store.dispatch(
-    signInSuccess({
-      user,
-      joinedGames: {
-        [Game.createId()]: { name: "name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "long name", state: JoinedGameState.joined },
-        [Game.createId()]: { name: "looooong name", state: JoinedGameState.joined },
-      },
-    })
-  );
+  const hooks: Hooks = {
+    useCreateGame: sinon.fake(),
+    usePrepareGame() {
+      return {
+        status: PrepareGameStatus.Prepared,
+        prepare: sinon.fake(),
+      };
+    },
+    useListGame() {
+      return {
+        games: [],
+      };
+    },
+  };
 
+  // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SelectGamePage />
-      </MemoryRouter>
-    </Provider>
+    <ImplementationProvider implementation={hooks}>
+      <Provider store={store}>
+        <MemoryRouter>
+          <GameIndex />
+        </MemoryRouter>
+      </Provider>
+    </ImplementationProvider>
   );
 
-  await userEvent.type(screen.getByPlaceholderText(/Paste invitation/), "invitation");
+  await userEvent.type(screen.getByPlaceholderText(/invitation/i), "1234");
 
-  expect(screen.getByRole("button", { name: "Join" }).getAttribute("disabled")).toBeNull();
+  // Assert
+  expect(screen.getByText("Join")).toHaveProperty("disabled", false);
 });

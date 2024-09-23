@@ -36,6 +36,7 @@ export const NormalBehavior: Story = {
     const hooks: Hooks = {
       useCreateGame: createUseCreateGame(repository, sinon.fake()),
       usePrepareGame: createUsePrepareGame(repository),
+      useListGame: sinon.fake(),
     };
 
     return (
@@ -65,6 +66,7 @@ export const Waiting: Story = {
         };
       },
       usePrepareGame: sinon.fake(),
+      useListGame: sinon.fake(),
     };
 
     return (

@@ -6,6 +6,10 @@ import { MemoryRouter } from "react-router-dom";
 const meta = {
   title: "Presentations/Game List Item",
   component: GameListItem,
+  args: {
+    gameId: "id",
+    name: "Test",
+  },
   tags: ["autodocs"],
 } satisfies Meta<typeof GameListItem>;
 
@@ -14,6 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Joined: Story = {
   args: {
+    gameId: "foo",
     name: "Test",
   },
   render(args) {
@@ -27,6 +32,7 @@ export const Joined: Story = {
 
 export const Owned: Story = {
   args: {
+    gameId: "foo",
     owned: true,
     name: "Test",
   },

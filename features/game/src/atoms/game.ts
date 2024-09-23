@@ -1,7 +1,7 @@
 import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom } from "jotai";
-import { GameDto } from "./dto.js";
+import { GameDto, toGameDto } from "./dto.js";
 
 /**
  * Current user id in this feature.
@@ -223,6 +223,20 @@ export const createUsePrepareGame = function createUsePrepareGame(gameRepository
             setCurrentUserId(userId);
           });
       },
+    };
+  };
+};
+
+/**
+ * Create hook implementation of `UseListGame`
+ */
+export const createUseListGame = function createUseListGame(): UseListGame {
+  return () => {
+    const [games] = useAtom(gamesAtom);
+    const [currentUserId] = useAtom(currentUserIdAtom);
+
+    return {
+      games: !currentUserId ? [] : games.map((v) => toGameDto(v, currentUserId)),
     };
   };
 };

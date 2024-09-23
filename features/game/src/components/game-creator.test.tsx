@@ -26,6 +26,7 @@ test("render page", () => {
       };
     },
     usePrepareGame: sinon.fake(),
+    useListGame: sinon.fake(),
   };
 
   // Act
@@ -52,6 +53,7 @@ test("call hook after submit", async () => {
 
   const createFake = sinon.fake();
   const mock: Hooks = {
+    useListGame: sinon.fake(),
     useCreateGame() {
       return {
         errors: [],
@@ -86,6 +88,7 @@ test("disable submit if loading", async () => {
   const store = createStore();
 
   const mock: Hooks = {
+    useListGame: sinon.fake(),
     useCreateGame() {
       return {
         status: CreateGameStatus.Waiting,
@@ -120,6 +123,7 @@ test("show error if name is invalid", async () => {
   const store = createStore();
 
   const mock: Hooks = {
+    useListGame: sinon.fake(),
     useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
     usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
   };
@@ -159,6 +163,7 @@ test("show error if points is invalid", async () => {
   const store = createStore();
 
   const mock: Hooks = {
+    useListGame: sinon.fake(),
     useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
     usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
   };

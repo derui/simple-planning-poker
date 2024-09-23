@@ -1,10 +1,10 @@
-import { Game } from "@spp/shared-domain";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import * as AppUrl from "@spp/shared-app-url";
+import { Game } from "@spp/shared-domain";
 
-interface Props {
-  gameId: Game.Id;
+export interface Props {
+  gameId: string;
   name: string;
   owned?: boolean;
 }
@@ -34,7 +34,7 @@ const styles = {
 export const GameListItem = function GameListItem({ gameId, owned, name }: Props) {
   return (
     <li key={gameId} className={styles.main}>
-      <Link className={styles.link} to={AppUrl.votingPage(gameId)}>
+      <Link className={styles.link} to={AppUrl.votingPage(Game.createId(gameId))}>
         <span className={styles.linkName}>{name}</span>
         <span className={styles.ownerMarkContainer}>
           <span className={styles.ownerMark(owned ?? false)}>Owner</span>

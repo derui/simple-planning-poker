@@ -1,9 +1,10 @@
 import { createFacade } from "@spp/shared-hook-facade";
-import { UseCreateGame, UsePrepareGame } from "../atoms/game.js";
+import { UseCreateGame, UseListGame, UsePrepareGame } from "../atoms/game.js";
 
 export type Hooks = {
   useCreateGame: UseCreateGame;
   usePrepareGame: UsePrepareGame;
+  useListGame: UseListGame;
 };
 
 const { hooks, ImplementationProvider } = createFacade<Hooks>();
