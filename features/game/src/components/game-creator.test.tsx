@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { GameCreator } from "./game-creator.js";
 import { Provider, createStore } from "jotai";
 import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { CreateGameStatus, createUseCreateGame } from "../atoms/game.js";
+import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../atoms/game.js";
 import sinon from "sinon";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { PropsWithChildren, useEffect } from "react";
@@ -20,12 +20,12 @@ test("render page", () => {
   const hooks: Hooks = {
     useCreateGame() {
       return {
-        status: CreateGameStatus.Prepared,
-        canCreate: sinon.fake(),
+        errors: [],
+        validate: sinon.fake(),
         create: sinon.fake(),
-        prepare: sinon.fake(),
       };
     },
+    usePrepareGame: sinon.fake(),
   };
 
   // Act
@@ -54,12 +54,12 @@ test("call hook after submit", async () => {
   const mock: Hooks = {
     useCreateGame() {
       return {
-        status: CreateGameStatus.Prepared,
+        errors: [],
         create: createFake,
-        canCreate: sinon.fake.returns([]),
-        prepare: sinon.fake(),
+        validate: sinon.fake.returns([]),
       };
     },
+    usePrepareGame: sinon.fake(),
   };
 
   render(
@@ -88,12 +88,13 @@ test("disable submit if loading", async () => {
   const mock: Hooks = {
     useCreateGame() {
       return {
-        status: CreateGameStatus.Preparing,
+        status: CreateGameStatus.Waiting,
+        errors: [],
         create: sinon.fake(),
-        canCreate: sinon.fake.returns([]),
-        prepare: sinon.fake(),
+        validate: sinon.fake.returns([]),
       };
     },
+    usePrepareGame: sinon.fake(),
   };
 
   // Act
@@ -120,13 +121,14 @@ test("show error if name is invalid", async () => {
 
   const mock: Hooks = {
     useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+    usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
-    const useCreateGame = hooks.useCreateGame();
+    const { prepare } = hooks.usePrepareGame();
 
     useEffect(() => {
-      useCreateGame.prepare(User.createId());
+      prepare(User.createId());
     }, []);
 
     return children;
@@ -145,8 +147,8 @@ test("show error if name is invalid", async () => {
     </ImplementationProvider>
   );
 
-  await screen.findByText("Submit");
-  await userEvent.click(screen.getByText("Submit"));
+  await userEvent.click(screen.getByLabelText("Name"));
+  await userEvent.type(screen.getByLabelText("Name"), "[Tab]");
 
   // Assert
   expect(screen.queryByText("Invalid name")).not.toBeNull();
@@ -158,13 +160,14 @@ test("show error if points is invalid", async () => {
 
   const mock: Hooks = {
     useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+    usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
-    const useCreateGame = hooks.useCreateGame();
+    const { prepare } = hooks.usePrepareGame();
 
     useEffect(() => {
-      useCreateGame.prepare(User.createId());
+      prepare(User.createId());
     }, []);
 
     return children;
@@ -188,8 +191,7 @@ test("show error if points is invalid", async () => {
 
   await userEvent.type(screen.getByLabelText("Name"), "foobar");
   await userEvent.clear(screen.getByLabelText("Points"));
-  await userEvent.type(screen.getByLabelText("Points"), "a,b,c");
-  await userEvent.click(screen.getByText("Submit"));
+  await userEvent.type(screen.getByLabelText("Points"), "a,b,c[Tab]");
 
   // Assert
   expect(screen.queryByText("Invalid name")).toBeNull();

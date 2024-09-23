@@ -59,24 +59,12 @@ export function GameCreator() {
   const createGame = hooks.useCreateGame();
   const navigate = useNavigate();
 
+  const handleBlur = () => {
+    createGame.validate(name, points);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setNameError(undefined);
-    setPointsError(undefined);
-
-    const errors = createGame.canCreate(name, points);
-    if (errors.length > 0) {
-      errors.forEach((v) => {
-        if (v == "InvalidName") {
-          setNameError("Invalid name");
-        } else if (v == "NameConflicted") {
-          setNameError("This name already exists in your games");
-        } else if (v == "InvalidPoints") {
-          setPointsError("Invalid points");
-        }
-      });
-      return;
-    }
 
     createGame.create(name, points);
   };
@@ -87,7 +75,22 @@ export function GameCreator() {
     }
   }, [createGame.status]);
 
-  const loading = createGame.status == CreateGameStatus.Waiting || createGame.status == CreateGameStatus.Preparing;
+  useEffect(() => {
+    setNameError(undefined);
+    setPointsError(undefined);
+
+    createGame.errors.forEach((v) => {
+      if (v == "InvalidName") {
+        setNameError("Invalid name");
+      } else if (v == "NameConflicted") {
+        setNameError("This name already exists in your games");
+      } else if (v == "InvalidPoints") {
+        setPointsError("Invalid points");
+      }
+    });
+  }, [createGame.errors]);
+
+  const loading = createGame.status == CreateGameStatus.Waiting;
 
   return (
     <Dialog title="Create game">
@@ -104,6 +107,7 @@ export function GameCreator() {
             className={styles.input.input}
             defaultValue={name}
             onChange={(e) => setName(e.target.value)}
+            onBlur={handleBlur}
             tabIndex={0}
             disabled={loading}
           />
@@ -120,6 +124,7 @@ export function GameCreator() {
             className={styles.input.input}
             defaultValue={points}
             onChange={(e) => setPoints(e.target.value)}
+            onBlur={handleBlur}
             tabIndex={0}
             disabled={loading}
           />

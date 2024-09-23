@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { GameCreator } from "./game-creator.js";
 import { createStore, Provider } from "jotai";
 import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { CreateGameStatus, createUseCreateGame } from "../atoms/game.js";
+import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../atoms/game.js";
 import sinon from "sinon";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { useEffect } from "react";
@@ -20,10 +20,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const InitializeUser = function InitializeUser({ children }: { children: React.ReactNode }) {
-  const createGame = hooks.useCreateGame();
+  const { prepare } = hooks.usePrepareGame();
 
   useEffect(() => {
-    createGame.prepare(User.createId());
+    prepare(User.createId());
   }, []);
 
   return children;
@@ -32,8 +32,10 @@ const InitializeUser = function InitializeUser({ children }: { children: React.R
 export const NormalBehavior: Story = {
   render() {
     const store = createStore();
+    const repository = newMemoryGameRepository();
     const hooks: Hooks = {
-      useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
+      useCreateGame: createUseCreateGame(repository, sinon.fake()),
+      usePrepareGame: createUsePrepareGame(repository),
     };
 
     return (
@@ -50,32 +52,6 @@ export const NormalBehavior: Story = {
   },
 };
 
-export const Preparing: Story = {
-  render() {
-    const store = createStore();
-    const hooks: Hooks = {
-      useCreateGame() {
-        return {
-          status: CreateGameStatus.Preparing,
-          canCreate: sinon.fake.returns([]),
-          create: sinon.fake(),
-          prepare: sinon.fake(),
-        };
-      },
-    };
-
-    return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <GameCreator />
-          </MemoryRouter>
-        </Provider>
-      </ImplementationProvider>
-    );
-  },
-};
-
 export const Waiting: Story = {
   render() {
     const store = createStore();
@@ -83,11 +59,12 @@ export const Waiting: Story = {
       useCreateGame() {
         return {
           status: CreateGameStatus.Waiting,
-          canCreate: sinon.fake.returns([]),
+          errors: [],
+          validate: sinon.fake.returns([]),
           create: sinon.fake(),
-          prepare: sinon.fake(),
         };
       },
+      usePrepareGame: sinon.fake(),
     };
 
     return (

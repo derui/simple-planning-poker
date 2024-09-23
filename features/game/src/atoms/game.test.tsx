@@ -1,14 +1,35 @@
 import { describe, expect, test } from "vitest";
-import { CreateGameStatus, createUseCreateGame } from "./game.js";
-import { act, renderHook } from "@testing-library/react";
+import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "./game.js";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { ApplicablePoints, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import sinon from "sinon";
+import { useEffect } from "react";
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
   ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
+
+const createPreparationWrapper =
+  (store: ReturnType<typeof createStore>, userId: User.Id, repository: GameRepository.T) =>
+  ({ children }: { children: React.ReactNode }) => {
+    const W = ({ children }: React.PropsWithChildren) => {
+      const { prepare } = createUsePrepareGame(repository)();
+
+      useEffect(() => {
+        prepare(userId);
+      }, []);
+
+      return children;
+    };
+
+    return (
+      <Provider store={store}>
+        <W>{children}</W>
+      </Provider>
+    );
+  };
 
 describe("UseCreateGame", () => {
   test("initial status is creating", () => {
@@ -22,26 +43,91 @@ describe("UseCreateGame", () => {
     });
 
     // Assert
-    expect(result.current.status).toEqual(CreateGameStatus.Preparing);
+    expect(result.current.status).toEqual(CreateGameStatus.Waiting);
   });
 
   test("prepared status", async () => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
-    const wrapper = createWrapper(store);
+    const wrapper = createPreparationWrapper(store, User.createId(), repository);
 
     // Act
-    const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+    const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
 
-    await act(async () => result.current.prepare(User.createId("foo")));
+    // Get affect prepared
+    await act(async () => {
+      rerender();
+    });
 
     // Assert
-    expect(result.current.status).toEqual(CreateGameStatus.Prepared);
+    expect(result.current.status).toBeUndefined();
   });
 
   describe("validation", () => {
-    test("get error if name is empty", async () => {
+    test("get error if name is empty", () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      result.current.validate("", "");
+      rerender();
+
+      // Assert
+      expect(result.current.errors).toContain("InvalidName");
+    });
+
+    test("get error if name is blank", () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      result.current.validate("   ", "");
+      rerender();
+
+      // Assert
+      expect(result.current.errors).toContain("InvalidName");
+    });
+
+    test.each(["", "  "])(`get error if point is empty or blank`, (v) => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      result.current.validate("foo", v);
+      rerender();
+
+      // Assert
+      expect(result.current.errors).toHaveLength(1);
+      expect(result.current.errors).toContain("InvalidPoints");
+    });
+
+    test("get error if points have non-numeric character", () => {
+      // Arrange
+      const repository = newMemoryGameRepository();
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+
+      // Act
+      result.current.validate("foo", "a,b");
+      rerender();
+
+      // Assert
+      expect(result.current.errors).toHaveLength(1);
+      expect(result.current.errors).toContain("InvalidPoints");
+    });
+
+    test("accept comma-separated list", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
@@ -49,14 +135,13 @@ describe("UseCreateGame", () => {
       const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("", "");
+      result.current.validate("foo", "1,2");
 
       // Assert
-      expect(ret).toContain("InvalidName");
+      expect(result.current.errors).toHaveLength(0);
     });
 
-    test("get error if name is blank", async () => {
+    test("accept large number in points", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
@@ -64,97 +149,10 @@ describe("UseCreateGame", () => {
       const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("   ", "");
+      result.current.validate("foo", "1,30");
 
       // Assert
-      expect(ret).toContain("InvalidName");
-    });
-
-    test.each(["", "  "])(`get error if point is empty or blank`, async (v) => {
-      // Arrange
-      const repository = newMemoryGameRepository();
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-
-      // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("foo", v);
-
-      // Assert
-      expect(ret).toHaveLength(1);
-      expect(ret).toContain("InvalidPoints");
-    });
-
-    test("get error if points have non-numeric character", async () => {
-      // Arrange
-      const repository = newMemoryGameRepository();
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-
-      // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("foo", "a,b");
-
-      // Assert
-      expect(ret).toHaveLength(1);
-      expect(ret).toContain("InvalidPoints");
-    });
-
-    test("accept comma-separated list", async () => {
-      // Arrange
-      const repository = newMemoryGameRepository();
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-
-      // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("foo", "1,2");
-
-      // Assert
-      expect(ret).toHaveLength(0);
-    });
-
-    test("accept large number in points", async () => {
-      // Arrange
-      const repository = newMemoryGameRepository();
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-
-      // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("foo", "1,30");
-
-      // Assert
-      expect(ret).toHaveLength(0);
-    });
-
-    test("get error if name is conflicted in owned games", async () => {
-      // Arrange
-      const repository = newMemoryGameRepository([
-        Game.create({
-          id: Game.createId(),
-          name: "foo",
-          owner: User.createId("foo"),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-          voting: Voting.createId(),
-        })[0],
-      ]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const { result } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-
-      // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
-      const ret = result.current.canCreate("foo", "1");
-
-      // Assert
-      expect(ret).toHaveLength(1);
-      expect(ret).toContain("NameConflicted");
+      expect(result.current.errors).toHaveLength(0);
     });
   });
 
@@ -163,11 +161,13 @@ describe("UseCreateGame", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
-      const wrapper = createWrapper(store);
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
       result.current.create("foo", "1");
       rerender();
 
@@ -179,12 +179,14 @@ describe("UseCreateGame", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
-      const wrapper = createWrapper(store);
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
-      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
       await act(async () => result.current.create("foo", "1"));
 
       // Assert
@@ -197,12 +199,14 @@ describe("UseCreateGame", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
-      const wrapper = createWrapper(store);
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
-      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
       await act(async () => result.current.create("foo", "1"));
 
       const game = await repository.listUserJoined(User.createId("foo"));
@@ -217,18 +221,20 @@ describe("UseCreateGame", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
-      const wrapper = createWrapper(store);
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
-      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
       await act(async () => result.current.create("foo", "1"));
-      const ret = result.current.canCreate("foo", "1,3,5");
+      await act(async () => result.current.create("foo", "1,3,5"));
 
       // Assert
-      expect(ret).toHaveLength(1);
-      expect(ret).toContain("NameConflicted");
+      expect(result.current.errors).toHaveLength(1);
+      expect(result.current.errors).toContain("NameConflicted");
     });
 
     test("set failed state if create is failed", async () => {
@@ -239,16 +245,44 @@ describe("UseCreateGame", () => {
       };
 
       const store = createStore();
-      const wrapper = createWrapper(store);
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
-      const { result } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
 
       // Act
-      await act(async () => result.current.prepare(User.createId("foo")));
       await act(async () => result.current.create("foo", "1"));
 
       // Assert
       expect(result.current.status).toEqual(CreateGameStatus.Failed);
+    });
+
+    test("get error if name is conflicted in owned games", async () => {
+      // Arrange
+      const repository = newMemoryGameRepository([
+        Game.create({
+          id: Game.createId(),
+          name: "foo",
+          owner: User.createId("foo"),
+          points: ApplicablePoints.create([StoryPoint.create(1)]),
+          voting: Voting.createId(),
+        })[0],
+      ]);
+      const store = createStore();
+      const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
+      const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
+      await act(async () => {
+        rerender();
+      });
+
+      // Act
+      await act(async () => result.current.create("foo", "1"));
+
+      // Assert
+      expect(result.current.errors).toHaveLength(1);
+      expect(result.current.errors).toContain("NameConflicted");
     });
   });
 });

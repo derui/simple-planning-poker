@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
 import { newCreateGameUseCase } from "./create-game.js";
-import { ApplicablePoints, DomainEvent, StoryPoint, User, Game, GameRepository } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, StoryPoint, User, Game, GameRepository, Voting } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 
 test("should return error if numbers is invalid", async () => {
@@ -92,6 +92,7 @@ test("should dispatch game created event", async () => {
     expect.fail("should be GameCreated");
   }
 });
+
 test("should fail if repository throws error", async () => {
   // Arrange
   const input = {
@@ -111,4 +112,30 @@ test("should fail if repository throws error", async () => {
 
   // Assert
   expect(ret.kind).toEqual("failed");
+});
+
+test("get error if some games having same name already exist", async () => {
+  // Arrange
+  const input = {
+    name: "foo",
+    points: [1],
+    createdBy: User.createId(),
+  };
+  const dispatcher = sinon.fake();
+  const repository = newMemoryGameRepository([
+    Game.create({
+      id: Game.createId(),
+      owner: input.createdBy,
+      name: "foo",
+      points: ApplicablePoints.create([StoryPoint.create(1)]),
+      voting: Voting.createId(),
+    })[0],
+  ]);
+  const useCase = newCreateGameUseCase(dispatcher, repository);
+
+  // Act
+  const ret = await useCase(input);
+
+  // Assert
+  expect(ret.kind).toEqual("conflictName");
 });

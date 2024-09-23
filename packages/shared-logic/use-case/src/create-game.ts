@@ -9,6 +9,7 @@ export interface CreateGameUseCaseInput {
 
 export type CreateGameUseCaseOutput =
   | { kind: "success"; game: Game.T }
+  | { kind: "conflictName" }
   | { kind: "invalidStoryPoint" }
   | { kind: "invalidStoryPoints" }
   | { kind: "failed" };
@@ -26,6 +27,11 @@ export const newCreateGameUseCase = function newCreateGameUseCase(
 
     if (!ApplicablePoints.isValidStoryPoints(storyPoints)) {
       return { kind: "invalidStoryPoints" };
+    }
+
+    const ownedGames = (await gameRepository.listUserJoined(input.createdBy)).filter((v) => v.owner == input.createdBy);
+    if (ownedGames.some((v) => v.name == input.name)) {
+      return { kind: "conflictName" };
     }
 
     const points = ApplicablePoints.create(storyPoints);
