@@ -55,3 +55,10 @@ export const Large: Story = {
     ],
   },
 };
+
+export const Loading: Story = {
+  args: {
+    children: [],
+    loading: true,
+  },
+};

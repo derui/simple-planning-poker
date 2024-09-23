@@ -13,7 +13,8 @@ const styles = {
     "grid-cols-[auto_auto_auto_auto]",
     "auto-cols-min",
     "place-content-center",
-    "gap-4"
+    "gap-4",
+    "w-full"
   ),
 };
 
