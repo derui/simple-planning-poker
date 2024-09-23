@@ -18,14 +18,12 @@ type Story = StoryObj<typeof meta>;
 export const Normal: Story = {
   args: {
     children: [
-      <PlayerEstimation key="1" name="user1" mode="player" state="notSelected">
-        1
+      <PlayerEstimation key="1" name="user1"></PlayerEstimation>,
+      <PlayerEstimation key="2" name="user2" estimated>
+        {" "}
       </PlayerEstimation>,
-      <PlayerEstimation key="2" name="user2" mode="player" state="estimated">
-        1
-      </PlayerEstimation>,
-      <PlayerEstimation key="3" name="user3" mode="inspector" state="revealed">
-        1
+      <PlayerEstimation key="3" name="user3">
+        {" "}
       </PlayerEstimation>,
     ],
   },
@@ -34,23 +32,19 @@ export const Normal: Story = {
 export const Large: Story = {
   args: {
     children: [
-      <PlayerEstimation key="1" name="user1" mode="player" state="notSelected">
-        1
+      <PlayerEstimation key="1" name="user1"></PlayerEstimation>,
+      <PlayerEstimation key="2" name="user2" estimated>
+        {" "}
       </PlayerEstimation>,
-      <PlayerEstimation key="2" name="user2" mode="player" state="estimated">
-        1
+      <PlayerEstimation key="3" name="user3">
+        {" "}
       </PlayerEstimation>,
-      <PlayerEstimation key="3" name="user3" mode="inspector" state="revealed">
-        1
+      <PlayerEstimation key="4" name="user4"></PlayerEstimation>,
+      <PlayerEstimation key="5" name="user5" estimated>
+        {" "}
       </PlayerEstimation>,
-      <PlayerEstimation key="4" name="user4" mode="player" state="notSelected">
-        1
-      </PlayerEstimation>,
-      <PlayerEstimation key="5" name="user5" mode="player" state="estimated">
-        1
-      </PlayerEstimation>,
-      <PlayerEstimation key="6" name="user6" mode="inspector" state="revealed">
-        1
+      <PlayerEstimation key="6" name="user6">
+        {" "}
       </PlayerEstimation>,
     ],
   },

@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`display a estimation 1`] = `
+<div>
+  <div
+    class="grid grid-rows-1 grid-cols-[auto_auto_auto_auto] auto-cols-min place-content-center gap-4 min-h-12 w-full"
+  >
+    <div
+      class="grid grid-rows-[auto_1fr] grid-cols-1 m-3 text-center max-w-12"
+    >
+      <span>
+        foo
+      </span>
+      <span
+        class="grid place-content-center h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
+        data-estimated="false"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -14,8 +14,10 @@ const styles = {
     "auto-cols-min",
     "place-content-center",
     "gap-4",
+    "min-h-12",
     "w-full"
   ),
+  loading: clsx("grid", "grid-rows-1", "grid-cols-1", "place-content-center", "gap-4", "min-h-12", "w-full"),
 };
 
 /**
@@ -25,7 +27,7 @@ const styles = {
 export function PlayerEstimations({ loading, children }: PropsWithChildren<Props>) {
   if (loading) {
     return (
-      <div className={styles.root} data-loading="true">
+      <div className={styles.loading} data-loading="true">
         <Skeleton />
       </div>
     );

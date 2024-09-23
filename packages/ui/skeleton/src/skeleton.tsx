@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 
 const styles = {
-  root: clsx("grid", "w-full", "h-full", "animate-pulse", "bg-gray-200"),
+  root: clsx("w-full", "h-full", "animate-pulse", "bg-gray-100"),
 };
 
 // eslint-disable-next-line func-style
