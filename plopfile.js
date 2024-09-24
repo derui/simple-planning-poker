@@ -113,17 +113,17 @@ const registerPresentationalComponentToFeature = function registerPresentational
       {
         type: "add",
         path: "features/{{feature}}/src/components/presentations/{{name}}.tsx",
-        templateFile: "plop-templates/packge/ui/component.hbs",
+        templateFile: "plop-templates/package/ui/component.hbs",
       },
       {
         type: "add",
         path: "features/{{feature}}/src/components/presentations/{{name}}.test.tsx",
-        templateFile: "plop-templates/packge/ui/component.test.hbs",
+        templateFile: "plop-templates/package/ui/component.test.hbs",
       },
       {
         type: "add",
         path: "features/{{feature}}/src/components/presentations/{{name}}.stories.ts",
-        templateFile: "plop-templates/packge/ui/component.stories.hbs",
+        templateFile: "plop-templates/package/ui/component.stories.hbs",
       },
     ],
   });
