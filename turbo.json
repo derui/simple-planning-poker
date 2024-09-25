@@ -6,7 +6,9 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "dist/**",
+        "storybook-static/**" ]
     },
     "check-type": {
       "dependsOn": ["^check-type"]
