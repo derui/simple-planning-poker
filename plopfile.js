@@ -122,7 +122,7 @@ const registerPresentationalComponentToFeature = function registerPresentational
       },
       {
         type: "add",
-        path: "features/{{feature}}/src/components/presentations/{{name}}.stories.ts",
+        path: "features/{{feature}}/src/components/presentations/{{name}}.stories.tsx",
         templateFile: "plop-templates/package/ui/component.stories.hbs",
       },
     ],
