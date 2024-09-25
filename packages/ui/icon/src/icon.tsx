@@ -6,7 +6,7 @@ export interface IconProps {
   /**
    * Size of icon. Default value is `m`
    */
-  size?: "s" | "m" | "l";
+  size?: "s" | "m" | "l" | "xl";
 
   /**
    * variant of icon color.
@@ -114,9 +114,11 @@ export const Icon = function Icon(props: IconProps) {
       "before:w-5 before:h-5": size == "s",
       "before:w-6 before:h-6": size == "m",
       "before:w-7 before:h-7": size == "l",
+      "before:w-10 before:h-10": size == "xl",
       "w-5 h-5": size == "s",
       "w-6 h-6": size == "m",
       "w-7 h-7": size == "l",
+      "w-10 h-10": size == "xl",
     }
   );
 

@@ -23,6 +23,12 @@ test("render size large", () => {
   expect(ret.container).toMatchSnapshot();
 });
 
+test("render size extra-large", () => {
+  const ret = render(<Icon size="xl" type={Icons.chevronDown} />);
+
+  expect(ret.container).toMatchSnapshot();
+});
+
 test("render change icon color variant", () => {
   const ret = render(<Icon size="l" type={Icons.chevronDown} variant="teal" />);
 

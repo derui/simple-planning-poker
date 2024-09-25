@@ -32,3 +32,10 @@ export const Large: Story = {
     size: "l",
   },
 };
+
+export const ExtraLarge: Story = {
+  args: {
+    type: Icons.check,
+    size: "xl",
+  },
+};
