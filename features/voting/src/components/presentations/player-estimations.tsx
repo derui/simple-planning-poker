@@ -7,17 +7,8 @@ interface Props {
 }
 
 const styles = {
-  root: clsx(
-    "grid",
-    "grid-rows-1",
-    "grid-cols-[auto_auto_auto_auto]",
-    "auto-cols-min",
-    "place-content-center",
-    "gap-4",
-    "min-h-12",
-    "w-full"
-  ),
-  loading: clsx("grid", "grid-rows-1", "grid-cols-1", "place-content-center", "gap-4", "min-h-12", "w-full"),
+  root: clsx("flex", "flex-row", "items-center", "justify-center", "gap-4", "w-full"),
+  loading: clsx("grid", "grid-rows-1", "grid-cols-1", "place-content-center", "gap-4", "h-24", "w-full"),
 };
 
 /**

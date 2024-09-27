@@ -3,10 +3,10 @@
 exports[`display a estimation 1`] = `
 <div>
   <div
-    class="grid grid-rows-1 grid-cols-[auto_auto_auto_auto] auto-cols-min place-content-center gap-4 min-h-12 w-full"
+    class="flex flex-row items-center justify-center gap-4 w-full"
   >
     <div
-      class="flex flex-col m-3 items-center max-w-12"
+      class="flex flex-col m-3 items-center"
     >
       <span>
         foo
