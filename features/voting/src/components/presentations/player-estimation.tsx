@@ -6,11 +6,9 @@ interface Props {
 }
 
 const styles = {
-  root: clsx("grid", "grid-rows-[auto_1fr]", "grid-cols-1", "m-3", "text-center", "max-w-12"),
+  root: clsx("flex", "flex-col", "m-3", "items-center"),
   card: (estimated: boolean) =>
     clsx(
-      "grid",
-      "place-content-center",
       "h-20",
       "w-14",
       "rounded",
@@ -29,8 +27,6 @@ const styles = {
         "[transform:rotateY(180deg)]": estimated,
       }
     ),
-
-  eye: clsx("grid", "place-content-center"),
 };
 
 // eslint-disable-next-line func-style

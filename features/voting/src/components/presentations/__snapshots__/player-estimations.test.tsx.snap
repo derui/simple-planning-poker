@@ -6,13 +6,13 @@ exports[`display a estimation 1`] = `
     class="grid grid-rows-1 grid-cols-[auto_auto_auto_auto] auto-cols-min place-content-center gap-4 min-h-12 w-full"
   >
     <div
-      class="grid grid-rows-[auto_1fr] grid-cols-1 m-3 text-center max-w-12"
+      class="flex flex-col m-3 items-center max-w-12"
     >
       <span>
         foo
       </span>
       <span
-        class="grid place-content-center h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
+        class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
         data-estimated="false"
       />
     </div>
