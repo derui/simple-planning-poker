@@ -6,7 +6,7 @@ interface Props {
 }
 
 const styles = {
-  root: clsx("grid", "grid-rows-[auto_1fr]", "grid-cols-1", "m-3", "text-center", "max-w-12"),
+  root: clsx("flex", "flex-col", "m-3", "items-center"),
   card: (opened: boolean) =>
     clsx(
       "grid",
