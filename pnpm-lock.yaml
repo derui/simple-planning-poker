@@ -343,6 +343,12 @@ importers:
 
   features/voting:
     dependencies:
+      '@spp/shared-color-variant':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/color-variant
+      '@spp/ui-button-style':
+        specifier: workspace:^
+        version: link:../../packages/ui/button-style
       '@spp/ui-icon':
         specifier: workspace:^
         version: link:../../packages/ui/icon

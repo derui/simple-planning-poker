@@ -55,6 +55,8 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/shared-color-variant": "workspace:^",
+    "@spp/ui-button-style": "workspace:^",
     "@spp/ui-icon": "workspace:^",
     "@spp/ui-skeleton": "workspace:^",
     "clsx": "catalog:",
