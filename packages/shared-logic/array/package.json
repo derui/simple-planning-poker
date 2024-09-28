@@ -21,7 +21,7 @@
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
-    "dev": "concurrently \"pnpm:dev:*\""
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\""
   },
   "keywords": [],
   "author": "",
