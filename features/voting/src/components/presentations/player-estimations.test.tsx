@@ -7,7 +7,7 @@ afterEach(cleanup);
 
 test("display a estimation", async () => {
   const { container } = render(
-    <PlayerEstimations>
+    <PlayerEstimations total={5} estimated={1}>
       <PlayerEstimation name="foo"></PlayerEstimation>
     </PlayerEstimations>
   );
@@ -16,7 +16,13 @@ test("display a estimation", async () => {
 });
 
 test("loading", async () => {
-  const { container } = render(<PlayerEstimations loading />);
+  const { container } = render(<PlayerEstimations loading total={5} estimated={1} />);
 
   expect(container.querySelector('[data-loading="true"]')).not.toBeNull();
+});
+
+test("all estimated", async () => {
+  const { container } = render(<PlayerEstimations total={5} estimated={5} />);
+
+  expect(container).toMatchSnapshot();
 });

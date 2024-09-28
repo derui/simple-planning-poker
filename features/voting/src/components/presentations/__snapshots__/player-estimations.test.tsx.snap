@@ -1,20 +1,68 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`all estimated 1`] = `
+<div>
+  <div
+    class="grid grid-rows-[auto_1fr] grid-cols-1 place-items-center gap-4"
+  >
+    <div
+      class="flex flex-row items-center justify-center h-8"
+    >
+      <span
+        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+      >
+        Voted
+      </span>
+      <span
+        class="flex-auto text-xl rounded px-2 py-1 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
+      >
+        5
+         / 
+        5
+      </span>
+    </div>
+    <div
+      class="flex flex-row gap-4"
+    />
+  </div>
+</div>
+`;
+
 exports[`display a estimation 1`] = `
 <div>
   <div
-    class="flex flex-row items-center justify-center gap-4 w-full"
+    class="grid grid-rows-[auto_1fr] grid-cols-1 place-items-center gap-4"
   >
     <div
-      class="flex flex-col m-3 items-center"
+      class="flex flex-row items-center justify-center h-8"
     >
-      <span>
-        foo
+      <span
+        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+      >
+        Voted
       </span>
       <span
-        class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
-        data-estimated="false"
-      />
+        class="flex-auto text-xl rounded px-2 py-1 border transition text-gray-800 border-gray-400"
+      >
+        1
+         / 
+        5
+      </span>
+    </div>
+    <div
+      class="flex flex-row gap-4"
+    >
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
+          data-estimated="false"
+        />
+      </div>
     </div>
   </div>
 </div>
