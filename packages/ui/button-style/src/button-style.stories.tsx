@@ -33,6 +33,12 @@ export const Blue: Story = {
     variant: Variant.blue,
   },
 };
+export const IconButton: Story = {
+  args: {
+    variant: Variant.blue,
+    iconButton: true,
+  },
+};
 export const Teal: Story = {
   args: {
     variant: Variant.teal,
