@@ -24,8 +24,8 @@
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "dev": "concurrently \"npm:dev:*\"",
-    "build": "concurrently \"npm:build:*\""
+    "dev": "concurrently \"pnpm:dev:*\"",
+    "build": "concurrently \"pnpm:build:*\""
   },
   "keywords": [],
   "author": "",

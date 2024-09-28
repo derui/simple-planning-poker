@@ -39,7 +39,7 @@
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
-    "dev": "concurrently \"npm:dev:*\""
+    "dev": "concurrently \"pnpm:dev:*\""
   },
   "keywords": [],
   "author": "",
