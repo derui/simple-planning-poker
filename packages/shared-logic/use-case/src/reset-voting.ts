@@ -10,6 +10,8 @@ export type ResetVotingUseCaseOutput =
   | { kind: "notFound" }
   | { kind: "canNotResetVoting" };
 
+export type ResetVotingUseCase = UseCase<ResetVotingUseCaseInput, ResetVotingUseCaseOutput>;
+
 /**
  * Get new instance of use case to reset voting
  */
@@ -17,7 +19,7 @@ export const newResetVotingUseCase = function newResetVotingUseCase(
   dispatcher: EventDispatcher,
   gameRepository: GameRepository.T,
   votingRepository: VotingRepository.T
-): UseCase<ResetVotingUseCaseInput, ResetVotingUseCaseOutput> {
+): ResetVotingUseCase {
   return async (input) => {
     const game = await gameRepository.findBy(input.gameId);
     if (!game) {
