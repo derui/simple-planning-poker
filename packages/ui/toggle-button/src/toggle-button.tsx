@@ -3,7 +3,11 @@ import { useRef, useState } from "react";
 
 interface Props {
   initialChecked: boolean;
-  onToggle: (checked: boolean) => void;
+
+  /**
+   * Event to notify change state.
+   */
+  onToggle?: (checked: boolean) => void;
 }
 
 const styles = {
@@ -55,9 +59,7 @@ export function ToggleButton(props: Props) {
           onChange={(e) => {
             setChecked(e.target.checked);
 
-            if (props.onToggle) {
-              props.onToggle(e.target.checked);
-            }
+            props.onToggle?.(e.target.checked);
           }}
         />
       </span>
