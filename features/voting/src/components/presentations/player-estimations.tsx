@@ -1,11 +1,13 @@
 import clsx from "clsx";
 import { Skeleton } from "@spp/ui-skeleton";
-import { PropsWithChildren } from "react";
+import { useMemo } from "react";
+import { EstimationDto } from "../../atoms/dto.js";
+import { PlayerEstimation } from "./player-estimation.js";
 
 interface Props {
   loading?: boolean;
   total: number;
-  estimated: number;
+  estimations: EstimationDto[];
 }
 
 const styles = {
@@ -31,7 +33,9 @@ const styles = {
  * Container presentation for player estimations
  */
 // eslint-disable-next-line func-style
-export function PlayerEstimations({ loading, children, total, estimated }: PropsWithChildren<Props>) {
+export function PlayerEstimations({ loading, total, estimations }: Props) {
+  const estimated = useMemo(() => estimations.filter((v) => v.estimated).length, [estimations]);
+
   if (loading) {
     return (
       <div className={styles.loading} data-loading="true">
@@ -50,7 +54,11 @@ export function PlayerEstimations({ loading, children, total, estimated }: Props
           {estimated} / {total}
         </span>
       </div>
-      <div className={styles.estimations}>{children}</div>
+      <div className={styles.estimations}>
+        {estimations.map((estimation, index) => {
+          return <PlayerEstimation key={index} {...estimation}></PlayerEstimation>;
+        })}
+      </div>
     </div>
   );
 }

@@ -346,6 +346,12 @@ importers:
       '@spp/shared-color-variant':
         specifier: workspace:^
         version: link:../../packages/shared-logic/color-variant
+      '@spp/shared-domain':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/domain
+      '@spp/shared-use-case':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/use-case
       '@spp/ui-button-style':
         specifier: workspace:^
         version: link:../../packages/ui/button-style
@@ -361,6 +367,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      jotai:
+        specifier: ^2.10.0
+        version: 2.10.0(@types/react@18.3.10)(react@18.3.1)
       react:
         specifier: 'catalog:'
         version: 18.3.1

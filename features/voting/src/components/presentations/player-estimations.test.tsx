@@ -7,22 +7,26 @@ afterEach(cleanup);
 
 test("display a estimation", async () => {
   const { container } = render(
-    <PlayerEstimations total={5} estimated={1}>
-      <PlayerEstimation name="foo"></PlayerEstimation>
-    </PlayerEstimations>
+    <PlayerEstimations total={5} estimations={[{ name: "foo", estimated: false }]}></PlayerEstimations>
   );
 
   expect(container).toMatchSnapshot();
 });
 
 test("loading", async () => {
-  const { container } = render(<PlayerEstimations loading total={5} estimated={1} />);
+  const { container } = render(
+    <PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: true }]} />
+  );
 
   expect(container.querySelector('[data-loading="true"]')).not.toBeNull();
 });
 
 test("all estimated", async () => {
-  const { container } = render(<PlayerEstimations total={5} estimated={5} />);
+  const estimations = Array.from(new Array(5)).map((_, index) => {
+    return { name: `foo${index}`, estimated: true };
+  });
+
+  const { container } = render(<PlayerEstimations total={5} estimations={estimations} />);
 
   expect(container).toMatchSnapshot();
 });

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PlayerEstimations } from "./player-estimations.js";
-import { PlayerEstimation } from "./player-estimation.js";
 
 const meta = {
   title: "Presentational/Player Estimations",
@@ -18,11 +17,10 @@ type Story = StoryObj<typeof meta>;
 export const Normal: Story = {
   args: {
     total: 4,
-    estimated: 3,
-    children: [
-      <PlayerEstimation key="1" name="user1" />,
-      <PlayerEstimation key="2" name="user2" estimated />,
-      <PlayerEstimation key="3" name="user3" />,
+    estimations: [
+      { name: "user1", estimated: false },
+      { name: "user2", estimated: true },
+      { name: "user3", estimated: false },
     ],
   },
 };
@@ -30,14 +28,13 @@ export const Normal: Story = {
 export const Large: Story = {
   args: {
     total: 6,
-    estimated: 6,
-    children: [
-      <PlayerEstimation key="1" name="user1" />,
-      <PlayerEstimation key="2" name="user2" estimated />,
-      <PlayerEstimation key="3" name="user3" />,
-      <PlayerEstimation key="4" name="user4" />,
-      <PlayerEstimation key="5" name="user5" estimated />,
-      <PlayerEstimation key="6" name="user6" />,
+    estimations: [
+      { name: "user1", estimated: true },
+      { name: "user2", estimated: true },
+      { name: "user3", estimated: true },
+      { name: "user4", estimated: true },
+      { name: "user5", estimated: true },
+      { name: "user6", estimated: true },
     ],
   },
 };
@@ -45,7 +42,7 @@ export const Large: Story = {
 export const Loading: Story = {
   args: {
     total: 1,
-    estimated: 0,
+    estimations: [],
     loading: true,
   },
 };

@@ -23,7 +23,63 @@ exports[`all estimated 1`] = `
     </div>
     <div
       class="flex flex-row gap-4"
-    />
+    >
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo0
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo1
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo2
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo3
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo4
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -44,7 +100,7 @@ exports[`display a estimation 1`] = `
       <span
         class="flex-auto text-xl rounded px-2 py-1 border transition text-gray-800 border-gray-400"
       >
-        1
+        0
          / 
         5
       </span>
