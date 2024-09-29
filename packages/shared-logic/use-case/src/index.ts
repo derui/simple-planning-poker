@@ -3,7 +3,6 @@ export * from "./change-user-mode.js";
 export * from "./change-user-name.js";
 export * from "./create-game.js";
 export * from "./estimate-player.js";
-export * from "./join-user.js";
 export * from "./kick-player.js";
 export * from "./leave-game.js";
 export * from "./reset-voting.js";
