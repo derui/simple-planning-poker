@@ -1,11 +1,10 @@
 import { cleanup, render } from "@testing-library/react";
 import { test, expect, afterEach } from "vitest";
 import { PlayerEstimations } from "./player-estimations.js";
-import { PlayerEstimation } from "./player-estimation.js";
 
 afterEach(cleanup);
 
-test("display a estimation", async () => {
+test("display a estimation", () => {
   const { container } = render(
     <PlayerEstimations total={5} estimations={[{ name: "foo", estimated: false }]}></PlayerEstimations>
   );
@@ -13,7 +12,7 @@ test("display a estimation", async () => {
   expect(container).toMatchSnapshot();
 });
 
-test("loading", async () => {
+test("loading", () => {
   const { container } = render(
     <PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: true }]} />
   );
@@ -21,7 +20,7 @@ test("loading", async () => {
   expect(container.querySelector('[data-loading="true"]')).not.toBeNull();
 });
 
-test("all estimated", async () => {
+test("all estimated", () => {
   const estimations = Array.from(new Array(5)).map((_, index) => {
     return { name: `foo${index}`, estimated: true };
   });

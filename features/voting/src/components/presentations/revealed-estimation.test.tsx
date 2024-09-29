@@ -15,7 +15,7 @@ afterEach(() => {
   fakeTimer.restore();
 });
 
-test("display player card as normal and not opened", async () => {
+test("display player card as normal and not opened", () => {
   render(<RevealedEstimation name="user">5</RevealedEstimation>);
 
   expect(screen.queryByText("5")).toBeNull();

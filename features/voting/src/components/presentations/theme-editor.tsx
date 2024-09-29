@@ -1,5 +1,4 @@
 import { Variant } from "@spp/shared-color-variant";
-import { buttonStyle } from "@spp/ui-button-style";
 import { Icon, Icons } from "@spp/ui-icon";
 import { clsx } from "clsx";
 import { FormEvent, useEffect, useRef, useState } from "react";

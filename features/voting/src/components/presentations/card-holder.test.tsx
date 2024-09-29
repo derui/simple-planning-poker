@@ -5,7 +5,7 @@ import { SelectableCard } from "./selectable-card.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(
     <CardHolder type="player">
       <SelectableCard>3</SelectableCard>
@@ -15,7 +15,7 @@ test("should be able to render", async () => {
   expect(ret.container).toMatchSnapshot();
 });
 
-test("should be able to render as inspector", async () => {
+test("should be able to render as inspector", () => {
   const ret = render(
     <CardHolder type="inspector">
       <SelectableCard>3</SelectableCard>

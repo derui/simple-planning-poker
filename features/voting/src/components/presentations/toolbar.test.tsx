@@ -5,20 +5,20 @@ import { userEvent } from "@testing-library/user-event";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<Toolbar defaultRole="player" />);
 
   expect(ret.container).toMatchSnapshot();
 });
 
-test("should change current check", async () => {
+test("should change current check", () => {
   const ret = render(<Toolbar defaultRole="inspector" />);
 
   expect(ret.container).toMatchSnapshot();
   expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBeTruthy();
 });
 
-test("should not call handler after initial render", async () => {
+test("should not call handler after initial render", () => {
   render(
     <Toolbar
       defaultRole="inspector"

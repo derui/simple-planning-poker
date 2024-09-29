@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<ThemeEditor theme="foo" />);
 
   expect(ret.container).toMatchSnapshot();

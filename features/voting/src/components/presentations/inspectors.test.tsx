@@ -5,7 +5,7 @@ import { Inspector } from "./inspector.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(
     <Inspectors>
       <Inspector name="foo" />
@@ -17,7 +17,7 @@ test("should be able to render", async () => {
   expect(ret.container).toMatchSnapshot();
 });
 
-test("render text if no children", async () => {
+test("render text if no children", () => {
   const ret = render(<Inspectors></Inspectors>);
 
   expect(ret.container).toMatchSnapshot();
