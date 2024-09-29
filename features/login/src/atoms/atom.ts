@@ -40,12 +40,12 @@ export type UseAuth = () => {
   /**
    * logined or not
    */
-  status: AuthStatus;
+  readonly status: AuthStatus;
 
   /**
    * Logined user id
    */
-  currentUserId: User.Id | undefined;
+  readonly currentUserId: User.Id | undefined;
 
   /**
    * Start checking login or not
@@ -111,12 +111,12 @@ export type UseLogin = () => {
   /**
    * Login status
    */
-  status: "logined" | "notLogined" | "doing";
+  readonly status: "logined" | "notLogined" | "doing";
 
   /**
    * Set error message when login failed
    */
-  loginError: string | undefined;
+  readonly loginError: string | undefined;
 };
 
 /**
