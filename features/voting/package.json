@@ -55,6 +55,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/feature-login": "workspace:^",
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-domain": "workspace:^",
     "@spp/shared-use-case": "workspace:^",

@@ -343,6 +343,9 @@ importers:
 
   features/voting:
     dependencies:
+      '@spp/feature-login':
+        specifier: workspace:^
+        version: link:../login
       '@spp/shared-color-variant':
         specifier: workspace:^
         version: link:../../packages/shared-logic/color-variant
