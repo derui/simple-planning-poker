@@ -1,8 +1,8 @@
 import { EventDispatcher, UseCase } from "./base.js";
-import { Game, Voting, GameRepository, VotingRepository } from "@spp/shared-domain";
+import { Voting, VotingRepository } from "@spp/shared-domain";
 
 export interface ResetVotingUseCaseInput {
-  gameId: Game.Id;
+  votingId: Voting.Id;
 }
 
 export type ResetVotingUseCaseOutput =
@@ -17,15 +17,10 @@ export type ResetVotingUseCase = UseCase<ResetVotingUseCaseInput, ResetVotingUse
  */
 export const newResetVotingUseCase = function newResetVotingUseCase(
   dispatcher: EventDispatcher,
-  gameRepository: GameRepository.T,
   votingRepository: VotingRepository.T
 ): ResetVotingUseCase {
   return async (input) => {
-    const game = await gameRepository.findBy(input.gameId);
-    if (!game) {
-      return { kind: "notFound" };
-    }
-    const voting = await votingRepository.findBy(game.voting);
+    const voting = await votingRepository.findBy(input.votingId);
     if (!voting) {
       return { kind: "notFound" };
     }

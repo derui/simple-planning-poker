@@ -11,20 +11,18 @@ import {
   DomainEvent,
 } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { newResetVotingUseCase } from "./reset-voting.js";
 
 test("should return error if game is not found", async () => {
   // Arrange
   const input = {
-    gameId: Game.createId(),
+    votingId: Voting.createId(),
   };
 
   const votingRepository = newMemoryVotingRepository();
-  const repository = newMemoryGameRepository();
   const dispatcher = sinon.fake();
 
-  const useCase = newResetVotingUseCase(dispatcher, repository, votingRepository);
+  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
 
   // Act
   const ret = await useCase(input);
@@ -52,13 +50,12 @@ test("should save reseted voting", async () => {
   });
 
   const input = {
-    gameId: game.id,
+    votingId: voting.id,
   };
   const votingRepository = newMemoryVotingRepository([voting]);
-  const repository = newMemoryGameRepository([game]);
   const dispatcher = sinon.fake();
 
-  const useCase = newResetVotingUseCase(dispatcher, repository, votingRepository);
+  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
 
   // Act
   const ret = await useCase(input);
@@ -86,13 +83,12 @@ test("should dispatch VotingStarted event", async () => {
   });
 
   const input = {
-    gameId: game.id,
+    votingId: voting.id,
   };
   const votingRepository = newMemoryVotingRepository([voting]);
-  const repository = newMemoryGameRepository([game]);
   const dispatcher = sinon.fake<DomainEvent.T[]>();
 
-  const useCase = newResetVotingUseCase(dispatcher, repository, votingRepository);
+  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
 
   // Act
   await useCase(input);
