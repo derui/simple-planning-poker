@@ -42,3 +42,11 @@ test("cancel should return default", async () => {
 
   expect(screen.queryByPlaceholderText(/theme/)).toBeNull();
 });
+
+test("focus input first when switched to edit mode", async () => {
+  render(<ThemeEditor theme="foo" />);
+
+  await userEvent.click(screen.getByRole("button"));
+
+  expect(screen.getByRole<HTMLInputElement>("textbox").matches(":focus")).toBeTruthy();
+});

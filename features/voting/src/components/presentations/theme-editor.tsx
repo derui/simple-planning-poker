@@ -2,7 +2,7 @@ import { Variant } from "@spp/shared-color-variant";
 import { buttonStyle } from "@spp/ui-button-style";
 import { Icon, Icons } from "@spp/ui-icon";
 import { clsx } from "clsx";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 export interface Props {
   /**
@@ -61,6 +61,13 @@ const ThemeEditorInternal = function ThemeEditorInternal({
   onCancel,
 }: Props & { onCancel: () => void }) {
   const [state, setState] = useState(theme);
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  }, [ref.current]);
 
   const handleChange = (input: FormEvent<HTMLInputElement>) => {
     setState(input.currentTarget.value);
@@ -75,6 +82,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
   return (
     <form className={styles.editor.root} onSubmit={handleSubmit}>
       <input
+        ref={ref}
         type="text"
         tabIndex={1}
         className={styles.editor.input}
