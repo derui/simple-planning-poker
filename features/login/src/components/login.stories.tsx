@@ -25,7 +25,6 @@ export const notLogin: Story = {
           status: AuthStatus.Authenticated,
           checkLogined: sinon.fake(),
           logout: sinon.fake(),
-          currentUserId: undefined,
         };
       },
     };
@@ -52,7 +51,6 @@ export const checking: Story = {
           status: AuthStatus.Checking,
           checkLogined: sinon.fake(),
           logout: sinon.fake(),
-          currentUserId: undefined,
         };
       },
     };

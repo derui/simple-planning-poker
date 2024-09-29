@@ -1,6 +1,6 @@
 import { User } from "@spp/shared-domain";
 import { Authenticator } from "@spp/infra-authenticator";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
 /**
  * User id that is logined.
@@ -34,6 +34,29 @@ export enum AuthStatus {
 const authStatusAtom = atom<AuthStatus>(AuthStatus.NotAuthenticated);
 
 /**
+ * Login user hook
+ */
+export type UseLoginUser = () => {
+  /**
+   * Logined user id
+   */
+  readonly userId: User.Id | undefined;
+};
+
+/**
+ * Create `UseLoginUser` hook
+ */
+export const createUseLoginUser = function createUseLoginUser(): UseLoginUser {
+  return () => {
+    const currentUserId = useAtomValue(currentUserIdAtom);
+
+    return {
+      userId: currentUserId,
+    };
+  };
+};
+
+/**
  * Hook interface
  */
 export type UseAuth = () => {
@@ -41,11 +64,6 @@ export type UseAuth = () => {
    * logined or not
    */
   readonly status: AuthStatus;
-
-  /**
-   * Logined user id
-   */
-  readonly currentUserId: User.Id | undefined;
 
   /**
    * Start checking login or not
@@ -63,12 +81,11 @@ export type UseAuth = () => {
  */
 export const createUseAuth = function createUseAuth(authenticator: Authenticator): UseAuth {
   return () => {
-    const [currentUserId, setCurrentUserId] = useAtom(currentUserIdAtom);
+    const setCurrentUserId = useSetAtom(currentUserIdAtom);
     const [status, setStatus] = useAtom(authStatusAtom);
 
     return {
       status,
-      currentUserId,
       checkLogined() {
         setStatus(AuthStatus.Checking);
 

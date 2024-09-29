@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createUseLogin, createUseAuth } from "./atom.js";
+import { createUseLogin, createUseAuth, createUseLoginUser } from "./atom.js";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { newMemoryAuthenticator } from "@spp/infra-authenticator/memory.js";
@@ -20,7 +20,6 @@ describe("UseAuth", () => {
     const { result } = renderHook(() => createUseAuth(authenticator)(), { wrapper: createWrapper(store) });
 
     // Assert
-    expect(result.current.currentUserId).toBeUndefined();
     expect(result.current.status).toEqual("notAuthenticated");
   });
 
@@ -39,7 +38,6 @@ describe("UseAuth", () => {
     await waitFor(() => Promise.resolve());
 
     // Assert
-    expect(result.current.currentUserId).not.toBeUndefined();
     expect(result.current.status).toEqual("authenticated");
   });
 
@@ -56,8 +54,40 @@ describe("UseAuth", () => {
     act(() => result.current.checkLogined());
 
     // Assert
-    expect(result.current.currentUserId).toBeUndefined();
     expect(result.current.status).toEqual("checking");
+  });
+});
+
+describe("UseLoginUser", () => {
+  test("return undefined before authentication", () => {
+    // Arrange
+    const store = createStore();
+
+    // Act
+    const { result } = renderHook(() => createUseLoginUser()(), { wrapper: createWrapper(store) });
+
+    // Assert
+    expect(result.current.userId).toBeUndefined();
+  });
+
+  test("authenticated status", async () => {
+    // Arrange
+    const authenticator = newMemoryAuthenticator(newMemoryUserRepository(), User.createId("foo"));
+
+    const store = createStore();
+    const wrapper = createWrapper(store);
+
+    // Act
+    const auth = renderHook(() => createUseAuth(authenticator)(), { wrapper });
+
+    act(() => auth.result.current.checkLogined());
+
+    await waitFor(() => Promise.resolve());
+
+    const { result } = renderHook(() => createUseLoginUser()(), { wrapper });
+
+    // Assert
+    expect(result.current.userId).toEqual(User.createId("foo"));
   });
 });
 

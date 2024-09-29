@@ -21,7 +21,6 @@ test("render page", () => {
         status: AuthStatus.NotAuthenticated,
         checkLogined: sinon.fake(),
         logout: sinon.fake(),
-        currentUserId: undefined,
       };
     },
   };
@@ -52,7 +51,6 @@ test("call hook on mount", async () => {
         status: AuthStatus.NotAuthenticated,
         checkLogined: checkFake,
         logout: sinon.fake(),
-        currentUserId: undefined,
       };
     },
   };
@@ -81,7 +79,6 @@ test("navigate game if user already authenticated", async () => {
         status: AuthStatus.Authenticated,
         checkLogined: sinon.fake(),
         logout: sinon.fake(),
-        currentUserId: undefined,
       };
     },
   };
