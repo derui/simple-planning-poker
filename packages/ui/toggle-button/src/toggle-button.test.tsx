@@ -12,6 +12,31 @@ test("apply initial checked", () => {
   expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(true);
 });
 
+test("do not call handle on initial render", () => {
+  render(
+    <ToggleButton
+      initialChecked
+      onToggle={() => {
+        expect.fail("Do not call this initialize");
+      }}
+    />
+  );
+
+  expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(true);
+});
+
+test("do not call handle on initial render", () => {
+  render(
+    <ToggleButton
+      onToggle={() => {
+        expect.fail("Do not call this initialize");
+      }}
+    />
+  );
+
+  expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(false);
+});
+
 test("change checking when rail clicked", async () => {
   expect.assertions(2);
   render(

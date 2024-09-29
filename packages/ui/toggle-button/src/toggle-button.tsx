@@ -1,8 +1,8 @@
 import { clsx } from "clsx";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
-  initialChecked: boolean;
+  initialChecked?: boolean;
 
   /**
    * Event to notify change state.
@@ -13,7 +13,17 @@ interface Props {
 const styles = {
   container: clsx("flex", "flex-none", "outline-none", "border-none", "p-0", "h-8", "items-center", "rounded"),
   switch: {
-    root: clsx("flex", "relative", "inline-block", "bg-transparent", "h-6", "justify-items-center"),
+    root: clsx(
+      "flex",
+      "relative",
+      "inline-block",
+      "bg-transparent",
+      "h-6",
+      "justify-items-center",
+      "border",
+      "border-emerald-600",
+      "rounded"
+    ),
     rail: (checked: boolean) =>
       clsx(
         "relative",
@@ -42,7 +52,11 @@ const styles = {
 // eslint-disable-next-line func-style
 export function ToggleButton(props: Props) {
   const ref = useRef<HTMLInputElement>(null);
-  const [checked, setChecked] = useState(props.initialChecked);
+  const [checked, setChecked] = useState(props.initialChecked ?? false);
+
+  useEffect(() => {
+    setChecked(props.initialChecked ?? false);
+  }, [props.initialChecked]);
 
   return (
     <span className={styles.container} role="switch" onClick={() => ref?.current?.click()}>
