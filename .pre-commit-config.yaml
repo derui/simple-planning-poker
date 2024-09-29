@@ -6,11 +6,5 @@ repos:
       name: prettier
       entry: pnpm exec prettier
       language: system
-      files: "\\.tsx?$"
+      files: "\\.[tj]sx?$"
       args: ["-w"]
-    - id: eslint
-      name: eslint
-      entry: pnpm exec eslint
-      language: system
-      files: "\\.tsx?$"
-      args: ["--fix", "--ext", ".ts,.tsx"]

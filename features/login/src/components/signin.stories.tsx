@@ -1,0 +1,70 @@
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { MemoryRouter } from "react-router-dom";
+import { Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { createStore, Provider } from "jotai";
+import sinon from "sinon";
+import { SignIn } from "./signin.js";
+
+const meta = {
+  title: "Page/Sign In",
+  component: SignIn,
+  tags: ["autodocs"],
+} satisfies Meta<typeof SignIn>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const notLogin: Story = {
+  render() {
+    const mock: Hooks = {
+      useLogin() {
+        return {
+          loginError: undefined,
+          status: "notLogined",
+          signIn() {},
+          signUp() {},
+        };
+      },
+      useAuth: sinon.fake(),
+    };
+    const store = createStore();
+
+    return (
+      <ImplementationProvider implementation={mock}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <SignIn />
+          </MemoryRouter>
+        </Provider>
+      </ImplementationProvider>
+    );
+  },
+};
+
+export const doing: Story = {
+  render() {
+    const mock: Hooks = {
+      useLogin() {
+        return {
+          loginError: undefined,
+          status: "doing",
+          signIn() {},
+          signUp() {},
+        };
+      },
+      useAuth: sinon.fake(),
+    };
+    const store = createStore();
+
+    return (
+      <ImplementationProvider implementation={mock}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <SignIn />
+          </MemoryRouter>
+        </Provider>
+      </ImplementationProvider>
+    );
+  },
+};
