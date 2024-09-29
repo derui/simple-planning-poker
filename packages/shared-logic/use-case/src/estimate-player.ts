@@ -12,9 +12,11 @@ export type EstimatePlayerUseCaseOutput =
   | { kind: "notFound" }
   | { kind: "EstimatePlayerFailed" };
 
+export type EstimatePlayerUseCase = UseCase<EstimatePlayerUseCaseInput, EstimatePlayerUseCaseOutput>;
+
 export const newEstimatePlayerUseCase = function newEstimatePlayerUseCase(
   votingRepository: VotingRepository.T
-): UseCase<EstimatePlayerUseCaseInput, EstimatePlayerUseCaseOutput> {
+): EstimatePlayerUseCase {
   return async (input: EstimatePlayerUseCaseInput): Promise<EstimatePlayerUseCaseOutput> => {
     const voting = await votingRepository.findBy(input.votingId);
     if (!voting) {

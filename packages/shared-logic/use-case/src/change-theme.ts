@@ -11,12 +11,14 @@ export type ChangeThemeOutput =
   | { kind: "canNotChangeTheme" }
   | { kind: "notFound" };
 
+export type ChangeThemeUseCase = UseCase<ChangeThemeInput, ChangeThemeOutput>;
+
 /**
  * Get new instance of use case
  */
 export const newChangeThemeUseCase = function newChangeThemeUseCase(
   votingRepository: VotingRepository.T
-): UseCase<ChangeThemeInput, ChangeThemeOutput> {
+): ChangeThemeUseCase {
   return async (input: ChangeThemeInput): Promise<ChangeThemeOutput> => {
     const voting = await votingRepository.findBy(input.votingId);
     if (!voting) {

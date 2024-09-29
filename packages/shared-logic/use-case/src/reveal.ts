@@ -13,13 +13,15 @@ export type RevealUseCaseOutput =
   | { kind: "notFoundVoting" }
   | { kind: "revealed" };
 
+export type RevealUseCase = UseCase<RevealUseCaseInput, RevealUseCaseOutput>;
+
 /**
  * Get new instance of use case to reveal a voting
  */
 export const newRevealUseCase = function newRevealUseCase(
   dispatcher: EventDispatcher,
   votingRepository: VotingRepository.T
-): UseCase<RevealUseCaseInput, RevealUseCaseOutput> {
+): RevealUseCase {
   return async (input) => {
     const voting = await votingRepository.findBy(input.votingId);
     if (!voting) {
