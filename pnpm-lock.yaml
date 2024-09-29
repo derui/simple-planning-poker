@@ -355,6 +355,9 @@ importers:
       '@spp/ui-skeleton':
         specifier: workspace:^
         version: link:../../packages/ui/skeleton
+      '@spp/ui-toggle-button':
+        specifier: workspace:^
+        version: link:../../packages/ui/toggle-button
       clsx:
         specifier: 'catalog:'
         version: 2.1.1

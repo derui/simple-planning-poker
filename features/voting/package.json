@@ -59,6 +59,7 @@
     "@spp/ui-button-style": "workspace:^",
     "@spp/ui-icon": "workspace:^",
     "@spp/ui-skeleton": "workspace:^",
+    "@spp/ui-toggle-button": "workspace:^",
     "clsx": "catalog:",
     "react": "catalog:"
   }
