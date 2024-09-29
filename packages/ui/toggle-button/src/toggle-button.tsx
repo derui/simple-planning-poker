@@ -20,21 +20,20 @@ const styles = {
         "inline-block",
         "m-0",
         "px-1",
-        "bg-secondary1-300",
+
         "w-12",
         "h-full",
         "transition-colors",
         "overflow-hidden",
         "rounded",
         {
-          "bg-secondary1-400": checked,
+          "bg-emerald-100": !checked,
+          "bg-emerald-300": checked,
         }
       ),
     box: (checked: boolean) =>
-      clsx("absolute", "inline-block", "bg-primary-400", "h-full", "w-6", "left-0", "top-0", "transition-transform", {
+      clsx("absolute", "inline-block", "bg-emerald-500", "h-full", "w-6", "left-0", "top-0", "transition-transform", {
         "translate-x-6": checked,
-        "rounded-l": !checked,
-        "rounded-r": checked,
       }),
     input: clsx("hidden"),
   },
