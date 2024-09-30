@@ -46,6 +46,7 @@
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
+    "immer": "^10.0.3",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
     "sinon": "catalog:",

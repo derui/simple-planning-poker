@@ -419,6 +419,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.11.1(jiti@2.0.0)
+      immer:
+        specifier: ^10.0.3
+        version: 10.1.1
       jsdom:
         specifier: 'catalog:'
         version: 25.0.1

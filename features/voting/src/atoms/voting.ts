@@ -59,6 +59,7 @@ export type UseVoting = () => {
    * loading or not
    */
   loading: boolean;
+
   /**
    * Estimations in voting.
    */
@@ -90,9 +91,19 @@ export type UseVoting = () => {
  */
 export type UseRevealed = () => {
   /**
+   * loading or not
+   */
+  loading: boolean;
+
+  /**
    * Estimations in revealed voting
    */
   estimations: RevealedEstimationDto[];
+
+  /**
+   * theme of current joining voting
+   */
+  theme: string;
 
   /**
    * Change theme with `newTheme`
@@ -279,6 +290,7 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
   const { changeThemeUseCase, resetVotingUseCase } = dependencies;
   const [voting, setVoting] = useAtom(votingAtom);
   const users = useAtomValue(usersAtom);
+  const loading = useAtomValue(votingLoadingAtom);
 
   const estimations = Array.from(voting?.estimations?.userEstimations?.entries() ?? []).map<RevealedEstimationDto>(
     ([user, estimation]) => {
@@ -294,6 +306,8 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
 
   return () => {
     return {
+      loading,
+      theme: voting?.theme ?? "",
       estimations,
 
       changeTheme(newTheme) {
