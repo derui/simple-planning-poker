@@ -2,21 +2,34 @@ import { Variant } from "@spp/shared-color-variant";
 import { Icon, Icons } from "@spp/ui-icon";
 import { ToggleButton } from "@spp/ui-toggle-button";
 import { clsx } from "clsx";
+import { UserRole } from "../types.js";
 
 export interface Props {
   /**
    * Event to notify change role between player and inspector.
    */
-  onChangeRole?: (role: "player" | "inspector") => void;
+  onChangeRole?: (role: UserRole) => void;
 
   /**
    * Default role
    */
-  defaultRole: "player" | "inspector";
+  defaultRole: UserRole;
 }
 
 const styles = {
-  root: clsx("grid", "grid-rows-1", "grid-cols-1", "place-content-center", "gap-2", "place-items-center"),
+  root: clsx(
+    "grid",
+    "grid-rows-1",
+    "grid-cols-1",
+    "place-content-center",
+    "gap-2",
+    "place-items-center",
+    "h-12",
+    "px-2",
+    "py-1",
+    "rounded",
+    "bg-orange-500"
+  ),
   role: clsx(
     "grid",
     "grid-rows-1",

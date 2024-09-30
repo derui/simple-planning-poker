@@ -16,8 +16,8 @@ export interface Props {
 }
 
 const styles = {
-  root: clsx("flex", "px-8", "py-2", "rounded-full", "border", "border-teal-600", "h-12"),
-  contentContainer: clsx("flex-auto", "flex", "flex-row", "items-center"),
+  root: clsx("flex", "px-4", "py-1", "rounded-full", "border", "border-teal-600", "h-12"),
+  contentContainer: clsx("flex-auto", "flex", "flex-row", "items-center", "gap-4"),
   theme: clsx("flex-auto", "text-teal-700", "font-bold", "text-lg"),
   edit: clsx(
     "border",
