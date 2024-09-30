@@ -1,8 +1,8 @@
 import { StoryPoint, User, UserEstimation, UserRepository, Voting, VotingRepository } from "@spp/shared-domain";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { EstimationDto, RevealedEstimationDto } from "./dto.js";
-import { UseAuth } from "@spp/feature-login";
 import { ChangeThemeUseCase, EstimatePlayerUseCase, ResetVotingUseCase, RevealUseCase } from "@spp/shared-use-case";
+import { UseLoginUser } from "@spp/feature-login";
 
 /**
  * current voting
@@ -32,13 +32,13 @@ const votingStatusAtom = atom<VotingStatus>(VotingStatus.NotJoined);
  * Loading atom for voting
  */
 const votingLoadingAtom = atom((get) => {
-  return get(votingAtom) != undefined;
+  return get(votingAtom) == undefined;
 });
 
 /**
  * Definition of hook for join
  */
-export type UseJoin = {
+export type UseJoin = () => {
   status: JoinStatus;
 
   /**
@@ -47,14 +47,14 @@ export type UseJoin = {
   join(id: Voting.Id): void;
 };
 
-export type UseVotingStatus = {
+export type UseVotingStatus = () => {
   status: VotingStatus;
 };
 
 /**
  * Definition of hook for voting
  */
-export type UseVoting = {
+export type UseVoting = () => {
   /**
    * loading or not
    */
@@ -63,6 +63,11 @@ export type UseVoting = {
    * Estimations in voting.
    */
   estimations: EstimationDto[];
+
+  /**
+   * theme of current joining voting
+   */
+  theme: string;
 
   /**
    * Reveal current voting
@@ -83,7 +88,7 @@ export type UseVoting = {
 /**
  * Definition of hook for revealed voting
  */
-export type UseRevealed = {
+export type UseRevealed = () => {
   /**
    * Estimations in revealed voting
    */
@@ -104,52 +109,54 @@ export type UseRevealed = {
  * Create `UseJoin` with dependencies
  */
 export const createUseJoin = function createUseJoin(
-  useAuth: UseAuth,
+  useLoginUser: UseLoginUser,
   votingRepository: VotingRepository.T,
   userRepository: UserRepository.T
 ): UseJoin {
-  const { currentUserId } = useAuth();
+  const { userId } = useLoginUser();
   const [, setVoting] = useAtom(votingAtom);
   const [status, setStatus] = useAtom(joinStatusAtom);
   const [, setUsers] = useAtom(usersAtom);
   const [, setVotingStatus] = useAtom(votingStatusAtom);
 
-  return {
-    status,
+  return () => {
+    return {
+      status,
 
-    join(votingId) {
-      if (!currentUserId) {
-        return;
-      }
+      join(votingId) {
+        if (!userId) {
+          return;
+        }
 
-      setStatus(JoinStatus.Joining);
+        setStatus(JoinStatus.Joining);
 
-      votingRepository
-        .findBy(votingId)
-        .then((voting) => {
-          setStatus(JoinStatus.Joined);
+        votingRepository
+          .findBy(votingId)
+          .then((voting) => {
+            setStatus(JoinStatus.Joined);
 
-          if (voting) {
-            userRepository
-              .listIn(Array.from(voting.estimations.userEstimations.keys()))
-              .then((users) => {
-                setUsers(users);
-              })
-              .catch((e) => console.warn(e));
-            setVoting(voting);
+            if (voting) {
+              userRepository
+                .listIn(Array.from(voting.estimations.userEstimations.keys()))
+                .then((users) => {
+                  setUsers(users);
+                })
+                .catch((e) => console.warn(e));
+              setVoting(voting);
 
-            if (voting.status == Voting.VotingStatus.Revealed) {
-              setVotingStatus(VotingStatus.Revealed);
-            } else {
-              setVotingStatus(VotingStatus.Voting);
+              if (voting.status == Voting.VotingStatus.Revealed) {
+                setVotingStatus(VotingStatus.Revealed);
+              } else {
+                setVotingStatus(VotingStatus.Voting);
+              }
             }
-          }
-        })
-        .catch(() => {
-          setStatus(JoinStatus.NotJoined);
-          setVoting(undefined);
-        });
-    },
+          })
+          .catch(() => {
+            setStatus(JoinStatus.NotJoined);
+            setVoting(undefined);
+          });
+      },
+    };
   };
 };
 
@@ -158,8 +165,11 @@ export const createUseJoin = function createUseJoin(
  */
 export const createUseVotingStatus = function createUseVotingStatus(): UseVotingStatus {
   const status = useAtomValue(votingStatusAtom);
-  return {
-    status,
+
+  return () => {
+    return {
+      status,
+    };
   };
 };
 
@@ -167,13 +177,13 @@ export const createUseVotingStatus = function createUseVotingStatus(): UseVoting
  * Create `UseVoting` hook with dependencies
  */
 export const createUseVoting = function createUseVoting(dependencies: {
-  useAuth: UseAuth;
+  useLoginUser: UseLoginUser;
   changeThemeUseCase: ChangeThemeUseCase;
   estimatePlayerUseCase: EstimatePlayerUseCase;
   revealUseCase: RevealUseCase;
 }): UseVoting {
-  const { useAuth, changeThemeUseCase, estimatePlayerUseCase, revealUseCase } = dependencies;
-  const { currentUserId } = useAuth();
+  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase } = dependencies;
+  const { userId } = useLoginUser();
   const [voting, setVoting] = useAtom(votingAtom);
   const loading = useAtomValue(votingLoadingAtom);
   const users = useAtomValue(usersAtom);
@@ -190,68 +200,72 @@ export const createUseVoting = function createUseVoting(dependencies: {
     }
   );
 
-  return {
-    loading,
+  return () => {
+    return {
+      loading,
 
-    estimations,
+      estimations,
 
-    changeTheme(newTheme) {
-      if (!voting) {
-        return;
-      }
+      theme: voting?.theme ?? "",
 
-      changeThemeUseCase({
-        theme: newTheme,
-        votingId: voting.id,
-      })
-        .then((ret) => {
-          if (ret.kind == "success") {
-            setVoting(ret.voting);
-          }
+      changeTheme(newTheme) {
+        if (!voting) {
+          return;
+        }
+
+        changeThemeUseCase({
+          theme: newTheme,
+          votingId: voting.id,
         })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
+          .then((ret) => {
+            if (ret.kind == "success") {
+              setVoting(ret.voting);
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
 
-    estimate(estimation: number) {
-      if (!voting || !currentUserId) {
-        return;
-      }
+      estimate(estimation: number) {
+        if (!voting || !userId) {
+          return;
+        }
 
-      estimatePlayerUseCase({
-        userId: currentUserId,
-        votingId: voting.id,
-        userEstimation: UserEstimation.submittedOf(StoryPoint.create(estimation)),
-      })
-        .then((result) => {
-          switch (result.kind) {
-            case "success":
-              setVoting(result.voting);
-              break;
-          }
+        estimatePlayerUseCase({
+          userId: userId,
+          votingId: voting.id,
+          userEstimation: UserEstimation.submittedOf(StoryPoint.create(estimation)),
         })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
-    reveal() {
-      if (!voting) {
-        return;
-      }
+          .then((result) => {
+            switch (result.kind) {
+              case "success":
+                setVoting(result.voting);
+                break;
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
+      reveal() {
+        if (!voting) {
+          return;
+        }
 
-      revealUseCase({ votingId: voting.id })
-        .then((result) => {
-          switch (result.kind) {
-            case "success":
-              setVoting(result.voting);
-              break;
-          }
-        })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
+        revealUseCase({ votingId: voting.id })
+          .then((result) => {
+            switch (result.kind) {
+              case "success":
+                setVoting(result.voting);
+                break;
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
+    };
   };
 };
 
@@ -278,44 +292,46 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
     }
   );
 
-  return {
-    estimations,
+  return () => {
+    return {
+      estimations,
 
-    changeTheme(newTheme) {
-      if (!voting) {
-        return;
-      }
+      changeTheme(newTheme) {
+        if (!voting) {
+          return;
+        }
 
-      changeThemeUseCase({
-        theme: newTheme,
-        votingId: voting.id,
-      })
-        .then((ret) => {
-          if (ret.kind == "success") {
-            setVoting(ret.voting);
-          }
+        changeThemeUseCase({
+          theme: newTheme,
+          votingId: voting.id,
         })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
+          .then((ret) => {
+            if (ret.kind == "success") {
+              setVoting(ret.voting);
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
 
-    reset() {
-      if (!voting) {
-        return;
-      }
+      reset() {
+        if (!voting) {
+          return;
+        }
 
-      resetVotingUseCase({ votingId: voting.id })
-        .then((result) => {
-          switch (result.kind) {
-            case "success":
-              setVoting(result.voting);
-              break;
-          }
-        })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
+        resetVotingUseCase({ votingId: voting.id })
+          .then((result) => {
+            switch (result.kind) {
+              case "success":
+                setVoting(result.voting);
+                break;
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
+    };
   };
 };
