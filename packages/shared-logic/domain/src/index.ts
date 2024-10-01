@@ -2,8 +2,7 @@
 
 export * as Game from "./game.js";
 export * as GameRepository from "./game-repository.js";
-export * as GamePlayer from "./game-player.js";
-export * as Invitation from "./invitation.js";
+export * as Voter from "./voter.js";
 export * as User from "./user.js";
 export * as Voting from "./voting.js";
 export * as ApplicablePoints from "./applicable-points.js";

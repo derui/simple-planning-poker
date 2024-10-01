@@ -18,11 +18,8 @@ export const newMemoryGameRepository = function newMemoryGameRepository(initial:
       return Promise.resolve(data.get(id));
     },
 
-    findByInvitation(invitation) {
-      return Promise.resolve(Array.from(data.values()).find((v) => Game.makeInvitation(v) == invitation));
-    },
-    listUserJoined(userId) {
-      return Promise.resolve(Array.from(data.values()).filter((v) => v.joinedPlayers.map((v) => v.user == userId)));
+    listUserCreated(userId) {
+      return Promise.resolve(Array.from(data.values()).filter((v) => v.owner == userId));
     },
   };
 };

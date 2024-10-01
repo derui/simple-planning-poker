@@ -3,6 +3,7 @@ import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as Estimations from "./estimations.js";
+import * as Voter from "./voter.js";
 import * as Event from "./event.js";
 import * as Base from "./base.js";
 
@@ -27,15 +28,39 @@ export enum VotingStatus {
 }
 
 export type T = {
+  /**
+   * Id of voting
+   */
   readonly id: Id;
+
+  /**
+   * Current estimations in this voting
+   */
   readonly estimations: Estimations.T;
+
+  /**
+   * Applicable points in this voting
+   */
   readonly points: ApplicablePoints.T;
+
+  /**
+   * theme of this voting
+   */
   readonly theme?: string;
+
+  /**
+   * Status of this voting
+   */
   readonly status: VotingStatus;
+
+  /**
+   * voters who currently participated
+   */
+  readonly participatedVoters: Voter.T[];
 };
 
 /**
- * event when raised at new round started
+ * event when raised at voting is started
  */
 export interface VotingStarted extends Event.T {
   readonly kind: Event.DOMAIN_EVENTS.VotingStarted;
@@ -68,18 +93,25 @@ export const votingOf = function votingOf({
   points,
   estimations,
   theme,
+  voters,
 }: {
   id: Id;
   points: ApplicablePoints.T;
   estimations: Estimations.T;
   theme?: string;
+  voters: Voter.T[];
 }): T {
+  if (voters.length == 0) {
+    throw new Error("Can not create voting with empty voters");
+  }
+
   return {
     id,
     estimations,
     points: ApplicablePoints.clone(points),
     theme,
     status: VotingStatus.Voting,
+    participatedVoters: voters,
   } satisfies T;
 };
 
@@ -91,18 +123,25 @@ export const revealedOf = function revealedOf({
   points,
   estimations,
   theme,
+  voters,
 }: {
   id: Id;
   points: ApplicablePoints.T;
   estimations: Estimations.T;
   theme?: string;
+  voters: Voter.T[];
 }): T {
+  if (voters.length == 0) {
+    throw new Error("Can not create voting with empty voters");
+  }
+
   return {
     id,
     estimations,
     points: ApplicablePoints.clone(points),
     theme,
     status: VotingStatus.Revealed,
+    participatedVoters: voters,
   } satisfies T;
 };
 
@@ -128,6 +167,10 @@ export const takePlayerEstimation = function takePlayerEstimation(
   userId: User.Id,
   estimation: UserEstimation.T
 ) {
+  if (!voting.participatedVoters.find((v) => v.user == userId)) {
+    throw new Error("Can not accept not participated voter");
+  }
+
   if (UserEstimation.isSubmitted(estimation) && !ApplicablePoints.contains(voting.points, estimation.point)) {
     throw new Error("Can not accept this card");
   }

@@ -17,23 +17,26 @@ import * as Estimations from "./estimations.js";
 import * as UserEstimation from "./user-estimation.js";
 import { DOMAIN_EVENTS } from "./event.js";
 import { enableMapSet } from "immer";
+import { Voter } from "./index.js";
 
 enableMapSet();
 
 const points = ApplicablePoints.create([StoryPoint.create(2), StoryPoint.create(3)]);
 const estimations = Estimations.create([User.createId("1")]);
 
-test("get round", () => {
+test("get voting", () => {
   const ret = votingOf({
     id: createId("id"),
     points,
     estimations,
+    voters: [Voter.createVoter({ user: User.createId() })],
   });
 
   expect(ret.status).toEqual(VotingStatus.Voting);
   expect(ret.id).toBe(createId("id"));
   expect(ret.points).toEqual(points);
   expect(ret.theme).toBeUndefined();
+  expect(ret.participatedVoters).toHaveLength(1);
 });
 
 test("get revealed voting", () => {
@@ -41,6 +44,7 @@ test("get revealed voting", () => {
     id: createId("id"),
     points,
     estimations,
+    voters: [Voter.createVoter({ user: User.createId() })],
   });
 
   expect(ret.points).toEqual(points);
@@ -50,7 +54,12 @@ test("get revealed voting", () => {
 });
 
 test("voting can accept user estimation", () => {
-  const voting = votingOf({ id: createId("id"), points: points, estimations });
+  const voting = votingOf({
+    id: createId("id"),
+    points: points,
+    estimations,
+    voters: [Voter.createVoter({ user: User.createId("1") })],
+  });
   const changed = takePlayerEstimation(voting, User.createId("1"), UserEstimation.submittedOf(points[0]));
 
   expect(voting).not.toBe(changed);
@@ -62,7 +71,12 @@ test("voting can accept user estimation", () => {
 });
 
 test("update estimation if user already take their estimation before", () => {
-  const voting = votingOf({ id: createId("id"), points, estimations });
+  const voting = votingOf({
+    id: createId("id"),
+    points,
+    estimations,
+    voters: [Voter.createVoter({ user: User.createId("1") })],
+  });
   let changed = takePlayerEstimation(voting, User.createId("1"), UserEstimation.submittedOf(points[0]));
   changed = takePlayerEstimation(changed, User.createId("1"), UserEstimation.submittedOf(points[1]));
 
@@ -72,7 +86,12 @@ test("update estimation if user already take their estimation before", () => {
 });
 
 test("throw error when a card user took is not contained applicable points", () => {
-  const voting = votingOf({ id: createId("id"), points: points, estimations });
+  const voting = votingOf({
+    id: createId("id"),
+    points: points,
+    estimations,
+    voters: [Voter.createVoter({ user: User.createId("1") })],
+  });
 
   expect(() => {
     takePlayerEstimation(voting, User.createId("1"), UserEstimation.submittedOf(StoryPoint.create(5)));
@@ -84,10 +103,24 @@ test("voting can accept user giveup", () => {
     id: createId("id"),
     points: points,
     estimations,
+    voters: [Voter.createVoter({ user: User.createId("1") })],
   });
   voting = takePlayerEstimation(voting, User.createId("1"), UserEstimation.giveUpOf());
 
   expect(voting.estimations.userEstimations.get(User.createId("1"))).toEqual(UserEstimation.giveUpOf());
+});
+
+test("voting can not accept selection user who does not join", () => {
+  const voting: T = votingOf({
+    id: createId("id"),
+    points: points,
+    estimations,
+    voters: [Voter.createVoter({ user: User.createId("1") })],
+  });
+
+  expect(() => takePlayerEstimation(voting, User.createId("2"), UserEstimation.giveUpOf())).toThrow(
+    /Can not accept not participated/
+  );
 });
 
 describe("reveal", () => {
@@ -96,6 +129,7 @@ describe("reveal", () => {
       id: createId("id"),
       points: points,
       estimations,
+      voters: [Voter.createVoter({ user: User.createId("1") })],
     });
     voting = takePlayerEstimation(voting, User.createId("1"), UserEstimation.submittedOf(points[0]));
 
@@ -112,7 +146,12 @@ describe("reveal", () => {
   });
 
   test("can not finish voting that has no estimation", () => {
-    const voting = votingOf({ id: createId("id"), points: points, estimations });
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() })],
+    });
 
     expect(canReveal(voting)).toBe(false);
     expect(() => reveal(voting)).toThrowError();
@@ -125,6 +164,7 @@ describe("theme", () => {
       id: createId("id"),
       points: points,
       estimations,
+      voters: [Voter.createVoter({ user: User.createId() })],
     });
 
     const newVoting = changeTheme(voting, "new theme");
@@ -139,6 +179,7 @@ describe("theme", () => {
       points: points,
       estimations,
       theme: "finished",
+      voters: [Voter.createVoter({ user: User.createId() })],
     });
 
     const changed = changeTheme(voting, "changed");
@@ -153,6 +194,7 @@ describe("theme", () => {
       points: points,
       estimations,
       theme: "theme",
+      voters: [Voter.createVoter({ user: User.createId() })],
     });
 
     const changed = changeTheme(voting, "");
