@@ -9,6 +9,8 @@ import {
   T,
   changeTheme,
   VotingStatus,
+  joinUser,
+  isVoterJoined,
 } from "./voting.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as StoryPoint from "./story-point.js";
@@ -200,5 +202,51 @@ describe("theme", () => {
     const changed = changeTheme(voting, "");
 
     expect(changed.theme).toBeUndefined();
+  });
+});
+
+describe("join user", () => {
+  test("join user if user have not join yet", () => {
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() })],
+    });
+
+    const [newVoting] = joinUser(voting, User.createId("3"));
+
+    expect(newVoting.participatedVoters.map((v) => v.user)).toEqual(expect.arrayContaining([User.createId("3")]));
+  });
+
+  test("get event when user joined", () => {
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() })],
+    });
+
+    const [, e] = joinUser(voting, User.createId("3"));
+
+    if (isVoterJoined(e!)) {
+      expect(e.userId).toEqual(User.createId("3"));
+      expect(e.votingId).toEqual(voting.id);
+    } else {
+      expect.fail("should be valid event");
+    }
+  });
+
+  test("can not get event if user is already joined", () => {
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() }), Voter.createVoter({ user: User.createId("foo") })],
+    });
+
+    const [, e] = joinUser(voting, User.createId("foo"));
+
+    expect(e).toBeUndefined();
   });
 });

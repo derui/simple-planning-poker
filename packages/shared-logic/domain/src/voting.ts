@@ -71,6 +71,9 @@ export const isVotingStarted = function isVotingStarted(event: Event.T): event i
   return event.kind === Event.DOMAIN_EVENTS.VotingStarted;
 };
 
+/**
+ * event when raised at voting is revealed
+ */
 export interface VotingRevealed extends Event.T {
   readonly kind: Event.DOMAIN_EVENTS.VotingRevealed;
   readonly votingId: Id;
@@ -78,6 +81,19 @@ export interface VotingRevealed extends Event.T {
 
 export const isVotingRevealed = function isVotingRevealed(event: Event.T): event is VotingRevealed {
   return event.kind === Event.DOMAIN_EVENTS.VotingRevealed;
+};
+
+/**
+ * event when raised at voting is revealed
+ */
+export interface VoterJoined extends Event.T {
+  readonly kind: Event.DOMAIN_EVENTS.VoterJoined;
+  readonly votingId: Id;
+  readonly userId: User.Id;
+}
+
+export const isVoterJoined = function isVoterJoined(event: Event.T): event is VoterJoined {
+  return event.kind === Event.DOMAIN_EVENTS.VoterJoined;
 };
 
 // functions
@@ -219,4 +235,21 @@ export const changeTheme = function changeTheme(voting: T, theme: string): T {
       draft.theme = undefined;
     }
   });
+};
+
+/**
+ * Join user to voting
+ */
+export const joinUser = function joinUser(voting: T, user: User.Id): [T, Event.T | undefined] {
+  if (voting.participatedVoters.some((v) => v.user == user)) {
+    return [voting, undefined];
+  }
+
+  const newObj = produce(voting, (draft) => {
+    draft.participatedVoters.push(Voter.createVoter({ user }));
+  });
+
+  const event: VoterJoined = { kind: Event.DOMAIN_EVENTS.VoterJoined, votingId: newObj.id, userId: user };
+
+  return [newObj, event];
 };

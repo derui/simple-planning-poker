@@ -3,8 +3,6 @@ import { changeName, changePoints, create, createId, isGameCreated } from "./gam
 import * as ApplicablePoints from "./applicable-points.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
-import * as Voting from "./voting.js";
-import { DOMAIN_EVENTS } from "./event.js";
 
 const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
 
