@@ -96,6 +96,20 @@ export const isVoterJoined = function isVoterJoined(event: Event.T): event is Vo
   return event.kind === Event.DOMAIN_EVENTS.VoterJoined;
 };
 
+/**
+ * event that raises if voter is changed in voting
+ */
+export interface VoterChanged extends Event.T {
+  readonly kind: Event.DOMAIN_EVENTS.VoterChanged;
+  readonly votingId: Id;
+  readonly userId: User.Id;
+  readonly voterType: Voter.VoterType;
+}
+
+export const isVoterChanged = function isVoterChanged(event: Event.T): event is VoterChanged {
+  return event.kind === Event.DOMAIN_EVENTS.VoterChanged;
+};
+
 // functions
 export const createId = function createId(id?: string): Id {
   return Base.create<tag>(id);
@@ -250,6 +264,30 @@ export const joinUser = function joinUser(voting: T, user: User.Id): [T, Event.T
   });
 
   const event: VoterJoined = { kind: Event.DOMAIN_EVENTS.VoterJoined, votingId: newObj.id, userId: user };
+
+  return [newObj, event];
+};
+
+/**
+ * Voter changed in the voting
+ */
+export const updateVoter = function updateVoter(voting: T, voter: Voter.T): [T, Event.T] {
+  if (!voting.participatedVoters.some((v) => v.user == voter.user)) {
+    throw new Error("Can not update voter that have not joined");
+  }
+
+  const newObj = produce(voting, (draft) => {
+    const index = draft.participatedVoters.findIndex((v) => v.user == voter.user);
+
+    draft.participatedVoters[index] = voter;
+  });
+
+  const event: VoterChanged = {
+    kind: Event.DOMAIN_EVENTS.VoterChanged,
+    votingId: newObj.id,
+    userId: voter.user,
+    voterType: voter.type,
+  };
 
   return [newObj, event];
 };

@@ -12,7 +12,7 @@ export enum DOMAIN_EVENTS {
   GameCreated,
   VotingStarted,
   UserNameChanged,
-  VoterTypeChanged,
+  VoterChanged,
   VoterJoined,
   VoterSelected,
   VoterGiveUpped,

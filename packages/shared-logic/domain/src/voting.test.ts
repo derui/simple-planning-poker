@@ -11,6 +11,8 @@ import {
   VotingStatus,
   joinUser,
   isVoterJoined,
+  updateVoter,
+  isVoterChanged,
 } from "./voting.js";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as StoryPoint from "./story-point.js";
@@ -20,6 +22,7 @@ import * as UserEstimation from "./user-estimation.js";
 import { DOMAIN_EVENTS } from "./event.js";
 import { enableMapSet } from "immer";
 import { Voter } from "./index.js";
+import { changeVoterType, VoterType } from "./voter.js";
 
 enableMapSet();
 
@@ -248,5 +251,54 @@ describe("join user", () => {
     const [, e] = joinUser(voting, User.createId("foo"));
 
     expect(e).toBeUndefined();
+  });
+});
+
+describe("change voter", () => {
+  test("change voter ", () => {
+    const voter = Voter.createVoter({ user: User.createId("1") });
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() }), voter],
+    });
+
+    const [newVoting] = updateVoter(voting, changeVoterType(voter, VoterType.Inspector));
+
+    expect(newVoting.participatedVoters.find((v) => v.user == voter.user)).toEqual(
+      Voter.createVoter({ user: voter.user, type: VoterType.Inspector })
+    );
+  });
+
+  test("get event when voter updated", () => {
+    const voter = Voter.createVoter({ user: User.createId() });
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() }), voter],
+    });
+
+    const [, e] = updateVoter(voting, voter);
+
+    if (isVoterChanged(e)) {
+      expect(e.userId).toEqual(voter.user);
+      expect(e.votingId).toEqual(voting.id);
+      expect(e.voterType).toEqual(VoterType.Normal);
+    } else {
+      expect.fail("should be valid event");
+    }
+  });
+
+  test("throw error if the voter is not joined", () => {
+    const voting = votingOf({
+      id: createId("id"),
+      points: points,
+      estimations,
+      voters: [Voter.createVoter({ user: User.createId() })],
+    });
+
+    expect(() => updateVoter(voting, Voter.createVoter({ user: User.createId("foo") }))).toThrowError(/update voter/);
   });
 });
