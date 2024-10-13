@@ -9,6 +9,7 @@ import {
   UserEstimation,
   Estimations,
   DomainEvent,
+  Voter,
 } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { enableMapSet } from "immer";
@@ -41,6 +42,7 @@ test("should save game showed down", async () => {
     id: Voting.createId(),
     estimations: Estimations.create([owner]),
     points: POINTS,
+    voters: [Voter.createVoter({ user: owner })],
   });
 
   const changed = Voting.takePlayerEstimation(voting, owner, UserEstimation.giveUpOf());
@@ -68,6 +70,7 @@ test("should return error if the round can not show down", async () => {
     id: Voting.createId(),
     estimations: Estimations.create([owner]),
     points: POINTS,
+    voters: [Voter.createVoter({ user: owner })],
   });
 
   const input = {
@@ -92,6 +95,7 @@ test("should dispatch Revealed event", async () => {
     id: Voting.createId(),
     estimations: Estimations.create([owner]),
     points: POINTS,
+    voters: [Voter.createVoter({ user: owner })],
   });
   const changed = Voting.takePlayerEstimation(voting, owner, UserEstimation.submittedOf(POINTS[0]));
   const input = {

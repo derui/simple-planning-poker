@@ -1,26 +1,33 @@
-import { UseCase } from "./base.js";
-import { GamePlayer, User, Game, GameRepository } from "@spp/shared-domain";
+import { EventDispatcher, UseCase } from "./base.js";
+import { User, VotingRepository, Voter, Voting } from "@spp/shared-domain";
 
 export interface ChangeUserModeInput {
   userId: User.Id;
-  gameId: Game.Id;
-  mode: GamePlayer.UserMode;
+  votingId: Voting.Id;
+  voterType: Voter.VoterType;
 }
 
-export type ChangeUserModeOutput = { kind: "success"; game: Game.T } | { kind: "notFound" };
+export type ChangeUserModeOutput = { kind: "success"; voting: Voting.T } | { kind: "notFound" };
+export type ChangeUserModeUseCase = UseCase<ChangeUserModeInput, ChangeUserModeOutput>;
 
 export const newChangeUserModeUseCase = function newChangeUserModeUseCase(
-  gameRepository: GameRepository.T
-): UseCase<ChangeUserModeInput, ChangeUserModeOutput> {
+  votingRepository: VotingRepository.T,
+  dispatcher: EventDispatcher
+): ChangeUserModeUseCase {
   return async (input: ChangeUserModeInput): Promise<ChangeUserModeOutput> => {
-    const game = await gameRepository.findBy(input.gameId);
-    if (!game) {
+    const voting = await votingRepository.findBy(input.votingId);
+    if (!voting) {
+      return { kind: "notFound" };
+    }
+    const voter = voting.participatedVoters.find((v) => v.user == input.userId);
+    if (!voter) {
       return { kind: "notFound" };
     }
 
-    const newGame = Game.declarePlayerAs(game, input.userId, input.mode);
-    await gameRepository.save(newGame);
+    const [newVoting, event] = Voting.updateVoter(voting, Voter.changeVoterType(voter, input.voterType));
+    await votingRepository.save(newVoting);
+    dispatcher(event);
 
-    return { kind: "success", game: newGame };
+    return { kind: "success", voting: newVoting };
   };
 };

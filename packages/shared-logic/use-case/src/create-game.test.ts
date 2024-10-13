@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
 import * as sinon from "sinon";
 import { newCreateGameUseCase } from "./create-game.js";
-import { ApplicablePoints, DomainEvent, StoryPoint, User, Game, GameRepository, Voting } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, StoryPoint, User, Game, GameRepository } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 
 test("should return error if numbers is invalid", async () => {
@@ -128,7 +128,6 @@ test("get error if some games having same name already exist", async () => {
       owner: input.createdBy,
       name: "foo",
       points: ApplicablePoints.create([StoryPoint.create(1)]),
-      voting: Voting.createId(),
     })[0],
   ]);
   const useCase = newCreateGameUseCase(dispatcher, repository);

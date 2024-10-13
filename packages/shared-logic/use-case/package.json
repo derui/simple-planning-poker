@@ -39,6 +39,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-domain": "workspace:^"
+    "@spp/shared-domain": "workspace:^",
+    "@spp/shared-type-util": "workspace:^"
   }
 }

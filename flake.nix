@@ -22,7 +22,12 @@
               nodejs-slim_22
               pnpm_9
               pre-commit
+              nodePackages.typescript-language-server
             ];
+
+            shellHook = ''
+              pre-commit install
+            '';
           };
         };
   };

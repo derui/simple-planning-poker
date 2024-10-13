@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import { newEstimatePlayerUseCase } from "./estimate-player.js";
-import { ApplicablePoints, StoryPoint, User, Voting, UserEstimation, Estimations } from "@spp/shared-domain";
+import { ApplicablePoints, StoryPoint, User, Voting, UserEstimation, Estimations, Voter } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { enableMapSet } from "immer";
 
@@ -34,6 +34,7 @@ test("should save player with card selected by user", async () => {
     id: Voting.createId(),
     points: POINTS,
     estimations: Estimations.create([owner]),
+    voters: [Voter.createVoter({ user: owner })],
   });
 
   const input = {

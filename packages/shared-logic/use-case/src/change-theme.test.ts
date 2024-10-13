@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import { newChangeThemeUseCase } from "./change-theme.js";
-import { Voting, User, UserEstimation, ApplicablePoints, StoryPoint, Estimations } from "@spp/shared-domain";
+import { Voting, User, UserEstimation, ApplicablePoints, StoryPoint, Estimations, Voter } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { enableMapSet } from "immer";
 
@@ -32,8 +32,9 @@ test("should be able to change theme", async () => {
   const voting = Voting.votingOf({
     id,
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    estimations: Estimations.create([User.createId()]),
+    estimations: Estimations.create([User.createId("user")]),
     theme: "not changed",
+    voters: [Voter.createVoter({ user: User.createId("user") })],
   });
 
   const repository = newMemoryVotingRepository([voting]);
@@ -61,6 +62,7 @@ test("can not change theme when voting is revealed", async () => {
     points: ApplicablePoints.create([StoryPoint.create(1)]),
     estimations: Estimations.create([User.createId("id")]),
     theme: "not changed",
+    voters: [Voter.createVoter({ user: User.createId("id") })],
   });
   voting = Voting.takePlayerEstimation(voting, User.createId("id"), UserEstimation.submittedOf(voting.points[0]));
   voting = Voting.reveal(voting)[0];

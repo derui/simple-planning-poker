@@ -9,6 +9,7 @@ import {
   Estimations,
   UserEstimation,
   DomainEvent,
+  Voter,
 } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newResetVotingUseCase } from "./reset-voting.js";
@@ -34,19 +35,14 @@ test("should return error if game is not found", async () => {
 test("should save reseted voting", async () => {
   // Arrange
   const points = ApplicablePoints.create([StoryPoint.create(1)]);
-  const [game] = Game.create({
-    id: Game.createId(),
-    name: "name",
-    owner: User.createId(),
-    voting: Voting.createId(),
-    points,
-  });
+  const voter = Voter.createVoter({ user: User.createId("id"), type: Voter.VoterType.Normal });
   const voting = Voting.votingOf({
-    id: game.voting,
+    id: Voting.createId("id"),
     points,
     estimations: Estimations.from({
-      [game.owner]: UserEstimation.giveUpOf(),
+      [voter.user]: UserEstimation.giveUpOf(),
     }),
+    voters: [voter],
   });
 
   const input = {
@@ -67,19 +63,14 @@ test("should save reseted voting", async () => {
 test("should dispatch VotingStarted event", async () => {
   // Arrange
   const points = ApplicablePoints.create([StoryPoint.create(1)]);
-  const [game] = Game.create({
-    id: Game.createId(),
-    name: "name",
-    owner: User.createId(),
-    voting: Voting.createId(),
-    points,
-  });
+  const voter = Voter.createVoter({ user: User.createId("id"), type: Voter.VoterType.Normal });
   const voting = Voting.votingOf({
-    id: game.voting,
+    id: Voting.createId(),
     points,
     estimations: Estimations.from({
-      [game.owner]: UserEstimation.giveUpOf(),
+      [voter.user]: UserEstimation.giveUpOf(),
     }),
+    voters: [voter],
   });
 
   const input = {

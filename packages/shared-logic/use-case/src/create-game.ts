@@ -1,5 +1,6 @@
+import { Prettify } from "@spp/shared-type-util";
 import { EventDispatcher, UseCase } from "./base.js";
-import { Voting, User, StoryPoint, ApplicablePoints, Game, GameRepository } from "@spp/shared-domain";
+import { User, StoryPoint, ApplicablePoints, Game, GameRepository } from "@spp/shared-domain";
 
 export interface CreateGameUseCaseInput {
   name: string;
@@ -16,7 +17,7 @@ export type CreateGameUseCaseOutput =
 
 export const newCreateGameUseCase = function newCreateGameUseCase(
   dispatcher: EventDispatcher,
-  gameRepository: GameRepository.T
+  gameRepository: Prettify<GameRepository.T>
 ): UseCase<CreateGameUseCaseInput, CreateGameUseCaseOutput> {
   return async (input) => {
     if (!input.points.every(StoryPoint.isValid)) {
@@ -29,7 +30,9 @@ export const newCreateGameUseCase = function newCreateGameUseCase(
       return { kind: "invalidStoryPoints" };
     }
 
-    const ownedGames = (await gameRepository.listUserJoined(input.createdBy)).filter((v) => v.owner == input.createdBy);
+    const ownedGames = (await gameRepository.listUserCreated(input.createdBy)).filter(
+      (v) => v.owner == input.createdBy
+    );
     if (ownedGames.some((v) => v.name == input.name)) {
       return { kind: "conflictName" };
     }
@@ -37,13 +40,11 @@ export const newCreateGameUseCase = function newCreateGameUseCase(
     const points = ApplicablePoints.create(storyPoints);
 
     const gameId = Game.createId();
-    const votingId = Voting.createId();
     const [game, event] = Game.create({
       id: gameId,
       name: input.name,
       owner: input.createdBy,
       points: points,
-      voting: votingId,
     });
 
     try {

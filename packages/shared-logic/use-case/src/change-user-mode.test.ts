@@ -1,18 +1,19 @@
 import { test, expect } from "vitest";
 import { newChangeUserModeUseCase } from "./change-user-mode.js";
-import { User, Game, Voting, GamePlayer, ApplicablePoints, StoryPoint } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { User, Game, Voting, ApplicablePoints, StoryPoint, Voter, Estimations } from "@spp/shared-domain";
+import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import sinon from "sinon";
 
 test("should return error if user not found", async () => {
   // Arrange
   const input = {
     userId: User.createId(),
-    gameId: Game.createId(),
-    mode: GamePlayer.UserMode.Inspector,
+    votingId: Voting.createId(),
+    voterType: Voter.VoterType.Inspector,
   };
 
-  const repository = newMemoryGameRepository();
-  const useCase = newChangeUserModeUseCase(repository);
+  const repository = newMemoryVotingRepository();
+  const useCase = newChangeUserModeUseCase(repository, sinon.fake());
 
   // Act
   const ret = await useCase(input);
@@ -21,33 +22,59 @@ test("should return error if user not found", async () => {
   expect(ret.kind).toBe("notFound");
 });
 
-test("should save game", async () => {
+test("should return error if voter not found", async () => {
   // Arrange
-  const userId = User.createId();
+  const user = User.createId();
+  const voting = Voting.votingOf({
+    id: Voting.createId(),
+    points: ApplicablePoints.create([StoryPoint.create(1)]),
+    estimations: Estimations.create([user]),
+    voters: [Voter.createVoter({ user })],
+  });
   const input = {
-    userId,
-    gameId: Game.createId(),
-    mode: GamePlayer.UserMode.Inspector,
+    userId: User.createId("changed"),
+    votingId: voting.id,
+    voterType: Voter.VoterType.Inspector,
   };
 
-  const game = Game.create({
-    id: input.gameId,
-    name: "name",
+  const repository = newMemoryVotingRepository([voting]);
+  const useCase = newChangeUserModeUseCase(repository, sinon.fake());
+
+  // Act
+  const ret = await useCase(input);
+
+  // Assert
+  expect(ret.kind).toBe("notFound");
+});
+
+test("should save voting", async () => {
+  // Arrange
+  const user = User.createId();
+  const voting = Voting.votingOf({
+    id: Voting.createId(),
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    owner: userId,
-    voting: Voting.createId(),
-  })[0];
+    estimations: Estimations.create([user]),
+    voters: [Voter.createVoter({ user, type: Voter.VoterType.Inspector })],
+  });
+  const input = {
+    userId: user,
+    votingId: voting.id,
+    voterType: Voter.VoterType.Normal,
+  };
 
-  const repository = newMemoryGameRepository([game]);
-
-  const useCase = newChangeUserModeUseCase(repository);
+  const repository = newMemoryVotingRepository([voting]);
+  const fake = sinon.fake();
+  const useCase = newChangeUserModeUseCase(repository, fake);
 
   // Act
   const ret = await useCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
+  const saved = await repository.findBy(input.votingId);
+  expect(saved?.participatedVoters?.find((v) => v.user == user)?.type).toBe(Voter.VoterType.Normal);
+  expect(fake.calledOnce).toBeTruthy();
 
-  const saved = await repository.findBy(input.gameId);
-  expect(saved?.joinedPlayers?.find((v) => v.user == userId)?.mode).toBe(GamePlayer.UserMode.Inspector);
+  const event = fake.lastCall.args[0];
+  expect(Voting.isVoterChanged(event)).toBeTruthy();
 });
