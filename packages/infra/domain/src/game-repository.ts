@@ -5,7 +5,7 @@ import { deserializeFrom } from "./game-snapshot-deserializer.js";
 import { Game, User, GameRepository } from "@spp/shared-domain";
 import { filterUndefined } from "@spp/shared-basic";
 
-const parseUserJoined = function parseUserJoined(_value: unknown): _value is Game.Id[] {
+const parseUserJoined = function parseUserJoined(_value: unknown): _value is Record<string, { gameId: Game.Id }> {
   return !!_value;
 };
 
@@ -25,7 +25,7 @@ export class GameRepositoryImpl implements GameRepository.T {
   }
 
   async findBy(id: Game.Id): Promise<Game.T | undefined> {
-    if (id === "") {
+    if (!id) {
       return;
     }
     const snapshot = await get(child(ref(this.database, "games"), id));
@@ -44,8 +44,8 @@ export class GameRepositoryImpl implements GameRepository.T {
     }
 
     const games = await Promise.all(
-      val.map((v) => {
-        return this.findBy(v);
+      Object.values(val).map((v: { gameId: Game.Id }) => {
+        return this.findBy(v.gameId);
       })
     );
 

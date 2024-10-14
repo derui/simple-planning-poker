@@ -83,13 +83,13 @@ test("should be able to list games an user created", async () => {
   await repository.save(otherGame);
 
   const data = [
-    { id: User.createId("1"), relation: "player", gameId: game.id },
-    { id: User.createId("2"), relation: "player", gameId: otherGame.id },
+    { id: User.createId("1"), gameId: game.id },
+    { id: User.createId("2"), gameId: otherGame.id },
   ];
 
-  for (const { id, ...rest } of data) {
+  for (const { id, gameId } of data) {
     const newRef = push(ref(database, ownerGames(User.createId(id))));
-    await set(newRef, rest);
+    await set(newRef, { gameId });
   }
 
   // Act
