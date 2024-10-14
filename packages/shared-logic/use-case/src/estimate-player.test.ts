@@ -33,7 +33,7 @@ test("should save player with card selected by user", async () => {
   const voting = Voting.votingOf({
     id: Voting.createId(),
     points: POINTS,
-    estimations: Estimations.create([owner]),
+    estimations: Estimations.empty(),
     voters: [Voter.createVoter({ user: owner })],
   });
 

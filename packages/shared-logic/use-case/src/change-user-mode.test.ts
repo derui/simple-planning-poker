@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import { newChangeUserModeUseCase } from "./change-user-mode.js";
-import { User, Game, Voting, ApplicablePoints, StoryPoint, Voter, Estimations } from "@spp/shared-domain";
+import { User, Voting, ApplicablePoints, StoryPoint, Voter, Estimations } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
 
@@ -28,7 +28,7 @@ test("should return error if voter not found", async () => {
   const voting = Voting.votingOf({
     id: Voting.createId(),
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    estimations: Estimations.create([user]),
+    estimations: Estimations.empty(),
     voters: [Voter.createVoter({ user })],
   });
   const input = {
@@ -53,7 +53,7 @@ test("should save voting", async () => {
   const voting = Voting.votingOf({
     id: Voting.createId(),
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    estimations: Estimations.create([user]),
+    estimations: Estimations.empty(),
     voters: [Voter.createVoter({ user, type: Voter.VoterType.Inspector })],
   });
   const input = {

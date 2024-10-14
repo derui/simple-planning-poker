@@ -32,7 +32,7 @@ test("should be able to change theme", async () => {
   const voting = Voting.votingOf({
     id,
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    estimations: Estimations.create([User.createId("user")]),
+    estimations: Estimations.empty(),
     theme: "not changed",
     voters: [Voter.createVoter({ user: User.createId("user") })],
   });
@@ -60,7 +60,7 @@ test("can not change theme when voting is revealed", async () => {
   let voting = Voting.votingOf({
     id,
     points: ApplicablePoints.create([StoryPoint.create(1)]),
-    estimations: Estimations.create([User.createId("id")]),
+    estimations: Estimations.empty(),
     theme: "not changed",
     voters: [Voter.createVoter({ user: User.createId("id") })],
   });

@@ -40,7 +40,7 @@ test("should save game showed down", async () => {
   const owner = User.createId();
   const voting = Voting.votingOf({
     id: Voting.createId(),
-    estimations: Estimations.create([owner]),
+    estimations: Estimations.empty(),
     points: POINTS,
     voters: [Voter.createVoter({ user: owner })],
   });
@@ -68,7 +68,7 @@ test("should return error if the round can not show down", async () => {
   const owner = User.createId();
   const voting = Voting.votingOf({
     id: Voting.createId(),
-    estimations: Estimations.create([owner]),
+    estimations: Estimations.empty(),
     points: POINTS,
     voters: [Voter.createVoter({ user: owner })],
   });
@@ -93,7 +93,7 @@ test("should dispatch Revealed event", async () => {
   const owner = User.createId();
   const voting = Voting.votingOf({
     id: Voting.createId(),
-    estimations: Estimations.create([owner]),
+    estimations: Estimations.empty(),
     points: POINTS,
     voters: [Voter.createVoter({ user: owner })],
   });
