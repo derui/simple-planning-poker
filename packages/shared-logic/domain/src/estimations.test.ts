@@ -5,11 +5,12 @@ import * as User from "./user.js";
 import {
   averageEstimation,
   calculateAverate,
-  create,
+  empty,
   isLeastOneEstimation,
   update,
   reset,
   from,
+  estimationOfUser,
 } from "./estimations.js";
 import { enableMapSet } from "immer";
 
@@ -19,30 +20,10 @@ test("should be able to create estimations", () => {
   // Arrange
 
   // Act
-  const actual = create([User.createId("id1")]);
+  const actual = empty();
 
   // Assert
-  expect(actual.userEstimations.size).toBe(1);
-});
-
-test("allow containing same id", () => {
-  // Arrange
-
-  // Act
-  const actual = create([User.createId("id1"), User.createId("id1")]);
-
-  // Assert
-  expect(actual.userEstimations.size).toBe(1);
-  expect(actual.userEstimations.get(User.createId("id1"))).toEqual(UserEstimation.unsubmitOf());
-});
-
-test("should throw error if users is empty", () => {
-  // Arrange
-
-  // Act
-
-  // Assert
-  expect(() => create([])).toThrowError("Can not create estimation");
+  expect(actual.userEstimations.size).toBe(0);
 });
 
 test("create from estimation like object", () => {
@@ -69,19 +50,19 @@ test("should throw error if users is empty", () => {
 
 test("should be able to update estimations with user estimation", () => {
   // Arrange
-  let obj = create([User.createId("id1"), User.createId("id2")]);
+  let obj = empty();
 
   // Act
   obj = update(obj, User.createId("id1"), UserEstimation.giveUpOf());
 
   // Assert
-  expect(obj.userEstimations.get(User.createId("id1"))).toEqual(UserEstimation.giveUpOf());
-  expect(obj.userEstimations.get(User.createId("id2"))).toEqual(UserEstimation.unsubmitOf());
+  expect(estimationOfUser(obj, User.createId("id1"))).toEqual(UserEstimation.giveUpOf());
+  expect(estimationOfUser(obj, User.createId("id2"))).toEqual(UserEstimation.unsubmitOf());
 });
 
 test("initial average should be zero", () => {
   // Arrange
-  const obj = create([User.createId("id1"), User.createId("id2")]);
+  const obj = empty();
 
   // Act
   const value = calculateAverate(obj);
@@ -92,7 +73,7 @@ test("initial average should be zero", () => {
 
 test("get average estimation", () => {
   // Arrange
-  let obj = create([User.createId("id1"), User.createId("id2")]);
+  let obj = empty();
   obj = update(obj, User.createId("id1"), UserEstimation.submittedOf(StoryPoint.create(5)));
   obj = update(obj, User.createId("id2"), UserEstimation.submittedOf(StoryPoint.create(3)));
 
@@ -103,9 +84,21 @@ test("get average estimation", () => {
   expect(averageEstimation(value)).toBe(4);
 });
 
-test("allow checking any estimations are not given", () => {
+test("allow checking any estimations if empty", () => {
   // Arrange
-  const obj = create([User.createId("id1")]);
+  const obj = empty();
+
+  // Act
+  const actual = isLeastOneEstimation(obj);
+
+  // Assert
+  expect(actual).toBeFalsy();
+});
+
+test("allow checking any estimations if empty", () => {
+  // Arrange
+  let obj = empty();
+  obj = update(obj, User.createId("id1"), UserEstimation.unsubmitOf());
 
   // Act
   const actual = isLeastOneEstimation(obj);
@@ -116,7 +109,7 @@ test("allow checking any estimations are not given", () => {
 
 test("allow checking estimations are given", () => {
   // Arrange
-  let obj = create([User.createId("id1"), User.createId("id2")]);
+  let obj = empty();
   obj = update(obj, User.createId("id1"), UserEstimation.submittedOf(StoryPoint.create(3)));
 
   // Act
@@ -128,7 +121,7 @@ test("allow checking estimations are given", () => {
 
 test("reset estimation", () => {
   // Arrange
-  let obj = create([User.createId("id1"), User.createId("id2")]);
+  let obj = empty();
   obj = update(obj, User.createId("id1"), UserEstimation.submittedOf(StoryPoint.create(3)));
   const resetted = reset(obj);
 

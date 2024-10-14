@@ -23,18 +23,9 @@ export type T = {
 /**
  * Create new estimation object
  */
-export const create = function create(users: User.Id[]): T {
-  if (!isValid(users)) {
-    throw new Error("Can not create estimation");
-  }
-
-  const userEstimations = new Map();
-  for (const user of users) {
-    userEstimations.set(user, UserEstimation.unsubmitOf());
-  }
-
+export const empty = function empty(): T {
   return Object.freeze({
-    userEstimations,
+    userEstimations: new Map(),
   });
 };
 
@@ -83,15 +74,16 @@ export const isLeastOneEstimation = function isLeastOneEstimation(obj: T) {
 };
 
 /**
+ * Get user estimation from estimations.
+ */
+export const estimationOfUser = function estimationOfUser(obj: T, user: User.Id): UserEstimation.T {
+  return obj.userEstimations.get(user) ?? UserEstimation.unsubmitOf();
+};
+
+/**
  * Update estimations with user estimation
  */
 export const update = function update(obj: T, user: User.Id, estimation: UserEstimation.T): T {
-  const users = Array.from(obj.userEstimations.keys());
-
-  if (!users.find((v) => Base.isEqual(v, user))) {
-    throw new Error("The user can not be contained in estimations");
-  }
-
   return produce(obj, (draft) => {
     draft.userEstimations.set(user, estimation);
 
@@ -104,6 +96,11 @@ export const update = function update(obj: T, user: User.Id, estimation: UserEst
  */
 export const calculateAverate = function calculateAverate(obj: T): AverageEstimation {
   const estimations = Array.from(obj.userEstimations.values());
+
+  if (estimations.length == 0) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return 0 as AverageEstimation;
+  }
 
   const average =
     estimations.reduce((accum, v) => {

@@ -27,7 +27,7 @@ import { changeVoterType, VoterType } from "./voter.js";
 enableMapSet();
 
 const points = ApplicablePoints.create([StoryPoint.create(2), StoryPoint.create(3)]);
-const estimations = Estimations.create([User.createId("1")]);
+const estimations = Estimations.empty();
 
 test("get voting", () => {
   const ret = votingOf({
