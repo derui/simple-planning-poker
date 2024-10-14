@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { createUseJoin, createUseRevealed, createUseVoting, createUseVotingStatus } from "./voting.js";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voting } from "@spp/shared-domain";
+import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
 import sinon from "sinon";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
@@ -31,7 +31,8 @@ describe("UseVotingStatus", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       }),
     ]);
     const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -65,7 +66,8 @@ describe("UseVotingStatus", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       }),
     ]);
     const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -127,7 +129,8 @@ describe("UseVoting", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       }),
     ]);
     const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -202,7 +205,8 @@ describe("UseVoting", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       });
       const votingRepository = newMemoryVotingRepository([voting]);
       const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -253,7 +257,8 @@ describe("UseVoting", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       });
       const votingRepository = newMemoryVotingRepository([voting]);
       const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -304,7 +309,8 @@ describe("UseVoting", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       });
       const votingRepository = newMemoryVotingRepository([voting]);
       const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -381,7 +387,8 @@ describe("UseRevealed", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       });
       const votingRepository = newMemoryVotingRepository([voting]);
       const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
@@ -430,7 +437,8 @@ describe("UseRevealed", () => {
         id: votingId,
         points: POINTS,
         theme: "foo",
-        estimations: Estimations.create([userId]),
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
       });
       const votingRepository = newMemoryVotingRepository([voting]);
       const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);

@@ -186,7 +186,7 @@ export const createUseCreateGame = function createUseCreateGame(
             return;
         }
 
-        const games = await gameRepository.listUserJoined(currentUserId);
+        const games = await gameRepository.listUserCreated(currentUserId);
         setGames(games);
       },
     };
@@ -210,7 +210,7 @@ export const createUsePrepareGame = function createUsePrepareGame(gameRepository
         setStatus(PrepareGameStatus.Prepared);
 
         gameRepository
-          .listUserJoined(userId)
+          .listUserCreated(userId)
           .then((games) => {
             setGames(games);
           })

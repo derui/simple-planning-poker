@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "./game.js";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { ApplicablePoints, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
@@ -209,7 +209,7 @@ describe("UseCreateGame", () => {
       // Act
       await act(async () => result.current.create("foo", "1"));
 
-      const game = await repository.listUserJoined(User.createId("foo"));
+      const game = await repository.listUserCreated(User.createId("foo"));
 
       // Assert
       expect(game[0].name).toEqual("foo");
@@ -267,7 +267,6 @@ describe("UseCreateGame", () => {
           name: "foo",
           owner: User.createId("foo"),
           points: ApplicablePoints.create([StoryPoint.create(1)]),
-          voting: Voting.createId(),
         })[0],
       ]);
       const store = createStore();

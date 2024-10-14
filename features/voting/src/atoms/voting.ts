@@ -144,9 +144,9 @@ export const createUseJoin = function createUseJoin(
         votingRepository
           .findBy(votingId)
           .then((voting) => {
-            setStatus(JoinStatus.Joined);
-
             if (voting) {
+              setStatus(JoinStatus.Joined);
+
               userRepository
                 .listIn(Array.from(voting.estimations.userEstimations.keys()))
                 .then((users) => {
@@ -160,6 +160,9 @@ export const createUseJoin = function createUseJoin(
               } else {
                 setVotingStatus(VotingStatus.Voting);
               }
+            } else {
+              setStatus(JoinStatus.NotJoined);
+              setVoting(undefined);
             }
           })
           .catch(() => {
