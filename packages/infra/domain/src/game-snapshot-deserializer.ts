@@ -1,5 +1,5 @@
 import { DataSnapshot } from "firebase/database";
-import { Game, StoryPoint, ApplicablePoints, User, Voting, GamePlayer } from "@spp/shared-domain";
+import { Game, StoryPoint, ApplicablePoints, User } from "@spp/shared-domain";
 
 /**
  * Snapshot type for game
@@ -7,9 +7,7 @@ import { Game, StoryPoint, ApplicablePoints, User, Voting, GamePlayer } from "@s
 interface Snapshot {
   name: string;
   points: number[];
-  voting: Voting.Id;
   owner: string;
-  joinedPlayers: Record<User.Id, { type: GamePlayer.PlayerType; mode: GamePlayer.UserMode }> | undefined;
 }
 
 /**
@@ -28,7 +26,7 @@ export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: D
     return;
   }
 
-  const { name, points, voting, owner, joinedPlayers } = val;
+  const { name, points, owner } = val;
 
   const selectableCards = ApplicablePoints.create(points.map(StoryPoint.create));
   const [game] = Game.create({
@@ -36,12 +34,6 @@ export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: D
     name,
     owner: User.createId(owner),
     points: selectableCards,
-    voting,
-    joinedPlayers: Object.entries(joinedPlayers ?? {}).map(([k, { mode, type }]) => ({
-      type,
-      user: User.createId(k),
-      mode,
-    })),
   });
 
   return game;

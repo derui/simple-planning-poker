@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 import { UserRepositoryImpl } from "../user-repository.js";
 import { GameRepositoryImpl } from "../game-repository.js";
 import { JoinUserEventListener } from "./join-user-event-listener.js";
-import { Game, Voting, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
+import { Game, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
 import { Database } from "firebase/database";
 
 let database: Database;
@@ -35,14 +35,12 @@ test("should add joined user as owner", async () => {
   // Arrange
   const owner = User.create({ id: User.createId(), name: "name" });
   const player = User.create({ id: User.createId(), name: "player" });
-  const [game] = Game.create({
+  const [game, event] = Game.create({
     id: Game.createId(),
     name: "test",
     owner: owner.id,
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
-    voting: Voting.createId(),
   });
-  const [, event] = Game.joinUserAsPlayer(game, player.id, Game.makeInvitation(game));
   const userRepository = new UserRepositoryImpl(database);
   const listener = new JoinUserEventListener(database);
   const repository = new GameRepositoryImpl(database);
@@ -52,7 +50,7 @@ test("should add joined user as owner", async () => {
 
   // Act
   await listener.handle(event);
-  const joinedGames = await repository.listUserJoined(player.id);
+  const joinedGames = await repository.listUserCreated(player.id);
 
   // Assert
   expect(joinedGames).toEqual([game]);

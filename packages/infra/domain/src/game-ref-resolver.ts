@@ -11,11 +11,3 @@ export const cards = function cards(id: Game.Id) {
 export const owner = function owner(id: Game.Id) {
   return `/games/${id}/owner`;
 };
-
-export const voting = function voting(id: Game.Id) {
-  return `/games/${id}/voting`;
-};
-
-export const joinedPlayers = function joinedPlayers(id: Game.Id) {
-  return `/games/${id}/joinedPlayers`;
-};

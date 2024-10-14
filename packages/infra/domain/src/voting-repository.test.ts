@@ -2,7 +2,7 @@ import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { v4 } from "uuid";
 import { VotingRepositoryImpl } from "./voting-repository.js";
-import { Voting, ApplicablePoints, StoryPoint, User, UserEstimation, Estimations } from "@spp/shared-domain";
+import { Voting, ApplicablePoints, StoryPoint, User, UserEstimation, Estimations, Voter } from "@spp/shared-domain";
 import { Database } from "firebase/database";
 import { enableMapSet } from "immer";
 
@@ -44,6 +44,12 @@ test("should be able to save and find a voting", async () => {
       [User.createId("user3")]: UserEstimation.giveUpOf(),
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
+    voters: [
+      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Normal }),
+    ],
   });
 
   const repository = new VotingRepositoryImpl(database);
@@ -64,6 +70,12 @@ test("should be able to save and find a voting", async () => {
   );
   expect(instance?.points).toEqual(voting.points);
   expect(instance?.theme).toBeUndefined();
+  expect(instance?.participatedVoters).toEqual([
+    Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Normal }),
+  ]);
 });
 
 test("should be able to save and find a finished voting", async () => {
@@ -78,6 +90,12 @@ test("should be able to save and find a finished voting", async () => {
       [User.createId("user3")]: UserEstimation.giveUpOf(),
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
+    voters: [
+      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+    ],
   });
   const [finished] = Voting.reveal(voting);
 
@@ -100,6 +118,12 @@ test("should be able to save and find a finished voting", async () => {
     ])
   );
   expect(instance?.theme).toBeUndefined();
+  expect(instance?.participatedVoters).toEqual([
+    Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+  ]);
 });
 
 test("empty theme as undefined", async () => {
@@ -115,6 +139,12 @@ test("empty theme as undefined", async () => {
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
     theme: "",
+    voters: [
+      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+    ],
   });
 
   const repository = new VotingRepositoryImpl(database);

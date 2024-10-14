@@ -1,5 +1,5 @@
-import { Database, push, ref, set } from "firebase/database";
-import { joinedGames } from "../user-ref-resolver.js";
+import { Database, push, ref } from "firebase/database";
+import { ownerGames } from "../user-ref-resolver.js";
 import { DomainEventListener } from "./domain-event-listener.js";
 import { Game, DomainEvent } from "@spp/shared-domain";
 
@@ -14,9 +14,9 @@ export class CreateGameEventListener implements DomainEventListener {
       return;
     }
 
-    const targetRef = joinedGames(event.owner);
+    const targetRef = ownerGames(event.owner);
     const value = push(ref(this.database, targetRef));
 
-    await set(value, { gameId: event.gameId, relation: "owner" });
+    await push(value, event.gameId);
   }
 }

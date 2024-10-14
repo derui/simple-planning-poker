@@ -27,7 +27,7 @@ export class UserObserverImpl implements UserObserver {
         return;
       }
 
-      subscriber(user, await this.gameRepository.listUserJoined(user.id));
+      subscriber(user, await this.gameRepository.listUserCreated(user.id));
     };
 
     const key = `users/${userId}`;

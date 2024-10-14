@@ -4,6 +4,6 @@ export const name = function name(id: User.Id) {
   return `/users/${id}/name`;
 };
 
-export const joinedGames = function joinedGames(id: User.Id) {
-  return `/users/${id}/joinedGames`;
+export const ownerGames = function ownerGames(id: User.Id) {
+  return `/users/${id}/ownerGames`;
 };
