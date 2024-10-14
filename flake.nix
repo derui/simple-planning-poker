@@ -23,6 +23,8 @@
               pnpm_9
               pre-commit
               nodePackages.typescript-language-server
+              nodePackages.npm 
+              openjdk17
             ];
 
             shellHook = ''
