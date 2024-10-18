@@ -84,7 +84,6 @@ export const SomeGames: Story = {
         owner: User.createId("foo"),
         name: "Sprint 1",
         points: ApplicablePoints.create([StoryPoint.create(1)]),
-        voting: Voting.createId(),
       })[0],
 
       Game.create({
@@ -92,7 +91,6 @@ export const SomeGames: Story = {
         owner: User.createId("bar"),
         name: "Sprint 2",
         points: ApplicablePoints.create([StoryPoint.create(1)]),
-        voting: Voting.createId(),
       })[0],
     ]);
 
@@ -129,7 +127,6 @@ export const TenGames: Story = {
             owner: User.createId("foo"),
             name: "Sprint 1",
             points: ApplicablePoints.create([StoryPoint.create(1)]),
-            voting: Voting.createId(),
           })[0]
       )
     );

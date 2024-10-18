@@ -22,20 +22,8 @@ const styles = {
   ),
   header: clsx("p-4", "text-lg", "font-bold", "bg-purple-200", "text-purple-700"),
   main: {
-    root: clsx("grid", "grid-rows-[auto_1fr]", "grid-cols-1"),
+    root: clsx(),
     list: clsx("max-h-96", "overflow-y-auto"),
-    invitation: clsx(
-      "grid",
-      "grid-rows-1",
-      "grid-cols-[1fr_auto]",
-      "px-3",
-      "mt-3",
-      "border-b",
-      "border-b-primary-400",
-      "pb-3"
-    ),
-    invitationToken: clsx("rounded-r-none"),
-    joinButton: (enabled: boolean) => clsx(buttonStyle({ variant: "purple", disabled: !enabled })),
   },
   footer: clsx(
     "flex",
@@ -73,7 +61,7 @@ const styles = {
 const Empty = () => {
   return (
     <div className={styles.empty}>
-      <span className={styles.emptyText}>You do not have games that you are invited before.</span>
+      <span className={styles.emptyText}>You do not have games.</span>
     </div>
   );
 };
@@ -104,35 +92,16 @@ export function GameIndex() {
     return <GameListItem gameId={v.id} name={v.name} owned={v.owned} />;
   });
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (token) {
-      navigate(generatePath("/invitation/:token", { token: token }));
-    }
-  };
-
   return (
     <div className={styles.root}>
       <div className={styles.container}>
-        <header className={styles.header}>Select game you already joined</header>
+        <header className={styles.header}>Select game you created</header>
         <main className={styles.main.root}>
-          <form className={styles.main.invitation} onSubmit={handleSubmit}>
-            <input
-              className={styles.main.invitationToken}
-              placeholder="Paste invitation token here"
-              onChange={(e) => setToken(e.target.value)}
-            />
-            <button className={styles.main.joinButton(token !== "")} disabled={token === ""}>
-              Join
-            </button>
-          </form>
           <ul className={styles.main.list}>{games.length > 0 ? gameComponents : <Empty />}</ul>
         </main>
         <footer className={styles.footer}>
           <Link className={styles.creator} to={AppUrl.gameCreatePage()} role="button">
-            Create Game
+            New Game
           </Link>
         </footer>
       </div>
