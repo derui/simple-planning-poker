@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SelectableCard } from "./selectable-card.js";
 
 const meta = {
-  title: "Presentational/Selectable card",
+  title: "Presentations/Selectable card",
   component: SelectableCard,
   tags: ["autodocs"],
 } satisfies Meta<typeof SelectableCard>;

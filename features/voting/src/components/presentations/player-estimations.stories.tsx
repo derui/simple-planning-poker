@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PlayerEstimations } from "./player-estimations.js";
 
 const meta = {
-  title: "Presentational/Player Estimations",
+  title: "Presentations/Player Estimations",
   component: PlayerEstimations,
   tags: ["autodocs"],
   argTypes: {

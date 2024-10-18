@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { RevealedEstimation } from "./revealed-estimation.js";
 
 const meta = {
-  title: "Presentational/Revealed Estimation",
+  title: "Presentations/Revealed Estimation",
   component: RevealedEstimation,
   tags: ["autodocs"],
 } satisfies Meta<typeof RevealedEstimation>;
