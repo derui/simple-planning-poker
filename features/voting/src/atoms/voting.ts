@@ -186,7 +186,6 @@ export const createUseJoin = function createUseJoin(
 
               const users = await userRepository.listIn(voting.participatedVoters.map((v) => v.user));
               setUsers(users);
-              console.log(voting, votingId);
               setVoting(voting);
               setUserRole("player");
 
