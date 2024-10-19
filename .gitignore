@@ -3,7 +3,6 @@
 .envrc
 .direnv
 node_modules
-yarn-error.log
 .log/
 .firebase/
 .firebaserc
