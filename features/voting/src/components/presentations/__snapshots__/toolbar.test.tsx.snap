@@ -3,7 +3,7 @@
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center"
+    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center h-12 px-2 py-1 rounded bg-orange-500"
   >
     <div
       class="grid grid-rows-1 grid-cols-[auto_auto_auto] rounded bg-orange-100 place-content-center gap-2 place-items-center px-2 py-1"
@@ -42,7 +42,7 @@ exports[`should be able to render 1`] = `
 exports[`should change current check 1`] = `
 <div>
   <div
-    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center"
+    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center h-12 px-2 py-1 rounded bg-orange-500"
   >
     <div
       class="grid grid-rows-1 grid-cols-[auto_auto_auto] rounded bg-orange-100 place-content-center gap-2 place-items-center px-2 py-1"

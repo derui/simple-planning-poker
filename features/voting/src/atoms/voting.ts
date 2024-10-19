@@ -42,7 +42,7 @@ enum JoinStatus {
 }
 const joinStatusAtom = atom<JoinStatus>(JoinStatus.NotJoined);
 
-enum VotingStatus {
+export enum VotingStatus {
   Voting = "voting",
   Revealed = "revealed",
   NotJoined = "notJoined",
@@ -87,6 +87,11 @@ export type UsePollingPlace = () => {
   estimations: EstimationDto[];
 
   /**
+   * inspectors in voting
+   */
+  inspectors: EstimationDto[];
+
+  /**
    * theme of current joining voting
    */
   theme: string;
@@ -95,12 +100,22 @@ export type UsePollingPlace = () => {
    * role of login user.
    */
   userRole: UserRole;
+
+  /**
+   * applicable points in this voting
+   */
+  points: string[];
 };
 
 /**
  * Definition of hook for voting
  */
 export type UseVoting = () => {
+  /**
+   * Login user estimated
+   */
+  estimated?: number;
+
   /**
    * Reveal current voting
    */
@@ -171,6 +186,7 @@ export const createUseJoin = function createUseJoin(
 
               const users = await userRepository.listIn(voting.participatedVoters.map((v) => v.user));
               setUsers(users);
+              console.log(voting, votingId);
               setVoting(voting);
               setUserRole("player");
 
@@ -215,7 +231,9 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
   const loading = useAtomValue(votingLoadingAtom);
   const userRole = useAtomValue(userRoleAtom);
 
-  const estimations = Array.from(voting?.participatedVoters ?? []).map<EstimationDto>((voter) => {
+  const voters = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Normal == v.type);
+  const inspectors = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Inspector == v.type);
+  const estimations = Array.from(voters).map<EstimationDto>((voter) => {
     const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
     if (!voting) {
@@ -231,6 +249,12 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
     };
   });
 
+  const _inspectors = inspectors.map((voter) => {
+    const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
+
+    return { name: userName, estimated: false };
+  });
+
   return () => {
     return {
       loading,
@@ -240,6 +264,10 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
       theme: voting?.theme ?? "",
 
       userRole,
+
+      inspectors: _inspectors,
+
+      points: voting?.points.map((v) => String(v)) ?? [],
     };
   };
 };
@@ -260,8 +288,18 @@ export const createUseVoting = function createUseVoting(dependencies: {
   const [voting, setVoting] = useAtom(votingAtom);
   const [, setUserRole] = useAtom(userRoleAtom);
 
+  let estimated = undefined;
+  if (voting && userId) {
+    const estimation = Estimations.estimationOfUser(voting.estimations, userId);
+    if (UserEstimation.isSubmitted(estimation)) {
+      estimated = estimation.point;
+    }
+  }
+
   return () => {
     return {
+      estimated,
+
       changeVoterRole(newRole) {
         if (!voting || !userId) {
           return;

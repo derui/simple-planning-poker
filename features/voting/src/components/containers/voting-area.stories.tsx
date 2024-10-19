@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Header } from "./header.js";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { createStore, Provider } from "jotai";
@@ -21,24 +20,32 @@ import {
   newRevealUseCase,
 } from "@spp/shared-use-case";
 import sinon from "sinon";
+import { VotingArea } from "./voting-area.js";
+import { useEffect } from "react";
+import { enableMapSet } from "immer";
+
+enableMapSet();
 
 const meta = {
-  title: "Containers/Header",
-  component: Header,
+  title: "Containers/Voting Area",
+  component: VotingArea,
   tags: ["autodocs"],
-} satisfies Meta<typeof Header>;
+} satisfies Meta<typeof VotingArea>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render() {
+  args: {
+    votingId: Voting.createId(),
+  },
+  render({ votingId }: { votingId: Voting.Id }) {
     const store = createStore();
     const userId = User.createId("id");
     const votingRepository = newMemoryVotingRepository([
       Voting.votingOf({
-        id: Voting.createId(),
-        points: ApplicablePoints.create([StoryPoint.create(1)]),
+        id: votingId,
+        points: ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2)]),
         estimations: Estimations.empty(),
         voters: [Voter.createVoter({ user: userId })],
       }),
@@ -67,10 +74,14 @@ export const Default: Story = {
       useVotingStatus: createUseVotingStatus(),
     };
 
+    useEffect(() => {
+      hooks.useJoin().join(votingId);
+    }, []);
+
     return (
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
-          <Header />
+          <VotingArea />
         </Provider>
       </ImplementationProvider>
     );

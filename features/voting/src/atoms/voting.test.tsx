@@ -13,7 +13,13 @@ import sinon from "sinon";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { UseLoginUser } from "@spp/feature-login";
-import { ChangeThemeUseCase, ChangeUserModeUseCase, EstimatePlayerUseCase, RevealUseCase } from "@spp/shared-use-case";
+import {
+  ChangeThemeUseCase,
+  ChangeUserModeUseCase,
+  EstimatePlayerUseCase,
+  newEstimatePlayerUseCase,
+  RevealUseCase,
+} from "@spp/shared-use-case";
 import { enableMapSet } from "immer";
 
 enableMapSet();
@@ -142,7 +148,7 @@ describe("UsePollingPlace", () => {
 });
 
 describe("UseVoting", () => {
-  const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+  const POINTS = ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(5)]);
 
   test("get voting after joined", async () => {
     // Arrange
@@ -263,6 +269,53 @@ describe("UseVoting", () => {
   });
 
   describe("estimate", () => {
+    test("estimated should be undefined when voting is just started", async () => {
+      // Arrange
+      const userId = User.createId();
+      const votingId = Voting.createId();
+      const voting = Voting.votingOf({
+        id: votingId,
+        points: POINTS,
+        theme: "foo",
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
+      });
+      const votingRepository = newMemoryVotingRepository([voting]);
+      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const useLoginUser: UseLoginUser = () => {
+        return {
+          userId,
+        };
+      };
+
+      // Act
+      const fake = sinon.fake.resolves<unknown[], ReturnType<EstimatePlayerUseCase>>({
+        kind: "success",
+        voting: Voting.takePlayerEstimation(voting, userId, UserEstimation.submittedOf(StoryPoint.create(1))),
+      });
+      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const { result } = renderHook(
+        () =>
+          createUseVoting({
+            useLoginUser,
+            changeThemeUseCase: sinon.fake(),
+            estimatePlayerUseCase: fake,
+            changeUserModeUseCase: sinon.fake(),
+            revealUseCase: sinon.fake(),
+          })(),
+        { wrapper }
+      );
+
+      await act(async () => {
+        join.result.current.join(votingId);
+      });
+
+      // Assert
+      expect(result.current.estimated).toBeUndefined();
+    });
+
     test("call use-case and get updated voting", async () => {
       // Arrange
       const userId = User.createId();
@@ -312,6 +365,56 @@ describe("UseVoting", () => {
 
       // Assert
       expect(fake.calledWith({ userId, votingId, userEstimation: UserEstimation.submittedOf(StoryPoint.create(1)) }));
+    });
+
+    test("udpate `estimated` if after estimated", async () => {
+      // Arrange
+      const userId = User.createId();
+      const votingId = Voting.createId();
+      const voting = Voting.votingOf({
+        id: votingId,
+        points: POINTS,
+        theme: "foo",
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId }), Voter.createVoter({ user: User.createId("other") })],
+      });
+      const votingRepository = newMemoryVotingRepository([voting]);
+      const userRepository = newMemoryUserRepository([
+        User.create({ id: userId, name: "foo" }),
+        User.create({ id: User.createId("other"), name: "other" }),
+      ]);
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const useLoginUser: UseLoginUser = () => {
+        return {
+          userId,
+        };
+      };
+
+      // Act
+      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const { result } = renderHook(
+        () =>
+          createUseVoting({
+            useLoginUser,
+            changeThemeUseCase: sinon.fake(),
+            estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
+            changeUserModeUseCase: sinon.fake(),
+            revealUseCase: sinon.fake(),
+          })(),
+        { wrapper }
+      );
+
+      await act(async () => {
+        join.result.current.join(votingId);
+      });
+
+      await act(async () => {
+        result.current.estimate(5);
+      });
+
+      // Assert
+      expect(result.current.estimated).toEqual(5);
     });
   });
 

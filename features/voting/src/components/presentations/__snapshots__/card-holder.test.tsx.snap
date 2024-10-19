@@ -6,7 +6,7 @@ exports[`should be able to render 1`] = `
     class="flex flex-row items-center justify-center h-36 bg-emerald-50 w-full"
   >
     <div
-      class="grid place-content-center h-20 w-14 rounded border-2 border-orange-400 m-3 transition-transform first-of-type:ml-0 last-of-type:mr-0 hover:-translate-y-2 text-orange-700 bg-white"
+      class="grid place-content-center cursor-pointer h-20 w-14 rounded border-2 border-orange-400 m-3 transition-transform first-of-type:ml-0 last-of-type:mr-0 hover:-translate-y-2 text-orange-700 bg-white"
     >
       3
     </div>

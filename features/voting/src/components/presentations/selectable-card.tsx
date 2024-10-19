@@ -11,6 +11,7 @@ const styles = {
     clsx(
       "grid",
       "place-content-center",
+      "cursor-pointer",
       "h-20",
       "w-14",
       "rounded",
