@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { createStore, Provider } from "jotai";
@@ -28,12 +28,11 @@ enableMapSet();
 
 const meta = {
   title: "Containers/Voting Area",
-  component: VotingArea,
   tags: ["autodocs"],
-} satisfies Meta<typeof VotingArea>;
+} satisfies Meta<{ votingId: Voting.Id }>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<{ votingId: Voting.Id }>;
 
 export const Default: Story = {
   args: {
