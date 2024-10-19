@@ -1,7 +1,7 @@
 import { createFacade } from "@spp/shared-hook-facade";
 import { UseJoin, UseVoting, UseRevealed, UseVotingStatus, UsePollingPlace } from "../atoms/voting.js";
 
-type Hooks = {
+export type Hooks = {
   useJoin: UseJoin;
   useVoting: UseVoting;
   useRevealed: UseRevealed;
