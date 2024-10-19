@@ -40,19 +40,28 @@ export const Default: Story = {
   },
   render({ votingId }: { votingId: Voting.Id }) {
     const store = createStore();
-    const userId = User.createId("id");
+    const users = {
+      player: User.createId(),
+      inspector: User.createId(),
+    };
     const votingRepository = newMemoryVotingRepository([
       Voting.votingOf({
         id: votingId,
         points: ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2)]),
         estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
+        voters: [
+          Voter.createVoter({ user: users.player }),
+          Voter.createVoter({ user: users.inspector, type: Voter.VoterType.Inspector }),
+        ],
       }),
     ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "player1" })]);
+    const userRepository = newMemoryUserRepository([
+      User.create({ id: users.player, name: "player1" }),
+      User.create({ id: users.inspector, name: "I'm looking" }),
+    ]);
     const useLoginUser = () => {
       return {
-        userId: userId,
+        userId: users.player,
       };
     };
     const hooks: Hooks = {

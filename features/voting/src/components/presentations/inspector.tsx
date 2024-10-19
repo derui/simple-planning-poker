@@ -7,7 +7,7 @@ export interface Props {
 
 const styles = {
   root: clsx("flex", "flex-col", "p-3", "items-center"),
-  name: clsx("flex-auto", "text-indigo-700", "font-bold", "mb-2"),
+  name: clsx("flex-auto", "text-indigo-700", "mb-2"),
 } as const;
 
 export const Inspector = function Inspector({ name }: Props) {
