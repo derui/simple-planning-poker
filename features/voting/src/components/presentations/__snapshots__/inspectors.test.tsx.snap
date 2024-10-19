@@ -23,7 +23,7 @@ exports[`should be able to render 1`] = `
       class="flex flex-col p-3 items-center"
     >
       <span
-        class="flex-auto text-indigo-700 font-bold mb-2"
+        class="flex-auto text-indigo-700 mb-2"
       >
         foo
       </span>
@@ -35,7 +35,7 @@ exports[`should be able to render 1`] = `
       class="flex flex-col p-3 items-center"
     >
       <span
-        class="flex-auto text-indigo-700 font-bold mb-2"
+        class="flex-auto text-indigo-700 mb-2"
       >
         bar
       </span>
@@ -47,7 +47,7 @@ exports[`should be able to render 1`] = `
       class="flex flex-col p-3 items-center"
     >
       <span
-        class="flex-auto text-indigo-700 font-bold mb-2"
+        class="flex-auto text-indigo-700 mb-2"
       >
         long name
       </span>

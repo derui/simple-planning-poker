@@ -3,10 +3,10 @@
 exports[`all estimated 1`] = `
 <div>
   <div
-    class="grid grid-rows-[auto_1fr] grid-cols-1 place-items-center gap-4"
+    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
   >
     <div
-      class="flex flex-row items-center justify-center h-8"
+      class="flex flex-row items-center justify-center h-16"
     >
       <span
         class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
@@ -14,12 +14,116 @@ exports[`all estimated 1`] = `
         Voted
       </span>
       <span
-        class="flex-auto text-xl rounded px-2 py-1 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
+        class="flex-auto text-xl rounded px-4 py-2 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
       >
         5
          / 
         5
       </span>
+    </div>
+    <div
+      class="flex flex-auto ml-4"
+    >
+      <button
+        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        disabled=""
+      >
+        Reveal
+      </button>
+    </div>
+    <div
+      class="flex flex-row gap-4"
+    >
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo0
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo1
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo2
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo3
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+      <div
+        class="flex flex-col m-3 items-center"
+      >
+        <span>
+          foo4
+        </span>
+        <span
+          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          data-estimated="true"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`disable button if can not reveal 1`] = `
+<div>
+  <div
+    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
+  >
+    <div
+      class="flex flex-row items-center justify-center h-16"
+    >
+      <span
+        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+      >
+        Voted
+      </span>
+      <span
+        class="flex-auto text-xl rounded px-4 py-2 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
+      >
+        5
+         / 
+        5
+      </span>
+    </div>
+    <div
+      class="flex flex-auto ml-4"
+    >
+      <button
+        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        disabled=""
+      >
+        Reveal
+      </button>
     </div>
     <div
       class="flex flex-row gap-4"
@@ -87,10 +191,10 @@ exports[`all estimated 1`] = `
 exports[`display a estimation 1`] = `
 <div>
   <div
-    class="grid grid-rows-[auto_1fr] grid-cols-1 place-items-center gap-4"
+    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
   >
     <div
-      class="flex flex-row items-center justify-center h-8"
+      class="flex flex-row items-center justify-center h-16"
     >
       <span
         class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
@@ -98,12 +202,22 @@ exports[`display a estimation 1`] = `
         Voted
       </span>
       <span
-        class="flex-auto text-xl rounded px-2 py-1 border transition text-gray-800 border-gray-400"
+        class="flex-auto text-xl rounded px-4 py-2 border transition text-gray-800 border-gray-400"
       >
         0
          / 
         5
       </span>
+    </div>
+    <div
+      class="flex flex-auto ml-4"
+    >
+      <button
+        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        disabled=""
+      >
+        Reveal
+      </button>
     </div>
     <div
       class="flex flex-row gap-4"
