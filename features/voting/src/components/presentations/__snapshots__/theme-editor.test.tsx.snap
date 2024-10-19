@@ -5,23 +5,97 @@ exports[`should be able to render 1`] = `
   <div
     class="flex px-4 py-1 rounded-full border border-teal-600 h-12"
   >
-    <div
-      class="flex-auto flex flex-row items-center gap-4"
+    <form
+      class="flex flex-row flex-auto items-center gap-2"
     >
-      <span
-        class="flex-auto text-teal-700 font-bold text-lg"
-      >
-        foo
-      </span>
+      <input
+        class="flex-auto w-full p-2 outline-none rounded transition-colors"
+        placeholder="No theme"
+        readonly=""
+        tabindex="1"
+        type="text"
+        value="foo"
+      />
       <button
-        class="border border-transparent hover:border-orange-600 hover:bg-orange-100 transition p-1 rounded-full"
+        aria-label="submit"
+        class="flex-none border border-transparent hover:border-emerald-600 hover:bg-emerald-100 transition p-1 rounded-full hidden"
+        disabled=""
+        type="submit"
+      >
+        <span
+          class="flex before:bg-emerald-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/check.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        />
+      </button>
+      <button
+        aria-label="cancel"
+        class="flex-none border border-transparent hover:border-gray-600 hover:bg-gray-100 transition p-1 rounded-full hidden"
+        disabled=""
         type="button"
       >
         <span
-          class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/pencil.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+          class="flex before:bg-gray-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/x.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
         />
       </button>
-    </div>
+    </form>
+    <button
+      aria-label="edit"
+      class="border border-transparent hover:border-orange-600 hover:bg-orange-100 transition p-1 rounded-full"
+      type="button"
+    >
+      <span
+        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/pencil.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`should be able to render without theme 1`] = `
+<div>
+  <div
+    class="flex px-4 py-1 rounded-full border border-teal-600 h-12"
+  >
+    <form
+      class="flex flex-row flex-auto items-center gap-2"
+    >
+      <input
+        class="flex-auto w-full p-2 outline-none rounded transition-colors"
+        placeholder="No theme"
+        readonly=""
+        tabindex="1"
+        type="text"
+        value=""
+      />
+      <button
+        aria-label="submit"
+        class="flex-none border border-transparent hover:border-emerald-600 hover:bg-emerald-100 transition p-1 rounded-full hidden"
+        disabled=""
+        type="submit"
+      >
+        <span
+          class="flex before:bg-emerald-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/check.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        />
+      </button>
+      <button
+        aria-label="cancel"
+        class="flex-none border border-transparent hover:border-gray-600 hover:bg-gray-100 transition p-1 rounded-full hidden"
+        disabled=""
+        type="button"
+      >
+        <span
+          class="flex before:bg-gray-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/x.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        />
+      </button>
+    </form>
+    <button
+      aria-label="edit"
+      class="border border-transparent hover:border-orange-600 hover:bg-orange-100 transition p-1 rounded-full"
+      type="button"
+    >
+      <span
+        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/pencil.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+      />
+    </button>
   </div>
 </div>
 `;

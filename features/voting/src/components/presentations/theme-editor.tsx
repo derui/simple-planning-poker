@@ -19,6 +19,7 @@ const styles = {
   root: clsx("flex", "px-4", "py-1", "rounded-full", "border", "border-teal-600", "h-12"),
   contentContainer: clsx("flex-auto", "flex", "flex-row", "items-center", "gap-4"),
   theme: clsx("flex-auto", "text-teal-700", "font-bold", "text-lg"),
+  themePlaceholder: clsx("flex-auto", "text-gray-700", "font-bold", "text-lg"),
   edit: clsx(
     "border",
     "border-transparent",
@@ -31,34 +32,43 @@ const styles = {
   editor: {
     root: clsx("flex", "flex-row", "flex-auto", "items-center", "gap-2"),
     input: clsx("flex-auto", "w-full", "p-2", "outline-none", "rounded", "transition-colors"),
-    submit: clsx(
-      "flex-none",
-      "border",
-      "border-transparent",
-      "hover:border-emerald-600",
-      "hover:bg-emerald-100",
-      "transition",
-      "p-1",
-      "rounded-full"
-    ),
-    cancel: clsx(
-      "flex-none",
-      "border",
-      "border-transparent",
-      "hover:border-gray-600",
-      "hover:bg-gray-100",
-      "transition",
-      "p-1",
-      "rounded-full"
-    ),
+    submit: (editing: boolean) =>
+      clsx(
+        "flex-none",
+        "border",
+        "border-transparent",
+        "hover:border-emerald-600",
+        "hover:bg-emerald-100",
+        "transition",
+        "p-1",
+        "rounded-full",
+        {
+          hidden: !editing,
+        }
+      ),
+    cancel: (editing: boolean) =>
+      clsx(
+        "flex-none",
+        "border",
+        "border-transparent",
+        "hover:border-gray-600",
+        "hover:bg-gray-100",
+        "transition",
+        "p-1",
+        "rounded-full",
+        {
+          hidden: !editing,
+        }
+      ),
   },
 } as const;
 
 const ThemeEditorInternal = function ThemeEditorInternal({
+  editing,
   theme,
   onSubmit,
   onCancel,
-}: Props & { onCancel: () => void }) {
+}: Props & { editing: boolean; onCancel: () => void }) {
   const [state, setState] = useState(theme);
   const ref = useRef<HTMLInputElement>(null);
 
@@ -75,7 +85,9 @@ const ThemeEditorInternal = function ThemeEditorInternal({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    onSubmit?.(state);
+    if (editing) {
+      onSubmit?.(state);
+    }
   };
 
   return (
@@ -87,12 +99,19 @@ const ThemeEditorInternal = function ThemeEditorInternal({
         className={styles.editor.input}
         onInput={handleChange}
         defaultValue={state}
-        placeholder="theme of this voting"
+        placeholder="No theme"
+        readOnly={!editing}
       />
-      <button type="submit" className={styles.editor.submit}>
+      <button type="submit" className={styles.editor.submit(editing)} disabled={!editing} aria-label="submit">
         <Icon type={Icons.check} variant={Variant.emerald} />
       </button>
-      <button type="button" aria-label="cancel" className={styles.editor.cancel} onClick={onCancel}>
+      <button
+        type="button"
+        aria-label="cancel"
+        className={styles.editor.cancel(editing)}
+        onClick={onCancel}
+        disabled={!editing}
+      >
         <Icon type={Icons.x} variant={Variant.gray} />
       </button>
     </form>
@@ -110,16 +129,21 @@ export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props) {
     setEditing(false);
   };
 
-  const content = editing ? (
-    <ThemeEditorInternal theme={theme} onSubmit={onSubmit} onCancel={handleCancel} />
-  ) : (
-    <div className={styles.contentContainer}>
-      <span className={styles.theme}>{theme}</span>
-      <button type="button" onClick={handleEditing} className={styles.edit}>
-        <Icon type={Icons.pencil} variant={Variant.orange} />
-      </button>
+  const handleSubmit = (value: string) => {
+    setEditing(false);
+    onSubmit?.(value);
+  };
+
+  const editButton = !editing ? (
+    <button type="button" onClick={handleEditing} className={styles.edit} aria-label="edit">
+      <Icon type={Icons.pencil} variant={Variant.orange} />
+    </button>
+  ) : null;
+
+  return (
+    <div className={styles.root}>
+      <ThemeEditorInternal editing={editing} theme={theme} onSubmit={handleSubmit} onCancel={handleCancel} />
+      {editButton}
     </div>
   );
-
-  return <div className={styles.root}>{content}</div>;
 };

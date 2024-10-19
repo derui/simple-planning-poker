@@ -35,7 +35,13 @@ const styles = {
 // eslint-disable-next-line func-style
 export function SelectableCard(props: PropsWithChildren<Props>) {
   return (
-    <div className={styles.root(props.selected ?? false)} onClick={props.onSelect} data-selected={props.selected}>
+    <div
+      className={styles.root(props.selected ?? false)}
+      onClick={props.onSelect}
+      data-selected={props.selected}
+      role="tab"
+      aria-selected={props.selected}
+    >
       {props.children}
     </div>
   );

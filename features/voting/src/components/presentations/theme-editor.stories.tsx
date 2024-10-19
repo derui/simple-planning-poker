@@ -17,3 +17,9 @@ export const Default: Story = {
     onSubmit: console.log,
   },
 };
+
+export const NoTheme: Story = {
+  args: {
+    theme: "",
+  },
+};

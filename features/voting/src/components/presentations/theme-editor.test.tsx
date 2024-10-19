@@ -14,7 +14,7 @@ test("should be able to render", () => {
 test("show editor after click button", async () => {
   render(<ThemeEditor theme="foo" />);
 
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole("button", { name: "edit" }));
 
   expect(screen.queryAllByRole("button")).toHaveLength(2);
 });
@@ -30,23 +30,29 @@ test("edit and submit changed theme", async () => {
     />
   );
 
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole("button", { name: "edit" }));
   await userEvent.type(screen.getByPlaceholderText(/theme/), " changed[Enter]");
 });
 
 test("cancel should return default", async () => {
   render(<ThemeEditor theme="foo" />);
 
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole("button", { name: "edit" }));
   await userEvent.click(screen.getByRole("button", { name: "cancel" }));
 
-  expect(screen.queryByPlaceholderText(/theme/)).toBeNull();
+  expect(screen.queryByPlaceholderText<HTMLInputElement>(/No theme/)?.value).toBe("foo");
 });
 
 test("focus input first when switched to edit mode", async () => {
   render(<ThemeEditor theme="foo" />);
 
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole("button", { name: "edit" }));
 
   expect(screen.getByRole<HTMLInputElement>("textbox").matches(":focus")).toBeTruthy();
+});
+
+test("should be able to render without theme", () => {
+  const ret = render(<ThemeEditor theme="" />);
+
+  expect(ret.container).toMatchSnapshot();
 });

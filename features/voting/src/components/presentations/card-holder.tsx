@@ -15,7 +15,7 @@ const styles = {
 
 export const CardHolder = function CardHolder({ type, children }: PropsWithChildren<Props>) {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} role="tablist">
       {type == "player" ? children : <p className={styles.inspector}>Inspector mode</p>}
     </div>
   );
