@@ -1,13 +1,10 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
-import { userEvent } from "@testing-library/user-event";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { createStore, Provider } from "jotai";
-import { ApplicablePoints, Estimations, StoryPoint, User, Voter, Voting } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import { VotingStatus } from "../../atoms/voting.js";
-import { VotingArea } from "./voting-area.js";
 import sinon from "sinon";
+import { afterEach, expect, test } from "vitest";
+import { VotingStatus } from "../../atoms/voting.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { VotingArea } from "./voting-area.js";
 
 afterEach(cleanup);
 

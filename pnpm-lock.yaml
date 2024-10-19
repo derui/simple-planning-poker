@@ -4,93 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@dotenvx/dotenvx':
-      specifier: ^1.14.1
-      version: 1.14.1
-    '@firebase/rules-unit-testing':
-      specifier: ^3.0.1
-      version: 3.0.4
-    '@storybook/addon-controls':
-      specifier: ^8.3.3
-      version: 8.3.3
-    '@storybook/cli':
-      specifier: ^8.3.3
-      version: 8.3.3
-    '@storybook/react':
-      specifier: ^8.3.3
-      version: 8.3.3
-    '@storybook/react-vite':
-      specifier: ^8.3.3
-      version: 8.3.3
-    '@testing-library/react':
-      specifier: 16.0.1
-      version: 16.0.1
-    '@types/react':
-      specifier: ^18.3.10
-      version: 18.3.10
-    '@types/sinon':
-      specifier: ^17.0.3
-      version: 17.0.3
-    '@vitejs/plugin-react':
-      specifier: 4.3.1
-      version: 4.3.1
-    clsx:
-      specifier: 2.1.1
-      version: 2.1.1
-    concurrently:
-      specifier: 9.0.1
-      version: 9.0.1
-    eslint:
-      specifier: ^9.11.0
-      version: 9.11.1
-    eslint-config-prettier:
-      specifier: ^9.1.0
-      version: 9.1.0
-    eslint-plugin-react:
-      specifier: ^7.37.0
-      version: 7.37.0
-    eslint-plugin-unused-imports:
-      specifier: ^4.1.4
-      version: 4.1.4
-    firebase:
-      specifier: ^10.13.2
-      version: 10.13.2
-    firebase-tools:
-      specifier: ^13.20.1
-      version: 13.20.1
-    jsdom:
-      specifier: 25.0.1
-      version: 25.0.1
-    react:
-      specifier: 18.3.1
-      version: 18.3.1
-    react-dom:
-      specifier: 18.3.1
-      version: 18.3.1
-    react-router-dom:
-      specifier: ^6.26.2
-      version: 6.26.2
-    sinon:
-      specifier: 19.0.2
-      version: 19.0.2
-    tailwindcss:
-      specifier: 3.4.13
-      version: 3.4.13
-    typescript:
-      specifier: 5.6.2
-      version: 5.6.2
-    typescript-eslint:
-      specifier: ^8.7.0
-      version: 8.7.0
-    vite:
-      specifier: 5.4.8
-      version: 5.4.8
-    vitest:
-      specifier: 2.1.1
-      version: 2.1.1
-
 importers:
 
   .:
@@ -105,6 +18,9 @@ importers:
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
+      prettier-plugin-organize-imports:
+        specifier: ^4.1.0
+        version: 4.1.0(prettier@3.3.3)(typescript@5.6.2)
 
   configs/eslint-config:
     dependencies:
@@ -6116,6 +6032,16 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier-plugin-organize-imports@4.1.0:
+    resolution: {integrity: sha512-5aWRdCgv645xaa58X8lOxzZoiHAldAPChljr/MT0crXVOWTZ+Svl4hIWlz+niYSlO6ikE5UXkN1JrRvIP2ut0A==}
+    peerDependencies:
+      prettier: '>=2.0'
+      typescript: '>=2.9'
+      vue-tsc: ^2.1.0
+    peerDependenciesMeta:
+      vue-tsc:
+        optional: true
 
   prettier@3.3.3:
     resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
@@ -12815,6 +12741,11 @@ snapshots:
       xtend: 4.0.2
 
   prelude-ls@1.2.1: {}
+
+  prettier-plugin-organize-imports@4.1.0(prettier@3.3.3)(typescript@5.6.2):
+    dependencies:
+      prettier: 3.3.3
+      typescript: 5.6.2
 
   prettier@3.3.3: {}
 
