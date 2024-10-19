@@ -6,7 +6,7 @@ import { enableMapSet } from "immer";
 
 enableMapSet();
 
-const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+const POINTS = ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(5)]);
 
 test("should return error if game is not found", async () => {
   // Arrange
@@ -40,7 +40,7 @@ test("should save player with card selected by user", async () => {
   const input = {
     userId: owner,
     votingId: voting.id,
-    userEstimation: UserEstimation.submittedOf(POINTS[0]),
+    userEstimation: UserEstimation.submittedOf(POINTS[1]),
   };
 
   const repository = newMemoryVotingRepository([voting]);
@@ -55,7 +55,7 @@ test("should save player with card selected by user", async () => {
   expect(ret).toEqual({ kind: "success", voting: saved! });
   expect(saved?.estimations).toEqual(
     Estimations.from({
-      [owner]: UserEstimation.submittedOf(POINTS[0]),
+      [owner]: UserEstimation.submittedOf(POINTS[1]),
     })
   );
 });
