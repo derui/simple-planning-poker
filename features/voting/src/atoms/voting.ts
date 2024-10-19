@@ -1,8 +1,24 @@
-import { StoryPoint, User, UserEstimation, UserRepository, Voting, VotingRepository } from "@spp/shared-domain";
+import {
+  Estimations,
+  StoryPoint,
+  User,
+  UserEstimation,
+  UserRepository,
+  Voter,
+  Voting,
+  VotingRepository,
+} from "@spp/shared-domain";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { EstimationDto, RevealedEstimationDto } from "./dto.js";
-import { ChangeThemeUseCase, EstimatePlayerUseCase, ResetVotingUseCase, RevealUseCase } from "@spp/shared-use-case";
+import {
+  ChangeThemeUseCase,
+  ChangeUserModeUseCase,
+  EstimatePlayerUseCase,
+  ResetVotingUseCase,
+  RevealUseCase,
+} from "@spp/shared-use-case";
 import { UseLoginUser } from "@spp/feature-login";
+import { UserRole } from "../components/types.js";
 
 /**
  * current voting
@@ -81,6 +97,11 @@ export type UseVoting = () => {
   changeTheme(newTheme: string): void;
 
   /**
+   * Change voter's role to `newRole`.
+   */
+  changeVoterRole(newRole: UserRole): void;
+
+  /**
    * change estimation in voting
    */
   estimate(estimation: number): void;
@@ -143,16 +164,12 @@ export const createUseJoin = function createUseJoin(
 
         votingRepository
           .findBy(votingId)
-          .then((voting) => {
+          .then(async (voting) => {
             if (voting) {
               setStatus(JoinStatus.Joined);
 
-              userRepository
-                .listIn(Array.from(voting.estimations.userEstimations.keys()))
-                .then((users) => {
-                  setUsers(users);
-                })
-                .catch((e) => console.warn(e));
+              const users = await userRepository.listIn(voting.participatedVoters.map((v) => v.user));
+              setUsers(users);
               setVoting(voting);
 
               if (voting.status == Voting.VotingStatus.Revealed) {
@@ -194,25 +211,31 @@ export const createUseVoting = function createUseVoting(dependencies: {
   useLoginUser: UseLoginUser;
   changeThemeUseCase: ChangeThemeUseCase;
   estimatePlayerUseCase: EstimatePlayerUseCase;
+  changeUserModeUseCase: ChangeUserModeUseCase;
   revealUseCase: RevealUseCase;
 }): UseVoting {
-  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase } = dependencies;
+  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase, changeUserModeUseCase } =
+    dependencies;
   const { userId } = useLoginUser();
   const [voting, setVoting] = useAtom(votingAtom);
   const loading = useAtomValue(votingLoadingAtom);
   const users = useAtomValue(usersAtom);
 
-  const estimations = Array.from(voting?.estimations?.userEstimations?.entries() ?? []).map<EstimationDto>(
-    ([user, estimation]) => {
-      const estimated = UserEstimation.isSubmitted(estimation);
-      const userName = users.find((v) => v.id == user)?.name ?? "unknown";
+  const estimations = Array.from(voting?.participatedVoters ?? []).map<EstimationDto>((voter) => {
+    const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
-      return {
-        name: userName,
-        estimated,
-      };
+    if (!voting) {
+      return { name: userName, estimated: false };
     }
-  );
+
+    const estimation = Estimations.estimationOfUser(voting.estimations, voter.user);
+    const estimated = UserEstimation.isSubmitted(estimation);
+
+    return {
+      name: userName,
+      estimated,
+    };
+  });
 
   return () => {
     return {
@@ -221,6 +244,29 @@ export const createUseVoting = function createUseVoting(dependencies: {
       estimations,
 
       theme: voting?.theme ?? "",
+
+      changeVoterRole(newRole) {
+        if (!voting || !userId) {
+          return;
+        }
+        const voterType = newRole == "inspector" ? Voter.VoterType.Inspector : Voter.VoterType.Normal;
+
+        const input = {
+          userId,
+          votingId: voting.id,
+          voterType,
+        };
+
+        changeUserModeUseCase(input)
+          .then((ret) => {
+            if (ret.kind == "success") {
+              setVoting(ret.voting);
+            }
+          })
+          .catch((e) => {
+            console.warn(e);
+          });
+      },
 
       changeTheme(newTheme) {
         if (!voting) {

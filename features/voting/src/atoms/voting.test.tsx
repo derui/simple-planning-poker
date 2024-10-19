@@ -7,7 +7,7 @@ import sinon from "sinon";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { UseLoginUser } from "@spp/feature-login";
-import { ChangeThemeUseCase, EstimatePlayerUseCase, RevealUseCase } from "@spp/shared-use-case";
+import { ChangeThemeUseCase, ChangeUserModeOutput, EstimatePlayerUseCase, RevealUseCase } from "@spp/shared-use-case";
 import { enableMapSet } from "immer";
 
 enableMapSet();
@@ -107,6 +107,7 @@ describe("UseVoting", () => {
           changeThemeUseCase: sinon.fake(),
           revealUseCase: sinon.fake(),
           estimatePlayerUseCase: sinon.fake(),
+          changeUserModeUseCase: sinon.fake(),
           useLoginUser: sinon.fake.returns({
             userId: User.createId(),
           }),
@@ -150,6 +151,7 @@ describe("UseVoting", () => {
           useLoginUser,
           changeThemeUseCase: sinon.fake(),
           estimatePlayerUseCase: sinon.fake(),
+          changeUserModeUseCase: sinon.fake(),
           revealUseCase: sinon.fake(),
         })(),
       { wrapper }
@@ -163,6 +165,51 @@ describe("UseVoting", () => {
     // Assert
     expect(join.result.current.status).toEqual("joined");
     expect(result.current.loading).toBeFalsy();
+    expect(result.current.theme).toEqual("foo");
+  });
+
+  test("get estimations from", async () => {
+    // Arrange
+    const userId = User.createId();
+    const votingId = Voting.createId();
+    const votingRepository = newMemoryVotingRepository([
+      Voting.votingOf({
+        id: votingId,
+        points: POINTS,
+        theme: "foo",
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
+      }),
+    ]);
+    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
+    const store = createStore();
+    const wrapper = createWrapper(store);
+    const useLoginUser: UseLoginUser = () => {
+      return {
+        userId,
+      };
+    };
+
+    // Act
+    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+    const { result, rerender } = renderHook(
+      () =>
+        createUseVoting({
+          useLoginUser,
+          changeThemeUseCase: sinon.fake(),
+          estimatePlayerUseCase: sinon.fake(),
+          changeUserModeUseCase: sinon.fake(),
+          revealUseCase: sinon.fake(),
+        })(),
+      { wrapper }
+    );
+
+    await act(async () => {
+      join.result.current.join(votingId);
+    });
+    rerender();
+
+    // Assert
     expect(result.current.estimations).toEqual([{ name: "foo", estimated: false }]);
   });
 
@@ -186,6 +233,7 @@ describe("UseVoting", () => {
             useLoginUser,
             changeThemeUseCase: fake,
             estimatePlayerUseCase: sinon.fake(),
+            changeUserModeUseCase: sinon.fake(),
             revealUseCase: sinon.fake(),
           })(),
         { wrapper }
@@ -230,6 +278,7 @@ describe("UseVoting", () => {
             useLoginUser,
             changeThemeUseCase: fake,
             estimatePlayerUseCase: sinon.fake(),
+            changeUserModeUseCase: sinon.fake(),
             revealUseCase: sinon.fake(),
           })(),
         { wrapper }
@@ -282,6 +331,7 @@ describe("UseVoting", () => {
             useLoginUser,
             changeThemeUseCase: sinon.fake(),
             estimatePlayerUseCase: fake,
+            changeUserModeUseCase: sinon.fake(),
             revealUseCase: sinon.fake(),
           })(),
         { wrapper }
@@ -334,6 +384,7 @@ describe("UseVoting", () => {
             useLoginUser,
             changeThemeUseCase: sinon.fake(),
             estimatePlayerUseCase: sinon.fake(),
+            changeUserModeUseCase: sinon.fake(),
             revealUseCase: fake,
           })(),
         { wrapper }
@@ -462,6 +513,7 @@ describe("UseRevealed", () => {
             useLoginUser,
             changeThemeUseCase: sinon.fake(),
             estimatePlayerUseCase: sinon.fake(),
+            changeUserModeUseCase: sinon.fake(),
             revealUseCase: fake,
           })(),
         { wrapper }
@@ -477,6 +529,59 @@ describe("UseRevealed", () => {
 
       // Assert
       expect(fake.calledWith({ votingId }));
+    });
+  });
+
+  describe("change voter type", () => {
+    test("call use-case and get updated voting", async () => {
+      // Arrange
+      const userId = User.createId();
+      const votingId = Voting.createId();
+      const voting = Voting.votingOf({
+        id: votingId,
+        points: POINTS,
+        theme: "foo",
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
+      });
+      const votingRepository = newMemoryVotingRepository([voting]);
+      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
+      const store = createStore();
+      const wrapper = createWrapper(store);
+      const useLoginUser: UseLoginUser = () => {
+        return {
+          userId,
+        };
+      };
+
+      // Act
+      const fake = sinon.fake.resolves<unknown[], ChangeUserModeOutput>({
+        kind: "success",
+        voting,
+      });
+      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const { result } = renderHook(
+        () =>
+          createUseVoting({
+            useLoginUser,
+            changeThemeUseCase: sinon.fake(),
+            estimatePlayerUseCase: sinon.fake(),
+            changeUserModeUseCase: fake,
+            revealUseCase: sinon.fake(),
+          })(),
+        { wrapper }
+      );
+
+      await act(async () => {
+        join.result.current.join(votingId);
+      });
+
+      await act(async () => {
+        result.current.changeVoterRole("inspector");
+      });
+
+      // Assert
+      expect(fake.calledWith({ userId, votingId, voterType: Voter.VoterType.Inspector }));
     });
   });
 });
