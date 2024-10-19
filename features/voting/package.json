@@ -59,6 +59,8 @@
     "@spp/feature-login": "workspace:^",
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-domain": "workspace:^",
+    "@spp/shared-hook-facade": "workspace:^",
+    "@spp/shared-type-util": "workspace:^",
     "@spp/shared-use-case": "workspace:^",
     "@spp/ui-button-style": "workspace:^",
     "@spp/ui-icon": "workspace:^",

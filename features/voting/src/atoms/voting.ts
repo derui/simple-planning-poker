@@ -8,7 +8,7 @@ import {
   Voting,
   VotingRepository,
 } from "@spp/shared-domain";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { EstimationDto, RevealedEstimationDto } from "./dto.js";
 import {
   ChangeThemeUseCase,
@@ -29,6 +29,11 @@ const votingAtom = atom<Voting.T | undefined>();
  * users joined in the voting holding by `votingAtom`
  */
 const usersAtom = atom<User.T[]>([]);
+
+/**
+ * atom for user role.
+ */
+const userRoleAtom = atom<UserRole>("player");
 
 enum JoinStatus {
   Joining = "joining",
@@ -68,9 +73,9 @@ export type UseVotingStatus = () => {
 };
 
 /**
- * Definition of hook for voting
+ * Hook to get common attributes at polling place
  */
-export type UseVoting = () => {
+export type UsePollingPlace = () => {
   /**
    * loading or not
    */
@@ -86,6 +91,16 @@ export type UseVoting = () => {
    */
   theme: string;
 
+  /**
+   * role of login user.
+   */
+  userRole: UserRole;
+};
+
+/**
+ * Definition of hook for voting
+ */
+export type UseVoting = () => {
   /**
    * Reveal current voting
    */
@@ -112,21 +127,6 @@ export type UseVoting = () => {
  */
 export type UseRevealed = () => {
   /**
-   * loading or not
-   */
-  loading: boolean;
-
-  /**
-   * Estimations in revealed voting
-   */
-  estimations: RevealedEstimationDto[];
-
-  /**
-   * theme of current joining voting
-   */
-  theme: string;
-
-  /**
    * Change theme with `newTheme`
    */
   changeTheme(newTheme: string): void;
@@ -150,6 +150,7 @@ export const createUseJoin = function createUseJoin(
   const [status, setStatus] = useAtom(joinStatusAtom);
   const [, setUsers] = useAtom(usersAtom);
   const [, setVotingStatus] = useAtom(votingStatusAtom);
+  const setUserRole = useSetAtom(userRoleAtom);
 
   return () => {
     return {
@@ -171,6 +172,7 @@ export const createUseJoin = function createUseJoin(
               const users = await userRepository.listIn(voting.participatedVoters.map((v) => v.user));
               setUsers(users);
               setVoting(voting);
+              setUserRole("player");
 
               if (voting.status == Voting.VotingStatus.Revealed) {
                 setVotingStatus(VotingStatus.Revealed);
@@ -205,21 +207,13 @@ export const createUseVotingStatus = function createUseVotingStatus(): UseVoting
 };
 
 /**
- * Create `UseVoting` hook with dependencies
+ * Create `UsePollingPlace` hook
  */
-export const createUseVoting = function createUseVoting(dependencies: {
-  useLoginUser: UseLoginUser;
-  changeThemeUseCase: ChangeThemeUseCase;
-  estimatePlayerUseCase: EstimatePlayerUseCase;
-  changeUserModeUseCase: ChangeUserModeUseCase;
-  revealUseCase: RevealUseCase;
-}): UseVoting {
-  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase, changeUserModeUseCase } =
-    dependencies;
-  const { userId } = useLoginUser();
-  const [voting, setVoting] = useAtom(votingAtom);
-  const loading = useAtomValue(votingLoadingAtom);
+export const createUsePollingPlace = function createUsePollingPlace(): UsePollingPlace {
+  const voting = useAtomValue(votingAtom);
   const users = useAtomValue(usersAtom);
+  const loading = useAtomValue(votingLoadingAtom);
+  const userRole = useAtomValue(userRoleAtom);
 
   const estimations = Array.from(voting?.participatedVoters ?? []).map<EstimationDto>((voter) => {
     const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
@@ -245,6 +239,29 @@ export const createUseVoting = function createUseVoting(dependencies: {
 
       theme: voting?.theme ?? "",
 
+      userRole,
+    };
+  };
+};
+
+/**
+ * Create `UseVoting` hook with dependencies
+ */
+export const createUseVoting = function createUseVoting(dependencies: {
+  useLoginUser: UseLoginUser;
+  changeThemeUseCase: ChangeThemeUseCase;
+  estimatePlayerUseCase: EstimatePlayerUseCase;
+  changeUserModeUseCase: ChangeUserModeUseCase;
+  revealUseCase: RevealUseCase;
+}): UseVoting {
+  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase, changeUserModeUseCase } =
+    dependencies;
+  const { userId } = useLoginUser();
+  const [voting, setVoting] = useAtom(votingAtom);
+  const [, setUserRole] = useAtom(userRoleAtom);
+
+  return () => {
+    return {
       changeVoterRole(newRole) {
         if (!voting || !userId) {
           return;
@@ -261,6 +278,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
           .then((ret) => {
             if (ret.kind == "success") {
               setVoting(ret.voting);
+              setUserRole(newRole);
             }
           })
           .catch((e) => {
@@ -338,27 +356,9 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
 }): UseRevealed {
   const { changeThemeUseCase, resetVotingUseCase } = dependencies;
   const [voting, setVoting] = useAtom(votingAtom);
-  const users = useAtomValue(usersAtom);
-  const loading = useAtomValue(votingLoadingAtom);
-
-  const estimations = Array.from(voting?.estimations?.userEstimations?.entries() ?? []).map<RevealedEstimationDto>(
-    ([user, estimation]) => {
-      const estimated = UserEstimation.estimatedPoint(estimation);
-      const userName = users.find((v) => v.id == user)?.name ?? "unknown";
-
-      return {
-        name: userName,
-        estimated: estimated ? StoryPoint.value(estimated).toString() : "?",
-      };
-    }
-  );
 
   return () => {
     return {
-      loading,
-      theme: voting?.theme ?? "",
-      estimations,
-
       changeTheme(newTheme) {
         if (!voting) {
           return;

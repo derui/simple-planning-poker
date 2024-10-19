@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import { PlayerEstimations } from "../presentations/player-estimations";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Skeleton } from "../presentations/skeleton";
@@ -11,16 +11,16 @@ import { AppDispatch } from "@/status/store";
 import { selectRoundInformation } from "@/status/selectors/round";
 
 const styles = {
-  root: classNames("relative", "w-full", "h-full"),
-  gridContainer: classNames(
+  root: clsx("relative", "w-full", "h-full"),
+  gridContainer: clsx(
     "w-full",
     "h-full",
     "grid",
     "grid-rows-[1fr_8rem_5rem_8rem_1fr]",
     "grid-cols-[1fr_max-content_1fr]"
   ),
-  estimations: classNames("flex"),
-  table: classNames(
+  estimations: clsx("flex"),
+  table: clsx(
     "row-start-3",
     "col-start-2",
     "flex",
@@ -36,7 +36,7 @@ const styles = {
     "justify-center"
   ),
 
-  tableLoading: classNames(
+  tableLoading: clsx(
     "row-start-3",
     "col-start-2",
     "flex",
@@ -51,7 +51,7 @@ const styles = {
     "items-center",
     "justify-center"
   ),
-  nextGameButton: classNames(
+  nextGameButton: clsx(
     "flex-none",
     "outline-none",
     "border",

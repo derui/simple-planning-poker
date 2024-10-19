@@ -352,6 +352,12 @@ importers:
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
+      '@spp/shared-hook-facade':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/hook-facade
+      '@spp/shared-type-util':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/type-util
       '@spp/shared-use-case':
         specifier: workspace:^
         version: link:../../packages/shared-logic/use-case

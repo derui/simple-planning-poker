@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { createUseJoin, createUseRevealed, createUseVoting, createUseVotingStatus } from "./voting.js";
+import {
+  createUseJoin,
+  createUsePollingPlace,
+  createUseRevealed,
+  createUseVoting,
+  createUseVotingStatus,
+} from "./voting.js";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
@@ -7,7 +13,7 @@ import sinon from "sinon";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { UseLoginUser } from "@spp/feature-login";
-import { ChangeThemeUseCase, ChangeUserModeOutput, EstimatePlayerUseCase, RevealUseCase } from "@spp/shared-use-case";
+import { ChangeThemeUseCase, ChangeUserModeUseCase, EstimatePlayerUseCase, RevealUseCase } from "@spp/shared-use-case";
 import { enableMapSet } from "immer";
 
 enableMapSet();
@@ -93,33 +99,8 @@ describe("UseVotingStatus", () => {
   });
 });
 
-describe("UseVoting", () => {
+describe("UsePollingPlace", () => {
   const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
-
-  test("initial status is loading", () => {
-    // Arrange
-    const store = createStore();
-
-    // Act
-    const { result } = renderHook(
-      () =>
-        createUseVoting({
-          changeThemeUseCase: sinon.fake(),
-          revealUseCase: sinon.fake(),
-          estimatePlayerUseCase: sinon.fake(),
-          changeUserModeUseCase: sinon.fake(),
-          useLoginUser: sinon.fake.returns({
-            userId: User.createId(),
-          }),
-        })(),
-      {
-        wrapper: createWrapper(store),
-      }
-    );
-
-    // Assert
-    expect(result.current.loading).toEqual(true);
-  });
 
   test("get voting after joined", async () => {
     // Arrange
@@ -145,17 +126,7 @@ describe("UseVoting", () => {
 
     // Act
     const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-    const { result, rerender } = renderHook(
-      () =>
-        createUseVoting({
-          useLoginUser,
-          changeThemeUseCase: sinon.fake(),
-          estimatePlayerUseCase: sinon.fake(),
-          changeUserModeUseCase: sinon.fake(),
-          revealUseCase: sinon.fake(),
-        })(),
-      { wrapper }
-    );
+    const { result, rerender } = renderHook(() => createUsePollingPlace()(), { wrapper });
 
     await act(async () => {
       join.result.current.join(votingId);
@@ -166,9 +137,14 @@ describe("UseVoting", () => {
     expect(join.result.current.status).toEqual("joined");
     expect(result.current.loading).toBeFalsy();
     expect(result.current.theme).toEqual("foo");
+    expect(result.current.estimations).toEqual([{ name: "foo", estimated: false }]);
   });
+});
 
-  test("get estimations from", async () => {
+describe("UseVoting", () => {
+  const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+
+  test("get voting after joined", async () => {
     // Arrange
     const userId = User.createId();
     const votingId = Voting.createId();
@@ -192,25 +168,13 @@ describe("UseVoting", () => {
 
     // Act
     const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-    const { result, rerender } = renderHook(
-      () =>
-        createUseVoting({
-          useLoginUser,
-          changeThemeUseCase: sinon.fake(),
-          estimatePlayerUseCase: sinon.fake(),
-          changeUserModeUseCase: sinon.fake(),
-          revealUseCase: sinon.fake(),
-        })(),
-      { wrapper }
-    );
 
     await act(async () => {
       join.result.current.join(votingId);
     });
-    rerender();
 
     // Assert
-    expect(result.current.estimations).toEqual([{ name: "foo", estimated: false }]);
+    expect(join.result.current.status).toEqual("joined");
   });
 
   describe("ChangeTheme", () => {
@@ -272,6 +236,7 @@ describe("UseVoting", () => {
         voting: Voting.changeTheme(voting, "new theme"),
       });
       const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
       const { result } = renderHook(
         () =>
           createUseVoting({
@@ -293,7 +258,7 @@ describe("UseVoting", () => {
       });
 
       // Assert
-      expect(result.current.theme).toEqual("new theme");
+      expect(pollingPlace.result.current.theme).toEqual("new theme");
     });
   });
 
@@ -457,6 +422,7 @@ describe("UseRevealed", () => {
         voting: Voting.changeTheme(voting, "new theme"),
       });
       const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
       const { result } = renderHook(
         () =>
           createUseRevealed({
@@ -475,7 +441,7 @@ describe("UseRevealed", () => {
       });
 
       // Assert
-      expect(result.current.theme).toEqual("new theme");
+      expect(pollingPlace.result.current.theme).toEqual("new theme");
     });
   });
 
@@ -555,11 +521,12 @@ describe("UseRevealed", () => {
       };
 
       // Act
-      const fake = sinon.fake.resolves<unknown[], ChangeUserModeOutput>({
+      const fake = sinon.fake.resolves<unknown[], ReturnType<ChangeUserModeUseCase>>({
         kind: "success",
         voting,
       });
       const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
       const { result } = renderHook(
         () =>
           createUseVoting({
@@ -582,6 +549,7 @@ describe("UseRevealed", () => {
 
       // Assert
       expect(fake.calledWith({ userId, votingId, voterType: Voter.VoterType.Inspector }));
+      expect(pollingPlace.result.current.userRole).toEqual("inspector");
     });
   });
 });
