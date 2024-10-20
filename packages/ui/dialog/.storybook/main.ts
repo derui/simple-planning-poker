@@ -13,9 +13,6 @@ const config: StorybookConfig = {
     <link rel="stylesheet" href="/style.css">
     `,
 
-  staticDirs: [
-    { from: "../../../../app/public/static", to: "/static" },
-    { from: "../dist/style.css", to: "/style.css" },
-  ],
+  staticDirs: [{ from: "../../../../app/public/static", to: "/static" }],
 };
 export default config;

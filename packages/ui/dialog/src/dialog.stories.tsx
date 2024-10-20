@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { Dialog } from "./dialog.js";
 
 const meta = {
@@ -23,9 +24,11 @@ export const WithChildren: Story = {
   },
   render(args) {
     return (
-      <Dialog {...args}>
-        <div className="w-full">inner object</div>
-      </Dialog>
+      <div className={themeClass}>
+        <Dialog {...args}>
+          <div className="w-full">inner object</div>
+        </Dialog>
+      </div>
     );
   },
 };
