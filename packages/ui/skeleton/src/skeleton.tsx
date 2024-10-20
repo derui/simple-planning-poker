@@ -1,8 +1,4 @@
-import { clsx } from "clsx";
-
-const styles = {
-  root: clsx("w-full", "h-full", "animate-pulse", "bg-gray-100"),
-};
+import * as styles from "./style.css.js";
 
 // eslint-disable-next-line func-style
 export function Skeleton() {

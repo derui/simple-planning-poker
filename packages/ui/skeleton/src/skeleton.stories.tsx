@@ -1,3 +1,4 @@
+import { themeClass } from "@spp/ui-theme";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Skeleton } from "./skeleton.js";
@@ -13,7 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="w-full h-6">
+    <div className={themeClass} style={{ width: "100%", height: "100%" }}>
       <Skeleton />
     </div>
   ),

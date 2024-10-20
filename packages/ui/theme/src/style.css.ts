@@ -181,11 +181,23 @@ const rotate = keyframes({
   "100%": { transform: "rotate(360deg)" },
 });
 
+const pulseKeyframe = keyframes({
+  "0%": { opacity: 1 },
+  "50%": { opacity: 0.5 },
+  "100%": { opacity: 1 },
+});
+
 export const animation = {
   spin: style({
     animationName: rotate,
     animationDuration: "1s",
     animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+  }),
+  pulse: style({
+    animationName: pulseKeyframe,
+    animationDuration: "2s",
+    animationTimingFunction: "cubic-bezier(0.4, 0, 0.6, 1)",
     animationIterationCount: "infinite",
   }),
 };
