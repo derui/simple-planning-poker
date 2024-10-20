@@ -13,16 +13,6 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [
-    (Story) => {
-      return (
-        <>
-          <link rel="stylesheet" href="/style.css" />
-          <Story />
-        </>
-      );
-    },
-  ],
 };
 
 export default preview;

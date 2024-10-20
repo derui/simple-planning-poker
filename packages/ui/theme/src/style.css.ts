@@ -1,4 +1,4 @@
-import { createTheme } from "@vanilla-extract/css";
+import { createTheme, keyframes, style } from "@vanilla-extract/css";
 
 export const [themeClass, vars] = createTheme({
   spacing: {
@@ -37,6 +37,13 @@ export const [themeClass, vars] = createTheme({
     "88": "22em",
     "92": "23em",
     "96": "24em",
+  },
+  zIndex: {
+    "0": "0",
+    "10": "10",
+    "20": "20",
+    "30": "30",
+    "40": "40",
   },
   color: {
     gray: {
@@ -153,3 +160,18 @@ export const [themeClass, vars] = createTheme({
     white: "#FFF",
   },
 });
+
+// animation definitions
+const rotate = keyframes({
+  "0%": { transform: "rotate(0deg)" },
+  "100%": { transform: "rotate(360deg)" },
+});
+
+export const animation = {
+  spin: style({
+    animationName: rotate,
+    animationDuration: "1s",
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+  }),
+};

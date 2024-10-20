@@ -3,15 +3,15 @@
 exports[`display loader with variant 1`] = `
 <div>
   <span
-    class="relative inline-block w-5 h-5"
+    class="style_loader_s__1v4i49g2 style_base__1v4i49g0"
     data-shown="true"
     role="alert"
   >
     <span
-      class="absolute top-0 left-0 inline-block z-10 animate-spin w-5 h-5"
+      class="style_spinLoader_s__1v4i49g6 style_spinLoaderBase__1v4i49g5 style_animation_spin__6vbqbm3r"
     >
       <span
-        class="flex before:bg-cerise-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/loader-2.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-5 before:h-5 w-5 h-5"
+        class="loader2_small_cerise__1x64t376 style_iconSmall__12cnpf31 style_iconBase__12cnpf30"
       />
     </span>
   </span>

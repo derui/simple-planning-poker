@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { Variant } from "@spp/shared-color-variant";
+import { themeClass } from "@spp/ui-theme";
 import { Loader } from "./loader.js";
 
 const meta = {
   title: "UI/Loader",
   component: Loader,
+  argTypes: {
+    variant: { control: "select", options: Object.keys(Variant) },
+  },
   tags: ["autodocs"],
 } satisfies Meta<typeof Loader>;
 
@@ -16,6 +21,11 @@ export const Invisible: Story = {
     shown: false,
     size: "s",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <Loader {...args} />
+    </div>
+  ),
 };
 
 export const Small: Story = {
@@ -23,6 +33,11 @@ export const Small: Story = {
     shown: true,
     size: "s",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <Loader {...args} />
+    </div>
+  ),
 };
 
 export const Medium: Story = {
@@ -30,6 +45,11 @@ export const Medium: Story = {
     shown: true,
     size: "m",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <Loader {...args} />
+    </div>
+  ),
 };
 
 export const Large: Story = {
@@ -37,4 +57,9 @@ export const Large: Story = {
     shown: true,
     size: "l",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <Loader {...args} />
+    </div>
+  ),
 };

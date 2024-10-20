@@ -1,3 +1,3 @@
-import { themeClass, vars } from "./style.css.js";
+import { animation, themeClass, vars } from "./style.css.js";
 
-export { themeClass, vars };
+export { animation, themeClass, vars };
