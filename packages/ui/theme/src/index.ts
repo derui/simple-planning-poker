@@ -1,4 +1,5 @@
-import { alpha, animation, themeClass, transition, vars } from "./style.css.js";
+import { animation, themeClass, transition, vars } from "./style.css.js";
+import { alpha } from "./support.js";
 
 const support = {
   alpha,
