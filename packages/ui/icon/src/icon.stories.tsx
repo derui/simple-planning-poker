@@ -1,41 +1,91 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Icon } from "./icon.js";
-import { Icons } from "./icons.js";
+import { Variant } from "@spp/shared-color-variant";
+import { themeClass } from "@spp/ui-theme";
+import { Icon } from "./index.js";
+import { IconProps } from "./props.js";
 
 const meta = {
   title: "UI/Icon",
-  component: Icon,
+  argTypes: {
+    variant: { control: "select", options: Object.keys(Variant) },
+  },
   tags: ["autodocs"],
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<IconProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<IconProps>;
 
-export const Small: Story = {
+export const Check: Story = {
   args: {
-    type: Icons.check,
-    size: "s",
-  },
-};
-
-export const Medium: Story = {
-  args: {
-    type: Icons.check,
     size: "m",
   },
-};
-
-export const Large: Story = {
-  args: {
-    type: Icons.check,
-    size: "l",
+  render(args) {
+    return <Icon.Check {...args} />;
   },
 };
 
-export const ExtraLarge: Story = {
+export const Eye: Story = {
   args: {
-    type: Icons.check,
-    size: "xl",
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Check {...args} />
+      </div>
+    );
+  },
+};
+
+export const Loader2: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Check {...args} />
+      </div>
+    );
+  },
+};
+
+export const Pencil: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Pencil {...args} />
+      </div>
+    );
+  },
+};
+
+export const User: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.User {...args} />
+      </div>
+    );
+  },
+};
+
+export const X: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.X {...args} />
+      </div>
+    );
   },
 };

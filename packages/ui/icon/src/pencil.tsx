@@ -1,0 +1,26 @@
+import { Variant } from "@spp/shared-color-variant";
+import { Prettify } from "@spp/shared-type-util";
+import { extraLarge, large, medium, small } from "./pencil.css.js";
+import { IconProps } from "./props.js";
+
+export const Pencil = function Pencil({ size = "m", variant = Variant.gray }: Prettify<IconProps>) {
+  let base: typeof small;
+  switch (size) {
+    case "s":
+      base = small;
+      break;
+    case "m":
+      base = medium;
+      break;
+    case "l":
+      base = large;
+      break;
+    default:
+      base = extraLarge;
+      break;
+  }
+
+  const className = base[variant];
+
+  return <span className={className}></span>;
+};

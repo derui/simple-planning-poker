@@ -17,11 +17,7 @@
   "scripts": {
     "check-type": "tsc --noEmit",
     "build:tsc": "tsc",
-      "build:css":"tailwindcss -i src/style.css -o dist/style.css",
     "dev:build:tsc": "tsc --watch --noEmit",
-    "dev:build:css": "tailwindcss --watch -i src/style.css -o dist/style.css",
-    "test": "vitest run",
-    "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
@@ -33,7 +29,6 @@
   "license": "ISC",
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
-    "@spp/tailwind-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
@@ -41,18 +36,20 @@
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
+    "@vanilla-extract/css": "^1.16.0",
+    "@vanilla-extract/vite-plugin": "^4.0.16",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
-    "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:"
+    "vite": "catalog:"
   },
   "dependencies": {
     "@spp/shared-color-variant": "workspace:^",
+    "@spp/shared-type-util": "workspace:^",
+    "@spp/ui-theme": "workspace:^",
     "clsx": "catalog:",
     "react": "catalog:"
   }
