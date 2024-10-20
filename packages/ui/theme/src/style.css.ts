@@ -159,6 +159,10 @@ export const [themeClass, vars] = createTheme({
     lightgray: "#D0D0D0",
     white: "#FFF",
   },
+
+  shadow: {
+    xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+  },
 });
 
 // animation definitions

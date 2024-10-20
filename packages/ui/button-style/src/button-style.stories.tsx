@@ -1,12 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { buttonStyle, Props } from "./button-style.js";
 import { Variant } from "@spp/shared-color-variant";
+import { themeClass } from "@spp/ui-theme";
+import { buttonStyle, Props } from "./button-style.js";
 
 const B = (props: Props) => {
   const style = buttonStyle(props);
 
-  return <button className={style}>Button </button>;
+  return (
+    <div className={themeClass}>
+      {" "}
+      <button className={style}>Button </button>
+    </div>
+  );
 };
 
 const meta = {
