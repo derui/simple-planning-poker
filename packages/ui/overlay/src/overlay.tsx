@@ -1,36 +1,16 @@
-import { clsx } from "clsx";
 import { PropsWithChildren } from "react";
+import { hidden, root } from "./style.css.js";
 
 export interface Props {
   show: boolean;
 }
 
-const styles = {
-  root: (show: boolean) =>
-    clsx(
-      "absolute",
-      "z-10",
-      "bg-gray-500/80",
-      "w-full",
-      "h-full",
-      "top-0",
-      "left-0",
-      "transition-all",
-      "flex",
-      "items-center",
-      "justify-center",
-      {
-        ["invisible"]: !show,
-        "-z-50": !show,
-        "opacity-0": !show,
-      }
-    ),
-} as const;
-
 // eslint-disable-next-line func-style
 export function Overlay(props: PropsWithChildren<Props>) {
+  const style = props.show ? root : hidden;
+
   return (
-    <div className={styles.root(props.show)} role="dialog" data-show={props.show}>
+    <div className={style} role="dialog" data-show={props.show}>
       {props.children}
     </div>
   );
