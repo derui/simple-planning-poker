@@ -1,4 +1,4 @@
-import { animation, vars } from "@spp/ui-theme";
+import { support, vars } from "@spp/ui-theme";
 import { style, styleVariants } from "@vanilla-extract/css";
 
 const base = style({
@@ -32,7 +32,7 @@ const spinLoaderBase = style({
 
 export const spinLoader = styleVariants(sizes, (size) => [
   spinLoaderBase,
-  animation.spin,
+  support.animation.spin,
   {
     width: size,
     height: size,

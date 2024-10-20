@@ -1,3 +1,8 @@
-import { animation, themeClass, vars } from "./style.css.js";
+import { alpha, animation, themeClass, vars } from "./style.css.js";
 
-export { animation, themeClass, vars };
+const support = {
+  alpha,
+  animation,
+};
+
+export { support, themeClass, vars };
