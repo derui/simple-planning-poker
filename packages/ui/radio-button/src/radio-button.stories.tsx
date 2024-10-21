@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { RadioButton } from "./radio-button.js";
 
 const meta = {
@@ -23,5 +24,12 @@ export const Default: Story = {
     label: "label",
     onChange: () => {},
     checked: false,
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <RadioButton {...args} />
+      </div>
+    );
   },
 };
