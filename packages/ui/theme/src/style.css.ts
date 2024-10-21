@@ -208,4 +208,19 @@ export const transition = {
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     transitionDuration: "150ms",
   }),
+
+  allAfter: style({
+    "::after": {
+      transitionProperty: "all",
+      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      transitionDuration: "150ms",
+    },
+  }),
+  allBefore: style({
+    "::before": {
+      transitionProperty: "all",
+      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      transitionDuration: "150ms",
+    },
+  }),
 };

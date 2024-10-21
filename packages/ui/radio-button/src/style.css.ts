@@ -2,7 +2,7 @@ import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
 export const input = style([
-  support.transition.all,
+  support.transition.allAfter,
   {
     appearance: "none",
     position: "relative",

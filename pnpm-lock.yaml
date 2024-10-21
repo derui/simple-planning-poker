@@ -1197,9 +1197,6 @@ importers:
       '@spp/eslint-config':
         specifier: workspace:^
         version: link:../../../configs/eslint-config
-      '@spp/tailwind-config':
-        specifier: workspace:^
-        version: link:../../../configs/tailwind-config
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../../configs/typescript-config
@@ -1254,9 +1251,12 @@ importers:
 
   packages/ui/radio-group:
     dependencies:
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
+      '@spp/ui-theme':
+        specifier: workspace:^
+        version: link:../theme
+      '@vanilla-extract/css':
+        specifier: ^1.16.0
+        version: 1.16.0
       react:
         specifier: 'catalog:'
         version: 18.3.1
@@ -1264,9 +1264,6 @@ importers:
       '@spp/eslint-config':
         specifier: workspace:^
         version: link:../../../configs/eslint-config
-      '@spp/tailwind-config':
-        specifier: workspace:^
-        version: link:../../../configs/tailwind-config
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../../configs/typescript-config
@@ -1291,6 +1288,9 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 18.3.10
+      '@vanilla-extract/vite-plugin':
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@22.7.4)(vite@5.4.8(@types/node@22.7.4))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.3.1(vite@5.4.8(@types/node@22.7.4))
@@ -1306,9 +1306,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
-      tailwindcss:
-        specifier: 'catalog:'
-        version: 3.4.13
       typescript:
         specifier: 'catalog:'
         version: 5.6.2

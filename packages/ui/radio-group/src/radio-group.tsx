@@ -1,9 +1,5 @@
 import { PropsWithChildren } from "react";
-import { clsx } from "clsx";
-
-const styles = {
-  root: clsx("flex", "flex-row", "items-center", "gap-x-3", "m-2"),
-} as const;
+import * as styles from "./style.css.js";
 
 /**
  * RadioGroup should combine with RadioButton components. This component does not have any interaction, only definied styles wrapping up radio buttons.
