@@ -20,6 +20,7 @@ export const container = style({
   border: `1px solid ${vars.color.purple[600]}`,
   overflow: "hidden",
 });
+
 export const header = style({
   padding: vars.spacing[4],
   fontSize: vars.font.size.lg,
@@ -28,8 +29,11 @@ export const header = style({
   backgroundColor: vars.color.purple[200],
   color: vars.color.purple[700],
 });
+
 export const mainRoot = style({});
-export const mainList = style({ maxHeight: vars.spacing[96], overflowY: "auto" });
+
+export const mainList = style({ padding: `0 ${vars.spacing[2]}`, maxHeight: vars.spacing[96], overflowY: "auto" });
+
 export const footer = style({
   display: "flex",
   flexDirection: "column",
@@ -41,6 +45,7 @@ export const footer = style({
   borderTop: `1px solid ${vars.color.purple[600]}`,
   color: vars.color.purple[700],
 });
+
 export const creator = style([buttonStyle({ variant: Variant.emerald })]);
 export const empty = style({
   flex: "auto",
