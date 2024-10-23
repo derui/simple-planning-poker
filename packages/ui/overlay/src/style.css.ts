@@ -13,7 +13,7 @@ export const root = style([
     left: 0,
     display: "flex",
     alignItems: "center",
-    justifyItems: "center",
+    justifyContent: "center",
   },
 ]);
 

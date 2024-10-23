@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { MemoryRouter } from "react-router-dom";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
+import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { Login } from "./login.js";
 import { AuthStatus } from "../atoms/atom.js";
+import { Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { Login } from "./login.js";
 
 const meta = {
   title: "Page/Login",
@@ -34,7 +35,9 @@ export const notLogin: Story = {
       <ImplementationProvider implementation={mock}>
         <Provider store={store}>
           <MemoryRouter>
-            <Login />
+            <div className={themeClass}>
+              <Login />
+            </div>
           </MemoryRouter>
         </Provider>
       </ImplementationProvider>
@@ -60,7 +63,9 @@ export const checking: Story = {
       <ImplementationProvider implementation={mock}>
         <Provider store={store}>
           <MemoryRouter>
-            <Login />
+            <div className={themeClass}>
+              <Login />
+            </div>
           </MemoryRouter>
         </Provider>
       </ImplementationProvider>

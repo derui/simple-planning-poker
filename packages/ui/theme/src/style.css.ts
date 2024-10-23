@@ -168,6 +168,7 @@ export const [themeClass, vars] = createTheme({
   font: {
     size: {
       lg: "1.125rem",
+      sm: "0.875rem",
     },
     lineHeight: {
       lg: "1.75rem",
