@@ -3,21 +3,13 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
-  display: "flex",
-  backgroundColor: vars.color.white,
-  padding: vars.spacing[4],
-  flexDirection: "row",
-});
-
 export const input = {
   container: style({
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    display: "grid",
-    gridTemplateRows: "repeat(3, auto)",
-    padding: vars.spacing[3],
+    display: "flex",
+    flexDirection: "column",
     gap: vars.spacing[2],
   }),
 
@@ -29,15 +21,11 @@ export const input = {
     display: "grid",
     gridTemplateColumns: "1fr",
     gridTemplateRows: "repeat(3, auto)",
-    marginBottom: vars.spacing[4],
-    ":last-of-type": {
-      marginBottom: 0,
-    },
+    padding: vars.spacing[3],
     gap: vars.spacing[2],
   }),
 
   input: style({
-    width: "100%",
     padding: vars.spacing[2],
     outline: "none",
     borderRadius: "4px",
@@ -64,7 +52,7 @@ const submitBase = style({
   gridColumnEnd: 4,
   display: "grid",
   gridTemplateColumns: "repeat(2, auto)",
-  placeItems: "center",
+  placeContent: "center",
   gap: vars.spacing[1],
 });
 
@@ -76,8 +64,7 @@ export const footer = {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gridTemplateRows: "1fr",
-    marginTop: vars.spacing[2],
-    marginBottom: vars.spacing[2],
+    padding: vars.spacing[4],
   }),
   submit: style([buttonStyle({ variant: Variant.emerald }), submitBase]),
 };

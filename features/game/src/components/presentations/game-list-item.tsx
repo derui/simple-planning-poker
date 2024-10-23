@@ -15,7 +15,7 @@ export const GameListItem = function GameListItem({ gameId, owned, name }: Props
       <Link className={styles.link} to={AppUrl.votingPage(Game.createId(gameId))}>
         <span className={styles.linkName}>{name}</span>
         <span className={styles.ownerMarkContainer}>
-          <span className={styles.ownerMark(owned ?? false)}>Owner</span>
+          <span className={owned ? styles.ownerMark : styles.ownerMarkInvisible}>Owner</span>
         </span>
       </Link>
     </li>

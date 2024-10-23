@@ -21,7 +21,6 @@ export const header = style({
   display: "flex",
   flex: "1 1 auto",
   padding: vars.spacing[4],
-  height: vars.spacing[16],
   fontSize: vars.font.size.lg,
   lineHeight: vars.font.lineHeight.lg,
   fontWeight: "bold",

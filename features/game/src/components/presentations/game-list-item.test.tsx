@@ -1,8 +1,9 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
-import { GameListItem } from "./game-list-item.js";
 import { Game } from "@spp/shared-domain";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { afterEach, expect, test } from "vitest";
+import { ownerMarkInvisible } from "./game-list-item.css.js";
+import { GameListItem } from "./game-list-item.js";
 
 afterEach(cleanup);
 
@@ -18,7 +19,7 @@ test("render component", () => {
 
   // Assert
   expect(screen.queryByText("The game")).not.toBeNull();
-  expect(screen.getByText("Owner").classList.values()).toContain("invisible");
+  expect(screen.getByText("Owner").classList.values()).not.toContain(ownerMarkInvisible);
 });
 
 test("render for owner", () => {
@@ -33,5 +34,5 @@ test("render for owner", () => {
 
   // Assert
   expect(screen.queryByText("The game")).not.toBeNull();
-  expect(screen.getByText("Owner").classList.values()).not.toContain("invisible");
+  expect(screen.getByText("Owner").classList.values()).not.toContain(ownerMarkInvisible);
 });
