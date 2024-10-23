@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { MemoryRouter } from "react-router-dom";
-import { GameCreator } from "./game-creator.js";
-import { createStore, Provider } from "jotai";
-import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../atoms/game.js";
-import sinon from "sinon";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import { useEffect } from "react";
 import { User } from "@spp/shared-domain";
+import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { themeClass } from "@spp/ui-theme";
+import { createStore, Provider } from "jotai";
+import { useEffect } from "react";
+import { MemoryRouter } from "react-router-dom";
+import sinon from "sinon";
+import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../atoms/game.js";
+import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { GameCreator } from "./game-creator.js";
 
 const meta = {
   title: "Page/Game Creator",
@@ -44,7 +45,9 @@ export const NormalBehavior: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <InitializeUser>
-              <GameCreator />
+              <div className={themeClass}>
+                <GameCreator />
+              </div>
             </InitializeUser>
           </MemoryRouter>
         </Provider>
@@ -73,7 +76,9 @@ export const Waiting: Story = {
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
           <MemoryRouter>
-            <GameCreator />
+            <div className={themeClass}>
+              <GameCreator />
+            </div>
           </MemoryRouter>
         </Provider>
       </ImplementationProvider>

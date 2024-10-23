@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@dotenvx/dotenvx':
+      specifier: ^1.14.1
+      version: 1.14.1
+    '@firebase/rules-unit-testing':
+      specifier: ^3.0.1
+      version: 3.0.4
     '@storybook/addon-controls':
       specifier: ^8.3.3
       version: 8.3.3
@@ -30,12 +36,30 @@ catalogs:
     '@vitejs/plugin-react':
       specifier: 4.3.1
       version: 4.3.1
+    clsx:
+      specifier: 2.1.1
+      version: 2.1.1
     concurrently:
       specifier: 9.0.1
       version: 9.0.1
     eslint:
       specifier: ^9.11.0
       version: 9.11.1
+    eslint-config-prettier:
+      specifier: ^9.1.0
+      version: 9.1.0
+    eslint-plugin-react:
+      specifier: ^7.37.0
+      version: 7.37.0
+    eslint-plugin-unused-imports:
+      specifier: ^4.1.4
+      version: 4.1.4
+    firebase:
+      specifier: ^10.13.2
+      version: 10.13.2
+    firebase-tools:
+      specifier: ^13.20.1
+      version: 13.20.1
     jsdom:
       specifier: 25.0.1
       version: 25.0.1
@@ -51,9 +75,15 @@ catalogs:
     sinon:
       specifier: 19.0.2
       version: 19.0.2
+    tailwindcss:
+      specifier: 3.4.13
+      version: 3.4.13
     typescript:
       specifier: 5.6.2
       version: 5.6.2
+    typescript-eslint:
+      specifier: ^8.7.0
+      version: 8.7.0
     vite:
       specifier: 5.4.8
       version: 5.4.8
@@ -113,6 +143,9 @@ importers:
       '@spp/shared-app-url':
         specifier: workspace:^
         version: link:../../packages/shared-logic/app-url
+      '@spp/shared-color-variant':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/color-variant
       '@spp/shared-domain':
         specifier: workspace:^
         version: link:../../packages/shared-logic/domain
@@ -131,9 +164,12 @@ importers:
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../../packages/ui/loader
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
+      '@spp/ui-theme':
+        specifier: workspace:^
+        version: link:../../packages/ui/theme
+      '@vanilla-extract/css':
+        specifier: ^1.16.0
+        version: 1.16.0
       jotai:
         specifier: ^2.10.0
         version: 2.10.0(@types/react@18.3.10)(react@18.3.1)
@@ -147,9 +183,6 @@ importers:
       '@spp/eslint-config':
         specifier: workspace:^
         version: link:../../configs/eslint-config
-      '@spp/tailwind-config':
-        specifier: workspace:^
-        version: link:../../configs/tailwind-config
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config
@@ -177,6 +210,9 @@ importers:
       '@types/sinon':
         specifier: 'catalog:'
         version: 17.0.3
+      '@vanilla-extract/vite-plugin':
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@22.7.4)(vite@5.4.8(@types/node@22.7.4))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.3.1(vite@5.4.8(@types/node@22.7.4))
@@ -195,9 +231,6 @@ importers:
       sinon:
         specifier: 'catalog:'
         version: 19.0.2
-      tailwindcss:
-        specifier: 'catalog:'
-        version: 3.4.13
       typescript:
         specifier: 'catalog:'
         version: 5.6.2
@@ -259,9 +292,6 @@ importers:
       '@spp/eslint-config':
         specifier: workspace:^
         version: link:../../configs/eslint-config
-      '@spp/tailwind-config':
-        specifier: workspace:^
-        version: link:../../configs/tailwind-config
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config

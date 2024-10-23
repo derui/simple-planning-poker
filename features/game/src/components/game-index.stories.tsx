@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { MemoryRouter } from "react-router-dom";
-import { GameIndex } from "./game-index.js";
-import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { createStore, Provider } from "jotai";
-import sinon from "sinon";
-import { useEffect } from "react";
-import { ApplicablePoints, Game, StoryPoint, User, Voting } from "@spp/shared-domain";
-import { createUseListGame, createUsePrepareGame } from "../atoms/game.js";
+import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { themeClass } from "@spp/ui-theme";
+import { createStore, Provider } from "jotai";
+import { useEffect } from "react";
+import { MemoryRouter } from "react-router-dom";
+import sinon from "sinon";
+import { createUseListGame, createUsePrepareGame } from "../atoms/game.js";
+import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { GameIndex } from "./game-index.js";
 
 const meta = {
   title: "Page/Game Index",
@@ -42,7 +43,9 @@ export const WaitingPrepared: Story = {
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
           <MemoryRouter>
-            <GameIndex />
+            <div className={themeClass}>
+              <GameIndex />
+            </div>
           </MemoryRouter>
         </Provider>
       </ImplementationProvider>
@@ -66,7 +69,9 @@ export const Empty: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <InitializeUser>
-              <GameIndex />
+              <div className={themeClass}>
+                <GameIndex />
+              </div>
             </InitializeUser>
           </MemoryRouter>
         </Provider>
@@ -105,7 +110,9 @@ export const SomeGames: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <InitializeUser>
-              <GameIndex />
+              <div className={themeClass}>
+                <GameIndex />
+              </div>
             </InitializeUser>
           </MemoryRouter>
         </Provider>
@@ -142,7 +149,9 @@ export const TenGames: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <InitializeUser>
-              <GameIndex />
+              <div className={themeClass}>
+                <GameIndex />
+              </div>
             </InitializeUser>
           </MemoryRouter>
         </Provider>

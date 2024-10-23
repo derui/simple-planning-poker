@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { GameListItem } from "./game-list-item.js";
+import { themeClass } from "@spp/ui-theme";
 import { MemoryRouter } from "react-router-dom";
+import { GameListItem } from "./game-list-item.js";
 
 const meta = {
   title: "Presentations/Game List Item",
@@ -24,7 +25,9 @@ export const Joined: Story = {
   render(args) {
     return (
       <MemoryRouter>
-        <GameListItem {...args} />
+        <div className={themeClass}>
+          <GameListItem {...args} />
+        </div>
       </MemoryRouter>
     );
   },
@@ -39,7 +42,9 @@ export const Owned: Story = {
   render(args) {
     return (
       <MemoryRouter>
-        <GameListItem {...args} />
+        <div className={themeClass}>
+          <GameListItem {...args} />
+        </div>
       </MemoryRouter>
     );
   },
