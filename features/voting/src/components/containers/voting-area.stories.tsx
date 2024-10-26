@@ -1,17 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { createStore, Provider } from "jotai";
-import {
-  createUseJoin,
-  createUsePollingPlace,
-  createUseRevealed,
-  createUseVoting,
-  createUseVotingStatus,
-} from "../../atoms/voting.js";
 import { ApplicablePoints, Estimations, StoryPoint, User, Voter, Voting } from "@spp/shared-domain";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import {
   newChangeThemeUseCase,
   newChangeUserModeUseCase,
@@ -19,10 +10,20 @@ import {
   newResetVotingUseCase,
   newRevealUseCase,
 } from "@spp/shared-use-case";
-import sinon from "sinon";
-import { VotingArea } from "./voting-area.js";
-import { useEffect } from "react";
+import { themeClass } from "@spp/ui-theme";
 import { enableMapSet } from "immer";
+import { createStore, Provider } from "jotai";
+import { useEffect } from "react";
+import sinon from "sinon";
+import {
+  createUseJoin,
+  createUsePollingPlace,
+  createUseRevealed,
+  createUseVoting,
+  createUseVotingStatus,
+} from "../../atoms/voting.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { VotingArea } from "./voting-area.js";
 
 enableMapSet();
 
@@ -89,7 +90,9 @@ export const Default: Story = {
     return (
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
-          <VotingArea />
+          <div className={themeClass}>
+            <VotingArea />
+          </div>
         </Provider>
       </ImplementationProvider>
     );

@@ -1,3 +1,5 @@
+import { Variant } from "@spp/shared-color-variant";
+import { buttonStyle } from "@spp/ui-button-style";
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
@@ -7,6 +9,7 @@ export const root = style({
   borderRadius: "9999px",
   border: `1px solid ${vars.color.teal[600]}`,
   height: vars.spacing[12],
+  alignItems: "center",
 });
 
 export const contentContainer = style({
@@ -17,39 +20,18 @@ export const contentContainer = style({
   gap: vars.spacing[4],
 });
 
-export const theme = style({
-  flex: "1 1 auto",
-  color: vars.color.teal[700],
-  fontWeight: "bold",
-  fontSize: vars.font.size.lg,
-  lineHeight: vars.font.lineHeight.lg,
-});
-
-export const themePlaceholder = style({
-  flex: "1 1 auto",
-  color: vars.color.gray[700],
-  fontWeight: "bold",
-  fontSize: vars.font.size.lg,
-  lineHeight: vars.font.lineHeight.lg,
-});
-
 export const edit = style([
-  support.transition.all,
+  buttonStyle({ variant: Variant.orange, iconButton: true }),
   {
-    border: `1px solid transparent`,
-    ":hover": {
-      borderColor: vars.color.orange[600],
-      backgroundColor: vars.color.orange[100],
-    },
-    padding: vars.spacing[1],
-    borderRadius: "9999px",
+    flex: "0 0 auto",
+    marginLeft: vars.spacing[4],
   },
 ]);
 
 export const editorRoot = style({
   display: "flex",
   flexDirection: "row",
-  flex: "0 0 auto",
+  flex: "1 1 auto",
   alignItems: "center",
   gap: vars.spacing[2],
 });
@@ -57,43 +39,23 @@ export const editorRoot = style({
 export const editorInput = style([
   support.transition.all,
   {
-    flex: "0 0 auto",
-    width: "100%",
+    flex: "1 1 auto",
     padding: vars.spacing[2],
     outline: "none",
     borderRadius: "4px",
-  },
-]);
+    border: `1px solid ${vars.color.emerald[800]}`,
+    backgroundColor: vars.color.gray[100],
 
-const buttonBase = style([
-  support.transition.all,
-  {
-    flex: "0 0 auto",
-    border: `1px solid transparent`,
-    padding: vars.spacing[1],
-    borderRadius: "9999px",
-  },
-]);
-
-export const submitButton = style([
-  buttonBase,
-  {
-    ":hover": {
+    ":focus": {
       borderColor: vars.color.emerald[600],
-      backgroundColor: vars.color.emerald[100],
+      backgroundColor: vars.color.white,
     },
   },
 ]);
 
-export const cancelButton = style([
-  buttonBase,
-  {
-    ":hover": {
-      borderColor: vars.color.gray[600],
-      backgroundColor: vars.color.gray[100],
-    },
-  },
-]);
+export const submitButton = style([buttonStyle({ variant: Variant.emerald, iconButton: true })]);
+
+export const cancelButton = style([buttonStyle({ variant: Variant.gray, iconButton: true })]);
 
 export const submitButtonHidden = style([
   submitButton,

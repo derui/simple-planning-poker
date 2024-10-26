@@ -36,6 +36,7 @@ export const votingLabel = style({
   lineHeight: vars.font.lineHeight["2xl"],
   fontWeight: "bold",
   color: vars.color.emerald[700],
+  marginRight: vars.spacing[4],
 });
 export const votingEstimated = style([
   support.transition.all,
@@ -44,7 +45,7 @@ export const votingEstimated = style([
     fontSize: vars.font.size.lg,
     lineHeight: vars.font.lineHeight.lg,
     borderRadius: "4px",
-    border: "1ps solid transparent",
+    border: "1px solid transparent",
     padding: `${vars.spacing[2]} ${vars.spacing[4]}`,
   },
 ]);

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { CardHolder } from "./card-holder.js";
 import { SelectableCard } from "./selectable-card.js";
 
@@ -27,5 +28,12 @@ export const Player: Story = {
 export const Inspector: Story = {
   args: {
     type: "inspector",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <CardHolder {...args} />
+      </div>
+    );
   },
 };

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { RevealedEstimations } from "./revealed-estimations.js";
 
 const meta = {
@@ -23,6 +24,11 @@ export const Normal: Story = {
       { name: "user3", estimated: "4" },
     ],
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <RevealedEstimations {...args} />
+    </div>
+  ),
 };
 
 export const Large: Story = {
@@ -37,6 +43,11 @@ export const Large: Story = {
       { name: "user6", estimated: "8" },
     ],
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <RevealedEstimations {...args} />
+    </div>
+  ),
 };
 
 export const Loading: Story = {
@@ -44,4 +55,9 @@ export const Loading: Story = {
     estimations: [],
     loading: true,
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <RevealedEstimations {...args} />
+    </div>
+  ),
 };

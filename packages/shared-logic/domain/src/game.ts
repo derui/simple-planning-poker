@@ -1,8 +1,8 @@
-import { castDraft, produce, WritableDraft } from "immer";
+import { castDraft, Draft, produce } from "immer";
+import * as ApplicablePoints from "./applicable-points.js";
 import * as Base from "./base.js";
 import * as DomainEvent from "./event.js";
 import * as User from "./user.js";
-import * as ApplicablePoints from "./applicable-points.js";
 
 const _tag = Symbol("game");
 export type Id = Base.Id<typeof _tag>;
@@ -80,7 +80,7 @@ export const changeName = function changeName(game: T, name: string) {
 };
 
 export const changePoints = function changePoints(game: T, points: ApplicablePoints.T): T {
-  return produce(game, (draft: WritableDraft<T>) => {
+  return produce(game, (draft: Draft<T>) => {
     draft.points = castDraft<ApplicablePoints.T>(points);
   });
 };

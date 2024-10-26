@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Inspectors } from "./inspectors.js";
+import { themeClass } from "@spp/ui-theme";
 import { Inspector } from "./inspector.js";
+import { Inspectors } from "./inspectors.js";
 
 const meta = {
   title: "Presentations/Inspectors",
@@ -19,5 +20,12 @@ export const Empty: Story = {
 export const SomeInspector: Story = {
   args: {
     children: [<Inspector name="foobar" />, <Inspector name="long name" />],
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Inspectors {...args} />/
+      </div>
+    );
   },
 };

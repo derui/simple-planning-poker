@@ -12,21 +12,21 @@ exports[`should be able to render 1`] = `
         class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
-        class="flex flex-none outline-none border-none p-0 h-8 items-center rounded"
+        class="style_container__xfvt0r0"
         role="switch"
       >
         <span
-          class="flex relative inline-block bg-transparent h-6 justify-items-center border border-emerald-600 rounded"
+          class="style_toggleRoot__xfvt0r2"
         >
           <span
-            class="relative inline-block m-0 px-1 w-12 h-full transition-colors overflow-hidden rounded bg-emerald-100"
+            class="style_switchRailUnchecked__xfvt0r5 style_switchRail__xfvt0r3 style_transition_all__59wy0241"
           >
             <span
-              class="absolute inline-block bg-emerald-500 h-full w-6 left-0 top-0 transition-transform"
+              class="style_switchBox__xfvt0r6 style_transition_all__59wy0241"
             />
           </span>
           <input
-            class="hidden"
+            class="style_input__xfvt0r1"
             type="checkbox"
           />
         </span>
@@ -51,22 +51,22 @@ exports[`should change current check 1`] = `
         class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
-        class="flex flex-none outline-none border-none p-0 h-8 items-center rounded"
+        class="style_container__xfvt0r0"
         role="switch"
       >
         <span
-          class="flex relative inline-block bg-transparent h-6 justify-items-center border border-emerald-600 rounded"
+          class="style_toggleRoot__xfvt0r2"
         >
           <span
-            class="relative inline-block m-0 px-1 w-12 h-full transition-colors overflow-hidden rounded bg-emerald-300"
+            class="style_switchRailChecked__xfvt0r4 style_switchRail__xfvt0r3 style_transition_all__59wy0241"
           >
             <span
-              class="absolute inline-block bg-emerald-500 h-full w-6 left-0 top-0 transition-transform translate-x-6"
+              class="style_switchBoxChecked__xfvt0r7 style_switchBox__xfvt0r6 style_transition_all__59wy0241"
             />
           </span>
           <input
             checked=""
-            class="hidden"
+            class="style_input__xfvt0r1"
             type="checkbox"
           />
         </span>

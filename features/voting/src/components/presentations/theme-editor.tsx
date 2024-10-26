@@ -1,6 +1,6 @@
 import { Variant } from "@spp/shared-color-variant";
 import { Icon } from "@spp/ui-icon";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import * as styles from "./theme-editor.css.js";
 
 export interface Props {
@@ -30,16 +30,30 @@ const ThemeEditorInternal = function ThemeEditorInternal({
     }
   }, [ref.current]);
 
+  useEffect(() => {
+    setState(theme);
+  }, [theme]);
+
   const handleChange = (input: FormEvent<HTMLInputElement>) => {
     setState(input.currentTarget.value);
   };
 
   const handleSubmit = (e: FormEvent) => {
+    e.stopPropagation();
     e.preventDefault();
 
     if (editing) {
       onSubmit?.(state);
     }
+  };
+
+  const handleCancel = (e: MouseEvent) => {
+    e.stopPropagation();
+
+    if (editing) {
+      onCancel?.();
+    }
+    setState(theme);
   };
 
   return (
@@ -50,7 +64,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
         tabIndex={1}
         className={styles.editorInput}
         onInput={handleChange}
-        defaultValue={state}
+        value={state}
         placeholder="No theme"
         readOnly={!editing}
       />
@@ -66,7 +80,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
         type="button"
         aria-label="cancel"
         className={editing ? styles.cancelButton : styles.cancelButtonHidden}
-        onClick={onCancel}
+        onClick={handleCancel}
         disabled={!editing}
       >
         <Icon.X variant={Variant.gray} />

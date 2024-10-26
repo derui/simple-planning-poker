@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { RevealedEstimation } from "./revealed-estimation.js";
 
 const meta = {
@@ -16,4 +17,9 @@ export const Normal: Story = {
     name: "name",
     children: "value",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <RevealedEstimation {...args} />
+    </div>
+  ),
 };

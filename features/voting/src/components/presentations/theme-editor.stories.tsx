@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { ThemeEditor } from "./theme-editor.js";
 
 const meta = {
@@ -16,10 +17,12 @@ export const Default: Story = {
     theme: "Voting for something",
     onSubmit: console.log,
   },
+  render: (args) => <div className={themeClass}>{<ThemeEditor {...args} />}</div>,
 };
 
 export const NoTheme: Story = {
   args: {
     theme: "",
   },
+  render: (args) => <div className={themeClass}>{<ThemeEditor {...args} />}</div>,
 };

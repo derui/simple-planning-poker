@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { Header } from "./header.js";
 
 const meta = {
@@ -22,5 +23,12 @@ export const Inspector: Story = {
   args: {
     theme: "theme",
     defaultRole: "inspector",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Header {...args} />
+      </div>
+    );
   },
 };

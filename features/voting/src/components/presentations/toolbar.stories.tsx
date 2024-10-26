@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { themeClass } from "@spp/ui-theme";
 import { Toolbar } from "./toolbar.js";
 
 const meta = {
@@ -15,4 +16,9 @@ export const Default: Story = {
   args: {
     defaultRole: "player",
   },
+  render: (args) => (
+    <div className={themeClass}>
+      <Toolbar {...args} />
+    </div>
+  ),
 };

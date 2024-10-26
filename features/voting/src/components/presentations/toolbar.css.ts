@@ -5,7 +5,6 @@ export const root = style({
   display: "grid",
   gridTemplateRows: "repeat(1, minmax(0, 1fr))",
   gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
-  justifyContent: "center",
   gap: vars.spacing[2],
   alignItems: "center",
   height: vars.spacing[12],
@@ -21,6 +20,7 @@ export const role = style({
   borderRadius: "4px",
   backgroundColor: vars.color.orange[100],
   justifyContent: "center",
+  placeItems: "center",
   gap: vars.spacing[2],
   padding: `${vars.spacing[1]} ${vars.spacing[2]}`,
 });
