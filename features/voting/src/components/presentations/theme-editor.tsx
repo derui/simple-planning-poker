@@ -1,7 +1,7 @@
 import { Variant } from "@spp/shared-color-variant";
-import { Icon, Icons } from "@spp/ui-icon";
-import { clsx } from "clsx";
+import { Icon } from "@spp/ui-icon";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import * as styles from "./theme-editor.css.js";
 
 export interface Props {
   /**
@@ -14,54 +14,6 @@ export interface Props {
    */
   theme: string;
 }
-
-const styles = {
-  root: clsx("flex", "px-4", "py-1", "rounded-full", "border", "border-teal-600", "h-12"),
-  contentContainer: clsx("flex-auto", "flex", "flex-row", "items-center", "gap-4"),
-  theme: clsx("flex-auto", "text-teal-700", "font-bold", "text-lg"),
-  themePlaceholder: clsx("flex-auto", "text-gray-700", "font-bold", "text-lg"),
-  edit: clsx(
-    "border",
-    "border-transparent",
-    "hover:border-orange-600",
-    "hover:bg-orange-100",
-    "transition",
-    "p-1",
-    "rounded-full"
-  ),
-  editor: {
-    root: clsx("flex", "flex-row", "flex-auto", "items-center", "gap-2"),
-    input: clsx("flex-auto", "w-full", "p-2", "outline-none", "rounded", "transition-colors"),
-    submit: (editing: boolean) =>
-      clsx(
-        "flex-none",
-        "border",
-        "border-transparent",
-        "hover:border-emerald-600",
-        "hover:bg-emerald-100",
-        "transition",
-        "p-1",
-        "rounded-full",
-        {
-          hidden: !editing,
-        }
-      ),
-    cancel: (editing: boolean) =>
-      clsx(
-        "flex-none",
-        "border",
-        "border-transparent",
-        "hover:border-gray-600",
-        "hover:bg-gray-100",
-        "transition",
-        "p-1",
-        "rounded-full",
-        {
-          hidden: !editing,
-        }
-      ),
-  },
-} as const;
 
 const ThemeEditorInternal = function ThemeEditorInternal({
   editing,
@@ -91,28 +43,33 @@ const ThemeEditorInternal = function ThemeEditorInternal({
   };
 
   return (
-    <form className={styles.editor.root} onSubmit={handleSubmit}>
+    <form className={styles.editorRoot} onSubmit={handleSubmit}>
       <input
         ref={ref}
         type="text"
         tabIndex={1}
-        className={styles.editor.input}
+        className={styles.editorInput}
         onInput={handleChange}
         defaultValue={state}
         placeholder="No theme"
         readOnly={!editing}
       />
-      <button type="submit" className={styles.editor.submit(editing)} disabled={!editing} aria-label="submit">
-        <Icon type={Icons.check} variant={Variant.emerald} />
+      <button
+        type="submit"
+        className={editing ? styles.submitButton : styles.submitButtonHidden}
+        disabled={!editing}
+        aria-label="submit"
+      >
+        <Icon.Check variant={Variant.emerald} />
       </button>
       <button
         type="button"
         aria-label="cancel"
-        className={styles.editor.cancel(editing)}
+        className={editing ? styles.cancelButton : styles.cancelButtonHidden}
         onClick={onCancel}
         disabled={!editing}
       >
-        <Icon type={Icons.x} variant={Variant.gray} />
+        <Icon.X variant={Variant.gray} />
       </button>
     </form>
   );
@@ -136,7 +93,7 @@ export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props) {
 
   const editButton = !editing ? (
     <button type="button" onClick={handleEditing} className={styles.edit} aria-label="edit">
-      <Icon type={Icons.pencil} variant={Variant.orange} />
+      <Icon.Pencil variant={Variant.orange} />
     </button>
   ) : null;
 

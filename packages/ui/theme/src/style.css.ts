@@ -169,9 +169,11 @@ export const [themeClass, vars] = createTheme({
     size: {
       lg: "1.125rem",
       sm: "0.875rem",
+      "2xl": "1.5rem",
     },
     lineHeight: {
       lg: "1.75rem",
+      "2xl": "2rem",
     },
   },
 });

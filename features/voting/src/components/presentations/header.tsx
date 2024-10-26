@@ -1,7 +1,7 @@
-import { clsx } from "clsx";
+import { UserRole } from "../types.js";
+import * as styles from "./header.css.js";
 import { ThemeEditor } from "./theme-editor.js";
 import { Toolbar } from "./toolbar.js";
-import { UserRole } from "../types.js";
 
 export interface Props {
   /**
@@ -24,10 +24,6 @@ export interface Props {
    */
   defaultRole: UserRole;
 }
-
-const styles = {
-  root: clsx("grid", "grid-rows-1", "grid-cols-[auto_1fr_auto]"),
-} as const;
 
 /**
  * Layout component for container.

@@ -1,8 +1,8 @@
 import { Variant } from "@spp/shared-color-variant";
-import { Icon, Icons } from "@spp/ui-icon";
+import { Icon } from "@spp/ui-icon";
 import { ToggleButton } from "@spp/ui-toggle-button";
-import { clsx } from "clsx";
 import { UserRole } from "../types.js";
+import * as styles from "./toolbar.css.js";
 
 export interface Props {
   /**
@@ -16,34 +16,6 @@ export interface Props {
   defaultRole: UserRole;
 }
 
-const styles = {
-  root: clsx(
-    "grid",
-    "grid-rows-1",
-    "grid-cols-1",
-    "place-content-center",
-    "gap-2",
-    "place-items-center",
-    "h-12",
-    "px-2",
-    "py-1",
-    "rounded",
-    "bg-orange-500"
-  ),
-  role: clsx(
-    "grid",
-    "grid-rows-1",
-    "grid-cols-[auto_auto_auto]",
-    "rounded",
-    "bg-orange-100",
-    "place-content-center",
-    "gap-2",
-    "place-items-center",
-    "px-2",
-    "py-1"
-  ),
-} as const;
-
 export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props) {
   const handleToggle = (checked: boolean) => {
     if (checked) {
@@ -56,9 +28,9 @@ export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props) {
   return (
     <div className={styles.root}>
       <div className={styles.role}>
-        <Icon type={Icons.user} variant={Variant.orange} />
+        <Icon.User variant={Variant.orange} />
         <ToggleButton initialChecked={defaultRole == "inspector"} onToggle={handleToggle} />
-        <Icon type={Icons.eye} variant={Variant.orange} />
+        <Icon.Eye variant={Variant.orange} />
       </div>
     </div>
   );

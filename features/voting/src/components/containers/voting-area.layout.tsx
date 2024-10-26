@@ -1,21 +1,13 @@
-import clsx from "clsx";
-import { UserRole } from "../types.js";
-import { CardHolder } from "../presentations/card-holder.js";
-import { SelectableCard } from "../presentations/selectable-card.js";
-import { EstimationDto } from "../../atoms/dto.js";
-import { PlayerEstimations } from "../presentations/player-estimations.js";
-import { Inspectors } from "../presentations/inspectors.js";
-import { Inspector } from "../presentations/inspector.js";
-import { Header } from "../presentations/header.js";
 import { Prettify } from "@spp/shared-type-util";
-
-const styles = {
-  container: clsx("grid", "w-full", "h-full", "grid-rows-4", "grid-cols-1", "gap-4", "place-items-center"),
-  header: clsx("grid-row-1", "w-full"),
-  estimations: clsx("grid-row-2", "w-3/4"),
-  inspectors: clsx("grid-row-3", "", "w-3/4"),
-  cardHolder: clsx("grid-row-4", "w-3/4"),
-} as const;
+import { EstimationDto } from "../../atoms/dto.js";
+import { CardHolder } from "../presentations/card-holder.js";
+import { Header } from "../presentations/header.js";
+import { Inspector } from "../presentations/inspector.js";
+import { Inspectors } from "../presentations/inspectors.js";
+import { PlayerEstimations } from "../presentations/player-estimations.js";
+import { SelectableCard } from "../presentations/selectable-card.js";
+import { UserRole } from "../types.js";
+import * as styles from "./voting-area.css.js";
 
 /**
  * Displaying selectable card holders

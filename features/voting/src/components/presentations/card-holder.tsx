@@ -1,5 +1,5 @@
-import { clsx } from "clsx";
 import { PropsWithChildren } from "react";
+import * as styles from "./card-holder.css.js";
 
 export interface Props {
   /**
@@ -7,11 +7,6 @@ export interface Props {
    */
   type: "player" | "inspector";
 }
-
-const styles = {
-  root: clsx("flex", "flex-row", "items-center", "justify-center", "h-36", "bg-emerald-50", "w-full"),
-  inspector: clsx("font-bold", "text-emerald-700", "text-xl"),
-} as const;
 
 export const CardHolder = function CardHolder({ type, children }: PropsWithChildren<Props>) {
   return (

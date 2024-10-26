@@ -1,20 +1,16 @@
-import { Icon, Icons } from "@spp/ui-icon";
-import { clsx } from "clsx";
+import { Variant } from "@spp/shared-color-variant";
+import { Icon } from "@spp/ui-icon";
+import * as styles from "./inspector.css.js";
 
 export interface Props {
   name: string;
 }
 
-const styles = {
-  root: clsx("flex", "flex-col", "p-3", "items-center"),
-  name: clsx("flex-auto", "text-indigo-700", "mb-2"),
-} as const;
-
 export const Inspector = function Inspector({ name }: Props) {
   return (
     <span className={styles.root}>
       <span className={styles.name}>{name}</span>
-      <Icon type={Icons.user} size="xl" variant="indigo" />
+      <Icon.User size="xl" variant={Variant.indigo} />
     </span>
   );
 };

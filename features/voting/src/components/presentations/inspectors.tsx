@@ -1,10 +1,5 @@
-import { clsx } from "clsx";
-import { PropsWithChildren, Children } from "react";
-
-const styles = {
-  root: clsx("flex", "flex-row", "gap-2", "bg-indigo-100", "justify-center"),
-  emptyText: clsx("text-indigo-500", "font-bold", "text-lg", "m-7"),
-} as const;
+import { Children, PropsWithChildren } from "react";
+import * as styles from "./inspectors.css.js";
 
 export const Inspectors = function Inspectors(props: PropsWithChildren) {
   const childrenCount = Children.count(props.children);
