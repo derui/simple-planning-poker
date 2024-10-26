@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
 import { VotingStatus } from "../../atoms/voting.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
-import { VotingArea } from "./voting-area.js";
+import { RevealedArea } from "./revealed-area.js";
 
 afterEach(cleanup);
 
@@ -14,15 +14,13 @@ test("Pass valid states to child component", async () => {
 
   const hooks: Hooks = {
     useJoin: sinon.fake(),
-    useVoting: sinon.fake.returns<[], ReturnType<Hooks["useVoting"]>>({
+    useVoting: sinon.fake(),
+    useRevealed: sinon.fake.returns({
       changeTheme: sinon.fake(),
-      changeVoterRole: sinon.fake(),
-      estimate: sinon.fake(),
-      reveal: sinon.fake(),
+      reset: sinon.fake(),
     }),
-    useRevealed: sinon.fake(),
     usePollingPlace: sinon.fake.returns({
-      estimations: [{ name: "player1" }],
+      estimations: [{ name: "player1" }, { name: "player2" }],
       inspectors: [],
       loading: false,
       points: ["1", "2"],
@@ -38,12 +36,12 @@ test("Pass valid states to child component", async () => {
   render(
     <ImplementationProvider implementation={hooks}>
       <Provider store={store}>
-        <VotingArea />
+        <RevealedArea />
       </Provider>
     </ImplementationProvider>
   );
 
   // Assert
-  expect(screen.getByRole("tab", { name: "1" })).not.toBeNull();
-  expect(screen.getByRole("tab", { name: "1" })).not.toBeNull();
+  expect(screen.getByText("player1")).not.toBeNull();
+  expect(screen.getByText("player2")).not.toBeNull();
 });

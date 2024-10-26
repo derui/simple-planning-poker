@@ -6,6 +6,7 @@ export const root = style({
   flexDirection: "column",
   margin: vars.spacing[3],
   alignItems: "center",
+  gap: vars.spacing[2],
 });
 
 const cardBase = style([

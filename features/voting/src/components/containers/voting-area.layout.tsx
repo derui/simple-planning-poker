@@ -49,7 +49,7 @@ const VotingUserEstimations = function VotingUserEstimations({
  * Inspectors in voting
  */
 const VotingInspectors = function VotingInspectors({ inspectors: _inspectors }: { inspectors: EstimationDto[] }) {
-  const inspectors = _inspectors.map((v) => <Inspector name={v.name} />);
+  const inspectors = _inspectors.map((v, index) => <Inspector key={index} name={v.name} />);
 
   return <Inspectors>{inspectors}</Inspectors>;
 };

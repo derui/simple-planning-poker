@@ -1,27 +1,24 @@
 import { VotingStatus } from "../../atoms/voting.js";
 import { hooks } from "../../hooks/facade.js";
-import { VotingAreaLayout } from "./voting-area.layout.js";
+import { RevealedAreaLayout } from "./revealed-area.layout.js";
 
 /**
- * VotingArea container
+ * RevealedArea container
  */
-export const VotingArea = function VotingArea() {
+export const RevealedArea = function RevealedArea() {
   const place = hooks.usePollingPlace();
-  const voting = hooks.useVoting();
+  const revealed = hooks.useRevealed();
   const { status } = hooks.useVotingStatus();
 
   return (
-    <VotingAreaLayout
+    <RevealedAreaLayout
       loading={status != VotingStatus.Voting}
       theme={place.theme}
       userRole={place.userRole}
-      onSelect={(v) => voting.estimate(Number(v))}
-      selected={voting.estimated ? String(voting.estimated) : undefined}
       voters={place.estimations}
       inspectors={place.inspectors}
-      onChangeTheme={voting.changeTheme}
-      onChangeRole={voting.changeVoterRole}
-      points={place.points}
+      onChangeTheme={revealed.changeTheme}
+      onReset={revealed.reset}
     />
   );
 };

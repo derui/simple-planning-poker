@@ -21,7 +21,7 @@ const rootBase = style([
     },
 
     ":hover": {
-      transform: `transpateY(-${vars.spacing[2]})`,
+      transform: `translateY(calc(-1 * ${vars.spacing[2]}))`,
     },
   },
 ]);
@@ -37,6 +37,6 @@ export const selected = style([
   rootBase,
   {
     backgroundColor: vars.color.orange[200],
-    transform: `translateY(-${vars.spacing[2]})`,
+    transform: `translateY(calc(-1 * ${vars.spacing[2]}))`,
   },
 ]);

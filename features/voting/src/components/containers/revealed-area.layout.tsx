@@ -21,14 +21,14 @@ const RevealedUserEstimations = function RevealedUserEstimations({
   average: number;
   onReset?: () => void;
 }) {
-  return <RevealedEstimations loading={loading} estimations={estimations} average={average} />;
+  return <RevealedEstimations loading={loading} estimations={estimations} average={average} onReset={onReset} />;
 };
 
 /**
  * Inspectors in voting
  */
 const VotingInspectors = function VotingInspectors({ inspectors: _inspectors }: { inspectors: EstimationDto[] }) {
-  const inspectors = _inspectors.map((v) => <Inspector name={v.name} />);
+  const inspectors = _inspectors.map((v, index) => <Inspector key={index} name={v.name} />);
 
   return <Inspectors>{inspectors}</Inspectors>;
 };
@@ -51,7 +51,7 @@ type Props = {
   onReset?: () => void;
 };
 
-export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>) {
+export const RevealedAreaLayout = function RevealedAreaLayout(props: Prettify<Props>) {
   const { loading = false, voters = [], inspectors = [], onChangeTheme, onReset, average = 0 } = props;
   const theme = props.theme ?? "";
   const userRole = props.userRole ?? "player";
