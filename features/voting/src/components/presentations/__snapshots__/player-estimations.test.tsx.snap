@@ -3,18 +3,18 @@
 exports[`all estimated 1`] = `
 <div>
   <div
-    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
+    class="player-estimations_root__19q34j30"
   >
     <div
-      class="flex flex-row items-center justify-center h-16"
+      class="player-estimations_votingRoot__19q34j33"
     >
       <span
-        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+        class="player-estimations_votingLabel__19q34j34"
       >
         Voted
       </span>
       <span
-        class="flex-auto text-xl rounded px-4 py-2 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
+        class="player-estimations_votingEstimatedAllEstimated__19q34j37 player-estimations_votingEstimated__19q34j35 style_transition_all__59wy0241"
       >
         5
          / 
@@ -22,70 +22,70 @@ exports[`all estimated 1`] = `
       </span>
     </div>
     <div
-      class="flex flex-auto ml-4"
+      class="player-estimations_votingReveal__19q34j38"
     >
       <button
-        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        class="style_disabledButtonVariants_emerald__16ett8m9 style_disabledBase__16ett8m2 style_base__16ett8m0"
         disabled=""
       >
         Reveal
       </button>
     </div>
     <div
-      class="flex flex-row gap-4"
+      class="player-estimations_estimations__19q34j32"
     >
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo0
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo1
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo2
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo3
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo4
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
@@ -97,18 +97,18 @@ exports[`all estimated 1`] = `
 exports[`disable button if can not reveal 1`] = `
 <div>
   <div
-    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
+    class="player-estimations_root__19q34j30"
   >
     <div
-      class="flex flex-row items-center justify-center h-16"
+      class="player-estimations_votingRoot__19q34j33"
     >
       <span
-        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+        class="player-estimations_votingLabel__19q34j34"
       >
         Voted
       </span>
       <span
-        class="flex-auto text-xl rounded px-4 py-2 border transition text-emerald-700 font-bold bg-cerise-100 border-cerise-400"
+        class="player-estimations_votingEstimatedAllEstimated__19q34j37 player-estimations_votingEstimated__19q34j35 style_transition_all__59wy0241"
       >
         5
          / 
@@ -116,70 +116,70 @@ exports[`disable button if can not reveal 1`] = `
       </span>
     </div>
     <div
-      class="flex flex-auto ml-4"
+      class="player-estimations_votingReveal__19q34j38"
     >
       <button
-        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        class="style_disabledButtonVariants_emerald__16ett8m9 style_disabledBase__16ett8m2 style_base__16ett8m0"
         disabled=""
       >
         Reveal
       </button>
     </div>
     <div
-      class="flex flex-row gap-4"
+      class="player-estimations_estimations__19q34j32"
     >
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo0
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo1
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo2
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo3
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo4
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-orange-200 [transform:rotateY(180deg)]"
+          class="player-estimation_cardEstimated__tdwy753 player-estimation_card__tdwy751"
           data-estimated="true"
         />
       </div>
@@ -191,18 +191,18 @@ exports[`disable button if can not reveal 1`] = `
 exports[`display a estimation 1`] = `
 <div>
   <div
-    class="grid grid-rows-[auto_auto_1fr] grid-cols-1 place-items-center gap-4"
+    class="player-estimations_root__19q34j30"
   >
     <div
-      class="flex flex-row items-center justify-center h-16"
+      class="player-estimations_votingRoot__19q34j33"
     >
       <span
-        class="text-2xl font-bold text-emerald-700 mr-4 flex-none"
+        class="player-estimations_votingLabel__19q34j34"
       >
         Voted
       </span>
       <span
-        class="flex-auto text-xl rounded px-4 py-2 border transition text-gray-800 border-gray-400"
+        class="player-estimations_votingEstimatedNotAllEstimated__19q34j36 player-estimations_votingEstimated__19q34j35 style_transition_all__59wy0241"
       >
         0
          / 
@@ -210,26 +210,26 @@ exports[`display a estimation 1`] = `
       </span>
     </div>
     <div
-      class="flex flex-auto ml-4"
+      class="player-estimations_votingReveal__19q34j38"
     >
       <button
-        class="py-2 px-4 rounded cursor-not-allowed border border-emerald-300 bg-emerald-200/50 text-emerald-900/50"
+        class="style_disabledButtonVariants_emerald__16ett8m9 style_disabledBase__16ett8m2 style_base__16ett8m0"
         disabled=""
       >
         Reveal
       </button>
     </div>
     <div
-      class="flex flex-row gap-4"
+      class="player-estimations_estimations__19q34j32"
     >
       <div
-        class="flex flex-col m-3 items-center"
+        class="player-estimation_root__tdwy750"
       >
         <span>
           foo
         </span>
         <span
-          class="h-20 w-14 rounded text-center items-center justify-center border border-orange-400 text-orange-700 transition-transform bg-white"
+          class="player-estimation_cardNotEstimated__tdwy752 player-estimation_card__tdwy751"
           data-estimated="false"
         />
       </div>

@@ -37,14 +37,14 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
-    "@testing-library/user-event": "^14.5.2",
+      "@testing-library/user-event": "catalog:",
     "@types/react": "catalog:",
     "@types/sinon": "catalog:",
-    "@vanilla-extract/vite-plugin": "^4.0.16",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-    "immer": "^10.0.3",
+      "immer": "catalog:",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
     "sinon": "catalog:",
@@ -64,8 +64,8 @@
     "@spp/ui-skeleton": "workspace:^",
     "@spp/ui-theme": "workspace:^",
     "@spp/ui-toggle-button": "workspace:^",
-    "@vanilla-extract/css": "^1.16.0",
-    "jotai": "^2.10.0",
+    "@vanilla-extract/css": "catalog:",
+      "jotai": "catalog:",
     "react": "catalog:"
   }
 }

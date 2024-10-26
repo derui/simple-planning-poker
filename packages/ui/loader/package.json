@@ -36,7 +36,7 @@
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
-    "@vanilla-extract/vite-plugin": "^4.0.16",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@spp/shared-color-variant": "workspace:^",
     "@spp/ui-theme": "workspace:^",
-    "@vanilla-extract/css": "^1.16.0",
+    "@vanilla-extract/css": "catalog:",
     "react": "catalog:"
   }
 }

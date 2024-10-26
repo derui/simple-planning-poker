@@ -28,7 +28,7 @@
     "@spp/eslint-config": "workspace:^",
     "@spp/shared-get-pnpm-root": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@types/node": "^22.5.5",
+      "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"
   },

@@ -28,8 +28,8 @@
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@vanilla-extract/css": "^1.16.0",
-    "@vanilla-extract/vite-plugin": "^4.0.16",
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",

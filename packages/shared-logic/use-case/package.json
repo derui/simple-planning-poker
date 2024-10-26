@@ -32,7 +32,7 @@
     "@types/sinon": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-    "immer": "^10.0.3",
+      "immer": "catalog:",
     "sinon": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

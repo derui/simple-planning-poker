@@ -3,13 +3,13 @@
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="flex px-4 py-1 rounded-full border border-teal-600 h-12"
+    class="theme-editor_root__mrulgs0"
   >
     <form
-      class="flex flex-row flex-auto items-center gap-2"
+      class="theme-editor_editorRoot__mrulgs5"
     >
       <input
-        class="flex-auto w-full p-2 outline-none rounded transition-colors"
+        class="theme-editor_editorInput__mrulgs6 style_transition_all__59wy0241"
         placeholder="No theme"
         readonly=""
         tabindex="1"
@@ -18,32 +18,32 @@ exports[`should be able to render 1`] = `
       />
       <button
         aria-label="submit"
-        class="flex-none border border-transparent hover:border-emerald-600 hover:bg-emerald-100 transition p-1 rounded-full hidden"
+        class="theme-editor_submitButtonHidden__mrulgsa theme-editor_submitButton__mrulgs8 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
         disabled=""
         type="submit"
       >
         <span
-          class="flex before:bg-emerald-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/check.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+          class="check_medium_emerald__4p5k6ic style_iconMedium__qkwts32 style_iconBase__qkwts30"
         />
       </button>
       <button
         aria-label="cancel"
-        class="flex-none border border-transparent hover:border-gray-600 hover:bg-gray-100 transition p-1 rounded-full hidden"
+        class="theme-editor_cancelButtonHidden__mrulgsb theme-editor_cancelButton__mrulgs9 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
         disabled=""
         type="button"
       >
         <span
-          class="flex before:bg-gray-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/x.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+          class="x_medium_gray__ak7ds79 style_iconMedium__qkwts32 style_iconBase__qkwts30"
         />
       </button>
     </form>
     <button
       aria-label="edit"
-      class="border border-transparent hover:border-orange-600 hover:bg-orange-100 transition p-1 rounded-full"
+      class="theme-editor_edit__mrulgs4 style_transition_all__59wy0241"
       type="button"
     >
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/pencil.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="pencil_medium_orange__1mszgw0d style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
     </button>
   </div>
@@ -53,13 +53,13 @@ exports[`should be able to render 1`] = `
 exports[`should be able to render without theme 1`] = `
 <div>
   <div
-    class="flex px-4 py-1 rounded-full border border-teal-600 h-12"
+    class="theme-editor_root__mrulgs0"
   >
     <form
-      class="flex flex-row flex-auto items-center gap-2"
+      class="theme-editor_editorRoot__mrulgs5"
     >
       <input
-        class="flex-auto w-full p-2 outline-none rounded transition-colors"
+        class="theme-editor_editorInput__mrulgs6 style_transition_all__59wy0241"
         placeholder="No theme"
         readonly=""
         tabindex="1"
@@ -68,32 +68,32 @@ exports[`should be able to render without theme 1`] = `
       />
       <button
         aria-label="submit"
-        class="flex-none border border-transparent hover:border-emerald-600 hover:bg-emerald-100 transition p-1 rounded-full hidden"
+        class="theme-editor_submitButtonHidden__mrulgsa theme-editor_submitButton__mrulgs8 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
         disabled=""
         type="submit"
       >
         <span
-          class="flex before:bg-emerald-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/check.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+          class="check_medium_emerald__4p5k6ic style_iconMedium__qkwts32 style_iconBase__qkwts30"
         />
       </button>
       <button
         aria-label="cancel"
-        class="flex-none border border-transparent hover:border-gray-600 hover:bg-gray-100 transition p-1 rounded-full hidden"
+        class="theme-editor_cancelButtonHidden__mrulgsb theme-editor_cancelButton__mrulgs9 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
         disabled=""
         type="button"
       >
         <span
-          class="flex before:bg-gray-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/x.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+          class="x_medium_gray__ak7ds79 style_iconMedium__qkwts32 style_iconBase__qkwts30"
         />
       </button>
     </form>
     <button
       aria-label="edit"
-      class="border border-transparent hover:border-orange-600 hover:bg-orange-100 transition p-1 rounded-full"
+      class="theme-editor_edit__mrulgs4 style_transition_all__59wy0241"
       type="button"
     >
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/pencil.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="pencil_medium_orange__1mszgw0d style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
     </button>
   </div>

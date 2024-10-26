@@ -3,10 +3,10 @@
 exports[`render text if no children 1`] = `
 <div>
   <div
-    class="flex flex-row gap-2 bg-indigo-100 justify-center"
+    class="inspectors_root__osy0pc0"
   >
     <p
-      class="text-indigo-500 font-bold text-lg m-7"
+      class="inspectors_emptyText__osy0pc1"
     >
       No inspectors
     </p>
@@ -17,42 +17,42 @@ exports[`render text if no children 1`] = `
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="flex flex-row gap-2 bg-indigo-100 justify-center"
+    class="inspectors_root__osy0pc0"
   >
     <span
-      class="flex flex-col p-3 items-center"
+      class="inspector_root__qybz2l0"
     >
       <span
-        class="flex-auto text-indigo-700 mb-2"
+        class="inspector_name__qybz2l1"
       >
         foo
       </span>
       <span
-        class="flex before:bg-indigo-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-10 before:h-10 w-10 h-10"
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
       />
     </span>
     <span
-      class="flex flex-col p-3 items-center"
+      class="inspector_root__qybz2l0"
     >
       <span
-        class="flex-auto text-indigo-700 mb-2"
+        class="inspector_name__qybz2l1"
       >
         bar
       </span>
       <span
-        class="flex before:bg-indigo-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-10 before:h-10 w-10 h-10"
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
       />
     </span>
     <span
-      class="flex flex-col p-3 items-center"
+      class="inspector_root__qybz2l0"
     >
       <span
-        class="flex-auto text-indigo-700 mb-2"
+        class="inspector_name__qybz2l1"
       >
         long name
       </span>
       <span
-        class="flex before:bg-indigo-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-10 before:h-10 w-10 h-10"
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
       />
     </span>
   </div>

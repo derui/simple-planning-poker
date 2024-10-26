@@ -3,11 +3,13 @@
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="flex flex-row items-center justify-center h-36 bg-emerald-50 w-full"
+    class="card-holder_root__j7wifn0"
     role="tablist"
   >
     <div
-      class="grid place-content-center cursor-pointer h-20 w-14 rounded border-2 border-orange-400 m-3 transition-transform first-of-type:ml-0 last-of-type:mr-0 hover:-translate-y-2 text-orange-700 bg-white"
+      aria-selected="false"
+      class="selectable-card_notSelected__t2s9ip1 selectable-card_rootBase__t2s9ip0"
+      data-selected="false"
       role="tab"
     >
       3
@@ -19,11 +21,11 @@ exports[`should be able to render 1`] = `
 exports[`should be able to render as inspector 1`] = `
 <div>
   <div
-    class="flex flex-row items-center justify-center h-36 bg-emerald-50 w-full"
+    class="card-holder_root__j7wifn0"
     role="tablist"
   >
     <p
-      class="font-bold text-emerald-700 text-xl"
+      class="card-holder_inspector__j7wifn1"
     >
       Inspector mode
     </p>

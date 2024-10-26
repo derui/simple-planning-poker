@@ -3,13 +3,13 @@
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center h-12 px-2 py-1 rounded bg-orange-500"
+    class="toolbar_root__17ktofz0"
   >
     <div
-      class="grid grid-rows-1 grid-cols-[auto_auto_auto] rounded bg-orange-100 place-content-center gap-2 place-items-center px-2 py-1"
+      class="toolbar_role__17ktofz1"
     >
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
         class="flex flex-none outline-none border-none p-0 h-8 items-center rounded"
@@ -32,7 +32,7 @@ exports[`should be able to render 1`] = `
         </span>
       </span>
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/eye.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="eye_medium_orange__1p3uyfcd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
     </div>
   </div>
@@ -42,13 +42,13 @@ exports[`should be able to render 1`] = `
 exports[`should change current check 1`] = `
 <div>
   <div
-    class="grid grid-rows-1 grid-cols-1 place-content-center gap-2 place-items-center h-12 px-2 py-1 rounded bg-orange-500"
+    class="toolbar_root__17ktofz0"
   >
     <div
-      class="grid grid-rows-1 grid-cols-[auto_auto_auto] rounded bg-orange-100 place-content-center gap-2 place-items-center px-2 py-1"
+      class="toolbar_role__17ktofz1"
     >
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
         class="flex flex-none outline-none border-none p-0 h-8 items-center rounded"
@@ -72,7 +72,7 @@ exports[`should change current check 1`] = `
         </span>
       </span>
       <span
-        class="flex before:bg-orange-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/eye.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-6 before:h-6 w-6 h-6"
+        class="eye_medium_orange__1p3uyfcd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
     </div>
   </div>

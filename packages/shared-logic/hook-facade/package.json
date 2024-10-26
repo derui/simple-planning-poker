@@ -29,7 +29,7 @@
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
-    "@testing-library/react": "^16.0.1",
+      "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
