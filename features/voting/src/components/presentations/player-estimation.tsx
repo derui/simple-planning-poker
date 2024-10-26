@@ -14,7 +14,7 @@ export function PlayerEstimation(props: Props) {
   return (
     <div className={styles.root}>
       <span>{props.name}</span>
-      <span className={estimationClass} data-estimated={estimated}></span>
+      <span className={estimationClass} data-estimated={estimated ? true : false}></span>
     </div>
   );
 }

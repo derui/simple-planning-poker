@@ -1,3 +1,18 @@
+import { UseLoginUser } from "@spp/feature-login";
+import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import {
+  ChangeThemeUseCase,
+  ChangeUserModeUseCase,
+  EstimatePlayerUseCase,
+  newEstimatePlayerUseCase,
+  RevealUseCase,
+} from "@spp/shared-use-case";
+import { act, renderHook } from "@testing-library/react";
+import { enableMapSet } from "immer";
+import { createStore, Provider } from "jotai";
+import sinon from "sinon";
 import { describe, expect, test } from "vitest";
 import {
   createUseJoin,
@@ -6,21 +21,6 @@ import {
   createUseVoting,
   createUseVotingStatus,
 } from "./voting.js";
-import { act, renderHook } from "@testing-library/react";
-import { createStore, Provider } from "jotai";
-import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
-import sinon from "sinon";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { UseLoginUser } from "@spp/feature-login";
-import {
-  ChangeThemeUseCase,
-  ChangeUserModeUseCase,
-  EstimatePlayerUseCase,
-  newEstimatePlayerUseCase,
-  RevealUseCase,
-} from "@spp/shared-use-case";
-import { enableMapSet } from "immer";
 
 enableMapSet();
 
@@ -143,7 +143,7 @@ describe("UsePollingPlace", () => {
     expect(join.result.current.status).toEqual("joined");
     expect(result.current.loading).toBeFalsy();
     expect(result.current.theme).toEqual("foo");
-    expect(result.current.estimations).toEqual([{ name: "foo", estimated: false }]);
+    expect(result.current.estimations).toEqual([{ name: "foo" }]);
   });
 });
 

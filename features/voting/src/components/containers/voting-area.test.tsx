@@ -22,7 +22,7 @@ test("Pass valid states to child component", async () => {
     }),
     useRevealed: sinon.fake(),
     usePollingPlace: sinon.fake.returns({
-      estimations: [{ name: "player1", estimated: false }],
+      estimations: [{ name: "player1" }],
       inspectors: [],
       loading: false,
       points: ["1", "2"],

@@ -28,7 +28,7 @@ export const Normal: Story = {
 export const Estimated: Story = {
   args: {
     name: "name",
-    estimated: true,
+    estimated: "3",
   },
   render(args) {
     return (

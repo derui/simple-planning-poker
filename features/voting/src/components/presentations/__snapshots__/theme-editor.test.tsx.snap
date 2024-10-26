@@ -6,10 +6,10 @@ exports[`should be able to render 1`] = `
     class="theme-editor_root__mrulgs0"
   >
     <form
-      class="theme-editor_editorRoot__mrulgs5"
+      class="theme-editor_editorRoot__mrulgs3"
     >
       <input
-        class="theme-editor_editorInput__mrulgs6 style_transition_all__59wy0241"
+        class="theme-editor_editorInput__mrulgs4 style_transition_all__59wy0241"
         placeholder="No theme"
         readonly=""
         tabindex="1"
@@ -18,7 +18,7 @@ exports[`should be able to render 1`] = `
       />
       <button
         aria-label="submit"
-        class="theme-editor_submitButtonHidden__mrulgsa theme-editor_submitButton__mrulgs8 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
+        class="theme-editor_submitButtonHidden__mrulgs7 theme-editor_submitButton__mrulgs5 style_enabledIconButtonVariants_emerald__16ett8m10 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
         disabled=""
         type="submit"
       >
@@ -28,7 +28,7 @@ exports[`should be able to render 1`] = `
       </button>
       <button
         aria-label="cancel"
-        class="theme-editor_cancelButtonHidden__mrulgsb theme-editor_cancelButton__mrulgs9 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
+        class="theme-editor_cancelButtonHidden__mrulgs8 theme-editor_cancelButton__mrulgs6 style_enabledIconButtonVariants_gray__16ett8mx style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
         disabled=""
         type="button"
       >
@@ -39,7 +39,7 @@ exports[`should be able to render 1`] = `
     </form>
     <button
       aria-label="edit"
-      class="theme-editor_edit__mrulgs4 style_transition_all__59wy0241"
+      class="theme-editor_edit__mrulgs2 style_enabledIconButtonVariants_orange__16ett8m11 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
       type="button"
     >
       <span
@@ -56,10 +56,10 @@ exports[`should be able to render without theme 1`] = `
     class="theme-editor_root__mrulgs0"
   >
     <form
-      class="theme-editor_editorRoot__mrulgs5"
+      class="theme-editor_editorRoot__mrulgs3"
     >
       <input
-        class="theme-editor_editorInput__mrulgs6 style_transition_all__59wy0241"
+        class="theme-editor_editorInput__mrulgs4 style_transition_all__59wy0241"
         placeholder="No theme"
         readonly=""
         tabindex="1"
@@ -68,7 +68,7 @@ exports[`should be able to render without theme 1`] = `
       />
       <button
         aria-label="submit"
-        class="theme-editor_submitButtonHidden__mrulgsa theme-editor_submitButton__mrulgs8 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
+        class="theme-editor_submitButtonHidden__mrulgs7 theme-editor_submitButton__mrulgs5 style_enabledIconButtonVariants_emerald__16ett8m10 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
         disabled=""
         type="submit"
       >
@@ -78,7 +78,7 @@ exports[`should be able to render without theme 1`] = `
       </button>
       <button
         aria-label="cancel"
-        class="theme-editor_cancelButtonHidden__mrulgsb theme-editor_cancelButton__mrulgs9 theme-editor_buttonBase__mrulgs7 style_transition_all__59wy0241"
+        class="theme-editor_cancelButtonHidden__mrulgs8 theme-editor_cancelButton__mrulgs6 style_enabledIconButtonVariants_gray__16ett8mx style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
         disabled=""
         type="button"
       >
@@ -89,7 +89,7 @@ exports[`should be able to render without theme 1`] = `
     </form>
     <button
       aria-label="edit"
-      class="theme-editor_edit__mrulgs4 style_transition_all__59wy0241"
+      class="theme-editor_edit__mrulgs2 style_enabledIconButtonVariants_orange__16ett8m11 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
       type="button"
     >
       <span

@@ -1,3 +1,4 @@
+import { UseLoginUser } from "@spp/feature-login";
 import {
   Estimations,
   StoryPoint,
@@ -8,8 +9,6 @@ import {
   Voting,
   VotingRepository,
 } from "@spp/shared-domain";
-import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { EstimationDto, RevealedEstimationDto } from "./dto.js";
 import {
   ChangeThemeUseCase,
   ChangeUserModeUseCase,
@@ -17,8 +16,9 @@ import {
   ResetVotingUseCase,
   RevealUseCase,
 } from "@spp/shared-use-case";
-import { UseLoginUser } from "@spp/feature-login";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { UserRole } from "../components/types.js";
+import { EstimationDto } from "./dto.js";
 
 /**
  * current voting
@@ -236,11 +236,14 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
     const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
     if (!voting) {
-      return { name: userName, estimated: false };
+      return { name: userName };
     }
 
     const estimation = Estimations.estimationOfUser(voting.estimations, voter.user);
-    const estimated = UserEstimation.isSubmitted(estimation);
+    let estimated: string | undefined;
+    if (UserEstimation.isSubmitted(estimation)) {
+      estimated = estimation.point.toString();
+    }
 
     return {
       name: userName,
@@ -248,10 +251,10 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
     };
   });
 
-  const _inspectors = inspectors.map((voter) => {
+  const _inspectors = inspectors.map<EstimationDto>((voter) => {
     const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
-    return { name: userName, estimated: false };
+    return { name: userName };
   });
 
   return () => {

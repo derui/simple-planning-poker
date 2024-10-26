@@ -8,7 +8,7 @@ exports[`should be able to render 1`] = `
   >
     <div
       aria-selected="false"
-      class="selectable-card_notSelected__t2s9ip1 selectable-card_rootBase__t2s9ip0"
+      class="selectable-card_notSelected__t2s9ip1 selectable-card_rootBase__t2s9ip0 style_transition_all__59wy0241"
       data-selected="false"
       role="tab"
     >
