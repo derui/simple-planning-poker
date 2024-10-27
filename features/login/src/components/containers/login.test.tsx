@@ -1,13 +1,13 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { createStore, Provider } from "jotai";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
-import sinon from "sinon";
-import { gameIndexPage } from "@spp/shared-app-url";
-import { AuthStatus } from "../atoms/atom.js";
-import { Login } from "./login.js";
 import * as Url from "@spp/shared-app-url";
+import { gameIndexPage } from "@spp/shared-app-url";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { createStore, Provider } from "jotai";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import sinon from "sinon";
+import { afterEach, expect, test } from "vitest";
+import { AuthStatus } from "../../atoms/atom.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { Login } from "./login.js";
 
 afterEach(cleanup);
 

@@ -1,37 +1,34 @@
-import * as Url from "@spp/shared-app-url";
 import { Dialog } from "@spp/ui-dialog";
 import { Loader } from "@spp/ui-loader";
 import { Overlay } from "@spp/ui-overlay";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { hooks } from "../hooks/facade.js";
-import { LoginForm } from "./presentations/login-form.js";
+import { LoginForm } from "../presentations/login-form.js";
 import * as styles from "./signin.css.js";
 
-// eslint-disable-next-line func-style
-export function SignIn() {
-  const login = hooks.useLogin();
-  const navigate = useNavigate();
+interface Props {
+  title: string;
 
-  useEffect(() => {
-    if (login.status == "logined") {
-      navigate(Url.gameIndexPage());
-    }
-  }, [login.status]);
+  onSubmit?: (email: string, password: string) => void;
+
+  loading?: boolean;
+}
+
+// eslint-disable-next-line func-style
+export function SignInLayout(props: Props) {
+  const { title, loading = false, onSubmit } = props;
 
   const handleSubmit = (email: string, password: string) => {
-    login.signIn(email, password);
+    onSubmit?.(email, password);
   };
 
   return (
     <main className={styles.root}>
-      <Overlay show={login.status == "doing"}>
+      <Overlay show={loading}>
         <div className={styles.overlayDialog}>
           <Loader size="m" shown={true} />
           <span className={styles.dialogText}>Authenticating...</span>
         </div>
       </Overlay>
-      <Dialog title="Sign In">
+      <Dialog title={title}>
         <div className={styles.dialogContent}>
           <LoginForm onSubmit={handleSubmit} />
         </div>

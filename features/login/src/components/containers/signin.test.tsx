@@ -1,12 +1,12 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
-import { userEvent } from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { SignUp } from "./signup.js";
-import { createStore, Provider } from "jotai";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
-import sinon from "sinon";
 import { gameIndexPage } from "@spp/shared-app-url";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { createStore, Provider } from "jotai";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import sinon from "sinon";
+import { afterEach, expect, test } from "vitest";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { SignIn } from "./signin.js";
 
 afterEach(cleanup);
 
@@ -29,24 +29,24 @@ test("render page", () => {
     <ImplementationProvider implementation={mock}>
       <Provider store={store}>
         <MemoryRouter>
-          <SignUp />
+          <SignIn />
         </MemoryRouter>
       </Provider>
     </ImplementationProvider>
   );
 
   expect(screen.getByRole("main")).not.toBeNull();
-  expect(screen.queryByText(/Sign Up/)).not.toBeNull();
+  expect(screen.queryByText(/Sign In/)).not.toBeNull();
 });
 
 test("call hook after submit", async () => {
   // Arrange
-  const signUpFake = sinon.fake();
+  const signInFake = sinon.fake();
   const mock: Hooks = {
     useLogin() {
       return {
-        signIn: sinon.fake(),
-        signUp: signUpFake,
+        signIn: signInFake,
+        signUp: sinon.fake(),
         status: "notLogined",
         loginError: undefined,
       };
@@ -58,7 +58,7 @@ test("call hook after submit", async () => {
   render(
     <ImplementationProvider implementation={mock}>
       <MemoryRouter>
-        <SignUp />
+        <SignIn />
       </MemoryRouter>
     </ImplementationProvider>
   );
@@ -68,7 +68,7 @@ test("call hook after submit", async () => {
   await userEvent.click(screen.getByText("Submit"));
 
   // Assert
-  expect(signUpFake.lastCall.args).toEqual(["email", "password"]);
+  expect(signInFake.lastCall.args).toEqual(["email", "password"]);
 });
 
 test("navigate game if user already logined", async () => {
@@ -91,7 +91,7 @@ test("navigate game if user already logined", async () => {
       <MemoryRouter>
         <Routes>
           <Route path={gameIndexPage()} element={"Game"} />
-          <Route path="/" element={<SignUp />} />
+          <Route path="/" element={<SignIn />} />
         </Routes>
       </MemoryRouter>
     </ImplementationProvider>

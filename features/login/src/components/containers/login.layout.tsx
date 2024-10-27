@@ -1,11 +1,12 @@
 import * as Url from "@spp/shared-app-url";
 import { Dialog } from "@spp/ui-dialog";
 import { Loader } from "@spp/ui-loader";
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthStatus } from "../atoms/atom.js";
-import { hooks } from "../hooks/facade.js";
+import { Link } from "react-router-dom";
 import * as styles from "./login.css.js";
+
+interface Props {
+  authenticating?: boolean;
+}
 
 const Authenticating = function Authenticating() {
   return (
@@ -19,24 +20,11 @@ const Authenticating = function Authenticating() {
 };
 
 // eslint-disable-next-line func-style
-export function Login() {
-  const auth = hooks.useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (auth.status == AuthStatus.Authenticated) {
-      navigate(Url.gameIndexPage(), { replace: true });
-    }
-  }, [auth.status]);
-
-  useEffect(() => {
-    auth.checkLogined();
-  }, []);
-
+export function LoginLayout({ authenticating = false }: Props) {
   return (
     <div className={styles.root}>
       <Dialog title="Login">
-        {auth.status == AuthStatus.Checking ? (
+        {authenticating ? (
           <Authenticating />
         ) : (
           <div className={styles.children}>

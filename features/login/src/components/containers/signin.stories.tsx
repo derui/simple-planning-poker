@@ -4,14 +4,14 @@ import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { SignUp } from "./signup.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { SignIn } from "./signin.js";
 
 const meta = {
-  title: "Page/Sign Up",
-  component: SignUp,
+  title: "Page/Sign In",
+  component: SignIn,
   tags: ["autodocs"],
-} satisfies Meta<typeof SignUp>;
+} satisfies Meta<typeof SignIn>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -36,7 +36,7 @@ export const notLogin: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <div className={themeClass}>
-              <SignUp />
+              <SignIn />
             </div>
           </MemoryRouter>
         </Provider>
@@ -65,7 +65,7 @@ export const doing: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <div className={themeClass}>
-              <SignUp />
+              <SignIn />
             </div>
           </MemoryRouter>
         </Provider>

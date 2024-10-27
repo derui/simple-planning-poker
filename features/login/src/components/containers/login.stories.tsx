@@ -4,14 +4,15 @@ import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { SignIn } from "./signin.js";
+import { AuthStatus } from "../../atoms/atom.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { Login } from "./login.js";
 
 const meta = {
-  title: "Page/Sign In",
-  component: SignIn,
+  title: "Page/Login",
+  component: Login,
   tags: ["autodocs"],
-} satisfies Meta<typeof SignIn>;
+} satisfies Meta<typeof Login>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -19,15 +20,14 @@ type Story = StoryObj<typeof meta>;
 export const notLogin: Story = {
   render() {
     const mock: Hooks = {
-      useLogin() {
+      useLogin: sinon.fake(),
+      useAuth() {
         return {
-          loginError: undefined,
-          status: "notLogined",
-          signIn() {},
-          signUp() {},
+          status: AuthStatus.Authenticated,
+          checkLogined: sinon.fake(),
+          logout: sinon.fake(),
         };
       },
-      useAuth: sinon.fake(),
     };
     const store = createStore();
 
@@ -36,7 +36,7 @@ export const notLogin: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <div className={themeClass}>
-              <SignIn />
+              <Login />
             </div>
           </MemoryRouter>
         </Provider>
@@ -45,18 +45,17 @@ export const notLogin: Story = {
   },
 };
 
-export const doing: Story = {
+export const checking: Story = {
   render() {
     const mock: Hooks = {
-      useLogin() {
+      useLogin: sinon.fake(),
+      useAuth() {
         return {
-          loginError: undefined,
-          status: "doing",
-          signIn() {},
-          signUp() {},
+          status: AuthStatus.Checking,
+          checkLogined: sinon.fake(),
+          logout: sinon.fake(),
         };
       },
-      useAuth: sinon.fake(),
     };
     const store = createStore();
 
@@ -65,7 +64,7 @@ export const doing: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <div className={themeClass}>
-              <SignIn />
+              <Login />
             </div>
           </MemoryRouter>
         </Provider>
