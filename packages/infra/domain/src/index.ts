@@ -16,3 +16,5 @@ export {
   VotingObserverImpl,
   VotingRepositoryImpl,
 };
+
+export { CreateGameEventListener } from "./event/create-game-event-listener.js";

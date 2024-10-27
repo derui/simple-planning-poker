@@ -1,12 +1,49 @@
+import {
+  createUseCreateGame,
+  createUseListGame,
+  createUsePrepareGame,
+  ImplementationProvider as GameFeatureImplementationProvider,
+  Hooks as GameHooks,
+} from "@spp/feature-game";
+import {
+  createUseAuth,
+  createUseLogin,
+  createUseLoginUser,
+  ImplementationProvider as LoginFeatureImplementationProvider,
+  Hooks as LoginHooks,
+} from "@spp/feature-login";
+import {
+  createUseJoin,
+  createUsePollingPlace,
+  createUseRevealed,
+  createUseVoting,
+  createUseVotingStatus,
+  ImplementationProvider as VotingFeatureImplementationProvider,
+  Hooks as VotingHooks,
+} from "@spp/feature-voting";
+import { newFirebaseAuthenticator } from "@spp/infra-authenticator/firebase.js";
+import {
+  CreateGameEventListener,
+  GameRepositoryImpl,
+  newEventDispatcher,
+  UserRepositoryImpl,
+  VotingRepositoryImpl,
+} from "@spp/infra-domain";
+import {
+  newChangeThemeUseCase,
+  newChangeUserModeUseCase,
+  newEstimatePlayerUseCase,
+  newResetVotingUseCase,
+  newRevealUseCase,
+} from "@spp/shared-use-case";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
+import { Provider } from "jotai";
 import * as ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router";
-import { ApplicationDependencyRegistrar } from "./dependencies";
-import { firebaseConfig } from "./firebase.config";
-import { routes } from "./routes/root";
-import { createDependencyRegistrar } from "./utils/dependency-registrar";
+import { firebaseConfig } from "./firebase.config.js";
+import { routes } from "./routes/root.js";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -18,57 +55,51 @@ if (location.hostname === "localhost") {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-const gameRepository = new GameRepository(database);
+const gameRepository = new GameRepositoryImpl(database);
 const userRepository = new UserRepositoryImpl(database);
-const roundRepository = new RoundRepositoryImpl(database);
-const roundHistoryRepository = new RoundHistoryRepositoryImpl(database);
+const votingRepository = new VotingRepositoryImpl(database);
+const authenticator = newFirebaseAuthenticator(auth, userRepository);
 
-const dispatcher = new EventDispatcherImpl([
-  new CreateGameEventListener(database),
-  new JoinUserEventListener(database),
-  new CreateRoundAfterCreateGameListener(roundRepository),
-  new NewRoundStartedListener(gameRepository),
-  new RemoveGameFromJoinedGameListener(database),
-  new FinishedRoundRecordingListener(roundRepository, roundHistoryRepository),
-]);
+const dispatcher = newEventDispatcher([new CreateGameEventListener(database)]);
 
-const registrar = createDependencyRegistrar() as ApplicationDependencyRegistrar;
-registrar.register("gameRepository", gameRepository);
-registrar.register("userRepository", userRepository);
-registrar.register(
-  "userObserver",
-  new UserObserverImpl(database, registrar.resolve("userRepository"), registrar.resolve("gameRepository"))
-);
-registrar.register("roundObserver", new RoundObserverImpl(database));
-registrar.register("roundRepository", roundRepository);
-registrar.register("estimatePlayerUseCase", new EstimatePlayerUseCase(roundRepository));
-registrar.register("showDownUseCase", new ShowDownUseCase(dispatcher, roundRepository));
-registrar.register(
-  "newRoundUseCase",
-  new NewRoundUseCase(dispatcher, registrar.resolve("gameRepository"), roundRepository)
-);
-registrar.register("createGameUseCase", new CreateGameUseCase(dispatcher, registrar.resolve("gameRepository")));
-registrar.register("leaveGameUseCase", new LeaveGameUseCase(registrar.resolve("gameRepository"), dispatcher));
-registrar.register("changeUserModeUseCase", new ChangeUserModeUseCase(registrar.resolve("gameRepository")));
-registrar.register(
-  "joinUserUseCase",
-  new JoinUserUseCase(dispatcher, registrar.resolve("userRepository"), registrar.resolve("gameRepository"))
-);
-registrar.register("authenticator", new FirebaseAuthenticator(auth, database, registrar.resolve("userRepository")));
-registrar.register("changeUserNameUseCase", new ChangeUserNameUseCase(dispatcher, registrar.resolve("userRepository")));
-registrar.register("gameObserver", new GameObserverImpl(database));
-registrar.register("kickPlayerUseCase", new KickPlayerUseCase(dispatcher, gameRepository));
-registrar.register("changeThemeUseCase", new ChangeThemeUseCase(roundRepository));
-registrar.register("roundHistoryQuery", roundHistoryRepository);
+const loginHooks: LoginHooks = {
+  useAuth: createUseAuth(authenticator),
+  useLogin: createUseLogin(authenticator),
+};
 
-const store = createStore(registrar, process.env.NODE_ENV === "production");
+const gameHooks: GameHooks = {
+  useCreateGame: createUseCreateGame(gameRepository, dispatcher),
+  useListGame: createUseListGame(),
+  usePrepareGame: createUsePrepareGame(gameRepository),
+};
 
-store.dispatch(tryAuthenticate());
+const votingHooks: VotingHooks = {
+  useJoin: createUseJoin(createUseLoginUser(), votingRepository, userRepository),
+  useVoting: createUseVoting({
+    useLoginUser: createUseLoginUser(),
+    changeThemeUseCase: newChangeThemeUseCase(votingRepository),
+    estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
+    changeUserModeUseCase: newChangeUserModeUseCase(votingRepository, dispatcher),
+    revealUseCase: newRevealUseCase(dispatcher, votingRepository),
+  }),
+  useRevealed: createUseRevealed({
+    changeThemeUseCase: newChangeThemeUseCase(votingRepository),
+    resetVotingUseCase: newResetVotingUseCase(dispatcher, votingRepository),
+  }),
+  usePollingPlace: createUsePollingPlace(),
+  useVotingStatus: createUseVotingStatus(),
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 root.render(
-  <Provider store={store}>
-    <RouterProvider router={routes} />
-  </Provider>
+  <LoginFeatureImplementationProvider implementation={loginHooks}>
+    <GameFeatureImplementationProvider implementation={gameHooks}>
+      <VotingFeatureImplementationProvider implementation={votingHooks}>
+        <Provider>
+          <RouterProvider router={routes} />
+        </Provider>
+      </VotingFeatureImplementationProvider>
+    </GameFeatureImplementationProvider>
+  </LoginFeatureImplementationProvider>
 );
