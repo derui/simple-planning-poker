@@ -82,12 +82,12 @@ export type UseCreateGame = () => {
    * @param name current input for name
    * @param points current input for points
    */
-  validate(name: string, points: string): void;
+  validate: (name: string, points: string) => void;
 
   /**
    * Create game with inputs. If this method failed, update status.
    */
-  create(name: string, points: string): Promise<void>;
+  create: (name: string, points: string) => void;
 };
 
 /**
@@ -104,7 +104,7 @@ export type UsePrepareGame = () => {
    *
    * MUST CALL THIS FIRST BEFORE USE ANY FUNCTION IN THIS FEATURE!!.
    */
-  prepare(userId: User.Id): void;
+  prepare: (userId: User.Id) => void;
 };
 
 /**
@@ -154,40 +154,45 @@ export const createUseCreateGame = function createUseCreateGame(
         setErrors(errors);
       },
 
-      async create(name, points) {
+      create(name, points) {
         if (errors.length > 0 || !currentUserId) {
           return;
         }
-
         setErrors([]);
         setStatus(CreateGameStatus.Waiting);
 
-        const ret = await newCreateGameUseCase(
-          dispatcher,
-          gameRepository
-        )({
-          createdBy: currentUserId,
-          name,
-          points: points.split(",").map((v) => Number(v)),
+        const _create = async function () {
+          const ret = await newCreateGameUseCase(
+            dispatcher,
+            gameRepository
+          )({
+            createdBy: currentUserId,
+            name,
+            points: points.split(",").map((v) => Number(v)),
+          });
+
+          switch (ret.kind) {
+            case "success":
+              setStatus(CreateGameStatus.Completed);
+              break;
+            case "conflictName":
+              setStatus(CreateGameStatus.Failed);
+              setErrors(["NameConflicted"]);
+              return;
+            case "invalidStoryPoint":
+            case "invalidStoryPoints":
+            case "failed":
+              setStatus(CreateGameStatus.Failed);
+              return;
+          }
+
+          const games = await gameRepository.listUserCreated(currentUserId);
+          setGames(games);
+        };
+
+        _create().catch(() => {
+          setStatus(CreateGameStatus.Failed);
         });
-
-        switch (ret.kind) {
-          case "success":
-            setStatus(CreateGameStatus.Completed);
-            break;
-          case "conflictName":
-            setStatus(CreateGameStatus.Failed);
-            setErrors(["NameConflicted"]);
-            return;
-          case "invalidStoryPoint":
-          case "invalidStoryPoints":
-          case "failed":
-            setStatus(CreateGameStatus.Failed);
-            return;
-        }
-
-        const games = await gameRepository.listUserCreated(currentUserId);
-        setGames(games);
       },
     };
   };

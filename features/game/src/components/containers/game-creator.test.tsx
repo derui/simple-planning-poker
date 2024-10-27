@@ -83,7 +83,7 @@ test("call hook after submit", async () => {
   expect(createFake.lastCall.args).toEqual(["test", "1,2,3,5,8,13,21,34,55,89"]);
 });
 
-test("disable submit if loading", async () => {
+test("disable submit if loading", () => {
   // Arrange
   const store = createStore();
 

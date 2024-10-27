@@ -21,10 +21,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const InitializeUser = function InitializeUser({ children }: { children: React.ReactNode }) {
-  const { prepare } = hooks.usePrepareGame();
+  const hook = hooks.usePrepareGame();
 
   useEffect(() => {
-    prepare(User.createId());
+    hook.prepare(User.createId());
   }, []);
 
   return children;

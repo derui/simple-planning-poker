@@ -1,11 +1,11 @@
-import { describe, expect, test } from "vitest";
-import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "./game.js";
+import { ApplicablePoints, DomainEvent, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { ApplicablePoints, Game, GameRepository, StoryPoint, User, Voting } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import sinon from "sinon";
 import { useEffect } from "react";
+import sinon from "sinon";
+import { describe, expect, test } from "vitest";
+import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "./game.js";
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
@@ -46,7 +46,7 @@ describe("UseCreateGame", () => {
     expect(result.current.status).toEqual(CreateGameStatus.Waiting);
   });
 
-  test("prepared status", async () => {
+  test("prepared status", () => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
@@ -56,7 +56,7 @@ describe("UseCreateGame", () => {
     const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
 
     // Get affect prepared
-    await act(async () => {
+    act(() => {
       rerender();
     });
 
@@ -157,13 +157,13 @@ describe("UseCreateGame", () => {
   });
 
   describe("Create", () => {
-    test("change waiting status while creating game", async () => {
+    test("change waiting status while creating game", () => {
       // Arrange
       const repository = newMemoryGameRepository();
       const store = createStore();
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
@@ -180,14 +180,14 @@ describe("UseCreateGame", () => {
       const repository = newMemoryGameRepository();
       const store = createStore();
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
-      const dispatcher = sinon.fake();
+      const dispatcher = sinon.fake<[DomainEvent.T]>();
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
       // Act
-      await act(async () => result.current.create("foo", "1"));
+      await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
       // Assert
       expect(result.current.status).toEqual(CreateGameStatus.Completed);
@@ -202,12 +202,12 @@ describe("UseCreateGame", () => {
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
       // Act
-      await act(async () => result.current.create("foo", "1"));
+      await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
       const game = await repository.listUserCreated(User.createId("foo"));
 
@@ -224,13 +224,13 @@ describe("UseCreateGame", () => {
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
       // Act
-      await act(async () => result.current.create("foo", "1"));
-      await act(async () => result.current.create("foo", "1,3,5"));
+      await act(async () => Promise.resolve(result.current.create("foo", "1")));
+      await act(async () => Promise.resolve(result.current.create("foo", "1,3,5")));
 
       // Assert
       expect(result.current.errors).toHaveLength(1);
@@ -248,12 +248,12 @@ describe("UseCreateGame", () => {
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const dispatcher = sinon.fake();
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, dispatcher)(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
       // Act
-      await act(async () => result.current.create("foo", "1"));
+      await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
       // Assert
       expect(result.current.status).toEqual(CreateGameStatus.Failed);
@@ -272,12 +272,12 @@ describe("UseCreateGame", () => {
       const store = createStore();
       const wrapper = createPreparationWrapper(store, User.createId("foo"), repository);
       const { result, rerender } = renderHook(() => createUseCreateGame(repository, sinon.fake())(), { wrapper });
-      await act(async () => {
+      act(() => {
         rerender();
       });
 
       // Act
-      await act(async () => result.current.create("foo", "1"));
+      await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
       // Assert
       expect(result.current.errors).toHaveLength(1);
