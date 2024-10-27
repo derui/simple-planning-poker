@@ -171,27 +171,6 @@ importers:
       '@spp/shared-use-case':
         specifier: workspace:^
         version: link:../packages/shared-logic/use-case
-      '@spp/ui-icon':
-        specifier: workspace:^
-        version: link:../packages/ui/icon
-      '@spp/ui-loader':
-        specifier: workspace:^
-        version: link:../packages/ui/loader
-      '@spp/ui-overlay':
-        specifier: workspace:^
-        version: link:../packages/ui/overlay
-      '@spp/ui-radio-button':
-        specifier: workspace:^
-        version: link:../packages/ui/radio-button
-      '@spp/ui-radio-group':
-        specifier: workspace:^
-        version: link:../packages/ui/radio-group
-      '@spp/ui-skeleton':
-        specifier: workspace:^
-        version: link:../packages/ui/skeleton
-      '@spp/ui-toggle-button':
-        specifier: workspace:^
-        version: link:../packages/ui/toggle-button
       crypto-js:
         specifier: 'catalog:'
         version: 4.2.0
