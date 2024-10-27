@@ -1,40 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import * as ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
 import { RouterProvider } from "react-router";
-import { firebaseConfig } from "./firebase.config";
-import { FirebaseAuthenticator } from "./infrastractures/authenticator";
-import { EventDispatcherImpl } from "./infrastractures/event/event-dispatcher";
-import { GameRepositoryImpl } from "./infrastractures/game-repository";
-import { EstimatePlayerUseCase } from "./usecases/estimate-player";
-import { ShowDownUseCase } from "./usecases/show-down";
-import { GameObserverImpl } from "./infrastractures/game-observer";
-import { UserRepositoryImpl } from "./infrastractures/user-repository";
-import { JoinUserUseCase } from "./usecases/join-user";
-import { ChangeUserNameUseCase } from "./usecases/change-user-name";
-import { ChangeUserModeUseCase } from "./usecases/change-user-mode";
-import { createDependencyRegistrar } from "./utils/dependency-registrar";
 import { ApplicationDependencyRegistrar } from "./dependencies";
-import { UserObserverImpl } from "./infrastractures/user-observer";
-import { CreateGameUseCase } from "./usecases/create-game";
-import { LeaveGameUseCase } from "./usecases/leave-game";
-import { RoundRepositoryImpl } from "./infrastractures/round-repository";
-import { NewRoundUseCase } from "./usecases/new-round";
-import { createStore } from "./status/store";
-import { tryAuthenticate } from "./status/actions/signin";
+import { firebaseConfig } from "./firebase.config";
 import { routes } from "./routes/root";
-import { CreateGameEventListener } from "./infrastractures/event/create-game-event-listener";
-import { RoundObserverImpl } from "./infrastractures/round-observer";
-import { JoinUserEventListener } from "./infrastractures/event/join-user-event-listener";
-import { CreateRoundAfterCreateGameListener } from "./infrastractures/event/create-round-after-create-game-listener";
-import { NewRoundStartedListener } from "./infrastractures/event/new-round-started-listener";
-import { RemoveGameFromJoinedGameListener } from "./infrastractures/event/remove-game-from-joined-games-listener";
-import { KickPlayerUseCase } from "./usecases/kick-player";
-import { ChangeThemeUseCase } from "./usecases/change-theme";
-import { RoundHistoryRepositoryImpl } from "./infrastractures/round-history-repository";
-import { FinishedRoundRecordingListener } from "./infrastractures/event/finished-round-recording-listener";
+import { createDependencyRegistrar } from "./utils/dependency-registrar";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -46,7 +18,7 @@ if (location.hostname === "localhost") {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-const gameRepository = new GameRepositoryImpl(database);
+const gameRepository = new GameRepository(database);
 const userRepository = new UserRepositoryImpl(database);
 const roundRepository = new RoundRepositoryImpl(database);
 const roundHistoryRepository = new RoundHistoryRepositoryImpl(database);

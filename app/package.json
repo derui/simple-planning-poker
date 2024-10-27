@@ -62,6 +62,8 @@
     "@spp/feature-voting": "workspace:^",
     "@spp/infra-authenticator": "workspace:^",
     "@spp/infra-domain": "workspace:^",
+    "@spp/shared-domain": "workspace:^",
+    "@spp/shared-use-case": "workspace:^",
     "@spp/ui-icon": "workspace:^",
     "@spp/ui-loader": "workspace:^",
     "@spp/ui-overlay": "workspace:^",
