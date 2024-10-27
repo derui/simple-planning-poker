@@ -11,8 +11,15 @@ catalog:
   vitest: 2.1.1
   "@vitejs/plugin-react": 4.3.1
 
+  # test:playwright
+  '@playwright/test': 1.48.2
+
+  # test
+  "@remix-run/web-fetch": 4.4.2
+  
   # test:testing-librry
   jsdom: 25.0.1
+  "@testing-library/dom": 10.0.0
   "@testing-library/react": 16.0.1
   "@testing-library/user-event": 14.5.2
   # test:sinon
