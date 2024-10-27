@@ -1,19 +1,10 @@
-import { test, expect } from "vitest";
-import {
-  ApplicablePoints,
-  StoryPoint,
-  User,
-  Voting,
-  UserEstimation,
-  Estimations,
-  Voter,
-  UserRepository,
-} from "@spp/shared-domain";
+import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { enableMapSet } from "immer";
-import { newJoinVotingUseCase } from "./join-voting.js";
 import sinon from "sinon";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { expect, test } from "vitest";
+import { newJoinVotingUseCase } from "./join-voting.js";
 
 enableMapSet();
 

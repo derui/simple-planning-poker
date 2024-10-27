@@ -1,5 +1,5 @@
-import { User } from "@spp/shared-domain";
 import { Authenticator } from "@spp/infra-authenticator";
+import { User } from "@spp/shared-domain";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
 /**
@@ -68,12 +68,12 @@ export type UseAuth = () => {
   /**
    * Start checking login or not
    */
-  checkLogined(): void;
+  checkLogined: () => void;
 
   /**
    * Logout user
    */
-  logout(): Promise<void>;
+  logout: () => Promise<void>;
 };
 
 /**
@@ -118,12 +118,12 @@ export type UseLogin = () => {
   /**
    * sign in existance user
    */
-  signIn(email: string, password: string): void;
+  signIn: (email: string, password: string) => void;
 
   /**
    * sign up new user
    */
-  signUp(email: string, password: string): void;
+  signUp: (email: string, password: string) => void;
 
   /**
    * Login status

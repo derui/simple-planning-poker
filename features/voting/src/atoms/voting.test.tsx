@@ -25,7 +25,6 @@ import {
 enableMapSet();
 
 /* eslint-disable  @typescript-eslint/require-await */
-/* eslint-disable  @typescript-eslint/consistent-type-assertions */
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>

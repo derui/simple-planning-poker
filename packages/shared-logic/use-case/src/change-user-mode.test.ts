@@ -1,8 +1,8 @@
-import { test, expect } from "vitest";
-import { newChangeUserModeUseCase } from "./change-user-mode.js";
-import { User, Voting, ApplicablePoints, StoryPoint, Voter, Estimations } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Estimations, StoryPoint, User, Voter, Voting } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
+import { expect, test } from "vitest";
+import { newChangeUserModeUseCase } from "./change-user-mode.js";
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -63,7 +63,7 @@ test("should save voting", async () => {
   };
 
   const repository = newMemoryVotingRepository([voting]);
-  const fake = sinon.fake();
+  const fake = sinon.fake<[DomainEvent.T]>();
   const useCase = newChangeUserModeUseCase(repository, fake);
 
   // Act

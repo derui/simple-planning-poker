@@ -1,17 +1,16 @@
-import { test, expect } from "vitest";
-import * as sinon from "sinon";
 import {
-  Game,
-  User,
-  Voting,
-  StoryPoint,
   ApplicablePoints,
-  Estimations,
-  UserEstimation,
   DomainEvent,
+  Estimations,
+  StoryPoint,
+  User,
+  UserEstimation,
   Voter,
+  Voting,
 } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import * as sinon from "sinon";
+import { expect, test } from "vitest";
 import { newResetVotingUseCase } from "./reset-voting.js";
 
 test("should return error if game is not found", async () => {
