@@ -11,7 +11,7 @@ export const gameIndexPage = function gameIndexPage() {
  * Get path to voting of the game
  */
 export const votingPage = function votingPage(id: Game.Id) {
-  return `/game/${id}/voting`;
+  return `/voting/${id}`;
 };
 
 /**

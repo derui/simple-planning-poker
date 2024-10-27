@@ -1,35 +1,31 @@
-import React, { PropsWithChildren, useEffect } from "react";
+import { GameCreator, GameIndex } from "@spp/feature-game";
+import { AuthStatus } from "@spp/feature-login";
+import { PropsWithChildren, useEffect } from "react";
 import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../components/hooks";
-import { selectAuthenticated } from "../status/selectors/auth";
-import lazyImport from "../utils/lazy-import";
-import { RootLayout } from "./layout";
+import { hooks } from "../../../features/login/src/hooks/facade.js";
+import { RootLayout } from "./layout.js";
+import { RevealedAreaRoute } from "./revealed-area.js";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
-  const state = useAppSelector(selectAuthenticated);
+  const auth = hooks.useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!state) {
+    auth.checkLogined();
+  }, []);
+
+  useEffect(() => {
+    if (auth.status == AuthStatus.NotAuthenticated) {
       navigate("/signin", { state: { from: location }, replace: true });
     } else {
       navigate(location.pathname);
     }
-  }, [state]);
+  }, [auth.status]);
 
-  return <>{children}</>;
+  return children;
 }
-
-const LaziedRoundPage = React.lazy(() => lazyImport(import("../components/pages/round")));
-const LaziedRoundResultPage = React.lazy(() => lazyImport(import("../components/pages/round-result")));
-const LaziedCreateGamePage = React.lazy(() => lazyImport(import("../components/pages/create-game")));
-const LaziedSelectGamePage = React.lazy(() => lazyImport(import("../components/pages/select-game")));
-const LaziedJoinPage = React.lazy(() => lazyImport(import("../components/pages/join-game")));
-const LaziedSignInPage = React.lazy(() => lazyImport(import("../components/pages/signin")));
-const LaziedOpenGamePage = React.lazy(() => lazyImport(import("../components/pages/open-game")));
-const LaziedRoundHistoryPage = React.lazy(() => lazyImport(import("../components/pages/round-history")));
 
 export const routes = createBrowserRouter([
   {
@@ -45,7 +41,7 @@ export const routes = createBrowserRouter([
         path: "/game/create",
         element: (
           <PrivateRoute>
-            <LaziedCreateGamePage />
+            <GameCreator />
           </PrivateRoute>
         ),
       },
@@ -53,23 +49,23 @@ export const routes = createBrowserRouter([
         path: "/game",
         element: (
           <PrivateRoute>
-            <LaziedSelectGamePage />
+            <GameIndex />
           </PrivateRoute>
         ),
       },
       {
-        path: "/game/:gameId",
+        path: "/voting/:votingId",
         element: (
           <PrivateRoute>
-            <LaziedOpenGamePage />
+            <VoringAreaRoute />
           </PrivateRoute>
         ),
       },
       {
-        path: "/game/:gameId/round/:roundId",
+        path: "/voting/:votingId/revealed",
         element: (
           <PrivateRoute>
-            <LaziedRoundPage />
+            <RevealedAreaRoute />
           </PrivateRoute>
         ),
       },
