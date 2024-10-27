@@ -1,11 +1,11 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
-import { MemoryRouter } from "react-router-dom";
-import { GameIndex } from "./game-index.js";
-import sinon from "sinon";
 import { createStore, Provider } from "jotai";
-import { Hooks, ImplementationProvider } from "../hooks/facade.js";
-import { PrepareGameStatus } from "../atoms/game.js";
+import { MemoryRouter } from "react-router-dom";
+import sinon from "sinon";
+import { afterEach, expect, test } from "vitest";
+import { PrepareGameStatus } from "../../atoms/game.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { GameIndex } from "./game-index.js";
 
 afterEach(cleanup);
 

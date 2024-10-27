@@ -7,8 +7,8 @@ import { createStore, Provider } from "jotai";
 import { useEffect } from "react";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { createUseListGame, createUsePrepareGame } from "../atoms/game.js";
-import { hooks, Hooks, ImplementationProvider } from "../hooks/facade.js";
+import { createUseListGame, createUsePrepareGame } from "../../atoms/game.js";
+import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
 const meta = {

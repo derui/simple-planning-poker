@@ -1,10 +1,15 @@
 import * as AppUrl from "@spp/shared-app-url";
 import { Loader } from "@spp/ui-loader";
 import { Link } from "react-router-dom";
-import { PrepareGameStatus } from "../atoms/game.js";
-import { hooks } from "../hooks/facade.js";
+import { GameDto } from "../../atoms/dto.js";
+import { GameListItem } from "../presentations/game-list-item.js";
 import * as styles from "./game-index.css.js";
-import { GameListItem } from "./presentations/game-list-item.js";
+
+interface Props {
+  loading?: boolean;
+
+  games?: GameDto[];
+}
 
 const Empty = () => {
   return (
@@ -26,11 +31,10 @@ const Loading = () => {
 };
 
 // eslint-disable-next-line func-style
-export function GameIndex() {
-  const { games } = hooks.useListGame();
-  const { status } = hooks.usePrepareGame();
+export function GameIndexLayout(props: Props) {
+  const { loading = false, games = [] } = props;
 
-  if (status != PrepareGameStatus.Prepared) {
+  if (loading) {
     return <Loading />;
   }
 
