@@ -52,7 +52,6 @@
   "dependencies": {
     "@spp/ui-theme": "workspace:^",
     "@vanilla-extract/css": "catalog:",
-    "clsx": "catalog:",
-    "react": "catalog:"
+      "react": "catalog:"
   }
 }

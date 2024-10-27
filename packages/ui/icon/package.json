@@ -50,7 +50,6 @@
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-type-util": "workspace:^",
     "@spp/ui-theme": "workspace:^",
-    "clsx": "catalog:",
-    "react": "catalog:"
+      "react": "catalog:"
   }
 }
