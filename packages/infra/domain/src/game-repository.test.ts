@@ -1,10 +1,10 @@
-import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
+import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { Database, push, ref, set } from "firebase/database";
 import { v4 } from "uuid";
+import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
 import { GameRepositoryImpl } from "./game-repository.js";
 import { ownerGames } from "./user-ref-resolver.js";
-import { Game, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
 
 let database: Database;
 let testEnv: RulesTestEnvironment;
@@ -32,7 +32,7 @@ afterEach(async () => {
 
 test("should be able to save and find a game", async () => {
   // Arrange
-  let [game] = Game.create({
+  const [game] = Game.create({
     id: Game.createId(),
     name: "test",
     owner: User.createId("id"),
