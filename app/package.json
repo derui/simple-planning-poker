@@ -1,6 +1,6 @@
 {
-  "name": "planning-poker-react",
-  "version": "6.0.0",
+  "name": "@spp/app",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
