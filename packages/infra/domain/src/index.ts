@@ -1,8 +1,18 @@
 // Add public interface
-export { newEventDispatcher } from "./event/event-dispatcher.js";
-export { GameObserverImpl } from "./game-observer.js";
-export { GameRepositoryImpl } from "./game-repository.js";
-export { UserObserverImpl } from "./user-observer.js";
-export { UserRepositoryImpl } from "./user-repository.js";
-export { VotingObserverImpl } from "./voting-observer.js";
-export { VotingRepositoryImpl } from "./voting-repository.js";
+import { newEventDispatcher } from "./event/event-dispatcher.js";
+import { GameObserverImpl } from "./game-observer.js";
+import { GameRepositoryImpl } from "./game-repository.js";
+import { UserObserverImpl } from "./user-observer.js";
+import { UserRepositoryImpl } from "./user-repository.js";
+import { VotingObserverImpl } from "./voting-observer.js";
+import { VotingRepositoryImpl } from "./voting-repository.js";
+
+export {
+  GameObserverImpl,
+  GameRepositoryImpl,
+  newEventDispatcher,
+  UserObserverImpl,
+  UserRepositoryImpl,
+  VotingObserverImpl,
+  VotingRepositoryImpl,
+};
