@@ -22,8 +22,8 @@
     "test": "firebase emulators:exec 'npx vitest run'",
     "watch:test": "firebase emulators:exec 'npx vitest watch'",
     "watch:test:noemu": "npx vitest watch",
-    "dev:storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "dev:storybook": "storybook dev --disable-telemetry -p 6006",
+    "build:storybook": "storybook build --disable-telemetry"
   },
   "volta": {
     "node": "22.6.0"
