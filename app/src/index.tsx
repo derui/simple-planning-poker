@@ -40,7 +40,7 @@ import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { Provider } from "jotai";
-import * as ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 import { firebaseConfig } from "./firebase.config.js";
 import { routes } from "./routes/root.js";
@@ -90,7 +90,7 @@ const votingHooks: VotingHooks = {
   useVotingStatus: createUseVotingStatus(),
 };
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
+const root = createRoot(document.getElementById("root")!);
 
 root.render(
   <LoginFeatureImplementationProvider implementation={loginHooks}>

@@ -53,6 +53,7 @@ catalog:
   react-router-dom: 6.26.2
   "@types/react-router": 5.1.20
   "@types/react-router-dom": 5.3.3
+  "@remix-run/router": 1.20.0
 
   "@types/react-transition-group": 4.4.10
 

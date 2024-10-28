@@ -18,6 +18,9 @@ catalogs:
     '@pnpm/find-workspace-dir':
       specifier: 7.0.1
       version: 7.0.1
+    '@remix-run/router':
+      specifier: 1.20.0
+      version: 1.20.0
     '@remix-run/web-fetch':
       specifier: 4.4.2
       version: 4.4.2
@@ -159,6 +162,9 @@ importers:
 
   app:
     dependencies:
+      '@remix-run/router':
+        specifier: 'catalog:'
+        version: 1.20.0
       '@spp/feature-game':
         specifier: workspace:^
         version: link:../features/game
@@ -208,9 +214,6 @@ importers:
         specifier: 'catalog:'
         version: 10.0.0
     devDependencies:
-      '@firebase/rules-unit-testing':
-        specifier: 'catalog:'
-        version: 3.0.1(encoding@0.1.13)(firebase@10.13.2)
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.48.2
@@ -223,18 +226,6 @@ importers:
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../configs/typescript-config
-      '@storybook/addon-controls':
-        specifier: 'catalog:'
-        version: 8.3.3(storybook@8.3.3)
-      '@storybook/cli':
-        specifier: 'catalog:'
-        version: 8.3.3(@babel/preset-env@7.25.4(@babel/core@7.25.2))
-      '@storybook/react':
-        specifier: 'catalog:'
-        version: 8.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.3)(typescript@5.6.2)
-      '@storybook/react-vite':
-        specifier: 'catalog:'
-        version: 8.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.22.5)(storybook@8.3.3)(typescript@5.6.2)(vite@5.4.8(@types/node@22.7.4))
       '@testing-library/dom':
         specifier: 'catalog:'
         version: 10.0.0
@@ -3061,6 +3052,10 @@ packages:
 
   '@remix-run/router@1.19.2':
     resolution: {integrity: sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==}
+    engines: {node: '>=14.0.0'}
+
+  '@remix-run/router@1.20.0':
+    resolution: {integrity: sha512-mUnk8rPJBI9loFDZ+YzPGdeniYK+FTmRD1TMCz7ev2SNIozyKKpnGgsxO34u6Z4z/t0ITuu7voi/AshfsGsgFg==}
     engines: {node: '>=14.0.0'}
 
   '@remix-run/web-blob@3.1.0':
@@ -9218,6 +9213,8 @@ snapshots:
   '@protobufjs/utf8@1.1.0': {}
 
   '@remix-run/router@1.19.2': {}
+
+  '@remix-run/router@1.20.0': {}
 
   '@remix-run/web-blob@3.1.0':
     dependencies:

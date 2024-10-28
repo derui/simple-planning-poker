@@ -7,6 +7,7 @@
   "scripts": {
     "dev:test": "vitest",
     "dev:tsc": "tsc --watch",
+    "build:tsc": "tsc --noEmit",
     "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\"",
     "ci": "CI=true firebase emulators:exec --ui 'npx vite'",
     "build:bundle": "NODE_ENV=production vite build",
@@ -21,7 +22,7 @@
   "author": "derui",
   "license": "MIT",
   "devDependencies": {
-      "@playwright/test": "catalog:",
+    "@playwright/test": "catalog:",
     "@remix-run/web-fetch": "catalog:",
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
@@ -46,6 +47,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@remix-run/router": "catalog:",
     "@spp/feature-game": "workspace:^",
     "@spp/feature-login": "workspace:^",
     "@spp/feature-voting": "workspace:^",

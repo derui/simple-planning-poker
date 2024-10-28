@@ -1,7 +1,6 @@
-import { AuthStatus } from "@spp/feature-login";
+import { AuthStatus, hooks } from "@spp/feature-login";
 import React, { PropsWithChildren, useEffect } from "react";
 import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-router-dom";
-import { hooks } from "../../../features/login/src/hooks/facade.js";
 import lazyImport from "../utils/lazy-import.js";
 import { RootLayout } from "./layout.js";
 
