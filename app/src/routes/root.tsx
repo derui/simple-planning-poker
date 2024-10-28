@@ -1,11 +1,9 @@
-import { GameCreator, GameIndex } from "@spp/feature-game";
-import { AuthStatus, Login, SignIn, SignUp } from "@spp/feature-login";
-import { PropsWithChildren, useEffect } from "react";
+import { AuthStatus } from "@spp/feature-login";
+import React, { PropsWithChildren, useEffect } from "react";
 import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-router-dom";
 import { hooks } from "../../../features/login/src/hooks/facade.js";
+import lazyImport from "../utils/lazy-import.js";
 import { RootLayout } from "./layout.js";
-import { RevealedAreaRoute } from "./revealed-area.js";
-import { VotingAreaRoute } from "./voting-area.js";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
@@ -28,6 +26,22 @@ function PrivateRoute({ children }: PropsWithChildren) {
   return children;
 }
 
+const LaziedGameCreator = React.lazy(() =>
+  lazyImport(import("@spp/feature-game")).then((v) => ({ default: v.GameCreator }))
+);
+const LaziedGameIndex = React.lazy(() =>
+  lazyImport(import("@spp/feature-game")).then((v) => ({ default: v.GameIndex }))
+);
+const LaziedVotingAreaRoute = React.lazy(() =>
+  lazyImport(import("@spp/feature-voting")).then((v) => ({ default: v.VotingArea }))
+);
+const LaziedRevealedAreaRoute = React.lazy(() =>
+  lazyImport(import("@spp/feature-voting")).then((v) => ({ default: v.RevealedArea }))
+);
+const LaziedSignIn = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.SignIn })));
+const LaziedSignUp = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.SignUp })));
+const LaziedLogin = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.Login })));
+
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -42,7 +56,7 @@ export const routes = createBrowserRouter([
         path: "/game/create",
         element: (
           <PrivateRoute>
-            <GameCreator />
+            <LaziedGameCreator />
           </PrivateRoute>
         ),
       },
@@ -50,7 +64,7 @@ export const routes = createBrowserRouter([
         path: "/game",
         element: (
           <PrivateRoute>
-            <GameIndex />
+            <LaziedGameIndex />
           </PrivateRoute>
         ),
       },
@@ -58,7 +72,7 @@ export const routes = createBrowserRouter([
         path: "/voting/:votingId",
         element: (
           <PrivateRoute>
-            <VotingAreaRoute />
+            <LaziedVotingAreaRoute />
           </PrivateRoute>
         ),
       },
@@ -66,21 +80,21 @@ export const routes = createBrowserRouter([
         path: "/voting/:votingId/revealed",
         element: (
           <PrivateRoute>
-            <RevealedAreaRoute />
+            <LaziedRevealedAreaRoute />
           </PrivateRoute>
         ),
       },
       {
         path: "/signin",
-        element: <SignIn />,
+        element: <LaziedSignIn />,
       },
       {
         path: "/signup",
-        element: <SignUp />,
+        element: <LaziedSignUp />,
       },
       {
         path: "/login",
-        element: <Login />,
+        element: <LaziedLogin />,
       },
     ],
   },
