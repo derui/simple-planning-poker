@@ -1,10 +1,11 @@
 import { GameCreator, GameIndex } from "@spp/feature-game";
-import { AuthStatus } from "@spp/feature-login";
+import { AuthStatus, Login, SignIn, SignUp } from "@spp/feature-login";
 import { PropsWithChildren, useEffect } from "react";
 import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-router-dom";
 import { hooks } from "../../../features/login/src/hooks/facade.js";
 import { RootLayout } from "./layout.js";
 import { RevealedAreaRoute } from "./revealed-area.js";
+import { VotingAreaRoute } from "./voting-area.js";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
@@ -35,7 +36,7 @@ export const routes = createBrowserRouter([
       {
         index: true,
         path: "/",
-        loader: async () => redirect("/game"),
+        loader: async () => redirect("/login"),
       },
       {
         path: "/game/create",
@@ -57,7 +58,7 @@ export const routes = createBrowserRouter([
         path: "/voting/:votingId",
         element: (
           <PrivateRoute>
-            <VoringAreaRoute />
+            <VotingAreaRoute />
           </PrivateRoute>
         ),
       },
@@ -70,36 +71,16 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        path: "/game/:gameId/round/:roundId/result",
-        element: (
-          <PrivateRoute>
-            <LaziedRoundResultPage />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/game/:gameId/round/:roundId/history",
-        element: (
-          <PrivateRoute>
-            <LaziedRoundHistoryPage />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/invitation/:signature",
-        element: (
-          <PrivateRoute>
-            <LaziedJoinPage />
-          </PrivateRoute>
-        ),
-      },
-      {
         path: "/signin",
-        element: <LaziedSignInPage method="signIn" />,
+        element: <SignIn />,
       },
       {
         path: "/signup",
-        element: <LaziedSignInPage method="signUp" />,
+        element: <SignUp />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
     ],
   },
