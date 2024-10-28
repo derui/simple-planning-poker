@@ -1,3 +1,4 @@
+import { Router } from "@remix-run/router";
 import { AuthStatus, hooks } from "@spp/feature-login";
 import React, { PropsWithChildren, useEffect } from "react";
 import { createBrowserRouter, redirect, useLocation, useNavigate } from "react-router-dom";
@@ -41,7 +42,7 @@ const LaziedSignIn = React.lazy(() => lazyImport(import("@spp/feature-login")).t
 const LaziedSignUp = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.SignUp })));
 const LaziedLogin = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.Login })));
 
-export const routes = createBrowserRouter([
+export const routes: Router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,

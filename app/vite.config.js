@@ -1,26 +1,25 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import react from "@vitejs/plugin-react";
+import path from "node:path";
+import { defineConfig } from "vite";
 
-const isProduction = process.env['NODE_ENV'] === 'production';
-const isCI = process.env['CI'] === 'true';
+const isProduction = process.env["NODE_ENV"] === "production";
+const isCI = process.env["CI"] === "true";
 
 export default defineConfig({
   build: {
-    target: 'esnext',
+    target: "esnext",
     polyfillDynamicImport: false,
-    jsx: isProduction ? 'react-jsx' : 'react-jsxdev',
+    jsx: isProduction ? "react-jsx" : "react-jsxdev",
   },
-  define:{
+  define: {
     "process.env": {
-      "CI": isCI ? 'ci' : ''
-    }
+      CI: isCI ? "ci" : "",
+    },
   },
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "./firebase.config": path.join(__dirname, 'src', isProduction ? 'firebase.config.prod' : 'firebase.config')
+      "./firebase.config": path.join(__dirname, "src", isProduction ? "firebase.config.prod" : "firebase.config"),
     },
   },
 });

@@ -43,6 +43,7 @@
     "eslint-plugin-unused-imports": "catalog:",
     "jsdom": "catalog:",
     "sinon": "catalog:",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
