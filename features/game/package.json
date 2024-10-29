@@ -37,7 +37,7 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
-      "@testing-library/user-event": "catalog:",
+    "@testing-library/user-event": "catalog:",
     "@types/react": "catalog:",
     "@types/sinon": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
@@ -52,6 +52,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@spp/feature-login": "workspace:^",
     "@spp/infra-domain": "workspace:^",
     "@spp/shared-app-url": "workspace:^",
     "@spp/shared-color-variant": "workspace:^",
@@ -63,7 +64,7 @@
     "@spp/ui-loader": "workspace:^",
     "@spp/ui-theme": "workspace:^",
     "@vanilla-extract/css": "catalog:",
-      "jotai": "catalog:",
+    "jotai": "catalog:",
     "react": "catalog:",
     "react-router-dom": "catalog:"
   }

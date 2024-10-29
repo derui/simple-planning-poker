@@ -1,3 +1,4 @@
+import { UseLoginUser } from "@spp/feature-login";
 import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom, useAtomValue } from "jotai";
@@ -104,7 +105,7 @@ export type UsePrepareGame = () => {
    *
    * MUST CALL THIS FIRST BEFORE USE ANY FUNCTION IN THIS FEATURE!!.
    */
-  prepare: (userId: User.Id) => void;
+  prepare: () => void;
 };
 
 /**
@@ -201,17 +202,25 @@ export const createUseCreateGame = function createUseCreateGame(
 /**
  * Create Hook implementation of `UsePrepareGame`
  */
-export const createUsePrepareGame = function createUsePrepareGame(gameRepository: GameRepository.T): UsePrepareGame {
+export const createUsePrepareGame = function createUsePrepareGame(
+  gameRepository: GameRepository.T,
+  useLoginUser: UseLoginUser
+): UsePrepareGame {
   return () => {
     const [status, setStatus] = useAtom(prepareGameStatusAtom);
     const [, setCreateStatus] = useAtom(createGameStatusAtom);
     const [, setCurrentUserId] = useAtom(currentUserIdAtom);
     const [, setGames] = useAtom(gamesAtom);
+    const { userId } = useLoginUser();
 
     return {
       status,
 
-      prepare(userId) {
+      prepare() {
+        if (!userId) {
+          return;
+        }
+
         setStatus(PrepareGameStatus.Prepared);
 
         gameRepository

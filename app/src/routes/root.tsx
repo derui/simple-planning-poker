@@ -30,13 +30,13 @@ const LaziedGameCreator = React.lazy(() =>
   lazyImport(import("@spp/feature-game")).then((v) => ({ default: v.GameCreator }))
 );
 const LaziedGameIndex = React.lazy(() =>
-  lazyImport(import("@spp/feature-game")).then((v) => ({ default: v.GameIndex }))
+  lazyImport(import("./game-index.js")).then((v) => ({ default: v.GameIndexRoute }))
 );
 const LaziedVotingAreaRoute = React.lazy(() =>
-  lazyImport(import("@spp/feature-voting")).then((v) => ({ default: v.VotingArea }))
+  lazyImport(import("./voting-area.js")).then((v) => ({ default: v.VotingAreaRoute }))
 );
 const LaziedRevealedAreaRoute = React.lazy(() =>
-  lazyImport(import("@spp/feature-voting")).then((v) => ({ default: v.RevealedArea }))
+  lazyImport(import("./revealed-area.js")).then((v) => ({ default: v.RevealedAreaRoute }))
 );
 const LaziedSignIn = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.SignIn })));
 const LaziedSignUp = React.lazy(() => lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.SignUp })));

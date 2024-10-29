@@ -318,6 +318,9 @@ importers:
 
   features/game:
     dependencies:
+      '@spp/feature-login':
+        specifier: workspace:^
+        version: link:../login
       '@spp/infra-domain':
         specifier: workspace:^
         version: link:../../packages/infra/domain
