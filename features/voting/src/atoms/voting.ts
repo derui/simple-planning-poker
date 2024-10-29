@@ -160,14 +160,14 @@ export const createUseJoin = function createUseJoin(
   votingRepository: VotingRepository.T,
   userRepository: UserRepository.T
 ): UseJoin {
-  const { userId } = useLoginUser();
-  const [, setVoting] = useAtom(votingAtom);
-  const [status, setStatus] = useAtom(joinStatusAtom);
-  const [, setUsers] = useAtom(usersAtom);
-  const [, setVotingStatus] = useAtom(votingStatusAtom);
-  const setUserRole = useSetAtom(userRoleAtom);
-
   return () => {
+    const { userId } = useLoginUser();
+    const [, setVoting] = useAtom(votingAtom);
+    const [status, setStatus] = useAtom(joinStatusAtom);
+    const [, setUsers] = useAtom(usersAtom);
+    const [, setVotingStatus] = useAtom(votingStatusAtom);
+    const setUserRole = useSetAtom(userRoleAtom);
+
     return {
       status,
 
@@ -212,9 +212,8 @@ export const createUseJoin = function createUseJoin(
  * Create `UseVotingStatus` hook
  */
 export const createUseVotingStatus = function createUseVotingStatus(): UseVotingStatus {
-  const status = useAtomValue(votingStatusAtom);
-
   return () => {
+    const status = useAtomValue(votingStatusAtom);
     return {
       status,
     };
@@ -225,39 +224,39 @@ export const createUseVotingStatus = function createUseVotingStatus(): UseVoting
  * Create `UsePollingPlace` hook
  */
 export const createUsePollingPlace = function createUsePollingPlace(): UsePollingPlace {
-  const voting = useAtomValue(votingAtom);
-  const users = useAtomValue(usersAtom);
-  const loading = useAtomValue(votingLoadingAtom);
-  const userRole = useAtomValue(userRoleAtom);
-
-  const voters = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Normal == v.type);
-  const inspectors = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Inspector == v.type);
-  const estimations = Array.from(voters).map<EstimationDto>((voter) => {
-    const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
-
-    if (!voting) {
-      return { name: userName };
-    }
-
-    const estimation = Estimations.estimationOfUser(voting.estimations, voter.user);
-    let estimated: string | undefined;
-    if (UserEstimation.isSubmitted(estimation)) {
-      estimated = estimation.point.toString();
-    }
-
-    return {
-      name: userName,
-      estimated,
-    };
-  });
-
-  const _inspectors = inspectors.map<EstimationDto>((voter) => {
-    const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
-
-    return { name: userName };
-  });
-
   return () => {
+    const voting = useAtomValue(votingAtom);
+    const users = useAtomValue(usersAtom);
+    const loading = useAtomValue(votingLoadingAtom);
+    const userRole = useAtomValue(userRoleAtom);
+
+    const voters = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Normal == v.type);
+    const inspectors = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Inspector == v.type);
+    const estimations = Array.from(voters).map<EstimationDto>((voter) => {
+      const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
+
+      if (!voting) {
+        return { name: userName };
+      }
+
+      const estimation = Estimations.estimationOfUser(voting.estimations, voter.user);
+      let estimated: string | undefined;
+      if (UserEstimation.isSubmitted(estimation)) {
+        estimated = estimation.point.toString();
+      }
+
+      return {
+        name: userName,
+        estimated,
+      };
+    });
+
+    const _inspectors = inspectors.map<EstimationDto>((voter) => {
+      const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
+
+      return { name: userName };
+    });
+
     return {
       loading,
 
@@ -284,21 +283,21 @@ export const createUseVoting = function createUseVoting(dependencies: {
   changeUserModeUseCase: ChangeUserModeUseCase;
   revealUseCase: RevealUseCase;
 }): UseVoting {
-  const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase, changeUserModeUseCase } =
-    dependencies;
-  const { userId } = useLoginUser();
-  const [voting, setVoting] = useAtom(votingAtom);
-  const [, setUserRole] = useAtom(userRoleAtom);
-
-  let estimated = undefined;
-  if (voting && userId) {
-    const estimation = Estimations.estimationOfUser(voting.estimations, userId);
-    if (UserEstimation.isSubmitted(estimation)) {
-      estimated = estimation.point;
-    }
-  }
-
   return () => {
+    const { useLoginUser, changeThemeUseCase, estimatePlayerUseCase, revealUseCase, changeUserModeUseCase } =
+      dependencies;
+    const { userId } = useLoginUser();
+    const [voting, setVoting] = useAtom(votingAtom);
+    const [, setUserRole] = useAtom(userRoleAtom);
+
+    let estimated = undefined;
+    if (voting && userId) {
+      const estimation = Estimations.estimationOfUser(voting.estimations, userId);
+      if (UserEstimation.isSubmitted(estimation)) {
+        estimated = estimation.point;
+      }
+    }
+
     return {
       estimated,
 
@@ -394,10 +393,10 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
   changeThemeUseCase: ChangeThemeUseCase;
   resetVotingUseCase: ResetVotingUseCase;
 }): UseRevealed {
-  const { changeThemeUseCase, resetVotingUseCase } = dependencies;
-  const [voting, setVoting] = useAtom(votingAtom);
-
   return () => {
+    const { changeThemeUseCase, resetVotingUseCase } = dependencies;
+    const [voting, setVoting] = useAtom(votingAtom);
+
     return {
       changeTheme(newTheme) {
         if (!voting) {

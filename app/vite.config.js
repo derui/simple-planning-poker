@@ -1,3 +1,4 @@
+import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
 import { defineConfig } from "vite";
@@ -16,7 +17,7 @@ export default defineConfig({
       CI: isCI ? "ci" : "",
     },
   },
-  plugins: [react()],
+  plugins: [react(), vanillaExtractPlugin()],
   resolve: {
     alias: {
       "./firebase.config": path.join(__dirname, "src", isProduction ? "firebase.config.prod" : "firebase.config"),

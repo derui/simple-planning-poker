@@ -1,6 +1,6 @@
 import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import { GameDto, toGameDto } from "./dto.js";
 
 /**
@@ -237,8 +237,8 @@ export const createUsePrepareGame = function createUsePrepareGame(gameRepository
  */
 export const createUseListGame = function createUseListGame(): UseListGame {
   return () => {
-    const [games] = useAtom(gamesAtom);
-    const [currentUserId] = useAtom(currentUserIdAtom);
+    const games = useAtomValue(gamesAtom);
+    const currentUserId = useAtomValue(currentUserIdAtom);
 
     return {
       games: !currentUserId ? [] : games.map((v) => toGameDto(v, currentUserId)),

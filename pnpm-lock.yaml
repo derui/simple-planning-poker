@@ -186,6 +186,9 @@ importers:
       '@spp/shared-use-case':
         specifier: workspace:^
         version: link:../packages/shared-logic/use-case
+      '@vanilla-extract/css':
+        specifier: ^1.16.0
+        version: 1.16.0
       crypto-js:
         specifier: 'catalog:'
         version: 4.2.0
@@ -253,6 +256,9 @@ importers:
       '@types/uuid':
         specifier: 'catalog:'
         version: 10.0.0
+      '@vanilla-extract/vite-plugin':
+        specifier: ^4.0.17
+        version: 4.0.17(@types/node@22.7.4)(vite@5.4.8(@types/node@22.7.4))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.3.1(vite@5.4.8(@types/node@22.7.4))
@@ -3529,6 +3535,11 @@ packages:
 
   '@vanilla-extract/vite-plugin@4.0.16':
     resolution: {integrity: sha512-1yaIwn/2QXHvHfUeEcQ+OWVYvfYCfxIpWfY1y/dcGSMHu/fiFHbLgX75rX6SGnepsaYCTqsdtEiGWJhwxMHouw==}
+    peerDependencies:
+      vite: ^4.0.3 || ^5.0.0
+
+  '@vanilla-extract/vite-plugin@4.0.17':
+    resolution: {integrity: sha512-qyAEmBcwih7E3lMrcFZX1Ph81TQos1FFyxOu5JmNmu/F/g7HkcCXFV897pNKFmXgED/TzuyrFVcIRimg5pPc9A==}
     peerDependencies:
       vite: ^4.0.3 || ^5.0.0
 
@@ -9856,6 +9867,22 @@ snapshots:
   '@vanilla-extract/private@1.0.6': {}
 
   '@vanilla-extract/vite-plugin@4.0.16(@types/node@22.7.4)(vite@5.4.8(@types/node@22.7.4))':
+    dependencies:
+      '@vanilla-extract/integration': 7.1.10(@types/node@22.7.4)
+      vite: 5.4.8(@types/node@22.7.4)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  '@vanilla-extract/vite-plugin@4.0.17(@types/node@22.7.4)(vite@5.4.8(@types/node@22.7.4))':
     dependencies:
       '@vanilla-extract/integration': 7.1.10(@types/node@22.7.4)
       vite: 5.4.8(@types/node@22.7.4)

@@ -28,6 +28,11 @@
     "dev": {
       "persistent": true,
       "cache": false
+    },
+    "app": {
+      "dependsOn": ["build", "wait-emulator"],
+      "persistent": true,
+      "cache": false
     }
   }
 }

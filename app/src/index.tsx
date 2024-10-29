@@ -42,6 +42,7 @@ import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { Provider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
+import "./app.css.js";
 import { firebaseConfig } from "./firebase.config.js";
 import { routes } from "./routes/root.js";
 
@@ -93,13 +94,13 @@ const votingHooks: VotingHooks = {
 const root = createRoot(document.getElementById("root")!);
 
 root.render(
-  <LoginFeatureImplementationProvider implementation={loginHooks}>
-    <GameFeatureImplementationProvider implementation={gameHooks}>
-      <VotingFeatureImplementationProvider implementation={votingHooks}>
-        <Provider>
+  <Provider>
+    <LoginFeatureImplementationProvider implementation={loginHooks}>
+      <GameFeatureImplementationProvider implementation={gameHooks}>
+        <VotingFeatureImplementationProvider implementation={votingHooks}>
           <RouterProvider router={routes} />
-        </Provider>
-      </VotingFeatureImplementationProvider>
-    </GameFeatureImplementationProvider>
-  </LoginFeatureImplementationProvider>
+        </VotingFeatureImplementationProvider>
+      </GameFeatureImplementationProvider>
+    </LoginFeatureImplementationProvider>
+  </Provider>
 );
