@@ -186,6 +186,9 @@ importers:
       '@spp/shared-use-case':
         specifier: workspace:^
         version: link:../packages/shared-logic/use-case
+      '@spp/ui-theme':
+        specifier: workspace:^
+        version: link:../packages/ui/theme
       '@vanilla-extract/css':
         specifier: ^1.16.0
         version: 1.16.0
