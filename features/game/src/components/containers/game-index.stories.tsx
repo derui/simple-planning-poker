@@ -24,7 +24,7 @@ const InitializeUser = function InitializeUser({ children }: { children: React.R
   const { prepare } = hooks.usePrepareGame();
 
   useEffect(() => {
-    prepare(User.createId("foo"));
+    prepare();
   }, []);
 
   return children;
@@ -35,8 +35,11 @@ export const WaitingPrepared: Story = {
     const store = createStore();
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
-      useListGame: createUseListGame(),
+      usePrepareGame: createUsePrepareGame({
+        gameRepository: newMemoryGameRepository(),
+        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+      }),
+      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -60,8 +63,11 @@ export const Empty: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame(repository),
-      useListGame: createUseListGame(),
+      usePrepareGame: createUsePrepareGame({
+        gameRepository: repository,
+        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+      }),
+      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -101,8 +107,11 @@ export const SomeGames: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame(repository),
-      useListGame: createUseListGame(),
+      usePrepareGame: createUsePrepareGame({
+        gameRepository: repository,
+        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+      }),
+      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -140,8 +149,11 @@ export const TenGames: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame(repository),
-      useListGame: createUseListGame(),
+      usePrepareGame: createUsePrepareGame({
+        gameRepository: repository,
+        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+      }),
+      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (

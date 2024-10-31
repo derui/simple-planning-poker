@@ -124,15 +124,22 @@ test("show error if name is invalid", async () => {
 
   const mock: Hooks = {
     useListGame: sinon.fake(),
-    useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
-    usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
+    useCreateGame: createUseCreateGame({
+      gameRepository: newMemoryGameRepository(),
+      dispatcher: sinon.fake(),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+    }),
+    usePrepareGame: createUsePrepareGame({
+      gameRepository: newMemoryGameRepository(),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+    }),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
     const { prepare } = hooks.usePrepareGame();
 
     useEffect(() => {
-      prepare(User.createId());
+      prepare();
     }, []);
 
     return children;
@@ -164,15 +171,22 @@ test("show error if points is invalid", async () => {
 
   const mock: Hooks = {
     useListGame: sinon.fake(),
-    useCreateGame: createUseCreateGame(newMemoryGameRepository(), sinon.fake()),
-    usePrepareGame: createUsePrepareGame(newMemoryGameRepository()),
+    useCreateGame: createUseCreateGame({
+      gameRepository: newMemoryGameRepository(),
+      dispatcher: sinon.fake(),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+    }),
+    usePrepareGame: createUsePrepareGame({
+      gameRepository: newMemoryGameRepository(),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+    }),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
     const { prepare } = hooks.usePrepareGame();
 
     useEffect(() => {
-      prepare(User.createId());
+      prepare();
     }, []);
 
     return children;

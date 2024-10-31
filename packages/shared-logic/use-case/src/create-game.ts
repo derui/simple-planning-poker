@@ -1,6 +1,6 @@
+import { ApplicablePoints, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { Prettify } from "@spp/shared-type-util";
 import { EventDispatcher, UseCase } from "./base.js";
-import { User, StoryPoint, ApplicablePoints, Game, GameRepository } from "@spp/shared-domain";
 
 export interface CreateGameUseCaseInput {
   name: string;
@@ -30,9 +30,8 @@ export const newCreateGameUseCase = function newCreateGameUseCase(
       return { kind: "invalidStoryPoints" };
     }
 
-    const ownedGames = (await gameRepository.listUserCreated(input.createdBy)).filter(
-      (v) => v.owner == input.createdBy
-    );
+    const ownedGames = await gameRepository.listUserCreated(input.createdBy);
+
     if (ownedGames.some((v) => v.name == input.name)) {
       return { kind: "conflictName" };
     }

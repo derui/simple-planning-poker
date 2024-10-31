@@ -1,13 +1,8 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { Game, GameRepository, StoryPoint } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { GameDto, toGameDto } from "./dto.js";
-
-/**
- * Current user id in this feature.
- */
-const currentUserIdAtom = atom<User.Id | undefined>();
 
 /**
  * games that are owned by or joined by an user
@@ -88,7 +83,7 @@ export type UseCreateGame = () => {
   /**
    * Create game with inputs. If this method failed, update status.
    */
-  create: (name: string, points: string) => void;
+  create: (name: string, points: string) => Promise<void>;
 };
 
 /**
@@ -119,13 +114,16 @@ export type UseListGame = () => {
 };
 
 // hook implementations
-export const createUseCreateGame = function createUseCreateGame(
-  gameRepository: GameRepository.T,
-  dispatcher: EventDispatcher
-): UseCreateGame {
+export const createUseCreateGame = function createUseCreateGame(dependencies: {
+  gameRepository: GameRepository.T;
+  dispatcher: EventDispatcher;
+  useLoginUser: UseLoginUser;
+}): UseCreateGame {
+  const { gameRepository, dispatcher, useLoginUser } = dependencies;
+
   return () => {
     const [status, setStatus] = useAtom(createGameStatusAtom);
-    const [currentUserId] = useAtom(currentUserIdAtom);
+    const { userId } = useLoginUser();
     const [, setGames] = useAtom(gamesAtom);
     const [errors, setErrors] = useAtom(createGameValidationsAtom);
 
@@ -155,19 +153,19 @@ export const createUseCreateGame = function createUseCreateGame(
         setErrors(errors);
       },
 
-      create(name, points) {
-        if (errors.length > 0 || !currentUserId) {
+      async create(name, points) {
+        if (errors.length > 0 || !userId) {
           return;
         }
         setErrors([]);
         setStatus(CreateGameStatus.Waiting);
 
-        const _create = async function () {
+        try {
           const ret = await newCreateGameUseCase(
             dispatcher,
             gameRepository
           )({
-            createdBy: currentUserId,
+            createdBy: userId,
             name,
             points: points.split(",").map((v) => Number(v)),
           });
@@ -187,13 +185,11 @@ export const createUseCreateGame = function createUseCreateGame(
               return;
           }
 
-          const games = await gameRepository.listUserCreated(currentUserId);
+          const games = await gameRepository.listUserCreated(userId);
           setGames(games);
-        };
-
-        _create().catch(() => {
+        } catch (error) {
           setStatus(CreateGameStatus.Failed);
-        });
+        }
       },
     };
   };
@@ -202,14 +198,14 @@ export const createUseCreateGame = function createUseCreateGame(
 /**
  * Create Hook implementation of `UsePrepareGame`
  */
-export const createUsePrepareGame = function createUsePrepareGame(
-  gameRepository: GameRepository.T,
-  useLoginUser: UseLoginUser
-): UsePrepareGame {
+export const createUsePrepareGame = function createUsePrepareGame(params: {
+  gameRepository: GameRepository.T;
+  useLoginUser: UseLoginUser;
+}): UsePrepareGame {
+  const { gameRepository, useLoginUser } = params;
   return () => {
     const [status, setStatus] = useAtom(prepareGameStatusAtom);
     const [, setCreateStatus] = useAtom(createGameStatusAtom);
-    const [, setCurrentUserId] = useAtom(currentUserIdAtom);
     const [, setGames] = useAtom(gamesAtom);
     const { userId } = useLoginUser();
 
@@ -234,7 +230,6 @@ export const createUsePrepareGame = function createUsePrepareGame(
           .finally(() => {
             setCreateStatus(undefined);
             setStatus(PrepareGameStatus.Prepared);
-            setCurrentUserId(userId);
           });
       },
     };
@@ -244,13 +239,13 @@ export const createUsePrepareGame = function createUsePrepareGame(
 /**
  * Create hook implementation of `UseListGame`
  */
-export const createUseListGame = function createUseListGame(): UseListGame {
+export const createUseListGame = function createUseListGame(useLoginUser: UseLoginUser): UseListGame {
   return () => {
     const games = useAtomValue(gamesAtom);
-    const currentUserId = useAtomValue(currentUserIdAtom);
+    const { userId } = useLoginUser();
 
     return {
-      games: !currentUserId ? [] : games.map((v) => toGameDto(v, currentUserId)),
+      games: !userId ? [] : games.map((v) => toGameDto(v, userId)),
     };
   };
 };

@@ -24,7 +24,7 @@ const InitializeUser = function InitializeUser({ children }: { children: React.R
   const hook = hooks.usePrepareGame();
 
   useEffect(() => {
-    hook.prepare(User.createId());
+    hook.prepare();
   }, []);
 
   return children;
@@ -35,9 +35,16 @@ export const NormalBehavior: Story = {
     const store = createStore();
     const repository = newMemoryGameRepository();
     const hooks: Hooks = {
-      useCreateGame: createUseCreateGame(repository, sinon.fake()),
-      usePrepareGame: createUsePrepareGame(repository),
       useListGame: sinon.fake(),
+      useCreateGame: createUseCreateGame({
+        gameRepository: repository,
+        dispatcher: sinon.fake(),
+        useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+      }),
+      usePrepareGame: createUsePrepareGame({
+        gameRepository: repository,
+        useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+      }),
     };
 
     return (
