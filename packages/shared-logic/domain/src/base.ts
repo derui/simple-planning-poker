@@ -24,6 +24,6 @@ export const create = <T extends symbol>(constant: string | undefined = undefine
 /**
  * Compare two identifiers as generic.
  */
-export const isEqual = function isEqual<T extends symbol>(o1: Id<T>, o2: Id<T>) {
+export const isEqual = function isEqual<T extends symbol>(o1: Id<T>, o2: Id<T>): boolean {
   return o1 == o2;
 };

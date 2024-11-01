@@ -3,7 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { Dialog } from "./dialog.js";
 
-const meta = {
+const meta: {
+  title: string;
+  component: typeof Dialog;
+  tags: string[];
+} = {
   title: "Presentational/Dialog",
   component: Dialog,
   tags: ["autodocs"],

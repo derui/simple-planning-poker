@@ -4,7 +4,7 @@ import * as Base from "./base.js";
 import * as DomainEvent from "./event.js";
 import * as User from "./user.js";
 
-const _tag = Symbol("game");
+const _tag: unique symbol = Symbol("game");
 export type Id = Base.Id<typeof _tag>;
 
 /**
@@ -65,11 +65,11 @@ export const create = ({
   return [game, event];
 };
 
-export const canChangeName = function canChangeName(name: string) {
+export const canChangeName = function canChangeName(name: string): boolean {
   return name.trim() !== "";
 };
 
-export const changeName = function changeName(game: T, name: string) {
+export const changeName = function changeName(game: T, name: string): T {
   if (!canChangeName(name)) {
     throw new Error("can not change name");
   }

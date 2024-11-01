@@ -14,11 +14,11 @@ export const create = (v: number): T => {
 
 export const value = (v: T): Unbranded<T, typeof _tag> => v;
 
-export const isValid = (v: number) => {
+export const isValid = (v: number): boolean => {
   return v >= 0 && !isNaN(v);
 };
 
-export const isEqual = (v1: T, v2: T) => v1 == v2;
+export const isEqual = (v1: T, v2: T): boolean => v1 == v2;
 
 export const compare = (v1: T, v2: T): number => {
   if (isEqual(v1, v2)) {

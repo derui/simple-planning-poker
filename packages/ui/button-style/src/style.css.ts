@@ -151,7 +151,7 @@ const variants = {
   },
 };
 
-export const disabledButtonVariants = styleVariants(variants, (variant) => [
+export const disabledButtonVariants: Record<Variant, string> = styleVariants(variants, (variant) => [
   disabledBase,
   {
     borderWidth: "1px",
@@ -162,7 +162,7 @@ export const disabledButtonVariants = styleVariants(variants, (variant) => [
   },
 ]);
 
-export const disabledIconButtonVariants = styleVariants(variants, (variant) => [
+export const disabledIconButtonVariants: Record<Variant, string> = styleVariants(variants, (variant) => [
   disabledIconBase,
   {
     borderWidth: "1px",
@@ -173,7 +173,7 @@ export const disabledIconButtonVariants = styleVariants(variants, (variant) => [
   },
 ]);
 
-export const enabledButtonVariants = styleVariants(variants, (variant) => [
+export const enabledButtonVariants: Record<Variant, string> = styleVariants(variants, (variant) => [
   enabledBase,
   {
     borderWidth: "1px",
@@ -186,7 +186,7 @@ export const enabledButtonVariants = styleVariants(variants, (variant) => [
   },
 ]);
 
-export const enabledIconButtonVariants = styleVariants(variants, (variant) => [
+export const enabledIconButtonVariants: Record<Variant, string> = styleVariants(variants, (variant) => [
   enabledIconBase,
   {
     borderWidth: "1px",

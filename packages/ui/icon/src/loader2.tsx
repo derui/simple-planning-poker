@@ -3,7 +3,7 @@ import { Prettify } from "@spp/shared-type-util";
 import { extraLarge, large, medium, small } from "./loader2.css.js";
 import { IconProps } from "./props.js";
 
-export const Loader2 = function Loader2({ size = "m", variant = Variant.gray }: Prettify<IconProps>) {
+export const Loader2 = function Loader2({ size = "m", variant = Variant.gray }: Prettify<IconProps>): JSX.Element {
   let base: typeof small;
   switch (size) {
     case "s":

@@ -14,7 +14,7 @@ const iconBase = style({
   },
 });
 
-export const iconSmall = style([
+export const iconSmall: string = style([
   iconBase,
   {
     "::before": {
@@ -26,7 +26,7 @@ export const iconSmall = style([
   },
 ]);
 
-export const iconMedium = style([
+export const iconMedium: string = style([
   iconBase,
   {
     "::before": {
@@ -38,7 +38,7 @@ export const iconMedium = style([
   },
 ]);
 
-export const iconLarge = style([
+export const iconLarge: string = style([
   iconBase,
   {
     "::before": {
@@ -50,7 +50,7 @@ export const iconLarge = style([
   },
 ]);
 
-export const iconExtraLarge = style([
+export const iconExtraLarge: string = style([
   iconBase,
   {
     "::before": {
@@ -65,17 +65,19 @@ export const iconExtraLarge = style([
 /**
  * A simple function to make icon variant
  */
-export const styleVarianter = (base: string, icon: string) => (color: string) => [
-  base,
-  {
-    "::before": {
-      backgroundColor: color,
-      maskImage: `url(/static/svg/tabler-icons/${icon}.svg)`,
+export const styleVarianter =
+  (base: string, icon: string) =>
+  (color: string): [string, Record<string, object>] => [
+    base,
+    {
+      "::before": {
+        backgroundColor: color,
+        maskImage: `url(/static/svg/tabler-icons/${icon}.svg)`,
+      },
     },
-  },
-];
+  ];
 
-export const colorVariants = {
+export const colorVariants: Record<Variant, string> = {
   [Variant.gray]: vars.color.gray[700],
   [Variant.blue]: vars.color.blue[700],
   [Variant.teal]: vars.color.teal[700],

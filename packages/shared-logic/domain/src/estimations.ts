@@ -1,10 +1,10 @@
-import * as User from "./user.js";
-import * as Base from "./base.js";
-import * as StoryPoint from "./story-point.js";
-import * as UserEstimation from "./user-estimation.js";
-import { Branded, Unbranded } from "./type.js";
 import { unique } from "@spp/shared-array";
 import { produce } from "immer";
+import * as Base from "./base.js";
+import * as StoryPoint from "./story-point.js";
+import { Branded, Unbranded } from "./type.js";
+import * as UserEstimation from "./user-estimation.js";
+import * as User from "./user.js";
 
 const _tag: unique symbol = Symbol();
 
@@ -62,14 +62,14 @@ export const reset = function reset(obj: T): T {
 /**
  * Return argument is valid or not
  */
-export const isValid = function isValid(users: User.Id[]) {
+export const isValid = function isValid(users: User.Id[]): boolean {
   return unique(users, Base.isEqual).length > 0;
 };
 
 /**
  * Return the estimations have least one estimation from user.
  */
-export const isLeastOneEstimation = function isLeastOneEstimation(obj: T) {
+export const isLeastOneEstimation = function isLeastOneEstimation(obj: T): boolean {
   return Array.from(obj.userEstimations.values()).some((v) => !UserEstimation.isUnsubmit(v));
 };
 

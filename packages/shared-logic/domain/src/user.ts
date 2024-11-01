@@ -50,7 +50,7 @@ export const isEqual = function isEqual(o1: T, o2: T): boolean {
 /**
  * Return given name is changed to or not
  */
-export const canChangeName = (name: string) => {
+export const canChangeName = (name: string): boolean => {
   return name.trim() !== "";
 };
 

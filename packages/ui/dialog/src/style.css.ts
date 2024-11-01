@@ -1,7 +1,7 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "grid",
   gridTemplateRows: "auto 1fr",
   gridTemplateColumns: "1fr",
@@ -15,7 +15,7 @@ export const root = style({
   overflow: "hidden",
 });
 
-export const header = style({
+export const header: string = style({
   gridRowStart: 1,
   gridRowEnd: 2,
   display: "flex",
@@ -28,7 +28,7 @@ export const header = style({
   color: vars.color.emerald[800],
 });
 
-export const main = style({
+export const main: string = style({
   gridRowStart: 2,
   gridRowEnd: 4,
   width: "100%",

@@ -6,7 +6,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function Dialog(props: PropsWithChildren<Props>) {
+export function Dialog(props: PropsWithChildren<Props>): JSX.Element {
   return (
     <div className={root} role="dialog">
       <div className={header}>{props.title}</div>

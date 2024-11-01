@@ -1,13 +1,13 @@
 import { castDraft, produce } from "immer";
+import * as ApplicablePoints from "./applicable-points.js";
+import * as Base from "./base.js";
+import * as Estimations from "./estimations.js";
+import * as Event from "./event.js";
 import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
-import * as ApplicablePoints from "./applicable-points.js";
-import * as Estimations from "./estimations.js";
 import * as Voter from "./voter.js";
-import * as Event from "./event.js";
-import * as Base from "./base.js";
 
-const _tag = Symbol();
+const _tag: unique symbol = Symbol();
 type tag = typeof _tag;
 
 /**
@@ -196,7 +196,7 @@ export const takePlayerEstimation = function takePlayerEstimation(
   voting: T,
   userId: User.Id,
   estimation: UserEstimation.T
-) {
+): T {
   if (!voting.participatedVoters.find((v) => v.user == userId)) {
     throw new Error("Can not accept not participated voter");
   }
@@ -210,7 +210,7 @@ export const takePlayerEstimation = function takePlayerEstimation(
   });
 };
 
-export const canReveal = function canReveal(voting: T) {
+export const canReveal = function canReveal(voting: T): boolean {
   if (!Estimations.isLeastOneEstimation(voting.estimations) || voting.status == VotingStatus.Revealed) {
     return false;
   }

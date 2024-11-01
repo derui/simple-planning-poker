@@ -9,8 +9,7 @@
       "dom",
       "dom.iterable"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
+      "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
@@ -21,6 +20,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+      "isolatedDeclarations": true,
     "jsx": "react-jsxdev",
     "incremental": true
   }

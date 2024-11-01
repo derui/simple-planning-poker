@@ -15,7 +15,18 @@ const B = (props: Props) => {
   );
 };
 
-const meta = {
+const meta: {
+  title: string;
+  component: (props: Props) => import("react/jsx-dev-runtime").JSX.Element;
+  argTypes: {
+    disabled: {
+      control: {
+        type: "boolean";
+      };
+    };
+  };
+  tags: string[];
+} = {
   title: "UI/buttonStyle",
   component: B,
   argTypes: {

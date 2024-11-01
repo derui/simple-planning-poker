@@ -1,5 +1,5 @@
-import * as StoryPoint from "./story-point.js";
 import { unique } from "@spp/shared-array";
+import * as StoryPoint from "./story-point.js";
 
 export type T = ReadonlyArray<StoryPoint.T>;
 
@@ -30,11 +30,11 @@ export const pick = function pick(obj: T, storyPoint: StoryPoint.T): StoryPoint.
 /**
  * clone the cards;
  */
-export const clone = function clone(obj: T) {
+export const clone = function clone(obj: T): T {
   return Object.freeze(Array.from(obj));
 };
 
-export const contains = function contains(obj: T, point: StoryPoint.T) {
+export const contains = function contains(obj: T, point: StoryPoint.T): boolean {
   return obj.some((v) => StoryPoint.isEqual(v, point));
 };
 
