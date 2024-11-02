@@ -1,21 +1,16 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game } from "@spp/shared-domain";
-import { EventDispatcher, StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-case";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { Game, GameRepository } from "@spp/shared-domain";
+import { StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-case";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { GameDto, toGameDto } from "./dto.js";
+import { gamesAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
-
-/**
- * games that are owned by or joined by an user
- */
-const gamesAtom = atom<Game.T[]>([]);
-
-const voteStartingStatusAtom = atom<VoteStartingStatus | undefined>();
 
 /**
  * Hook definition to list game
  */
-export type UseListGame = () => {
+export type UseListGames = () => {
   /**
    * Status of starting voting.
    */
@@ -36,39 +31,61 @@ export type UseListGame = () => {
  * Create hook implementation of `UseListGame`
  */
 export const createUseListGames = function createUseListGames({
+  gameRepository,
   useLoginUser,
   startVotingUseCase,
-  dispatcher,
 }: {
+  gameRepository: GameRepository.T;
   useLoginUser: UseLoginUser;
   startVotingUseCase: StartVotingUseCase;
-  dispatcher: EventDispatcher;
-}): UseListGame {
+}): UseListGames {
   return () => {
-    const games = useAtomValue(gamesAtom);
+    const [games, setGames] = useAtom(gamesAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
+
+    useEffect(() => {
+      if (userId) {
+        gameRepository
+          .listUserCreated(userId)
+          .then((games) => {
+            setGames(games);
+          })
+          .catch(() => {
+            setGames([]);
+          });
+      }
+    }, [userId]);
 
     return {
       voteStartingStatus,
 
       games: !userId ? [] : games.map((v) => toGameDto(v, userId)),
 
-      startVoting: (gameId: string) => {
+      startVoting: (gameId: string): void => {
         const domainGameId = Game.createId(gameId);
 
         const input: StartVotingUseCaseInput = { gameId: domainGameId };
 
-        startVotingUseCase(input).then((input) => {
-          switch (input.kind) {
-            case "success":
-              break;
-            case "failed":
-            case "notFound":
-              console.warn("Can not start voting");
-              break;
-          }
-        });
+        setVoteStartingStatus(VoteStartingStatus.Starting);
+
+        startVotingUseCase(input)
+          .then((input) => {
+            switch (input.kind) {
+              case "success":
+                setVoteStartingStatus(VoteStartingStatus.Started);
+                break;
+              case "failed":
+              case "notFound":
+                setVoteStartingStatus(undefined);
+                console.warn("Can not start voting");
+                break;
+            }
+          })
+          .catch(() => {
+            setVoteStartingStatus(undefined);
+          })
+          .finally(() => {});
       },
     };
   };
