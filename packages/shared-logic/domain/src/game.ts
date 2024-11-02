@@ -32,8 +32,17 @@ export interface GameCreated extends DomainEvent.T {
   readonly applicablePoints: ApplicablePoints.T;
 }
 
+export interface VotingStarted extends DomainEvent.T {
+  readonly kind: DomainEvent.DOMAIN_EVENTS.VotingStarted;
+  readonly votingId: Voting.Id;
+}
+
 export const isGameCreated = function isGameCreated(event: DomainEvent.T): event is GameCreated {
   return event.kind === DomainEvent.DOMAIN_EVENTS.GameCreated;
+};
+
+export const isVotingStarted = function isVotingStarted(event: DomainEvent.T): event is VotingStarted {
+  return event.kind === DomainEvent.DOMAIN_EVENTS.VotingStarted;
 };
 
 export const create = ({
@@ -89,13 +98,20 @@ export const changePoints = function changePoints(game: T, points: ApplicablePoi
 /**
  * Create new voting from this game.
  */
-export const newVoting = function newVoting(game: T): Voting.T {
+export const newVoting = function newVoting(game: T): [Voting.T, DomainEvent.T] {
   const id = Voting.createId();
 
-  return Voting.votingOf({
+  const voting = Voting.votingOf({
     id,
     points: game.points,
     estimations: Estimations.empty(),
     voters: [Voter.createVoter({ user: game.owner })],
   });
+
+  const event: VotingStarted = {
+    kind: DomainEvent.DOMAIN_EVENTS.VotingStarted,
+    votingId: voting.id,
+  };
+
+  return [voting, event];
 };

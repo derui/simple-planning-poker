@@ -1,6 +1,6 @@
 import { Game, GameRepository, Voting, VotingRepository } from "@spp/shared-domain";
 import { Prettify } from "@spp/shared-type-util";
-import { UseCase } from "./base.js";
+import { EventDispatcher, UseCase } from "./base.js";
 
 export interface StartVotingUseCaseInput {
   gameId: Game.Id;
@@ -15,7 +15,8 @@ export type StartVotingUseCase = UseCase<StartVotingUseCaseInput, StartVotingUse
 
 export const newStartVotingUseCase = function newStartVotingUseCase(
   gameRepository: Prettify<GameRepository.T>,
-  votingRepository: Prettify<VotingRepository.T>
+  votingRepository: Prettify<VotingRepository.T>,
+  dispatcher: EventDispatcher
 ): StartVotingUseCase {
   return async (input) => {
     const game = await gameRepository.findBy(input.gameId);
@@ -23,7 +24,7 @@ export const newStartVotingUseCase = function newStartVotingUseCase(
       return { kind: "notFound" };
     }
 
-    const voting = Game.newVoting(game);
+    const [voting, event] = Game.newVoting(game);
 
     try {
       await votingRepository.save(voting);
@@ -31,6 +32,7 @@ export const newStartVotingUseCase = function newStartVotingUseCase(
       console.warn(e);
       return { kind: "failed" };
     }
+    dispatcher(event);
 
     return { kind: "success", voting };
   };

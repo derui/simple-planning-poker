@@ -1,4 +1,4 @@
-import { ApplicablePoints, Game, StoryPoint, User, VotingRepository } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Game, StoryPoint, User, VotingRepository } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
@@ -9,7 +9,7 @@ describe("errors", () => {
   test("should return error if game does not exist", async () => {
     // Arrange
     const gameId = Game.createId();
-    const useCase = newStartVotingUseCase(newMemoryGameRepository(), newMemoryVotingRepository());
+    const useCase = newStartVotingUseCase(newMemoryGameRepository(), newMemoryVotingRepository(), sinon.fake());
 
     // Act
     const result = await useCase({ gameId });
@@ -34,7 +34,8 @@ describe("errors", () => {
           points: ApplicablePoints.create([StoryPoint.create(1)]),
         })[0],
       ]),
-      mockRepository
+      mockRepository,
+      sinon.fake()
     );
 
     // Act
@@ -59,7 +60,8 @@ describe("happy path", () => {
           points: ApplicablePoints.create([StoryPoint.create(1)]),
         })[0],
       ]),
-      repository
+      repository,
+      sinon.fake()
     );
 
     // Act
@@ -71,5 +73,31 @@ describe("happy path", () => {
     } else {
       expect.fail("should succeeed");
     }
+  });
+
+  test("dispatch event", async () => {
+    // Arrange
+    const gameId = Game.createId();
+    const repository = newMemoryVotingRepository();
+    const dispatcher = sinon.fake<[DomainEvent.T]>();
+    const useCase = newStartVotingUseCase(
+      newMemoryGameRepository([
+        Game.create({
+          id: gameId,
+          name: "name",
+          owner: User.createId(),
+          points: ApplicablePoints.create([StoryPoint.create(1)]),
+        })[0],
+      ]),
+      repository,
+      dispatcher
+    );
+
+    // Act
+    await useCase({ gameId });
+
+    // Assert
+    expect(dispatcher.callCount).toEqual(1);
+    expect(dispatcher.lastCall.args[0].kind).toEqual(DomainEvent.DOMAIN_EVENTS.VotingStarted);
   });
 });

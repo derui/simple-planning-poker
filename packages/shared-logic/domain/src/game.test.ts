@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import * as ApplicablePoints from "./applicable-points.js";
-import { changeName, changePoints, create, createId, isGameCreated, newVoting } from "./game.js";
+import { changeName, changePoints, create, createId, isGameCreated, isVotingStarted, newVoting } from "./game.js";
 import { Voter } from "./index.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
@@ -75,7 +75,7 @@ describe("create voting", () => {
     });
 
     // Act
-    const voting = newVoting(game);
+    const [voting] = newVoting(game);
 
     // Assert
     expect(voting.theme).toBeUndefined();
@@ -84,5 +84,25 @@ describe("create voting", () => {
       expect.arrayContaining([Voter.createVoter({ user: User.createId("user") })])
     );
     expect(voting.points).toEqual(game.points);
+  });
+
+  test("get VotingStarted event", () => {
+    // Arrange
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      owner: User.createId("user"),
+      points: points,
+    });
+
+    // Act
+    const [v, event] = newVoting(game);
+
+    // Assert
+    if (isVotingStarted(event)) {
+      expect(event.votingId).toEqual(v.id);
+    } else {
+      expect.fail("should be valid event");
+    }
   });
 });

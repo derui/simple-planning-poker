@@ -1,6 +1,6 @@
 import { UseLoginUser } from "@spp/feature-login";
 import { Game, GameRepository, StoryPoint } from "@spp/shared-domain";
-import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
+import { EventDispatcher, newCreateGameUseCase, StartVotingUseCase } from "@spp/shared-use-case";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { GameDto, toGameDto } from "./dto.js";
 
@@ -108,9 +108,19 @@ export type UsePrepareGame = () => {
  */
 export type UseListGame = () => {
   /**
+   * Status of starting voting.
+   */
+  voteStartingStatus?: "started" | "starting";
+
+  /**
    * Current joined/owned games
    */
   games: GameDto[];
+
+  /**
+   * Start voting from a game.
+   */
+  startVoting: (gameId: string) => void;
 };
 
 // hook implementations
@@ -239,7 +249,13 @@ export const createUsePrepareGame = function createUsePrepareGame(params: {
 /**
  * Create hook implementation of `UseListGame`
  */
-export const createUseListGame = function createUseListGame(useLoginUser: UseLoginUser): UseListGame {
+export const createUseListGame = function createUseListGame({
+  useLoginUser,
+  startVotingUseCase,
+}: {
+  useLoginUser: UseLoginUser;
+  startVotingUseCase: StartVotingUseCase;
+}): UseListGame {
   return () => {
     const games = useAtomValue(gamesAtom);
     const { userId } = useLoginUser();
