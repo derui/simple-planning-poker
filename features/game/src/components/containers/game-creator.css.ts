@@ -3,6 +3,13 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
+export const root: string = style({
+  width: "100%",
+  height: "100%",
+  display: "grid",
+  placeContent: "center",
+});
+
 export const input: {
   container: string;
   label: string;

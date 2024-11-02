@@ -1,6 +1,7 @@
-import { test, expect, describe } from "vitest";
-import { changeName, changePoints, create, createId, isGameCreated } from "./game.js";
+import { describe, expect, test } from "vitest";
 import * as ApplicablePoints from "./applicable-points.js";
+import { changeName, changePoints, create, createId, isGameCreated, newVoting } from "./game.js";
+import { Voter } from "./index.js";
 import * as StoryPoint from "./story-point.js";
 import * as User from "./user.js";
 
@@ -60,5 +61,28 @@ describe("game points", () => {
     const changed = changePoints(game, newPoints);
 
     expect(changed.points).toEqual(newPoints);
+  });
+});
+
+describe("create voting", () => {
+  test("should be able to create new voting from game", () => {
+    // Arrange
+    const [game] = create({
+      id: createId("id"),
+      name: "name",
+      owner: User.createId("user"),
+      points: points,
+    });
+
+    // Act
+    const voting = newVoting(game);
+
+    // Assert
+    expect(voting.theme).toBeUndefined();
+    expect(voting.participatedVoters).toHaveLength(1);
+    expect(voting.participatedVoters).toEqual(
+      expect.arrayContaining([Voter.createVoter({ user: User.createId("user") })])
+    );
+    expect(voting.points).toEqual(game.points);
   });
 });

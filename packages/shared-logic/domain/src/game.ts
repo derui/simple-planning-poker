@@ -2,6 +2,7 @@ import { castDraft, Draft, produce } from "immer";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as Base from "./base.js";
 import * as DomainEvent from "./event.js";
+import { Estimations, Voter, Voting } from "./index.js";
 import * as User from "./user.js";
 
 const _tag: unique symbol = Symbol("game");
@@ -82,5 +83,19 @@ export const changeName = function changeName(game: T, name: string): T {
 export const changePoints = function changePoints(game: T, points: ApplicablePoints.T): T {
   return produce(game, (draft: Draft<T>) => {
     draft.points = castDraft<ApplicablePoints.T>(points);
+  });
+};
+
+/**
+ * Create new voting from this game.
+ */
+export const newVoting = function newVoting(game: T): Voting.T {
+  const id = Voting.createId();
+
+  return Voting.votingOf({
+    id,
+    points: game.points,
+    estimations: Estimations.empty(),
+    voters: [Voter.createVoter({ user: game.owner })],
   });
 };
