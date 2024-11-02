@@ -4,7 +4,7 @@ import { useEffect } from "react";
 /**
  * Route for voting area
  */
-export const GameIndexRoute = function GameIndexRoute() {
+export const GameIndexRoute = function GameIndexRoute(): JSX.Element {
   const prepare = hooks.usePrepareGame();
 
   useEffect(() => {

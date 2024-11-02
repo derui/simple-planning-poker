@@ -6,7 +6,7 @@ import { useParams } from "react-router";
 /**
  * Route for voting area
  */
-export const RevealedAreaRoute = function RevealedAreaRoute() {
+export const RevealedAreaRoute = function RevealedAreaRoute(): JSX.Element {
   const param = useParams<{ votingId: string }>();
   const join = hooks.useJoin();
 

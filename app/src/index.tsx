@@ -69,9 +69,9 @@ const loginHooks: LoginHooks = {
 };
 
 const gameHooks: GameHooks = {
-  useCreateGame: createUseCreateGame(gameRepository, dispatcher),
-  useListGame: createUseListGame(),
-  usePrepareGame: createUsePrepareGame(gameRepository),
+  useCreateGame: createUseCreateGame({ gameRepository, dispatcher, useLoginUser: createUseLoginUser() }),
+  useListGame: createUseListGame(createUseLoginUser()),
+  usePrepareGame: createUsePrepareGame({ gameRepository, useLoginUser: createUseLoginUser() }),
 };
 
 const votingHooks: VotingHooks = {
