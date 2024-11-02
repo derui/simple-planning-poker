@@ -1,5 +1,5 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game, GameRepository, StoryPoint } from "@spp/shared-domain";
+import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { useAtom } from "jotai";
 import { createGameStatusAtom, CreateGameValidation, createGameValidationsAtom, gamesAtom } from "./game-atom.js";
@@ -29,7 +29,7 @@ export type UseCreateGame = () => {
   /**
    * Create game with inputs. If this method failed, update status.
    */
-  create: (name: string, points: string) => Promise<void>;
+  create: (name: string, points: string) => void;
 };
 
 // hook implementations
@@ -72,14 +72,14 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
         setErrors(errors);
       },
 
-      async create(name, points) {
+      create(name, points) {
         if (errors.length > 0 || !userId) {
           return;
         }
         setErrors([]);
         setStatus(CreateGameStatus.Waiting);
 
-        try {
+        async function _do(userId: User.Id) {
           const ret = await newCreateGameUseCase(
             dispatcher,
             gameRepository
@@ -106,9 +106,11 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
 
           const games = await gameRepository.listUserCreated(userId);
           setGames(games);
-        } catch (error) {
-          setStatus(CreateGameStatus.Failed);
         }
+
+        _do(userId).catch(() => {
+          setStatus(CreateGameStatus.Failed);
+        });
       },
     };
   };
