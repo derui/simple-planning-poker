@@ -66,7 +66,7 @@ test("get games after effect", async () => {
   expect(result.current.games).toHaveLength(1);
 });
 
-test("start voting", async () => {
+test("Cast your vote", async () => {
   // Arrange
   const gameId = Game.createId("game");
   const repository = newMemoryGameRepository([
@@ -128,7 +128,8 @@ test("started voting after success", async () => {
   // Assert
   expect(result.current.voteStartingStatus).toEqual(VoteStartingStatus.Started);
 });
-test("reset status to undefined after failed", async () => {
+
+test("Reset status to undefined after failure.", async () => {
   // Arrange
   const gameId = Game.createId("game");
   const game = Game.create({
