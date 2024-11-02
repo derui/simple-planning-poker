@@ -89,7 +89,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
   );
 };
 
-export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props) {
+export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props): JSX.Element {
   const [editing, setEditing] = useState(false);
 
   const handleEditing = () => {

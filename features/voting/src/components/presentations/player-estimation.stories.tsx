@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { PlayerEstimation } from "./player-estimation.js";
 
-const meta = {
+const meta: Meta<typeof PlayerEstimation> = {
   title: "Presentations/Player Estimation",
   component: PlayerEstimation,
   tags: ["autodocs"],
-} satisfies Meta<typeof PlayerEstimation>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

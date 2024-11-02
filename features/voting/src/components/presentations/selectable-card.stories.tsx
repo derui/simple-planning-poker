@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { SelectableCard } from "./selectable-card.js";
 
-const meta = {
+const meta: Meta<typeof SelectableCard> = {
   title: "Presentations/Selectable card",
   component: SelectableCard,
   tags: ["autodocs"],
-} satisfies Meta<typeof SelectableCard>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

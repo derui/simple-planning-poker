@@ -5,7 +5,7 @@ import { VotingAreaLayout } from "./voting-area.layout.js";
 /**
  * VotingArea container
  */
-export const VotingArea = function VotingArea() {
+export const VotingArea = function VotingArea(): JSX.Element {
   const place = hooks.usePollingPlace();
   const voting = hooks.useVoting();
   const { status } = hooks.useVotingStatus();

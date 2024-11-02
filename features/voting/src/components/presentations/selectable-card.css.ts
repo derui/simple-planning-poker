@@ -26,14 +26,14 @@ const rootBase = style([
   },
 ]);
 
-export const notSelected = style([
+export const notSelected: string = style([
   rootBase,
   {
     backgroundColor: vars.color.white,
   },
 ]);
 
-export const selected = style([
+export const selected: string = style([
   rootBase,
   {
     backgroundColor: vars.color.orange[200],

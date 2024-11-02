@@ -3,7 +3,7 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "grid",
   gridTemplateRows: "auto 1fr auto",
   gridTemplateColumns: "1fr",
@@ -11,7 +11,7 @@ export const root = style({
   gap: vars.spacing[4],
 });
 
-export const loading = style({
+export const loading: string = style({
   display: "grid",
   gridTemplateRows: "1fr",
   gridTemplateColumns: "1fr",
@@ -20,13 +20,13 @@ export const loading = style({
   width: "100%",
 });
 
-export const estimations = style({
+export const estimations: string = style({
   display: "flex",
   flexDirection: "row",
   gap: vars.spacing[4],
 });
 
-export const votingRoot = style({
+export const votingRoot: string = style({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -34,7 +34,7 @@ export const votingRoot = style({
   height: vars.spacing[8],
 });
 
-export const votingLabel = style({
+export const votingLabel: string = style({
   flex: "0 0 auto",
   fontSize: vars.font.size["2xl"],
   lineHeight: vars.font.lineHeight["2xl"],
@@ -43,7 +43,7 @@ export const votingLabel = style({
   marginRight: vars.spacing[4],
 });
 
-export const votingAverage = style([
+export const votingAverage: string = style([
   support.transition.all,
   {
     flex: "1 1 auto",
@@ -58,8 +58,8 @@ export const votingAverage = style([
   },
 ]);
 
-export const reset = style({
+export const reset: string = style({
   display: "flex",
 });
 
-export const resetButton = buttonStyle({ variant: Variant.orange });
+export const resetButton: string = buttonStyle({ variant: Variant.orange });

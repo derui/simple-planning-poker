@@ -28,7 +28,7 @@ export interface Props {
 /**
  * Layout component for container.
  */
-export const Header = function Header({ theme, onChangeTheme, defaultRole, onChangeRole }: Props) {
+export const Header = function Header({ theme, onChangeTheme, defaultRole, onChangeRole }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />

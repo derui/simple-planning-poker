@@ -4,11 +4,11 @@ import { themeClass } from "@spp/ui-theme";
 import { CardHolder } from "./card-holder.js";
 import { SelectableCard } from "./selectable-card.js";
 
-const meta = {
+const meta: Meta<typeof CardHolder> = {
   title: "Presentations/CardHolder",
   component: CardHolder,
   tags: ["autodocs"],
-} satisfies Meta<typeof CardHolder>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -1,7 +1,7 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "flex",
   flexDirection: "column",
   margin: vars.spacing[3],
@@ -9,7 +9,7 @@ export const root = style({
   gap: vars.spacing[2],
 });
 
-const card = style({
+const card: string = style({
   height: vars.spacing[20],
   width: vars.spacing[14],
   borderRadius: "4px",
@@ -21,14 +21,14 @@ const card = style({
   transition: "transform 0.2s ease-in-out",
 });
 
-export const cardNotEstimated = style([
+export const cardNotEstimated: string = style([
   card,
   {
     backgroundColor: vars.color.white,
   },
 ]);
 
-export const cardEstimated = style([
+export const cardEstimated: string = style([
   card,
   {
     backgroundColor: vars.color.orange[200],

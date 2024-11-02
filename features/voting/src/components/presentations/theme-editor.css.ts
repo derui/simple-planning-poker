@@ -3,7 +3,7 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "flex",
   padding: `${vars.spacing[1]} ${vars.spacing[4]}`,
   borderRadius: "9999px",
@@ -12,7 +12,7 @@ export const root = style({
   alignItems: "center",
 });
 
-export const contentContainer = style({
+export const contentContainer: string = style({
   display: "flex",
   flex: "1 1 auto",
   flexDirection: "row",
@@ -20,7 +20,7 @@ export const contentContainer = style({
   gap: vars.spacing[4],
 });
 
-export const edit = style([
+export const edit: string = style([
   buttonStyle({ variant: Variant.orange, iconButton: true }),
   {
     flex: "0 0 auto",
@@ -28,7 +28,7 @@ export const edit = style([
   },
 ]);
 
-export const editorRoot = style({
+export const editorRoot: string = style({
   display: "flex",
   flexDirection: "row",
   flex: "1 1 auto",
@@ -36,7 +36,7 @@ export const editorRoot = style({
   gap: vars.spacing[2],
 });
 
-export const editorInput = style([
+export const editorInput: string = style([
   support.transition.all,
   {
     flex: "1 1 auto",
@@ -53,18 +53,18 @@ export const editorInput = style([
   },
 ]);
 
-export const submitButton = style([buttonStyle({ variant: Variant.emerald, iconButton: true })]);
+export const submitButton: string = style([buttonStyle({ variant: Variant.emerald, iconButton: true })]);
 
-export const cancelButton = style([buttonStyle({ variant: Variant.gray, iconButton: true })]);
+export const cancelButton: string = style([buttonStyle({ variant: Variant.gray, iconButton: true })]);
 
-export const submitButtonHidden = style([
+export const submitButtonHidden: string = style([
   submitButton,
   {
     display: "none",
   },
 ]);
 
-export const cancelButtonHidden = style([
+export const cancelButtonHidden: string = style([
   cancelButton,
   {
     display: "none",

@@ -6,7 +6,7 @@ export interface Props {
   name: string;
 }
 
-export const Inspector = function Inspector({ name }: Props) {
+export const Inspector = function Inspector({ name }: Props): JSX.Element {
   return (
     <span className={styles.root}>
       <span className={styles.name}>{name}</span>

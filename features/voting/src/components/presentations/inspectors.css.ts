@@ -1,7 +1,7 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "flex",
   flexDirection: "row",
   gap: vars.spacing[2],
@@ -9,7 +9,7 @@ export const root = style({
   justifyContent: "center",
 });
 
-export const emptyText = style({
+export const emptyText: string = style({
   color: vars.color.indigo[500],
   fontWeight: "bold",
   fontSize: vars.font.size.lg,

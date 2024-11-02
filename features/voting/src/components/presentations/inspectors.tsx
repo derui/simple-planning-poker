@@ -1,7 +1,7 @@
 import { Children, PropsWithChildren } from "react";
 import * as styles from "./inspectors.css.js";
 
-export const Inspectors = function Inspectors(props: PropsWithChildren) {
+export const Inspectors = function Inspectors(props: PropsWithChildren): JSX.Element {
   const childrenCount = Children.count(props.children);
   if (childrenCount == 0) {
     return (

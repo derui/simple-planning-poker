@@ -78,7 +78,7 @@ type Props = {
   points?: string[];
 };
 
-export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>) {
+export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>): JSX.Element {
   const {
     loading = false,
     onSelect,

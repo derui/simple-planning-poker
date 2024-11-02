@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { Header } from "./header.js";
 
-const meta = {
+const meta: Meta<typeof Header> = {
   title: "Presentations/Header",
   component: Header,
   tags: ["autodocs"],
-} satisfies Meta<typeof Header>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

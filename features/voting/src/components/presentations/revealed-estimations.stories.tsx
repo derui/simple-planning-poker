@@ -3,14 +3,14 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { RevealedEstimations } from "./revealed-estimations.js";
 
-const meta = {
+const meta: Meta<typeof RevealedEstimations> = {
   title: "Presentations/Revealed Estimations",
   component: RevealedEstimations,
   tags: ["autodocs"],
   argTypes: {
     loading: { type: "boolean" },
   },
-} satisfies Meta<typeof RevealedEstimations>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

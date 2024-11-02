@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "flex",
   flexDirection: "column",
   margin: vars.spacing[3],
@@ -25,7 +25,7 @@ const cardBase = style([
   },
 ]);
 
-export const cardNotOpened = style([
+export const cardNotOpened: string = style([
   cardBase,
   {
     backgroundColor: vars.color.orange[200],
@@ -33,7 +33,7 @@ export const cardNotOpened = style([
   },
 ]);
 
-export const cardOpened = style([
+export const cardOpened: string = style([
   cardBase,
   {
     backgroundColor: vars.color.white,

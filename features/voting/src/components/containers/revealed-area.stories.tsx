@@ -27,10 +27,10 @@ import { RevealedArea } from "./revealed-area.js";
 
 enableMapSet();
 
-const meta = {
+const meta: Meta<{ votingId: Voting.Id }> = {
   title: "Containers/Revealed Area",
   tags: ["autodocs"],
-} satisfies Meta<{ votingId: Voting.Id }>;
+};
 
 export default meta;
 type Story = StoryObj<{ votingId: Voting.Id }>;

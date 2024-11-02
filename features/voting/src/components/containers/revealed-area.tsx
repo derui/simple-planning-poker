@@ -5,7 +5,7 @@ import { RevealedAreaLayout } from "./revealed-area.layout.js";
 /**
  * RevealedArea container
  */
-export const RevealedArea = function RevealedArea() {
+export const RevealedArea = function RevealedArea(): JSX.Element {
   const place = hooks.usePollingPlace();
   const revealed = hooks.useRevealed();
   const { status } = hooks.useVotingStatus();

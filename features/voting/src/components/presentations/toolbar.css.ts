@@ -1,7 +1,7 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "grid",
   gridTemplateRows: "repeat(1, minmax(0, 1fr))",
   gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
@@ -13,7 +13,7 @@ export const root = style({
   backgroundColor: vars.color.orange[500],
 });
 
-export const role = style({
+export const role: string = style({
   display: "grid",
   gridTemplateRows: "repeat(1, minmax(0, 1fr))",
   gridTemplateColumns: "auto auto auto",

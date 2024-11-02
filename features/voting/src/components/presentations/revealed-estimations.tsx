@@ -14,7 +14,7 @@ interface Props {
  * Container presentation for revealed estimations
  */
 // eslint-disable-next-line func-style
-export function RevealedEstimations({ loading, average, estimations, onReset }: Props) {
+export function RevealedEstimations({ loading, average, estimations, onReset }: Props): JSX.Element {
   if (loading) {
     return (
       <div className={styles.loading} data-loading="true">

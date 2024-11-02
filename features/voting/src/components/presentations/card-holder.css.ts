@@ -1,7 +1,7 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -11,7 +11,7 @@ export const root = style({
   width: "100%",
 });
 
-export const inspector = style({
+export const inspector: string = style({
   fontWeight: "bold",
   color: vars.color.emerald[700],
   fontSize: vars.font.size.lg,

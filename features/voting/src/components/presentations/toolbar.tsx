@@ -16,7 +16,7 @@ export interface Props {
   defaultRole: UserRole;
 }
 
-export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props) {
+export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): JSX.Element {
   const handleToggle = (checked: boolean) => {
     if (checked) {
       onChangeRole?.("inspector");

@@ -1,5 +1,5 @@
 import { createFacade } from "@spp/shared-hook-facade";
-import { UseJoin, UseVoting, UseRevealed, UseVotingStatus, UsePollingPlace } from "../atoms/voting.js";
+import { UseJoin, UsePollingPlace, UseRevealed, UseVoting, UseVotingStatus } from "../atoms/voting.js";
 
 export type Hooks = {
   useJoin: UseJoin;
@@ -9,6 +9,7 @@ export type Hooks = {
   usePollingPlace: UsePollingPlace;
 };
 
-const { hooks, ImplementationProvider } = createFacade<Hooks>();
+const facade: ReturnType<typeof createFacade<Hooks>> = createFacade<Hooks>();
 
-export { hooks, ImplementationProvider };
+export const hooks: Readonly<Hooks> = facade.hooks;
+export const ImplementationProvider: typeof facade.ImplementationProvider = facade.ImplementationProvider;

@@ -4,11 +4,11 @@ import { themeClass } from "@spp/ui-theme";
 import { Inspector } from "./inspector.js";
 import { Inspectors } from "./inspectors.js";
 
-const meta = {
+const meta: Meta<typeof Inspectors> = {
   title: "Presentations/Inspectors",
   component: Inspectors,
   tags: ["autodocs"],
-} satisfies Meta<typeof Inspectors>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
