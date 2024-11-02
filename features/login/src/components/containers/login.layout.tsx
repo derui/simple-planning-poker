@@ -20,7 +20,7 @@ const Authenticating = function Authenticating() {
 };
 
 // eslint-disable-next-line func-style
-export function LoginLayout({ authenticating = false }: Props) {
+export function LoginLayout({ authenticating = false }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       <Dialog title="Login">

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { Overlay } from "./overlay.js";
 
-const meta = {
+const meta: Meta<typeof Overlay> = {
   title: "Presentational/Overlay",
   component: Overlay,
   tags: ["autodocs"],

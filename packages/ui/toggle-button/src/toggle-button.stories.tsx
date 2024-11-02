@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { ToggleButton } from "./toggle-button.js";
 
-const meta = {
+const meta: Meta<typeof ToggleButton> = {
   title: "Presentational/ToggleButton",
   component: ToggleButton,
   tags: ["autodocs"],

@@ -9,7 +9,7 @@ export interface Props {
   owned?: boolean;
 }
 
-export const GameListItem = function GameListItem({ gameId, owned, name }: Props) {
+export const GameListItem = function GameListItem({ gameId, owned, name }: Props): JSX.Element {
   return (
     <li key={gameId} className={styles.main}>
       <Link className={styles.link} to={AppUrl.votingPage(Game.createId(gameId))}>

@@ -1,6 +1,6 @@
+import { Game, GameRepository, User, UserRepository } from "@spp/shared-domain";
 import { Database, onValue, ref, type Unsubscribe } from "firebase/database";
 import { UserObserver } from "./observer.js";
-import { Game, User, GameRepository, UserRepository } from "@spp/shared-domain";
 
 export class UserObserverImpl implements UserObserver {
   private _subscriptions = new Map<User.Id, Unsubscribe>();
@@ -15,7 +15,7 @@ export class UserObserverImpl implements UserObserver {
     this._subscriptions = new Map();
   }
 
-  subscribe(userId: User.Id, subscriber: (user: User.T, joinedGames: Game.T[]) => void) {
+  subscribe(userId: User.Id, subscriber: (user: User.T, joinedGames: Game.T[]) => void): void {
     const oldSubscription = this._subscriptions.get(userId);
     if (oldSubscription) {
       oldSubscription();

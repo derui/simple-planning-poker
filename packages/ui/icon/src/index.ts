@@ -5,7 +5,14 @@ import { Pencil } from "./pencil.js";
 import { User } from "./user.js";
 import { X } from "./x.js";
 
-const Icon = {
+const Icon: {
+  Check: typeof Check;
+  X: typeof X;
+  Eye: typeof Eye;
+  Loader2: typeof Loader2;
+  User: typeof User;
+  Pencil: typeof Pencil;
+} = {
   Check,
   X,
   Eye,

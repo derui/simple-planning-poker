@@ -11,7 +11,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function Loader({ size, shown, variant }: Props) {
+export function Loader({ size, shown, variant }: Props): JSX.Element {
   const root = shown ? loader[size] : hidden;
   const spinner = spinLoader[size];
 

@@ -7,11 +7,11 @@ import sinon from "sinon";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { SignUp } from "./signup.js";
 
-const meta = {
+const meta: Meta<typeof SignUp> = {
   title: "Page/Sign Up",
   component: SignUp,
   tags: ["autodocs"],
-} satisfies Meta<typeof SignUp>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

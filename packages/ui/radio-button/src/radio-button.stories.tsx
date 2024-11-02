@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { RadioButton } from "./radio-button.js";
 
-const meta = {
+const meta: Meta<typeof RadioButton> = {
   title: "Presentational/Radio Button",
   component: RadioButton,
   tags: ["autodocs"],

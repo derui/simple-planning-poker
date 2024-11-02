@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const container = style({
+export const container: string = style({
   display: "flex",
   flex: "0 0 none",
   outline: "none",
@@ -12,11 +12,11 @@ export const container = style({
   borderRadius: "4px",
 });
 
-export const input = style({
+export const input: string = style({
   display: "none",
 });
 
-export const toggleRoot = style({
+export const toggleRoot: string = style({
   display: "flex",
   position: "relative",
   backgroundColor: "transparent",
@@ -39,21 +39,21 @@ const switchRail = style([
   },
 ]);
 
-export const switchRailChecked = style([
+export const switchRailChecked: string = style([
   switchRail,
   {
     backgroundColor: vars.color.emerald[300],
   },
 ]);
 
-export const switchRailUnchecked = style([
+export const switchRailUnchecked: string = style([
   switchRail,
   {
     backgroundColor: vars.color.emerald[100],
   },
 ]);
 
-export const switchBox = style([
+export const switchBox: string = style([
   support.transition.all,
   {
     position: "absolute",
@@ -66,7 +66,7 @@ export const switchBox = style([
   },
 ]);
 
-export const switchBoxChecked = style([
+export const switchBoxChecked: string = style([
   switchBox,
   {
     transform: `translateX(${vars.spacing[6]})`,

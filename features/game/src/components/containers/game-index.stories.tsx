@@ -11,11 +11,11 @@ import { createUseListGame, createUsePrepareGame } from "../../atoms/game.js";
 import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
-const meta = {
+const meta: Meta<typeof GameIndex> = {
   title: "Page/Game Index",
   component: GameIndex,
   tags: ["autodocs"],
-} satisfies Meta<typeof GameIndex>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

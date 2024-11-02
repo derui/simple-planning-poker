@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style([
+export const root: string = style([
   support.animation.pulse,
   {
     width: "100%",

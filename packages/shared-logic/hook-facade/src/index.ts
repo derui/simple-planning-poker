@@ -1,1 +1,1 @@
-export * from "./facade.js";
+export { createFacade } from "./facade.js";

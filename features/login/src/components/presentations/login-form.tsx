@@ -15,7 +15,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function LoginForm(props: Props) {
+export function LoginForm(props: Props): JSX.Element {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

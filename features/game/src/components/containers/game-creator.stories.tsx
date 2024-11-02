@@ -11,11 +11,11 @@ import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../
 import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameCreator } from "./game-creator.js";
 
-const meta = {
+const meta: Meta<typeof GameCreator> = {
   title: "Page/Game Creator",
   component: GameCreator,
   tags: ["autodocs"],
-} satisfies Meta<typeof GameCreator>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

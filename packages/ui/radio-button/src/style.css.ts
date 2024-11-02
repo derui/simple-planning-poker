@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const input = style([
+export const input: string = style([
   support.transition.allAfter,
   {
     appearance: "none",
@@ -36,7 +36,7 @@ export const input = style([
   },
 ]);
 
-export const label = style({
+export const label: string = style({
   display: "flex",
   gap: vars.spacing[1],
   alignItems: "center",

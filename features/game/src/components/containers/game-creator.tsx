@@ -6,7 +6,7 @@ import { hooks } from "../../hooks/facade.js";
 import { GameCreatorLayout } from "./game-creator.layout.js";
 
 // eslint-disable-next-line func-style
-export function GameCreator() {
+export function GameCreator(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const createGame = hooks.useCreateGame();
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ const base = style({
   display: "inline-block",
 });
 
-export const hidden = style({ display: "none" });
+export const hidden: string = style({ display: "none" });
 
 const sizes = {
   s: vars.spacing[5],
@@ -14,7 +14,7 @@ const sizes = {
   l: vars.spacing[7],
 };
 
-export const loader = styleVariants(sizes, (size) => [
+export const loader: Record<"s" | "m" | "l", string> = styleVariants(sizes, (size) => [
   base,
   {
     width: size,
@@ -30,7 +30,7 @@ const spinLoaderBase = style({
   zIndex: vars.zIndex[10],
 });
 
-export const spinLoader = styleVariants(sizes, (size) => [
+export const spinLoader: Record<"s" | "m" | "l", string> = styleVariants(sizes, (size) => [
   spinLoaderBase,
   support.animation.spin,
   {

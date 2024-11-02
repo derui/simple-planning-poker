@@ -1,7 +1,18 @@
 import { animation, themeClass, transition, vars } from "./style.css.js";
 import { alpha } from "./support.js";
 
-const support = {
+const support: {
+  alpha: (color: string, opacity: number) => string;
+  animation: {
+    spin: string;
+    pulse: string;
+  };
+  transition: {
+    all: string;
+    allAfter: string;
+    allBefore: string;
+  };
+} = {
   alpha,
   animation,
   transition,

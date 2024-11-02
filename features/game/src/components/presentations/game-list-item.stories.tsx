@@ -4,7 +4,7 @@ import { themeClass } from "@spp/ui-theme";
 import { MemoryRouter } from "react-router-dom";
 import { GameListItem } from "./game-list-item.js";
 
-const meta = {
+const meta: Meta<typeof GameListItem> = {
   title: "Presentations/Game List Item",
   component: GameListItem,
   args: {
@@ -12,7 +12,7 @@ const meta = {
     name: "Test",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof GameListItem>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

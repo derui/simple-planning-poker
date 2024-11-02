@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style([
+export const root: string = style([
   support.transition.all,
   {
     position: "absolute",
@@ -17,7 +17,7 @@ export const root = style([
   },
 ]);
 
-export const hidden = style([
+export const hidden: string = style([
   root,
   {
     visibility: "hidden",

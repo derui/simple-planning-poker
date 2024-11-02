@@ -13,7 +13,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function SignInLayout(props: Props) {
+export function SignInLayout(props: Props): JSX.Element {
   const { title, loading = false, onSubmit } = props;
 
   const handleSubmit = (email: string, password: string) => {

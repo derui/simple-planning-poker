@@ -11,7 +11,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function ToggleButton(props: Props) {
+export function ToggleButton(props: Props): JSX.Element {
   const ref = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(props.initialChecked ?? false);
 

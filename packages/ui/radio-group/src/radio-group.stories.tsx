@@ -4,7 +4,7 @@ import { RadioButton } from "@spp/ui-radio-button";
 import { themeClass } from "@spp/ui-theme";
 import { RadioGroup } from "./radio-group.js";
 
-const meta = {
+const meta: Meta<typeof RadioGroup> = {
   title: "UI/Radio Group",
   component: RadioGroup,
   tags: ["autodocs"],

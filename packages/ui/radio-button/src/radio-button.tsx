@@ -10,7 +10,7 @@ export interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function RadioButton(props: Props) {
+export function RadioButton(props: Props): JSX.Element {
   const ref = useRef<HTMLInputElement>(null);
 
   return (

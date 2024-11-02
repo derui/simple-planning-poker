@@ -6,7 +6,7 @@ import { hooks } from "../../hooks/facade.js";
 import { LoginLayout } from "./login.layout.js";
 
 // eslint-disable-next-line func-style
-export function Login() {
+export function Login(): JSX.Element {
   const auth = hooks.useAuth();
   const navigate = useNavigate();
 

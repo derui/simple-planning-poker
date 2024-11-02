@@ -5,7 +5,7 @@ import { themeClass } from "@spp/ui-theme";
 import { Icon } from "./index.js";
 import { IconProps } from "./props.js";
 
-const meta = {
+const meta: Meta<IconProps> = {
   title: "UI/Icon",
   argTypes: {
     variant: { control: "select", options: Object.keys(Variant) },

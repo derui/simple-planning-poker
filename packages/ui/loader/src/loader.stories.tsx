@@ -4,7 +4,7 @@ import { Variant } from "@spp/shared-color-variant";
 import { themeClass } from "@spp/ui-theme";
 import { Loader } from "./loader.js";
 
-const meta = {
+const meta: Meta<typeof Loader> = {
   title: "UI/Loader",
   component: Loader,
   argTypes: {

@@ -1,13 +1,13 @@
 import { Game } from "@spp/shared-domain";
 
-export const name = function name(id: Game.Id) {
+export const name = function name(id: Game.Id): string {
   return `/games/${id}/name`;
 };
 
-export const cards = function cards(id: Game.Id) {
+export const cards = function cards(id: Game.Id): string {
   return `/games/${id}/points`;
 };
 
-export const owner = function owner(id: Game.Id) {
+export const owner = function owner(id: Game.Id): string {
   return `/games/${id}/owner`;
 };

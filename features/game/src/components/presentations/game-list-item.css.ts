@@ -1,7 +1,7 @@
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const main = style([
+export const main: string = style([
   support.transition.all,
   {
     display: "flex",
@@ -21,7 +21,7 @@ export const main = style([
   },
 ]);
 
-export const link = style({
+export const link: string = style({
   display: "grid",
   gridTemplateColumns: "1fr auto",
   gridTemplateRows: "1fr",
@@ -29,7 +29,7 @@ export const link = style({
   height: "100%",
 });
 
-export const linkName = style({
+export const linkName: string = style({
   display: "flex",
   alignItems: "center",
   fontSize: vars.font.size.lg,
@@ -37,13 +37,13 @@ export const linkName = style({
   paddingLeft: vars.spacing[4],
 });
 
-export const ownerMarkContainer = style({
+export const ownerMarkContainer: string = style({
   display: "flex",
   alignItems: "center",
   paddingRight: vars.spacing[4],
 });
 
-export const ownerMark = style({
+export const ownerMark: string = style({
   display: "inline-block",
   backgroundColor: vars.color.purple[200],
   color: vars.color.purple[600],
@@ -55,7 +55,7 @@ export const ownerMark = style({
   paddingBottom: vars.spacing[1],
 });
 
-export const ownerMarkInvisible = style([
+export const ownerMarkInvisible: string = style([
   ownerMark,
   {
     visibility: "hidden",

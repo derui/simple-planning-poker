@@ -6,6 +6,7 @@ export type Hooks = {
   useLogin: UseLogin;
 };
 
-const { hooks, ImplementationProvider } = createFacade<Hooks>();
+const facade: ReturnType<typeof createFacade<Hooks>> = createFacade<Hooks>();
 
-export { hooks, ImplementationProvider };
+export const hooks: Readonly<Hooks> = facade.hooks;
+export const ImplementationProvider: typeof facade.ImplementationProvider = facade.ImplementationProvider;

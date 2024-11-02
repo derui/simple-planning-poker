@@ -1,14 +1,14 @@
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   width: "100%",
   height: "100%",
   display: "grid",
   placeContent: "center",
 });
 
-export const link = style({
+export const link: string = style({
   color: vars.color.orange[700],
   fontSize: vars.font.size.lg,
   display: "grid",
@@ -18,14 +18,14 @@ export const link = style({
   },
 });
 
-export const children = style({
+export const children: string = style({
   display: "grid",
   gridTemplateColumns: "repeat(2, 1fr)",
   gridTemplateRows: "repeat(2, 1fr)",
   padding: vars.spacing[4],
 });
 
-export const info = style({
+export const info: string = style({
   color: vars.color.chestnut[700],
   backgroundColor: vars.color.chestnut[200],
   border: `1px solid ${vars.color.chestnut[500]}`,
@@ -38,7 +38,11 @@ export const info = style({
   fontWeight: "bold",
 });
 
-export const authenticatingLoader = {
+export const authenticatingLoader: {
+  root: string;
+  loader: string;
+  text: string;
+} = {
   root: style({
     display: "grid",
     gridTemplateRows: "repeat(2, 1fr)",

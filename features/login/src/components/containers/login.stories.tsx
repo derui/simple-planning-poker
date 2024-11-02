@@ -8,11 +8,11 @@ import { AuthStatus } from "../../atoms/atom.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { Login } from "./login.js";
 
-const meta = {
+const meta: Meta<typeof Login> = {
   title: "Page/Login",
   component: Login,
   tags: ["autodocs"],
-} satisfies Meta<typeof Login>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

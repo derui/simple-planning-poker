@@ -3,7 +3,7 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const root: string = style({
   height: "100%",
   width: "100%",
   display: "grid",
@@ -12,11 +12,11 @@ export const root = style({
   gap: vars.spacing[4],
 });
 
-export const dialogText = style({
+export const dialogText: string = style({
   marginLeft: vars.spacing[3],
 });
 
-export const inputContainer = style({
+export const inputContainer: string = style({
   display: "grid",
   gridTemplateRows: "repeat(2, 1fr)",
   gridTemplateColumns: "1fr",
@@ -25,13 +25,13 @@ export const inputContainer = style({
   marginBottom: "auto",
 });
 
-export const inputLabel = style({
+export const inputLabel: string = style({
   display: "grid",
   placeContent: "start",
   width: vars.spacing[24],
 });
 
-export const input = style([
+export const input: string = style([
   support.transition.all,
   {
     padding: vars.spacing[2],
@@ -46,9 +46,9 @@ export const input = style([
   },
 ]);
 
-export const submitContainer = style({
+export const submitContainer: string = style({
   display: "grid",
   placeContent: "center",
 });
 
-export const submit = buttonStyle({ variant: Variant.emerald });
+export const submit: string = buttonStyle({ variant: Variant.emerald });

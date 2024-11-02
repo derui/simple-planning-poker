@@ -17,7 +17,7 @@ interface Props {
 const DEFAULT_POINTS = "1,2,3,5,8,13,21,34,55,89";
 
 // eslint-disable-next-line func-style
-export function GameCreatorLayout(props: Props) {
+export function GameCreatorLayout(props: Props): JSX.Element {
   const { onValidate, onCreateGame, errors, loading = false } = props;
 
   const [name, setName] = useState("");

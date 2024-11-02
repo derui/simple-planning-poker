@@ -31,7 +31,7 @@ const Loading = () => {
 };
 
 // eslint-disable-next-line func-style
-export function GameIndexLayout(props: Props) {
+export function GameIndexLayout(props: Props): JSX.Element {
   const { loading = false, games = [] } = props;
 
   if (loading) {

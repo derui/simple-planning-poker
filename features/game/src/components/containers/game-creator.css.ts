@@ -3,7 +3,13 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const input = {
+export const input: {
+  container: string;
+  label: string;
+  row: string;
+  input: string;
+  error: string;
+} = {
   container: style({
     width: "100%",
     marginLeft: "auto",
@@ -56,10 +62,13 @@ const submitBase = style({
   gap: vars.spacing[1],
 });
 
-export const cancel = style([buttonStyle({ variant: Variant.gray })]);
-export const cancelDisabled = style([buttonStyle({ variant: Variant.gray, disabled: true })]);
+export const cancel: string = style([buttonStyle({ variant: Variant.gray })]);
+export const cancelDisabled: string = style([buttonStyle({ variant: Variant.gray, disabled: true })]);
 
-export const footer = {
+export const footer: {
+  root: string;
+  submit: string;
+} = {
   root: style({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
@@ -69,4 +78,4 @@ export const footer = {
   submit: style([buttonStyle({ variant: Variant.emerald }), submitBase]),
 };
 
-export const submitLoading = style([buttonStyle({ variant: Variant.emerald, disabled: true }), submitBase]);
+export const submitLoading: string = style([buttonStyle({ variant: Variant.emerald, disabled: true }), submitBase]);

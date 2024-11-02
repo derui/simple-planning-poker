@@ -5,6 +5,7 @@ import { extraLarge, large, medium, small } from "./x.css.js";
 
 export const X = function X({ size = "m", variant = Variant.gray }: Prettify<IconProps>): JSX.Element {
   let base: typeof small;
+
   switch (size) {
     case "s":
       base = small;

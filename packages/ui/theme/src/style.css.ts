@@ -1,6 +1,6 @@
 import { createTheme, keyframes, style } from "@vanilla-extract/css";
 
-export const [themeClass, vars] = createTheme({
+const theme = createTheme({
   spacing: {
     0: "0px",
     "1": "0.25em",
@@ -178,6 +178,182 @@ export const [themeClass, vars] = createTheme({
   },
 });
 
+export const themeClass: string = theme[0];
+export const vars: {
+  spacing: {
+    0: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "1": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "2": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "3": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "4": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "5": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "6": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "7": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "8": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "9": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "10": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "11": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "12": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "14": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "16": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "20": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "24": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "28": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "32": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "36": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "40": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "44": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "48": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "52": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "56": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "60": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "64": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "68": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "72": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "76": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "80": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "84": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "88": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "92": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "96": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+  };
+  zIndex: {
+    "0": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "10": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "20": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "30": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    "40": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+  };
+  color: {
+    gray: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    blue: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    teal: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    emerald: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    orange: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    chestnut: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    cerise: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    purple: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    indigo: {
+      50: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      100: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      200: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      300: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      400: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      500: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      600: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      700: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      800: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      900: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    darkgray: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    lightgray: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    white: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+  };
+  shadow: {
+    md: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    xl: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+  };
+  font: {
+    size: {
+      lg: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      sm: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      "2xl": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+    lineHeight: {
+      lg: `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+      "2xl": `var(--${string})` | `var(--${string}, ${string})` | `var(--${string}, ${number})`;
+    };
+  };
+} = theme[1];
+
 // animation definitions
 const rotate = keyframes({
   "0%": { transform: "rotate(0deg)" },
@@ -190,7 +366,10 @@ const pulseKeyframe = keyframes({
   "100%": { opacity: 1 },
 });
 
-export const animation = {
+export const animation: {
+  spin: string;
+  pulse: string;
+} = {
   spin: style({
     animationName: rotate,
     animationDuration: "1s",
@@ -205,7 +384,11 @@ export const animation = {
   }),
 };
 
-export const transition = {
+export const transition: {
+  all: string;
+  allAfter: string;
+  allBefore: string;
+} = {
   all: style({
     transitionProperty: "all",
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
