@@ -77,6 +77,11 @@ export type UseVotingStatus = () => {
  */
 export type UsePollingPlace = () => {
   /**
+   * ID of current voting
+   */
+  id?: string;
+
+  /**
    * loading or not
    */
   loading: boolean;
@@ -124,22 +129,22 @@ export type UseVoting = () => {
   /**
    * Reveal current voting
    */
-  reveal(): void;
+  reveal: () => void;
 
   /**
    * Change theme with `newTheme`
    */
-  changeTheme(newTheme: string): void;
+  changeTheme: (newTheme: string) => void;
 
   /**
    * Change voter's role to `newRole`.
    */
-  changeVoterRole(newRole: UserRole): void;
+  changeVoterRole: (newRole: UserRole) => void;
 
   /**
    * change estimation in voting
    */
-  estimate(estimation: number): void;
+  estimate: (estimation: number) => void;
 };
 
 /**
@@ -149,12 +154,12 @@ export type UseRevealed = () => {
   /**
    * Change theme with `newTheme`
    */
-  changeTheme(newTheme: string): void;
+  changeTheme: (newTheme: string) => void;
 
   /**
    * Reset revealed voting
    */
-  reset(): void;
+  reset: () => void;
 };
 
 /**
@@ -263,6 +268,7 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
     });
 
     return {
+      id: voting?.id,
       loading,
 
       estimations,
@@ -303,12 +309,13 @@ export const createUseVoting = function createUseVoting(dependencies: {
       }
     }
     const revealable = voting ? Voting.canReveal(voting) : false;
+    const setVotingStatus = useSetAtom(votingStatusAtom);
 
     return {
       revealable,
       estimated,
 
-      changeVoterRole(newRole) {
+      changeVoterRole: (newRole) => {
         if (!voting || !userId) {
           return;
         }
@@ -332,7 +339,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
           });
       },
 
-      changeTheme(newTheme) {
+      changeTheme: (newTheme) => {
         if (!voting) {
           return;
         }
@@ -351,7 +358,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
           });
       },
 
-      estimate(estimation: number) {
+      estimate: (estimation: number) => {
         if (!voting || !userId) {
           return;
         }
@@ -372,7 +379,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
             console.warn(e);
           });
       },
-      reveal() {
+      reveal: () => {
         if (!voting) {
           return;
         }
@@ -382,6 +389,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
             switch (result.kind) {
               case "success":
                 setVoting(result.voting);
+                setVotingStatus(VotingStatus.Revealed);
                 break;
             }
           })
@@ -405,7 +413,7 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
     const [voting, setVoting] = useAtom(votingAtom);
 
     return {
-      changeTheme(newTheme) {
+      changeTheme: (newTheme) => {
         if (!voting) {
           return;
         }
@@ -424,7 +432,7 @@ export const createUseRevealed = function createUseReRevealed(dependencies: {
           });
       },
 
-      reset() {
+      reset: () => {
         if (!voting) {
           return;
         }

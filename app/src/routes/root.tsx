@@ -12,14 +12,8 @@ function PrivateRoute({ children }: PropsWithChildren) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    auth.checkLogined();
-  }, []);
-
-  useEffect(() => {
     if (auth.status == AuthStatus.NotAuthenticated) {
-      navigate("/signin", { state: { from: location }, replace: true });
-    } else {
-      navigate(location.pathname);
+      navigate("/login", { state: { from: location }, replace: true });
     }
   }, [auth.status]);
 

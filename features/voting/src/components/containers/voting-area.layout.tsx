@@ -39,13 +39,21 @@ const VotingUserEstimations = function VotingUserEstimations({
   estimations,
   loading,
   revealable,
+  onReveal,
 }: {
   estimations: EstimationDto[];
   loading: boolean;
   revealable: boolean;
+  onReveal?: () => void;
 }) {
   return (
-    <PlayerEstimations loading={loading} total={estimations.length} estimations={estimations} revealable={revealable} />
+    <PlayerEstimations
+      onReveal={onReveal}
+      loading={loading}
+      total={estimations.length}
+      estimations={estimations}
+      revealable={revealable}
+    />
   );
 };
 
@@ -81,6 +89,11 @@ type Props = {
    * text of points
    */
   points?: string[];
+
+  /**
+   * Handler to reveal the vote
+   */
+  onReveal?: () => void;
 };
 
 export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>): JSX.Element {
@@ -94,6 +107,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
     onChangeRole,
     points = [],
     revealable = true,
+    onReveal,
   } = props;
   const theme = props.theme ?? "";
   const userRole = props.userRole ?? "player";
@@ -104,7 +118,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
         <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} onChangeRole={onChangeRole} />
       </div>
       <div className={styles.estimations}>
-        <VotingUserEstimations estimations={voters} loading={loading} revealable={revealable} />
+        <VotingUserEstimations estimations={voters} loading={loading} revealable={revealable} onReveal={onReveal} />
       </div>
       <div className={styles.inspectors}>
         <VotingInspectors inspectors={inspectors} />

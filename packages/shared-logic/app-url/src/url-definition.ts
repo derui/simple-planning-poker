@@ -8,10 +8,17 @@ export const gameIndexPage = function gameIndexPage(): string {
 };
 
 /**
- * Get path to voting of the game
+ * Get path to page of the voting
  */
 export const votingPage = function votingPage(id: Voting.Id): string {
   return `/voting/${id}`;
+};
+
+/**
+ * Get path to revealed page of the voting
+ */
+export const revealedPage = function revealedPage(id: Voting.Id): string {
+  return `/voting/${id}/revealed`;
 };
 
 /**

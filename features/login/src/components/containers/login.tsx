@@ -20,5 +20,5 @@ export function Login(): JSX.Element {
     auth.checkLogined();
   }, []);
 
-  return <LoginLayout authenticating={auth.status == AuthStatus.Authenticated} />;
+  return <LoginLayout authenticating={auth.status == AuthStatus.Checking} />;
 }

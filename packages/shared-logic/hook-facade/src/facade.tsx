@@ -15,6 +15,7 @@ export const createFacade = function createFacade<Hooks extends Record<string, (
 
   const implementationHandler: ProxyHandler<Hooks> = {
     get(_target, prop, _receiver) {
+      // eslint-disable-next-line
       const obj = useContext(Context);
 
       if (obj === providerNotFound) {

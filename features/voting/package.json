@@ -17,7 +17,7 @@
   "scripts": {
     "build:tsc": "tsc",
     "check-type": "tsc --noEmit",
-      "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
     "test": "vitest run",
     "dev:test": "vitest watch",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
@@ -31,20 +31,20 @@
   "license": "ISC",
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
-      "@spp/typescript-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
-      "@testing-library/user-event": "catalog:",
+    "@testing-library/user-event": "catalog:",
     "@types/react": "catalog:",
     "@types/sinon": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-      "immer": "catalog:",
+    "immer": "catalog:",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
     "sinon": "catalog:",
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@spp/feature-login": "workspace:^",
+    "@spp/shared-app-url": "workspace:^",
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-domain": "workspace:^",
     "@spp/shared-hook-facade": "workspace:^",
@@ -65,7 +66,8 @@
     "@spp/ui-theme": "workspace:^",
     "@spp/ui-toggle-button": "workspace:^",
     "@vanilla-extract/css": "catalog:",
-      "jotai": "catalog:",
-    "react": "catalog:"
+    "jotai": "catalog:",
+    "react": "catalog:",
+    "react-router-dom": "^6.27.0"
   }
 }

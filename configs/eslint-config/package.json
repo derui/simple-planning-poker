@@ -13,6 +13,7 @@
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
     "eslint-plugin-unused-imports": "catalog:",
     "typescript-eslint": "catalog:"
   }

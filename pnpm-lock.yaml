@@ -93,6 +93,9 @@ catalogs:
     eslint-plugin-react:
       specifier: 7.37.0
       version: 7.37.0
+    eslint-plugin-react-hooks:
+      specifier: 5.0.0
+      version: 5.0.0
     eslint-plugin-unused-imports:
       specifier: 4.1.4
       version: 4.1.4
@@ -307,6 +310,9 @@ importers:
       eslint-plugin-react:
         specifier: 'catalog:'
         version: 7.37.0(eslint@9.13.0(jiti@2.0.0))
+      eslint-plugin-react-hooks:
+        specifier: 'catalog:'
+        version: 5.0.0(eslint@9.13.0(jiti@2.0.0))
       eslint-plugin-unused-imports:
         specifier: 'catalog:'
         version: 4.1.4(@typescript-eslint/eslint-plugin@8.7.0(@typescript-eslint/parser@8.7.0(eslint@9.13.0(jiti@2.0.0))(typescript@5.6.2))(eslint@9.13.0(jiti@2.0.0))(typescript@5.6.2))(eslint@9.13.0(jiti@2.0.0))
@@ -536,6 +542,9 @@ importers:
       '@spp/feature-login':
         specifier: workspace:^
         version: link:../login
+      '@spp/shared-app-url':
+        specifier: workspace:^
+        version: link:../../packages/shared-logic/app-url
       '@spp/shared-color-variant':
         specifier: workspace:^
         version: link:../../packages/shared-logic/color-variant
@@ -575,6 +584,9 @@ importers:
       react:
         specifier: 'catalog:'
         version: 18.3.1
+      react-router-dom:
+        specifier: ^6.27.0
+        version: 6.27.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@spp/eslint-config':
         specifier: workspace:^
@@ -3069,6 +3081,10 @@ packages:
     resolution: {integrity: sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==}
     engines: {node: '>=14.0.0'}
 
+  '@remix-run/router@1.20.0':
+    resolution: {integrity: sha512-mUnk8rPJBI9loFDZ+YzPGdeniYK+FTmRD1TMCz7ev2SNIozyKKpnGgsxO34u6Z4z/t0ITuu7voi/AshfsGsgFg==}
+    engines: {node: '>=14.0.0'}
+
   '@remix-run/web-blob@3.1.0':
     resolution: {integrity: sha512-owGzFLbqPH9PlKb8KvpNJ0NO74HWE2euAn61eEiyCXX/oteoVzTVSN8mpLgDjaxBf2btj5/nUllSUgpyd6IH6g==}
 
@@ -4530,6 +4546,12 @@ packages:
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
+
+  eslint-plugin-react-hooks@5.0.0:
+    resolution: {integrity: sha512-hIOwI+5hYGpJEc4uPRmz2ulCjAGD/N13Lukkh8cLV0i2IRk/bdZDYjgLVHj+U9Z704kLIdIO6iueGvxNur0sgw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
 
   eslint-plugin-react@7.37.0:
     resolution: {integrity: sha512-IHBePmfWH5lKhJnJ7WB1V+v/GolbB0rjS8XYVCSQCZKaQCAUhMoVoOEn1Ef8Z8Wf0a7l8KTJvuZg5/e4qrZ6nA==}
@@ -6533,8 +6555,21 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  react-router-dom@6.27.0:
+    resolution: {integrity: sha512-+bvtFWMC0DgAFrfKXKG9Fc+BcXWRUO1aJIihbB79xaeq0v5UzfvnM5houGUm1Y461WVRcgAQ+Clh5rdb1eCx4g==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
   react-router@6.26.2:
     resolution: {integrity: sha512-tvN1iuT03kHgOFnLPfLJ8V95eijteveqdOSk+srqfePtQvqCExB8eHOYnlilbOcyJyKnYkr1vJvf7YqotAJu1A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+
+  react-router@6.27.0:
+    resolution: {integrity: sha512-YA+HGZXz4jaAkVoYBE98VQl+nVzI+cVI2Oj/06F5ZM+0u3TgedN9Y9kmMRo2mnkSK2nCpNQn0DVob4HCsY/WLw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
@@ -9230,6 +9265,8 @@ snapshots:
 
   '@remix-run/router@1.19.2': {}
 
+  '@remix-run/router@1.20.0': {}
+
   '@remix-run/web-blob@3.1.0':
     dependencies:
       '@remix-run/web-stream': 1.1.0
@@ -11064,6 +11101,10 @@ snapshots:
       source-map: 0.6.1
 
   eslint-config-prettier@9.1.0(eslint@9.13.0(jiti@2.0.0)):
+    dependencies:
+      eslint: 9.13.0(jiti@2.0.0)
+
+  eslint-plugin-react-hooks@5.0.0(eslint@9.13.0(jiti@2.0.0)):
     dependencies:
       eslint: 9.13.0(jiti@2.0.0)
 
@@ -13410,9 +13451,21 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-router: 6.26.2(react@18.3.1)
 
+  react-router-dom@6.27.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@remix-run/router': 1.20.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-router: 6.27.0(react@18.3.1)
+
   react-router@6.26.2(react@18.3.1):
     dependencies:
       '@remix-run/router': 1.19.2
+      react: 18.3.1
+
+  react-router@6.27.0(react@18.3.1):
+    dependencies:
+      '@remix-run/router': 1.20.0
       react: 18.3.1
 
   react@18.3.1:

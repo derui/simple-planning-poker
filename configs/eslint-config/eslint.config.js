@@ -1,4 +1,5 @@
 import react from "eslint-plugin-react";
+import reactHook from "eslint-plugin-react-hooks";
 import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
@@ -9,6 +10,7 @@ export default [
     ignores: ["**/*.js", "setupTests.ts"],
     plugins: {
       react,
+      "react-hooks": reactHook,
       "unused-imports": unusedImports,
     },
     languageOptions: {
@@ -24,6 +26,8 @@ export default [
     },
 
     rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
       "func-style": ["error", "expression"],
       "unused-imports/no-unused-imports": "warn",
       "no-unused-vars": "off",
