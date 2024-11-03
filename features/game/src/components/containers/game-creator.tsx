@@ -1,5 +1,5 @@
 import * as AppUrl from "@spp/shared-app-url";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CreateGameStatus } from "../../atoms/type.js";
 import { hooks } from "../../hooks/facade.js";
@@ -7,7 +7,6 @@ import { GameCreatorLayout } from "./game-creator.layout.js";
 
 // eslint-disable-next-line func-style
 export function GameCreator(): JSX.Element {
-  const [loading, setLoading] = useState<boolean>(false);
   const createGame = hooks.useCreateGame();
   const navigate = useNavigate();
   const errors = useMemo(() => {
@@ -25,20 +24,21 @@ export function GameCreator(): JSX.Element {
 
     return errors;
   }, [createGame.errors]);
+  const loading = CreateGameStatus.Waiting == createGame.status;
 
-  useEffect(() => {
-    if (createGame.status == CreateGameStatus.Completed) {
-      navigate(AppUrl.gameIndexPage());
-    }
+  if (createGame.status == CreateGameStatus.Completed) {
+    navigate(AppUrl.gameIndexPage());
+  }
 
-    setLoading(createGame.status == CreateGameStatus.Waiting);
-  }, [createGame.status]);
+  const handleCreateGame = (name: string, points: string) => {
+    createGame.create(name, points);
+  };
 
   return (
     <GameCreatorLayout
       loading={loading}
       onValidate={createGame.validate}
-      onCreateGame={createGame.create}
+      onCreateGame={handleCreateGame}
       errors={errors}
     />
   );

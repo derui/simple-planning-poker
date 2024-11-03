@@ -7,18 +7,16 @@ import { LoginLayout } from "./login.layout.js";
 
 // eslint-disable-next-line func-style
 export function Login(): JSX.Element {
-  const auth = hooks.useAuth();
+  const { status, checkLogined } = hooks.useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.status == AuthStatus.Authenticated) {
-      navigate(Url.gameIndexPage(), { replace: true });
-    }
-  }, [auth.status]);
-
-  useEffect(() => {
-    auth.checkLogined();
+    checkLogined();
   }, []);
 
-  return <LoginLayout authenticating={auth.status == AuthStatus.Checking} />;
+  if (status == AuthStatus.Authenticated) {
+    navigate(Url.gameIndexPage(), { replace: true });
+  }
+
+  return <LoginLayout authenticating={status == AuthStatus.Checking} />;
 }
