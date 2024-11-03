@@ -19,6 +19,7 @@ test("Pass valid states to child component", async () => {
       changeVoterRole: sinon.fake(),
       estimate: sinon.fake(),
       reveal: sinon.fake(),
+      revealable: true,
     }),
     useRevealed: sinon.fake(),
     usePollingPlace: sinon.fake.returns({

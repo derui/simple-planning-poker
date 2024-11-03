@@ -39,12 +39,15 @@ import {
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
+import { enableMapSet } from "immer";
 import { Provider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 import "./app.css.js";
 import { firebaseConfig } from "./firebase.config.js";
 import { routes } from "./routes/root.js";
+
+enableMapSet();
 
 const firebaseApp = initializeApp(firebaseConfig);
 

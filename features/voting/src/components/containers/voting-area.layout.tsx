@@ -38,11 +38,15 @@ const SelectableCardHolder = function SelectableCardHolder({
 const VotingUserEstimations = function VotingUserEstimations({
   estimations,
   loading,
+  revealable,
 }: {
   estimations: EstimationDto[];
   loading: boolean;
+  revealable: boolean;
 }) {
-  return <PlayerEstimations loading={loading} total={estimations.length} estimations={estimations} />;
+  return (
+    <PlayerEstimations loading={loading} total={estimations.length} estimations={estimations} revealable={revealable} />
+  );
 };
 
 /**
@@ -62,6 +66,7 @@ type Props = {
   selected?: string;
   voters?: EstimationDto[];
   inspectors?: EstimationDto[];
+  revealable?: boolean;
   /**
    * Handler to change theme
    */
@@ -88,6 +93,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
     onChangeTheme,
     onChangeRole,
     points = [],
+    revealable = true,
   } = props;
   const theme = props.theme ?? "";
   const userRole = props.userRole ?? "player";
@@ -98,7 +104,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
         <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} onChangeRole={onChangeRole} />
       </div>
       <div className={styles.estimations}>
-        <VotingUserEstimations estimations={voters} loading={loading} />
+        <VotingUserEstimations estimations={voters} loading={loading} revealable={revealable} />
       </div>
       <div className={styles.inspectors}>
         <VotingInspectors inspectors={inspectors} />

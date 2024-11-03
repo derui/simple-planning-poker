@@ -182,6 +182,55 @@ describe("UseVoting", () => {
     expect(join.result.current.status).toEqual("joined");
   });
 
+  test("get revealable if the voting is revealable", async () => {
+    // Arrange
+    const userId = User.createId();
+    const votingId = Voting.createId();
+    const votingRepository = newMemoryVotingRepository([
+      Voting.votingOf({
+        id: votingId,
+        points: POINTS,
+        theme: "foo",
+        estimations: Estimations.empty(),
+        voters: [Voter.createVoter({ user: userId })],
+      }),
+    ]);
+    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
+    const store = createStore();
+    const wrapper = createWrapper(store);
+    const useLoginUser: UseLoginUser = () => {
+      return {
+        userId,
+      };
+    };
+    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+
+    await act(async () => {
+      join.result.current.join(votingId);
+    });
+
+    // Act
+    const { result, rerender } = renderHook(
+      () =>
+        createUseVoting({
+          useLoginUser,
+          changeThemeUseCase: sinon.fake(),
+          estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
+          changeUserModeUseCase: sinon.fake(),
+          revealUseCase: sinon.fake(),
+        })(),
+      { wrapper }
+    );
+
+    await act(async () => {
+      result.current.estimate(1);
+    });
+    rerender();
+
+    // Assert
+    expect(result.current.revealable).toBeTruthy();
+  });
+
   describe("ChangeTheme", () => {
     test("can not call use case if voting is not ready", async () => {
       // Arrange

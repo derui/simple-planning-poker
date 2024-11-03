@@ -112,6 +112,11 @@ export type UsePollingPlace = () => {
  */
 export type UseVoting = () => {
   /**
+   * Revealable or not current voting
+   */
+  revealable: boolean;
+
+  /**
    * Login user estimated
    */
   estimated?: number;
@@ -297,8 +302,10 @@ export const createUseVoting = function createUseVoting(dependencies: {
         estimated = estimation.point;
       }
     }
+    const revealable = voting ? Voting.canReveal(voting) : false;
 
     return {
+      revealable,
       estimated,
 
       changeVoterRole(newRole) {
