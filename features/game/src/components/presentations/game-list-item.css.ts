@@ -27,6 +27,7 @@ export const link: string = style({
   gridTemplateRows: "1fr",
   width: "100%",
   height: "100%",
+  cursor: "pointer",
 });
 
 export const linkName: string = style({

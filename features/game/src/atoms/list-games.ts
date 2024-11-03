@@ -8,6 +8,7 @@ import { gamesAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
 
 const loadingAtom = atom<"completed" | "loading">("completed");
+const nextVotingIdAtom = atom<string | undefined>(undefined);
 
 /**
  * Hook definition to list game
@@ -19,6 +20,11 @@ export type UseListGames = () => {
    * Status of starting voting.
    */
   voteStartingStatus?: VoteStartingStatus;
+
+  /**
+   * Next voting id
+   */
+  nextVotingId?: string;
 
   /**
    * Current joined/owned games
@@ -48,6 +54,7 @@ export const createUseListGames = function createUseListGames({
     const [games, setGames] = useAtom(gamesAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
+    const [nextVotingId, setNextVotingId] = useAtom(nextVotingIdAtom);
 
     useEffect(() => {
       setLoading("loading");
@@ -67,6 +74,7 @@ export const createUseListGames = function createUseListGames({
     }, [userId]);
 
     return {
+      nextVotingId,
       loading,
       voteStartingStatus,
 
@@ -83,6 +91,7 @@ export const createUseListGames = function createUseListGames({
           .then((input) => {
             switch (input.kind) {
               case "success":
+                setNextVotingId(input.voting.id);
                 setVoteStartingStatus(VoteStartingStatus.Started);
                 break;
               case "failed":

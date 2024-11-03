@@ -1,4 +1,4 @@
-import { Game } from "@spp/shared-domain";
+import { Voting } from "@spp/shared-domain";
 
 /**
  * Get index of game
@@ -10,7 +10,7 @@ export const gameIndexPage = function gameIndexPage(): string {
 /**
  * Get path to voting of the game
  */
-export const votingPage = function votingPage(id: Game.Id): string {
+export const votingPage = function votingPage(id: Voting.Id): string {
   return `/voting/${id}`;
 };
 

@@ -9,6 +9,11 @@ interface Props {
   loading?: boolean;
 
   games?: GameDto[];
+
+  /**
+   * handler to start voting
+   */
+  onStartVoting?: (id: string) => void;
 }
 
 const Empty = () => {
@@ -32,14 +37,16 @@ const Loading = () => {
 
 // eslint-disable-next-line func-style
 export function GameIndexLayout(props: Props): JSX.Element {
-  const { loading = false, games = [] } = props;
+  const { loading = false, games = [], onStartVoting } = props;
 
   if (loading) {
     return <Loading />;
   }
 
   const gameComponents = games.map((v) => {
-    return <GameListItem gameId={v.id} name={v.name} owned={v.owned} />;
+    return (
+      <GameListItem key={v.id} gameId={v.id} name={v.name} owned={v.owned} onClick={() => onStartVoting?.(v.id)} />
+    );
   });
 
   return (
