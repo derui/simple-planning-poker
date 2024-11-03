@@ -1,10 +1,10 @@
 import { createFacade } from "@spp/shared-hook-facade";
-import { UseCreateGame, UseListGame, UsePrepareGame } from "../atoms/game.js";
+import { UseCreateGame } from "../atoms/create-game.js";
+import { UseListGames } from "../atoms/list-games.js";
 
 export type Hooks = {
   useCreateGame: UseCreateGame;
-  usePrepareGame: UsePrepareGame;
-  useListGame: UseListGame;
+  useListGames: UseListGames;
 };
 
 const facade: ReturnType<typeof createFacade<Hooks>> = createFacade<Hooks>();

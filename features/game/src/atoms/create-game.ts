@@ -79,7 +79,7 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
         setErrors([]);
         setStatus(CreateGameStatus.Waiting);
 
-        async function _do(userId: User.Id) {
+        const _do = async function _do(userId: User.Id) {
           const ret = await newCreateGameUseCase(
             dispatcher,
             gameRepository
@@ -106,7 +106,7 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
 
           const games = await gameRepository.listUserCreated(userId);
           setGames(games);
-        }
+        };
 
         _do(userId).catch(() => {
           setStatus(CreateGameStatus.Failed);

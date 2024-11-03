@@ -3,12 +3,13 @@ import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { createStore, Provider } from "jotai";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
-import { CreateGameStatus, createUseCreateGame, createUsePrepareGame } from "../../atoms/game.js";
-import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { createUseCreateGame } from "../../atoms/create-game.js";
+import { CreateGameStatus } from "../../atoms/type.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameCreator } from "./game-creator.js";
 
 afterEach(cleanup);
@@ -25,8 +26,7 @@ test("render page", () => {
         create: sinon.fake(),
       };
     },
-    usePrepareGame: sinon.fake(),
-    useListGame: sinon.fake(),
+    useListGames: sinon.fake(),
   };
 
   // Act
@@ -53,7 +53,7 @@ test("call hook after submit", async () => {
 
   const createFake = sinon.fake();
   const mock: Hooks = {
-    useListGame: sinon.fake(),
+    useListGames: sinon.fake(),
     useCreateGame() {
       return {
         errors: [],
@@ -61,7 +61,6 @@ test("call hook after submit", async () => {
         validate: sinon.fake.returns([]),
       };
     },
-    usePrepareGame: sinon.fake(),
   };
 
   render(
@@ -88,7 +87,7 @@ test("disable submit if loading", () => {
   const store = createStore();
 
   const mock: Hooks = {
-    useListGame: sinon.fake(),
+    useListGames: sinon.fake(),
     useCreateGame() {
       return {
         status: CreateGameStatus.Waiting,
@@ -97,7 +96,6 @@ test("disable submit if loading", () => {
         validate: sinon.fake.returns([]),
       };
     },
-    usePrepareGame: sinon.fake(),
   };
 
   // Act
@@ -123,25 +121,15 @@ test("show error if name is invalid", async () => {
   const store = createStore();
 
   const mock: Hooks = {
-    useListGame: sinon.fake(),
+    useListGames: sinon.fake(),
     useCreateGame: createUseCreateGame({
       gameRepository: newMemoryGameRepository(),
       dispatcher: sinon.fake(),
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
     }),
-    usePrepareGame: createUsePrepareGame({
-      gameRepository: newMemoryGameRepository(),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-    }),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
-    const { prepare } = hooks.usePrepareGame();
-
-    useEffect(() => {
-      prepare();
-    }, []);
-
     return children;
   };
 
@@ -170,25 +158,15 @@ test("show error if points is invalid", async () => {
   const store = createStore();
 
   const mock: Hooks = {
-    useListGame: sinon.fake(),
+    useListGames: sinon.fake(),
     useCreateGame: createUseCreateGame({
       gameRepository: newMemoryGameRepository(),
       dispatcher: sinon.fake(),
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
     }),
-    usePrepareGame: createUsePrepareGame({
-      gameRepository: newMemoryGameRepository(),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-    }),
   };
 
   const Wrapper = ({ children }: PropsWithChildren) => {
-    const { prepare } = hooks.usePrepareGame();
-
-    useEffect(() => {
-      prepare();
-    }, []);
-
     return children;
   };
 

@@ -3,7 +3,6 @@ import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
-import { PrepareGameStatus } from "../../atoms/game.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
@@ -15,15 +14,11 @@ test("render page", () => {
 
   const hooks: Hooks = {
     useCreateGame: sinon.fake(),
-    usePrepareGame() {
+    useListGames() {
       return {
-        status: PrepareGameStatus.Prepared,
-        prepare: sinon.fake(),
-      };
-    },
-    useListGame() {
-      return {
+        loading: "completed",
         games: [],
+        startVoting: sinon.fake(),
       };
     },
   };
@@ -50,15 +45,11 @@ test("show loading while preparing", () => {
 
   const hooks: Hooks = {
     useCreateGame: sinon.fake(),
-    usePrepareGame() {
+    useListGames() {
       return {
-        status: PrepareGameStatus.Preparing,
-        prepare: sinon.fake(),
-      };
-    },
-    useListGame() {
-      return {
+        loading: "loading",
         games: [],
+        startVoting: sinon.fake(),
       };
     },
   };

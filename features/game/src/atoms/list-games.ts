@@ -1,16 +1,20 @@
 import { UseLoginUser } from "@spp/feature-login";
 import { Game, GameRepository } from "@spp/shared-domain";
 import { StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-case";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
 import { GameDto, toGameDto } from "./dto.js";
 import { gamesAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
 
+const loadingAtom = atom<"completed" | "loading">("completed");
+
 /**
  * Hook definition to list game
  */
 export type UseListGames = () => {
+  loading: "completed" | "loading";
+
   /**
    * Status of starting voting.
    */
@@ -40,11 +44,13 @@ export const createUseListGames = function createUseListGames({
   startVotingUseCase: StartVotingUseCase;
 }): UseListGames {
   return () => {
+    const [loading, setLoading] = useAtom(loadingAtom);
     const [games, setGames] = useAtom(gamesAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
 
     useEffect(() => {
+      setLoading("loading");
       if (userId) {
         gameRepository
           .listUserCreated(userId)
@@ -53,11 +59,15 @@ export const createUseListGames = function createUseListGames({
           })
           .catch(() => {
             setGames([]);
+          })
+          .finally(() => {
+            setTimeout(() => setLoading("completed"), 150);
           });
       }
     }, [userId]);
 
     return {
+      loading,
       voteStartingStatus,
 
       games: !userId ? [] : games.map((v) => toGameDto(v, userId)),

@@ -4,11 +4,10 @@ import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
-import { useEffect } from "react";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { createUseListGame, createUsePrepareGame } from "../../atoms/game.js";
-import { hooks, Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { createUseListGames } from "../../atoms/list-games.js";
+import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
 const meta: Meta<typeof GameIndex> = {
@@ -21,12 +20,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const InitializeUser = function InitializeUser({ children }: { children: React.ReactNode }) {
-  const { prepare } = hooks.usePrepareGame();
-
-  useEffect(() => {
-    prepare();
-  }, []);
-
   return children;
 };
 
@@ -35,11 +28,11 @@ export const WaitingPrepared: Story = {
     const store = createStore();
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame({
+      useListGames: createUseListGames({
         gameRepository: newMemoryGameRepository(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        startVotingUseCase: sinon.fake(),
       }),
-      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -63,11 +56,11 @@ export const Empty: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame({
+      useListGames: createUseListGames({
         gameRepository: repository,
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        startVotingUseCase: sinon.fake(),
       }),
-      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -107,11 +100,11 @@ export const SomeGames: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame({
+      useListGames: createUseListGames({
         gameRepository: repository,
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        startVotingUseCase: sinon.fake(),
       }),
-      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (
@@ -149,11 +142,11 @@ export const TenGames: Story = {
 
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      usePrepareGame: createUsePrepareGame({
+      useListGames: createUseListGames({
         gameRepository: repository,
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        startVotingUseCase: sinon.fake(),
       }),
-      useListGame: createUseListGame(() => ({ userId: User.createId("foo") })),
     };
 
     return (

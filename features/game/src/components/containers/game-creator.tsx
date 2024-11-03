@@ -1,7 +1,7 @@
 import * as AppUrl from "@spp/shared-app-url";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreateGameStatus } from "../../atoms/game.js";
+import { CreateGameStatus } from "../../atoms/type.js";
 import { hooks } from "../../hooks/facade.js";
 import { GameCreatorLayout } from "./game-creator.layout.js";
 
