@@ -1,13 +1,13 @@
+import { Voting } from "@spp/shared-domain";
 import { expect, test } from "vitest";
 import { gameIndexPage, loginPage, signInPage, signUpPage, votingPage } from "./url-definition.js";
-import { Game } from "@spp/shared-domain";
 
 test("game index path", () => {
   expect(gameIndexPage()).toEqual("/game");
 });
 
 test("voting page path", () => {
-  expect(votingPage(Game.createId("123"))).toEqual("/game/123/voting");
+  expect(votingPage(Voting.createId("123"))).toEqual("/voting/123");
 });
 
 test("login page", () => {

@@ -1,7 +1,6 @@
 import {
   createUseCreateGame,
-  createUseListGame,
-  createUsePrepareGame,
+  createUseListGames,
   ImplementationProvider as GameFeatureImplementationProvider,
   Hooks as GameHooks,
 } from "@spp/feature-game";
@@ -35,6 +34,7 @@ import {
   newEstimatePlayerUseCase,
   newResetVotingUseCase,
   newRevealUseCase,
+  newStartVotingUseCase,
 } from "@spp/shared-use-case";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
@@ -70,8 +70,11 @@ const loginHooks: LoginHooks = {
 
 const gameHooks: GameHooks = {
   useCreateGame: createUseCreateGame({ gameRepository, dispatcher, useLoginUser: createUseLoginUser() }),
-  useListGame: createUseListGame(createUseLoginUser()),
-  usePrepareGame: createUsePrepareGame({ gameRepository, useLoginUser: createUseLoginUser() }),
+  useListGames: createUseListGames({
+    gameRepository,
+    useLoginUser: createUseLoginUser(),
+    startVotingUseCase: newStartVotingUseCase(gameRepository, votingRepository, dispatcher),
+  }),
 };
 
 const votingHooks: VotingHooks = {
