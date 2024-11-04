@@ -102,3 +102,16 @@ export const Plus: Story = {
     );
   },
 };
+
+export const Trash: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Trash {...args} />
+      </div>
+    );
+  },
+};
