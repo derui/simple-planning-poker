@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { test, expect, afterEach } from "vitest";
 import { userEvent } from "@testing-library/user-event";
+import { afterEach, expect, test } from "vitest";
 import { LoginForm } from "./login-form.js";
 
 afterEach(cleanup);
@@ -25,4 +25,20 @@ test("dispatch event after submit", async () => {
   await userEvent.type(screen.getByPlaceholderText("e.g. yourname@yourdomain.com"), "email");
   await userEvent.type(screen.getByPlaceholderText("Password"), "password");
   await userEvent.click(screen.getByText("Submit"));
+});
+
+test("dispatch event after back", async () => {
+  expect.assertions(1);
+
+  render(
+    <LoginForm
+      onBack={() => {
+        expect(true).toBeTruthy();
+      }}
+    />
+  );
+
+  await userEvent.type(screen.getByPlaceholderText("e.g. yourname@yourdomain.com"), "email");
+  await userEvent.type(screen.getByPlaceholderText("Password"), "password");
+  await userEvent.click(screen.getByText("Back"));
 });

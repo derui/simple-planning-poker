@@ -49,6 +49,9 @@ export const input: string = style([
 export const submitContainer: string = style({
   display: "grid",
   placeContent: "center",
+  gridTemplateColumns: "1fr 1fr",
+  placeItems: "center",
 });
 
 export const submit: string = buttonStyle({ variant: Variant.emerald });
+export const back: string = buttonStyle({ variant: Variant.gray });

@@ -9,6 +9,11 @@ interface Props {
   onSubmit?: (email: string, password: string) => void;
 
   /**
+   * Call hook after back
+   */
+  onBack?: () => void;
+
+  /**
    * loading or not. Default is not loading
    */
   loading?: boolean;
@@ -23,6 +28,11 @@ export function LoginForm(props: Props): JSX.Element {
     event.preventDefault();
 
     props.onSubmit?.(email, password);
+  };
+  const handleBack = (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    props.onBack?.();
   };
   const loading = props.loading ?? false;
 
@@ -53,6 +63,10 @@ export function LoginForm(props: Props): JSX.Element {
         />
       </div>
       <div className={styles.submitContainer}>
+        <button type="button" className={styles.back} onClick={handleBack}>
+          <Loader size="s" shown={loading} />
+          Back
+        </button>
         <button type="submit" className={styles.submit}>
           <Loader size="s" shown={loading} />
           Submit

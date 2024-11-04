@@ -1,6 +1,7 @@
 import { Authenticator } from "@spp/infra-authenticator";
 import { User } from "@spp/shared-domain";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useCallback } from "react";
 
 /**
  * User id that is logined.
@@ -83,26 +84,27 @@ export const createUseAuth = function createUseAuth(authenticator: Authenticator
   return () => {
     const setCurrentUserId = useSetAtom(currentUserIdAtom);
     const [status, setStatus] = useAtom(authStatusAtom);
+    const checkLogined = useCallback(() => {
+      setStatus(AuthStatus.Checking);
+
+      authenticator
+        .currentUserIdIfExists()
+        .then((userId) => {
+          if (!userId) {
+            setStatus(AuthStatus.NotAuthenticated);
+          } else {
+            setCurrentUserId(userId);
+            setStatus(AuthStatus.Authenticated);
+          }
+        })
+        .catch(() => {
+          setStatus(AuthStatus.NotAuthenticated);
+        });
+    }, [setStatus, setCurrentUserId]);
 
     return {
       status,
-      checkLogined() {
-        setStatus(AuthStatus.Checking);
-
-        authenticator
-          .currentUserIdIfExists()
-          .then((userId) => {
-            if (!userId) {
-              setStatus(AuthStatus.NotAuthenticated);
-            } else {
-              setCurrentUserId(userId);
-              setStatus(AuthStatus.Authenticated);
-            }
-          })
-          .catch(() => {
-            setStatus(AuthStatus.NotAuthenticated);
-          });
-      },
+      checkLogined,
       logout: () => {
         setCurrentUserId(undefined);
         return Promise.resolve();

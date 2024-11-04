@@ -1,8 +1,7 @@
 import * as Url from "@spp/shared-app-url";
-import { gameIndexPage } from "@spp/shared-app-url";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
 import { AuthStatus } from "../../atoms/atom.js";
@@ -70,33 +69,39 @@ test("call hook on mount", async () => {
   expect(checkFake.callCount).toEqual(1);
 });
 
-test("navigate game if user already authenticated", async () => {
+test("dont call hook twice", async () => {
   // Arrange
+  const checkFake = sinon.fake();
   const mock: Hooks = {
     useLogin: sinon.fake(),
     useAuth() {
       return {
-        status: AuthStatus.Authenticated,
-        checkLogined: sinon.fake(),
+        status: AuthStatus.NotAuthenticated,
+        checkLogined: checkFake,
         logout: sinon.fake(),
       };
     },
   };
 
   // Act
-  render(
+  const container = render(
     <ImplementationProvider implementation={mock}>
       <MemoryRouter>
-        <Routes>
-          <Route path={gameIndexPage()} element={"Game"} />
-          <Route path="/" element={<Login />} />
-        </Routes>
+        <Login />
       </MemoryRouter>
     </ImplementationProvider>
   );
+  await waitFor(() => Promise.resolve());
 
+  container.rerender(
+    <ImplementationProvider implementation={mock}>
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    </ImplementationProvider>
+  );
   await waitFor(() => Promise.resolve());
 
   // Assert
-  expect(screen.getByText("Game")).not.toBeNull();
+  expect(checkFake.callCount).toEqual(1);
 });

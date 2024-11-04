@@ -27,8 +27,7 @@ export const children: string = style({
 
 export const info: string = style({
   color: vars.color.chestnut[700],
-  backgroundColor: vars.color.chestnut[200],
-  border: `1px solid ${vars.color.chestnut[500]}`,
+  backgroundColor: vars.color.chestnut[100],
   padding: vars.spacing[4],
   borderRadius: "4px",
   gridColumn: "span 2",
