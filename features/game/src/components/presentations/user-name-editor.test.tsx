@@ -37,6 +37,19 @@ test("should call submit callback after submitting", async () => {
   expect(submit.lastCall.args).toEqual(["foofoobar"]);
 });
 
+test("should not call if validation is invalid", async () => {
+  // Arrange
+  const submit = Sinon.fake();
+  render(<UserNameEditor defaultValue="foo" onSubmit={submit} />);
+
+  // Act
+  await userEvent.clear(screen.getByRole("textbox"));
+  await userEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+  // Assert
+  expect(submit.calledOnce).toBeFalsy();
+});
+
 test("should cancel when cancel button is clicked", async () => {
   // Arrange
   const cancel = Sinon.fake();
