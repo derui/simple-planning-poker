@@ -120,6 +120,9 @@ catalogs:
     react-dom:
       specifier: 18.3.1
       version: 18.3.1
+    react-hook-form:
+      specifier: 7.53.1
+      version: 7.53.1
     react-router:
       specifier: 6.26.2
       version: 6.26.2
@@ -144,6 +147,9 @@ catalogs:
     vitest:
       specifier: 2.1.1
       version: 2.1.1
+    zod:
+      specifier: 3.23.8
+      version: 3.23.8
 
 importers:
 
@@ -372,9 +378,15 @@ importers:
       react:
         specifier: 'catalog:'
         version: 18.3.1
+      react-hook-form:
+        specifier: 'catalog:'
+        version: 7.53.1(react@18.3.1)
       react-router-dom:
         specifier: 'catalog:'
         version: 6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
     devDependencies:
       '@spp/eslint-config':
         specifier: workspace:^
@@ -6605,6 +6617,12 @@ packages:
       react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
 
+  react-hook-form@7.53.1:
+    resolution: {integrity: sha512-6aiQeBda4zjcuaugWvim9WsGqisoUk+etmFEsSUMm451/Ic8L/UAb7sRtMj3V+Hdzm6mMjU1VhiSzYUZeBm0Vg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -7748,6 +7766,9 @@ packages:
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
+
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -13506,6 +13527,10 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-is: 18.1.0
 
+  react-hook-form@7.53.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -14833,3 +14858,5 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
+
+  zod@3.23.8: {}

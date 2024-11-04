@@ -68,6 +68,8 @@
     "@vanilla-extract/css": "catalog:",
     "jotai": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "catalog:"
+    "react-hook-form": "catalog:",
+    "react-router-dom": "catalog:",
+    "zod": "catalog:"
   }
 }
