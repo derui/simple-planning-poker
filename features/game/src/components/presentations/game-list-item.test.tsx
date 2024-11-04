@@ -3,7 +3,6 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, expect, test } from "vitest";
-import { ownerMarkInvisible } from "./game-list-item.css.js";
 import { GameListItem } from "./game-list-item.js";
 
 afterEach(cleanup);
@@ -20,22 +19,22 @@ test("render component", () => {
 
   // Assert
   expect(screen.queryByText("The game")).not.toBeNull();
-  expect(screen.getByText("Owner").classList.values()).not.toContain(ownerMarkInvisible);
+  expect(screen.getByLabelText("mark").ariaSelected).toBe("false");
 });
 
-test("render for owner", () => {
+test("render for selected", () => {
   // Arrange
 
   // Act
   render(
     <MemoryRouter>
-      <GameListItem gameId={Game.createId("id")} name="The game" owned />
+      <GameListItem gameId={Game.createId("id")} name="The game" selected />
     </MemoryRouter>
   );
 
   // Assert
   expect(screen.queryByText("The game")).not.toBeNull();
-  expect(screen.getByText("Owner").classList.values()).not.toContain(ownerMarkInvisible);
+  expect(screen.getByLabelText("mark").ariaSelected).toBe("true");
 });
 
 test("handle click", async () => {

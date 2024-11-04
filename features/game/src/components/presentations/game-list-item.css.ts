@@ -9,14 +9,22 @@ export const main: string = style([
     alignItems: "center",
     listStyleType: "none",
     width: "100%",
-    height: vars.spacing[16],
-    border: `1px solid ${vars.color.purple[200]}`,
-    backgroundColor: vars.color.purple[50],
+    height: vars.spacing[12],
+    border: "1px solid transparent",
+    backgroundColor: "transparent",
+    borderRadius: "9999px",
     color: vars.color.purple[700],
 
     ":hover": {
       borderColor: vars.color.purple[600],
       boxShadow: vars.shadow.xl,
+    },
+
+    selectors: {
+      '&[aria-selected="true"]': {
+        backgroundColor: vars.color.purple[100],
+        borderColor: vars.color.purple[600],
+      },
     },
   },
 ]);
@@ -38,27 +46,20 @@ export const linkName: string = style({
   paddingLeft: vars.spacing[4],
 });
 
-export const ownerMarkContainer: string = style({
+export const selectMarkContainer: string = style({
   display: "flex",
   alignItems: "center",
   paddingRight: vars.spacing[4],
 });
 
-export const ownerMark: string = style({
+export const selectMark: string = style({
   display: "inline-block",
-  backgroundColor: vars.color.purple[200],
-  color: vars.color.purple[600],
-  borderRadius: "9999px",
   alignItems: "center",
-  paddingLeft: vars.spacing[3],
-  paddingRight: vars.spacing[3],
-  paddingTop: vars.spacing[1],
-  paddingBottom: vars.spacing[1],
-});
+  visibility: "hidden",
 
-export const ownerMarkInvisible: string = style([
-  ownerMark,
-  {
-    visibility: "hidden",
+  selectors: {
+    '&[aria-selected="true"]': {
+      visibility: "visible",
+    },
   },
-]);
+});

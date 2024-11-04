@@ -17,7 +17,7 @@ const meta: Meta<typeof GameListItem> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Joined: Story = {
+export const Default: Story = {
   args: {
     gameId: "foo",
     name: "Test",
@@ -33,10 +33,10 @@ export const Joined: Story = {
   },
 };
 
-export const Owned: Story = {
+export const Selected: Story = {
   args: {
     gameId: "foo",
-    owned: true,
+    selected: true,
     name: "Test",
   },
   render(args) {
