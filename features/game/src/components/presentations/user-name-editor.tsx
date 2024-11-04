@@ -32,7 +32,11 @@ const schema = z.object({
 });
 
 export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): JSX.Element {
-  const { register, handleSubmit } = useForm<Form>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Form>({
     resolver: zodResolver(schema),
   });
 
@@ -50,7 +54,7 @@ export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, 
       <span className={styles.decoration}>
         <Icon.Pencil size="m" variant={Variant.teal} />
       </span>
-      <Input autoFocus defaultValue={defaultValue} {...register("userName")} />
+      <Input autoFocus defaultValue={defaultValue} {...register("userName")} aria-invalid={!!errors.userName} />
       <button type="submit" className={styles.submit} aria-label="Submit">
         <Icon.Check size="m" variant={Variant.emerald} />
       </button>

@@ -13,7 +13,8 @@ exports[`should be able to render 1`] = `
       />
     </span>
     <input
-      class="style_input__xo256r0"
+      aria-invalid="false"
+      class="style_input__xo256r0 style_transition_border__192bcwg42"
       name="userName"
       value="foo"
     />
