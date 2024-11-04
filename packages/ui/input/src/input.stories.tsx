@@ -16,8 +16,19 @@ export const Default: Story = {
   render() {
     return (
       <div className={themeClass}>
-        {" "}
         <Input />
+      </div>
+    );
+  },
+};
+export const Invalid: Story = {
+  args: {
+    "aria-invalid": true,
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Input {...args} />
       </div>
     );
   },

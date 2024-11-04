@@ -11,6 +11,7 @@ const support: {
     all: string;
     allAfter: string;
     allBefore: string;
+    border: string;
   };
 } = {
   alpha,

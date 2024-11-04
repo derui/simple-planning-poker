@@ -388,9 +388,16 @@ export const transition: {
   all: string;
   allAfter: string;
   allBefore: string;
+  border: string;
 } = {
   all: style({
     transitionProperty: "all",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    transitionDuration: "150ms",
+  }),
+
+  border: style({
+    transitionProperty: "border",
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     transitionDuration: "150ms",
   }),
