@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { {{pascalCase name}} } from "./{{name}}";
+import {themeClass} from "@spp/ui-theme";
+import { {{pascalCase name}} } from "./{{name}}.js";
 
 const meta = {
   title: "UI/{{pascalCase name}}",
@@ -11,3 +12,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const Default: Story = {
+  render() {
+    return <div className={themeClass}><{{pascalCase name}} /></div>
+  }
+};

@@ -13,7 +13,7 @@ export const input: string = style({
   appearance: "none",
 
   ":focus": {
-    outline: `2px solid ${vars.color.teal[500]}`,
+    outline: `1px solid ${vars.color.teal[500]}`,
     boxShadow: vars.shadow.md,
     backgroundColor: "transparent",
   },

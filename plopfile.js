@@ -21,11 +21,6 @@ const registerFeaturePackage = function registerFeaturePackage(plop) {
       },
       {
         type: "add",
-        path: "features/{{name}}/src/style.css",
-        templateFile: "plop-templates/common/style.css.hbs",
-      },
-      {
-        type: "add",
         path: "features/{{name}}/vite.config.js",
         templateFile: "plop-templates/common/vite.config.js.hbs",
       },
@@ -53,11 +48,6 @@ const registerFeaturePackage = function registerFeaturePackage(plop) {
         type: "add",
         path: "features/{{name}}/.storybook/preview.tsx",
         templateFile: "plop-templates/common/storybook/preview.tsx.hbs",
-      },
-      {
-        type: "add",
-        path: "features/{{name}}/tailwind.config.js",
-        templateFile: "plop-templates/common/tailwind.config.js.hbs",
       },
     ],
   });
@@ -128,7 +118,7 @@ const registerPresentationalComponentToFeature = function registerPresentational
       {
         type: "add",
         path: "features/{{feature}}/src/components/presentations/{{name}}.css.ts",
-        templateFile: "plop-templates/package/ui/component.css.ts",
+        templateFile: "plop-templates/package/ui/component.css.hbs",
       },
     ],
   });
@@ -255,11 +245,6 @@ export default function (plop) {
         type: "add",
         path: "packages/ui/{{name}}/.storybook/preview.tsx",
         templateFile: "plop-templates/common/storybook/preview.tsx.hbs",
-      },
-      {
-        type: "add",
-        path: "packages/ui/{{name}}/tailwind.config.js",
-        templateFile: "plop-templates/common/tailwind.config.js.hbs",
       },
     ],
   });
