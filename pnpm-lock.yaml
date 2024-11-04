@@ -351,6 +351,9 @@ importers:
       '@spp/ui-dialog':
         specifier: workspace:^
         version: link:../../packages/ui/dialog
+      '@spp/ui-icon':
+        specifier: workspace:^
+        version: link:../../packages/ui/icon
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../../packages/ui/loader

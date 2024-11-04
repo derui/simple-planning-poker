@@ -61,6 +61,7 @@
     "@spp/shared-use-case": "workspace:^",
     "@spp/ui-button-style": "workspace:^",
     "@spp/ui-dialog": "workspace:^",
+    "@spp/ui-icon": "workspace:^",
     "@spp/ui-loader": "workspace:^",
     "@spp/ui-theme": "workspace:^",
     "@vanilla-extract/css": "catalog:",
