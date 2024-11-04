@@ -354,6 +354,9 @@ importers:
       '@spp/ui-icon':
         specifier: workspace:^
         version: link:../../packages/ui/icon
+      '@spp/ui-input':
+        specifier: workspace:^
+        version: link:../../packages/ui/input
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../../packages/ui/loader
