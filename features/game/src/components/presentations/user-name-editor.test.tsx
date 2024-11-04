@@ -33,7 +33,8 @@ test("should call submit callback after submitting", async () => {
   await userEvent.click(screen.getByRole("button", { name: "Submit" }));
 
   // Assert
-  expect(submit.calledWith("foofoobar")).toBeTruthy();
+  expect(submit.calledOnce).toBeTruthy();
+  expect(submit.lastCall.args).toEqual(["foofoobar"]);
 });
 
 test("should cancel when cancel button is clicked", async () => {

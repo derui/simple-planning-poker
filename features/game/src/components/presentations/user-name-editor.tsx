@@ -1,6 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Variant } from "@spp/shared-color-variant";
 import { Icon } from "@spp/ui-icon";
 import { Input } from "@spp/ui-input";
+import { SubmitHandler, useForm } from "react-hook-form";
+import * as z from "zod";
 import * as styles from "./user-name-editor.css.js";
 
 export interface Props {
@@ -20,13 +23,21 @@ export interface Props {
   readonly onCancel?: () => void;
 }
 
-export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): JSX.Element {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const userName = data.get("userName") ?? "";
+interface Form {
+  readonly userName: string;
+}
 
-    onSubmit?.(userName.toString());
+const schema = z.object({
+  userName: z.string().min(1, { message: "required" }),
+});
+
+export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): JSX.Element {
+  const { register, handleSubmit } = useForm<Form>({
+    resolver: zodResolver(schema),
+  });
+
+  const wrappedHandleSubmit: SubmitHandler<Form> = (data) => {
+    onSubmit?.(data.userName);
   };
 
   const handleCancel = (event: React.MouseEvent) => {
@@ -35,11 +46,11 @@ export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, 
   };
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit}>
+    <form className={styles.root} onSubmit={handleSubmit(wrappedHandleSubmit)}>
       <span className={styles.decoration}>
         <Icon.Pencil size="m" variant={Variant.teal} />
       </span>
-      <Input autoFocus name="userName" defaultValue={defaultValue} />
+      <Input autoFocus defaultValue={defaultValue} {...register("userName")} />
       <button type="submit" className={styles.submit} aria-label="Submit">
         <Icon.Check size="m" variant={Variant.emerald} />
       </button>

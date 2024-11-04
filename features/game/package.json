@@ -52,6 +52,7 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@hookform/resolvers": "catalog:",
     "@spp/feature-login": "workspace:^",
     "@spp/infra-domain": "workspace:^",
     "@spp/shared-app-url": "workspace:^",

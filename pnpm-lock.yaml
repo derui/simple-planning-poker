@@ -12,6 +12,9 @@ catalogs:
     '@firebase/rules-unit-testing':
       specifier: 3.0.1
       version: 3.0.1
+    '@hookform/resolvers':
+      specifier: 3.9.1
+      version: 3.9.1
     '@playwright/test':
       specifier: 1.48.2
       version: 1.48.2
@@ -330,6 +333,9 @@ importers:
 
   features/game:
     dependencies:
+      '@hookform/resolvers':
+        specifier: 'catalog:'
+        version: 3.9.1(react-hook-form@7.53.1(react@18.3.1))
       '@spp/feature-login':
         specifier: workspace:^
         version: link:../login
@@ -2999,6 +3005,11 @@ packages:
     resolution: {integrity: sha512-AiXO/bfe9bmxBjxxtYxFAXGZvMaN5s8kO+jBHAJCON8rJoB5YS/D6X7ZNc6XQkuHNmyl4CYaMI1fJ/Gn27RGGw==}
     engines: {node: '>=6'}
     hasBin: true
+
+  '@hookform/resolvers@3.9.1':
+    resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@humanfs/core@0.19.0':
     resolution: {integrity: sha512-2cbWIHbZVEweE853g8jymffCA+NCMiuqeECeBBLm8dg2oFdjuGJhgN4UAbI+6v0CKbbhvtXA4qV8YR5Ji86nmw==}
@@ -9207,6 +9218,10 @@ snapshots:
       long: 5.2.3
       protobufjs: 7.3.3
       yargs: 17.7.2
+
+  '@hookform/resolvers@3.9.1(react-hook-form@7.53.1(react@18.3.1))':
+    dependencies:
+      react-hook-form: 7.53.1(react@18.3.1)
 
   '@humanfs/core@0.19.0': {}
 
