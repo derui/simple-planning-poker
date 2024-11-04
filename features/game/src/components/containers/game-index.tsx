@@ -1,20 +1,20 @@
-import * as AppUrl from "@spp/shared-app-url";
-import { Voting } from "@spp/shared-domain";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { hooks } from "../../hooks/facade.js";
 import { GameIndexLayout } from "./game-index.layout.js";
 
+interface Props {
+  /**
+   * Handler to notify start voting to page.
+   */
+  onStartVoting?: (votingId: string) => void;
+}
+
 // eslint-disable-next-line func-style
-export function GameIndex(): JSX.Element {
-  const { loading, games, nextVotingId, startVoting } = hooks.useListGames();
-  const navigate = useNavigate();
+export function GameIndex({ onStartVoting }: Props): JSX.Element {
+  const { loading, games, startVoting } = hooks.useListGames();
 
-  useEffect(() => {
-    if (nextVotingId) {
-      navigate(AppUrl.votingPage(Voting.createId(nextVotingId)));
-    }
-  }, [nextVotingId]);
+  const handleStartVoting = (gameId: string) => {
+    startVoting(gameId, onStartVoting);
+  };
 
-  return <GameIndexLayout games={games} loading={loading == "loading"} onStartVoting={startVoting} />;
+  return <GameIndexLayout games={games} loading={loading == "loading"} onStartVoting={handleStartVoting} />;
 }

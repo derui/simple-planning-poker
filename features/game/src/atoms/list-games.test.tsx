@@ -129,7 +129,7 @@ test("started voting after success", async () => {
   expect(result.current.voteStartingStatus).toEqual(VoteStartingStatus.Started);
 });
 
-test("get next voting id after started", async () => {
+test("get next voting id by callback after started", async () => {
   // Arrange
   const gameId = Game.createId("game");
   const game = Game.create({
@@ -152,13 +152,14 @@ test("get next voting id after started", async () => {
   await act(async () => {});
 
   // Act
-  result.current.startVoting("game");
+  const callback = sinon.fake();
+  result.current.startVoting("game", callback);
 
   await act(async () => {});
   rerender();
 
   // Assert
-  expect(result.current.nextVotingId).not.toBeUndefined();
+  expect(callback.called).toBeTruthy();
 });
 
 test("Reset status to undefined after failure.", async () => {

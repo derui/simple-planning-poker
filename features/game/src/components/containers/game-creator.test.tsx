@@ -62,12 +62,13 @@ test("call hook after submit", async () => {
       };
     },
   };
+  const callback = sinon.fake();
 
   render(
     <ImplementationProvider implementation={mock}>
       <Provider store={store}>
         <MemoryRouter>
-          <GameCreator />
+          <GameCreator onGameCreated={callback} />
         </MemoryRouter>
       </Provider>
     </ImplementationProvider>
@@ -79,7 +80,7 @@ test("call hook after submit", async () => {
 
   // Assert
   expect(createFake.calledOnce).toBeTruthy();
-  expect(createFake.lastCall.args).toEqual(["test", "1,2,3,5,8,13,21,34,55,89"]);
+  expect(createFake.lastCall.args).toEqual(["test", "1,2,3,5,8,13,21,34,55,89", callback]);
 });
 
 test("disable submit if loading", () => {

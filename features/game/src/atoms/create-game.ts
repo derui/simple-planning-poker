@@ -28,8 +28,10 @@ export type UseCreateGame = () => {
 
   /**
    * Create game with inputs. If this method failed, update status.
+   *
+   * @param callback Callback after a game is created
    */
-  create: (name: string, points: string) => void;
+  create: (name: string, points: string, callback?: (gameId: string) => void) => void;
 };
 
 // hook implementations
@@ -50,7 +52,7 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
       status,
       errors,
 
-      validate(name, points) {
+      validate: (name, points) => {
         const errors: CreateGameValidation[] = [];
         if (!Game.canChangeName(name)) {
           errors.push("InvalidName");
@@ -72,7 +74,7 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
         setErrors(errors);
       },
 
-      create(name, points) {
+      create: (name, points, callback) => {
         if (errors.length > 0 || !userId) {
           return;
         }
@@ -92,6 +94,7 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
           switch (ret.kind) {
             case "success":
               setStatus(CreateGameStatus.Completed);
+              callback?.(ret.game.id);
               break;
             case "conflictName":
               setStatus(CreateGameStatus.Failed);

@@ -1,14 +1,18 @@
-import * as AppUrl from "@spp/shared-app-url";
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { CreateGameStatus } from "../../atoms/type.js";
 import { hooks } from "../../hooks/facade.js";
 import { GameCreatorLayout } from "./game-creator.layout.js";
 
+interface Props {
+  /**
+   * Callback invoked when the game is created
+   */
+  onGameCreated?: (gameId: string) => void;
+}
+
 // eslint-disable-next-line func-style
-export function GameCreator(): JSX.Element {
+export function GameCreator({ onGameCreated }: Props): JSX.Element {
   const createGame = hooks.useCreateGame();
-  const navigate = useNavigate();
   const errors = useMemo(() => {
     const errors: Record<string, string> = {};
 
@@ -26,12 +30,8 @@ export function GameCreator(): JSX.Element {
   }, [createGame.errors]);
   const loading = CreateGameStatus.Waiting == createGame.status;
 
-  if (createGame.status == CreateGameStatus.Completed) {
-    navigate(AppUrl.gameIndexPage());
-  }
-
   const handleCreateGame = (name: string, points: string) => {
-    createGame.create(name, points);
+    createGame.create(name, points, onGameCreated);
   };
 
   return (

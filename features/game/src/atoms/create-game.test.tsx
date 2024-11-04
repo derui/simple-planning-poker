@@ -217,6 +217,32 @@ describe("Create", () => {
     expect(Game.isGameCreated(dispatcher.lastCall.args[0])).toBeTruthy();
   });
 
+  test("call callback after created", async () => {
+    // Arrange
+    const repository = newMemoryGameRepository();
+    const store = createStore();
+    const wrapper = createWrapper(store);
+    const dispatcher = sinon.fake<[DomainEvent.T]>();
+    const { result, rerender } = renderHook(
+      createUseCreateGame({
+        gameRepository: repository,
+        dispatcher,
+        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+      }),
+      { wrapper }
+    );
+    act(() => {
+      rerender();
+    });
+
+    // Act
+    const callback = sinon.fake();
+    await act(async () => Promise.resolve(result.current.create("foo", "1", callback)));
+
+    // Assert
+    expect(callback.called).toBeTruthy();
+  });
+
   test("created game should have valid values", async () => {
     // Arrange
     const repository = newMemoryGameRepository();

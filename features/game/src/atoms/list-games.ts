@@ -8,7 +8,6 @@ import { gamesAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
 
 const loadingAtom = atom<"completed" | "loading">("completed");
-const nextVotingIdAtom = atom<string | undefined>(undefined);
 
 /**
  * Hook definition to list game
@@ -22,19 +21,17 @@ export type UseListGames = () => {
   voteStartingStatus?: VoteStartingStatus;
 
   /**
-   * Next voting id
-   */
-  nextVotingId?: string;
-
-  /**
    * Current joined/owned games
    */
   games: GameDto[];
 
   /**
    * Start voting from a game.
+   *
+   * @param gameId Id of the game to start voting from.
+   * @param callback Callback to be called when the voting is started.
    */
-  startVoting: (gameId: string) => void;
+  startVoting: (gameId: string, callback?: (votingId: string) => void) => void;
 };
 
 /**
@@ -54,7 +51,6 @@ export const createUseListGames = function createUseListGames({
     const [games, setGames] = useAtom(gamesAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
-    const [nextVotingId, setNextVotingId] = useAtom(nextVotingIdAtom);
 
     useEffect(() => {
       setLoading("loading");
@@ -71,16 +67,15 @@ export const createUseListGames = function createUseListGames({
             setTimeout(() => setLoading("completed"), 150);
           });
       }
-    }, [userId]);
+    }, [userId, setGames, setLoading]);
 
     return {
-      nextVotingId,
       loading,
       voteStartingStatus,
 
       games: !userId ? [] : games.map((v) => toGameDto(v, userId)),
 
-      startVoting: (gameId: string): void => {
+      startVoting: (gameId: string, callback): void => {
         const domainGameId = Game.createId(gameId);
 
         const input: StartVotingUseCaseInput = { gameId: domainGameId };
@@ -91,8 +86,8 @@ export const createUseListGames = function createUseListGames({
           .then((input) => {
             switch (input.kind) {
               case "success":
-                setNextVotingId(input.voting.id);
                 setVoteStartingStatus(VoteStartingStatus.Started);
+                callback?.(input.voting.id);
                 break;
               case "failed":
               case "notFound":
