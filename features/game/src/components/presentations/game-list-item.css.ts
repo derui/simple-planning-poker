@@ -12,18 +12,18 @@ export const main: string = style([
     height: vars.spacing[12],
     border: "1px solid transparent",
     backgroundColor: "transparent",
-    borderRadius: "9999px",
+    borderRadius: "1rem",
     color: vars.color.purple[700],
 
     ":hover": {
-      borderColor: vars.color.purple[600],
+      borderColor: vars.color.purple[500],
+      backgroundColor: vars.color.purple[100],
       boxShadow: vars.shadow.xl,
     },
 
     selectors: {
-      '&[aria-selected="true"]': {
+      '&:not(:hover)&[aria-selected="true"]': {
         backgroundColor: vars.color.purple[100],
-        borderColor: vars.color.purple[600],
       },
     },
   },

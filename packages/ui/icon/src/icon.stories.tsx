@@ -89,3 +89,16 @@ export const X: Story = {
     );
   },
 };
+
+export const Plus: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Plus {...args} />
+      </div>
+    );
+  },
+};

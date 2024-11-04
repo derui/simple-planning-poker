@@ -10,8 +10,14 @@ export interface Props {
 }
 
 export const GameListItem = function GameListItem({ gameId, selected = false, name, onClick }: Props): JSX.Element {
+  const handleClick = (): void => {
+    if (!selected) {
+      onClick?.();
+    }
+  };
+
   return (
-    <li key={gameId} className={styles.main} onClick={onClick} aria-selected={selected}>
+    <li key={gameId} className={styles.main} onClick={handleClick} aria-selected={selected}>
       <div className={styles.link}>
         <span className={styles.linkName}>{name}</span>
         <span className={styles.selectMarkContainer}>
