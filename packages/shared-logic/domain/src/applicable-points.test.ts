@@ -1,5 +1,6 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import { clone, contains, create, pick } from "./applicable-points.js";
+import { ApplicablePoints } from "./index.js";
 import * as StoryPoint from "./story-point.js";
 
 test("make points from numbers", () => {
@@ -65,4 +66,29 @@ test("clone the cards", () => {
   // Assert
   expect(cloned).not.toBe(ret);
   expect(cloned).toEqual(ret);
+});
+
+test.each([
+  ["1,2,3", ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2), StoryPoint.create(3)])],
+  [
+    "1, 2, 3  ,4   ",
+    ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2), StoryPoint.create(3), StoryPoint.create(4)]),
+  ],
+])("parse from string: %s", (input, expected) => {
+  // Arrange
+
+  // Act
+  const ret = ApplicablePoints.parse(input);
+
+  // Assert
+  expect(ret).toEqual(expected);
+});
+
+test.each(["1,2,", "1,,3", "-1,4,5", "?,3,5"])("should throw error if input is not valid: %s", (input) => {
+  // Arrange
+
+  // Act
+
+  // Assert
+  expect(ApplicablePoints.parse(input)).toBeUndefined();
 });

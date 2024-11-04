@@ -1,4 +1,5 @@
 import { unique } from "@spp/shared-array";
+import { filterUndefined } from "@spp/shared-basic";
 import * as StoryPoint from "./story-point.js";
 
 export type T = ReadonlyArray<StoryPoint.T>;
@@ -41,4 +42,27 @@ export const contains = function contains(obj: T, point: StoryPoint.T): boolean 
 export const isValidStoryPoints = (points: StoryPoint.T[]): boolean => {
   const uniqued = unique(points, StoryPoint.isEqual);
   return uniqued.length > 0;
+};
+
+/**
+ * parse the story points;
+ */
+export const parse = function parse(obj: string): T | undefined {
+  const split = obj.split(",").map((v) => v.trim());
+
+  const points = split
+    .map((v) => {
+      try {
+        return StoryPoint.parse(v);
+      } catch (e) {
+        return;
+      }
+    })
+    .filter(filterUndefined);
+
+  if (split.length != points.length) {
+    return;
+  }
+
+  return create(points);
 };
