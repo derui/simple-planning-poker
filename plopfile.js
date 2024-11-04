@@ -125,6 +125,11 @@ const registerPresentationalComponentToFeature = function registerPresentational
         path: "features/{{feature}}/src/components/presentations/{{name}}.stories.tsx",
         templateFile: "plop-templates/package/ui/component.stories.hbs",
       },
+      {
+        type: "add",
+        path: "features/{{feature}}/src/components/presentations/{{name}}.css.ts",
+        templateFile: "plop-templates/package/ui/component.css.ts",
+      },
     ],
   });
 };
