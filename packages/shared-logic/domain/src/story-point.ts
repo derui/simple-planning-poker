@@ -12,6 +12,18 @@ export const create = (v: number): T => {
   return v as T;
 };
 
+/**
+ * Parses a story point from a string
+ */
+export const parse = (v: string): T | undefined => {
+  const num = parseInt(v, 10);
+  if (!isValid(num)) {
+    return;
+  }
+
+  return create(num);
+};
+
 export const value = (v: T): Unbranded<T, typeof _tag> => v;
 
 export const isValid = (v: number): boolean => {

@@ -1,5 +1,6 @@
-import { test, expect } from "vitest";
-import { create, value } from "./story-point.js";
+import { expect, test } from "vitest";
+import { StoryPoint } from "./index.js";
+import { create, parse, value } from "./story-point.js";
 
 test("create story point with positive number", () => {
   // Arrange
@@ -35,4 +36,12 @@ test("get value", () => {
   const point = create(10);
 
   expect(value(point)).toBe(10);
+});
+
+test.each(["1", "0", "10", "100"])("parse number from string: %d", (v) => {
+  expect(parse(v)).toBe(StoryPoint.create(parseInt(v, 10)));
+});
+
+test.each(["", " ", "-1", "-10", "-100"])("should get with invalid string: %d", (v) => {
+  expect(parse(v)).toBeUndefined();
 });
