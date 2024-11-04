@@ -68,6 +68,7 @@ test("should not call callback if the game is selected", async () => {
 
   // Act
   await userEvent.click(screen.getByText("The game"));
+
   // Assert
   expect(onClick.calledOnce).toBeFalsy;
 });
