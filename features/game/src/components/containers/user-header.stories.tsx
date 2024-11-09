@@ -1,37 +1,36 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { User } from "@spp/shared-domain";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { newChangeUserNameUseCase } from "@spp/shared-use-case";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { createUseListGames } from "../../atoms/list-games.js";
+import { createUseUserHeader } from "../../atoms/user-header.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
+import { UserHeader } from "./user-header.js";
 
 const meta: Meta<typeof GameIndex> = {
   title: "Container/User Header",
-  component: Userheader,
+  component: UserHeader,
   tags: ["autodocs"],
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const InitializeUser = function InitializeUser({ children }: { children: React.ReactNode }) {
-  return children;
-};
-
 export const WaitingPrepared: Story = {
   render() {
     const store = createStore();
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      useListGames: createUseListGames({
-        gameRepository: newMemoryGameRepository(),
+      useListGames: sinon.fake(),
+      useUserHeader: createUseUserHeader({
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
+        userRepository: newMemoryUserRepository(),
+        changeUserNameUseCase: sinon.fake(),
       }),
     };
 
@@ -40,7 +39,7 @@ export const WaitingPrepared: Story = {
         <Provider store={store}>
           <MemoryRouter>
             <div className={themeClass}>
-              <GameIndex />
+              <UserHeader />
             </div>
           </MemoryRouter>
         </Provider>
@@ -48,62 +47,22 @@ export const WaitingPrepared: Story = {
     );
   },
 };
-
-export const Empty: Story = {
+export const Loaded: Story = {
   render() {
     const store = createStore();
-    const repository = newMemoryGameRepository();
-
-    const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
-      useListGames: createUseListGames({
-        gameRepository: repository,
-        useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
+    const userRepository = newMemoryUserRepository([
+      User.create({
+        id: User.createId("foo"),
+        name: "foobar",
       }),
-    };
-
-    return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <InitializeUser>
-              <div className={themeClass}>
-                <GameIndex />
-              </div>
-            </InitializeUser>
-          </MemoryRouter>
-        </Provider>
-      </ImplementationProvider>
-    );
-  },
-};
-
-export const SomeGames: Story = {
-  render() {
-    const store = createStore();
-    const repository = newMemoryGameRepository([
-      Game.create({
-        id: Game.createId(),
-        owner: User.createId("foo"),
-        name: "Sprint 1",
-        points: ApplicablePoints.create([StoryPoint.create(1)]),
-      })[0],
-
-      Game.create({
-        id: Game.createId(),
-        owner: User.createId("bar"),
-        name: "Sprint 2",
-        points: ApplicablePoints.create([StoryPoint.create(1)]),
-      })[0],
     ]);
-
     const hooks: Hooks = {
       useCreateGame: sinon.fake(),
-      useListGames: createUseListGames({
-        gameRepository: repository,
+      useListGames: sinon.fake(),
+      useUserHeader: createUseUserHeader({
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
+        userRepository,
+        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), userRepository),
       }),
     };
 
@@ -111,53 +70,9 @@ export const SomeGames: Story = {
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
           <MemoryRouter>
-            <InitializeUser>
-              <div className={themeClass}>
-                <GameIndex />
-              </div>
-            </InitializeUser>
-          </MemoryRouter>
-        </Provider>
-      </ImplementationProvider>
-    );
-  },
-};
-
-export const TenGames: Story = {
-  render() {
-    const store = createStore();
-    const games = new Array(10).fill(undefined);
-
-    const repository = newMemoryGameRepository(
-      games.map(
-        () =>
-          Game.create({
-            id: Game.createId(),
-            owner: User.createId("foo"),
-            name: "Sprint 1",
-            points: ApplicablePoints.create([StoryPoint.create(1)]),
-          })[0]
-      )
-    );
-
-    const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
-      useListGames: createUseListGames({
-        gameRepository: repository,
-        useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
-      }),
-    };
-
-    return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <InitializeUser>
-              <div className={themeClass}>
-                <GameIndex />
-              </div>
-            </InitializeUser>
+            <div className={themeClass}>
+              <UserHeader />
+            </div>
           </MemoryRouter>
         </Provider>
       </ImplementationProvider>
