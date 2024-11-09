@@ -4,7 +4,7 @@ import { StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-cas
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { gamesAtom, voteStartingStatusAtom } from "./game-atom.js";
+import { gamesAtom, selectedGameAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
 
 const loadingAtom = atom<"completed" | "loading">("completed");
@@ -24,6 +24,18 @@ export type UseListGames = () => {
    * Current joined/owned games
    */
   games: GameDto[];
+
+  /**
+   * Selected game
+   */
+  selectedGame?: GameDto;
+
+  /**
+   * Select game.
+   *
+   * @param gameId Id of the game to select.
+   */
+  select: (gameId: string) => void;
 
   /**
    * Start voting from a game.
@@ -49,6 +61,7 @@ export const createUseListGames = function createUseListGames({
   return () => {
     const [loading, setLoading] = useAtom(loadingAtom);
     const [games, setGames] = useAtom(gamesAtom);
+    const [selectedGame, setSelectedGame] = useAtom(selectedGameAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
 
@@ -72,8 +85,13 @@ export const createUseListGames = function createUseListGames({
     return {
       loading,
       voteStartingStatus,
+      selectedGame: selectedGame ? toGameDto(selectedGame) : undefined,
 
-      games: !userId ? [] : games.map((v) => toGameDto(v, userId)),
+      games: !userId ? [] : games.map((v) => toGameDto(v)),
+
+      select: (gameId: string): void => {
+        setSelectedGame(games.find((v) => v.id === gameId));
+      },
 
       startVoting: (gameId: string, callback): void => {
         const domainGameId = Game.createId(gameId);

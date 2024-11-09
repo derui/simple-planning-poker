@@ -25,3 +25,8 @@ export type CreateGameValidation = "InvalidName" | "InvalidPoints" | "NameConfli
 export const createGameValidationsAtom: PrimitiveAtom<CreateGameValidation[]> = atom<CreateGameValidation[]>([]);
 
 export const createGameStatusAtom: PrimitiveAtom<CreateGameStatus | undefined> = atom<CreateGameStatus | undefined>();
+
+/**
+ * An atom to store selected game
+ */
+export const selectedGameAtom: PrimitiveAtom<Game.T | undefined> = atom<Game.T | undefined>(undefined);

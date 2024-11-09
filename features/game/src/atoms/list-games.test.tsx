@@ -193,3 +193,36 @@ test("Reset status to undefined after failure.", async () => {
   // Assert
   expect(result.current.voteStartingStatus).toBeUndefined();
 });
+
+test("select game", async () => {
+  // Arrange
+  const gameId = Game.createId("game");
+  const game = Game.create({
+    id: gameId,
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([StoryPoint.create(3)]),
+    name: "game name",
+  })[0];
+  const repository = newMemoryGameRepository([game]);
+  const store = createStore();
+  const wrapper = createWrapper(store);
+  const { result, rerender } = renderHook(
+    createUseListGames({
+      gameRepository: repository,
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+      startVotingUseCase: sinon.fake(),
+    }),
+    { wrapper }
+  );
+  await act(async () => {});
+
+  // Act
+  result.current.select("game");
+
+  await act(async () => {});
+  rerender();
+
+  // Assert
+  expect(result.current.selectedGame?.id).toEqual("game");
+  expect(result.current.selectedGame?.name).toEqual("game name");
+});
