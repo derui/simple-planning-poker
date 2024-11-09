@@ -1,13 +1,14 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game, GameRepository } from "@spp/shared-domain";
+import { Game, GameRepository, User, UserRepository } from "@spp/shared-domain";
 import { StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-case";
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
-import { GameDto, toGameDto } from "./dto.js";
+import { GameDto, toGameDto, toUserDto, UserDto } from "./dto.js";
 import { gamesAtom, selectedGameAtom, voteStartingStatusAtom } from "./game-atom.js";
 import { VoteStartingStatus } from "./type.js";
 
 const loadingAtom = atom<"completed" | "loading">("completed");
+const loginUserAtom = atom<User.T | undefined>(undefined);
 
 /**
  * Hook definition to list game
@@ -19,6 +20,11 @@ export type UseListGames = () => {
    * Status of starting voting.
    */
   voteStartingStatus?: VoteStartingStatus;
+
+  /**
+   * Current logged in user
+   */
+  loginUser?: UserDto;
 
   /**
    * Current joined/owned games
@@ -52,39 +58,49 @@ export type UseListGames = () => {
 export const createUseListGames = function createUseListGames({
   gameRepository,
   useLoginUser,
+  userRepository,
   startVotingUseCase,
 }: {
   gameRepository: GameRepository.T;
   useLoginUser: UseLoginUser;
   startVotingUseCase: StartVotingUseCase;
+  userRepository: UserRepository.T;
 }): UseListGames {
   return () => {
     const [loading, setLoading] = useAtom(loadingAtom);
     const [games, setGames] = useAtom(gamesAtom);
     const [selectedGame, setSelectedGame] = useAtom(selectedGameAtom);
+    const [loginUser, setLoginUser] = useAtom(loginUserAtom);
     const { userId } = useLoginUser();
     const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
 
     useEffect(() => {
       setLoading("loading");
       if (userId) {
-        gameRepository
+        const fetchGame = gameRepository
           .listUserCreated(userId)
           .then((games) => {
             setGames(games);
           })
           .catch(() => {
             setGames([]);
-          })
-          .finally(() => {
-            setTimeout(() => setLoading("completed"), 150);
           });
+
+        // fetch user from userRepository
+        const fetchUser = userRepository.findBy(userId).then((user) => {
+          setLoginUser(user);
+        });
+
+        Promise.all([fetchGame, fetchUser]).finally(() => {
+          setTimeout(() => setLoading("completed"), 150);
+        });
       }
     }, [userId, setGames, setLoading]);
 
     return {
       loading,
       voteStartingStatus,
+      loginUser: loginUser ? toUserDto(loginUser) : undefined,
       selectedGame: selectedGame ? toGameDto(selectedGame) : undefined,
 
       games: !userId ? [] : games.map((v) => toGameDto(v)),

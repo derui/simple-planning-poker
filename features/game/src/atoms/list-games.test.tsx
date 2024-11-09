@@ -1,9 +1,11 @@
 import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import { newStartVotingUseCase } from "@spp/shared-use-case";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
+import React from "react";
 import sinon from "sinon";
 import { expect, test } from "vitest";
 import { createUseListGames } from "./list-games.js";
@@ -24,6 +26,7 @@ test("initial status", () => {
         gameRepository: newMemoryGameRepository(),
         startVotingUseCase: sinon.fake(),
         useLoginUser: sinon.fake.returns({ userId: undefined }),
+        userRepository: newMemoryUserRepository(),
       })(),
     {
       wrapper: createWrapper(store),
@@ -54,6 +57,7 @@ test("get games after effect", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: sinon.fake(),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -84,6 +88,7 @@ test("Cast your vote", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: sinon.fake.rejects({ kind: "failed" }),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -114,6 +119,7 @@ test("started voting after success", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: newStartVotingUseCase(repository, newMemoryVotingRepository(), sinon.fake()),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -146,6 +152,7 @@ test("get next voting id by callback after started", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: newStartVotingUseCase(repository, newMemoryVotingRepository(), sinon.fake()),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -179,6 +186,7 @@ test("Reset status to undefined after failure.", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: sinon.fake.rejects({ kind: "failed" }),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -211,6 +219,7 @@ test("select game", async () => {
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
       startVotingUseCase: sinon.fake(),
+      userRepository: newMemoryUserRepository(),
     }),
     { wrapper }
   );
@@ -225,4 +234,39 @@ test("select game", async () => {
   // Assert
   expect(result.current.selectedGame?.id).toEqual("game");
   expect(result.current.selectedGame?.name).toEqual("game name");
+});
+
+test("get login user after effect", async () => {
+  // Arrange
+  const gameId = Game.createId("game");
+  const game = Game.create({
+    id: gameId,
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([StoryPoint.create(3)]),
+    name: "game",
+  })[0];
+  const repository = newMemoryGameRepository([game]);
+  const store = createStore();
+  const wrapper = createWrapper(store);
+  const { result, rerender } = renderHook(
+    createUseListGames({
+      gameRepository: repository,
+      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
+      startVotingUseCase: newStartVotingUseCase(repository, newMemoryVotingRepository(), sinon.fake()),
+      userRepository: newMemoryUserRepository([
+        User.create({
+          id: User.createId("id"),
+          name: "user",
+        }),
+      ]),
+    }),
+    { wrapper }
+  );
+  await act(async () => {});
+
+  // Act
+  rerender();
+
+  // Assert
+  expect(result.current.loginUser).toEqual({ id: "id", name: "user" });
 });
