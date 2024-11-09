@@ -12,6 +12,20 @@ export const root: string = style({
   height: "100%",
 });
 
+export const empty: string = style({
+  gridRowStart: 1,
+  gridRowEnd: 4,
+  display: "flex",
+  gap: vars.spacing[3],
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: vars.color.blue[50],
+  color: vars.color.blue[700],
+  fontSize: vars.font.size.lg,
+  lineHeight: vars.font.lineHeight.lg,
+});
+
 export const editButton: string = style([
   buttonStyle({ variant: Variant.emerald, iconButton: true }),
   {

@@ -25,3 +25,14 @@ export const Default: Story = {
     );
   },
 };
+
+export const Empty: Story = {
+  args: {},
+  render(args) {
+    return (
+      <div className={themeClass} style={{ height: "500px" }}>
+        <GameDetail {...args} />
+      </div>
+    );
+  },
+};

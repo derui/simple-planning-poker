@@ -3,9 +3,9 @@ import { Icon } from "@spp/ui-icon";
 import * as styles from "./game-detail.css.js";
 
 export interface Props {
-  readonly name: string;
+  readonly name?: string;
 
-  readonly points: string;
+  readonly points?: string;
 
   /**
    * The callback to call when the user clicks on the edit button.
@@ -24,6 +24,14 @@ export interface Props {
 }
 
 export const GameDetail = function GameDetail({ name, points, onEdit, onDelete, onStartVoting }: Props): JSX.Element {
+  if (!name || !points) {
+    return (
+      <div className={styles.root}>
+        <div className={styles.empty}>Select game from list</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.root}>
       <button className={styles.editButton} onClick={onEdit} aria-label="Edit">

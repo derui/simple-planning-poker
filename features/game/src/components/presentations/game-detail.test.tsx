@@ -47,3 +47,13 @@ test("should call callback onStartVoting where start voting button is clicked", 
   // Assert
   expect(mockCallback.calledOnce).toBeTruthy();
 });
+
+test("should show empty if name is not passed", () => {
+  // Arrange
+  render(<GameDetail />);
+
+  // Act
+
+  // Assert
+  expect(screen.queryByText(/Select game/)).not.toBeNull();
+});
