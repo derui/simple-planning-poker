@@ -12,7 +12,7 @@ interface Props {
 
   defaultPoints?: string;
 
-  onCreateGame?: (name: string, points: string) => void;
+  onSubmit?: (name: string, points: string) => void;
 
   loading?: boolean;
 }
@@ -32,7 +32,7 @@ const schema = z.object({
 
 // eslint-disable-next-line func-style
 export function GameEditor(props: Props): JSX.Element {
-  const { defaultName, defaultPoints, onCreateGame, loading = false } = props;
+  const { defaultName, defaultPoints, onSubmit, loading = false } = props;
 
   const {
     register,
@@ -41,7 +41,7 @@ export function GameEditor(props: Props): JSX.Element {
   } = useForm<Input>({ resolver: zodResolver(schema) });
 
   const handleWrappedSusbmit: SubmitHandler<Input> = (data) => {
-    onCreateGame?.(data.name, data.points);
+    onSubmit?.(data.name, data.points);
   };
 
   return (

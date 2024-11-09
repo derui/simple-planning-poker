@@ -16,7 +16,7 @@ test("call callback after submit", async () => {
   // Arrange
   const callback = sinon.fake();
 
-  render(<GameEditor onCreateGame={callback} />);
+  render(<GameEditor onSubmit={callback} />);
 
   // Act
   await userEvent.type(screen.getByLabelText("Name"), "test");
