@@ -6,6 +6,7 @@ import { Game, User } from "@spp/shared-domain";
 export interface GameDto {
   id: string;
   name: string;
+  points: string;
 }
 
 /**
@@ -15,6 +16,7 @@ export const toGameDto = function toGameDto(game: Game.T): GameDto {
   return {
     id: game.id,
     name: game.name,
+    points: game.points.map((v) => v.toString()).join(","),
   };
 };
 
