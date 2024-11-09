@@ -3,7 +3,7 @@
 exports[`should be able to render 1`] = `
 <div>
   <div
-    class="user-header_root__44nqd40"
+    class="user-header_root__44nqd40 style_transition_all__192bcwg41"
   >
     <button
       aria-label="Toggle voter mode"
@@ -21,18 +21,14 @@ exports[`should be able to render 1`] = `
       >
         name
       </span>
-      <span
-        class="user-header_icon__44nqd43 style_transition_all__192bcwg41"
+      <button
+        aria-label="Edit user name"
+        class="user-header_icon__44nqd43 style_transition_all__192bcwg41 style_enabledIconButtonVariants_teal__92u52zz style_enabledIconBase__92u52z5 style_iconBase__92u52z1"
       >
-        <button
-          aria-label="Edit user name"
-          class="user-header_icon__44nqd43 style_transition_all__192bcwg41"
-        >
-          <span
-            class="pencil_medium_teal__2ixuvsb style_iconMedium__p90ga82 style_iconBase__p90ga80"
-          />
-        </button>
-      </span>
+        <span
+          class="pencil_medium_teal__2ixuvsb style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+      </button>
     </div>
   </div>
 </div>

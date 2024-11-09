@@ -12,6 +12,7 @@ export const root: string = style([
     height: vars.spacing[12],
     gap: vars.spacing[3],
     padding: `0 ${vars.spacing[4]}`,
+    borderBottom: `1px solid ${vars.color.orange[500]}`,
     ":hover": {
       backgroundColor: vars.color.orange[100],
     },
