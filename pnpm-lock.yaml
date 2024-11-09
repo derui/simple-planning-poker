@@ -372,6 +372,9 @@ importers:
       '@spp/ui-loader':
         specifier: workspace:^
         version: link:../../packages/ui/loader
+      '@spp/ui-skeleton':
+        specifier: workspace:^
+        version: link:../../packages/ui/skeleton
       '@spp/ui-theme':
         specifier: workspace:^
         version: link:../../packages/ui/theme
@@ -405,7 +408,7 @@ importers:
         version: 8.3.3(storybook@8.4.2(prettier@3.3.3))
       '@storybook/cli':
         specifier: 'catalog:'
-        version: 8.3.3(@babel/preset-env@7.26.0(@babel/core@7.26.0))
+        version: 8.3.3(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       '@storybook/react':
         specifier: 'catalog:'
         version: 8.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.2(prettier@3.3.3))(typescript@5.6.2)
@@ -1078,7 +1081,7 @@ importers:
         version: 8.3.3(storybook@8.4.2(prettier@3.3.3))
       '@storybook/cli':
         specifier: 'catalog:'
-        version: 8.3.3(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+        version: 8.3.3(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       '@storybook/react':
         specifier: 'catalog:'
         version: 8.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.2(prettier@3.3.3))(typescript@5.6.2)

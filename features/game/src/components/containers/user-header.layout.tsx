@@ -1,3 +1,4 @@
+import { Skeleton } from "@spp/ui-skeleton";
 import { UserDto } from "../../atoms/dto.js";
 import { UserHeader } from "../presentations/user-header.js";
 import { UserNameEditor } from "../presentations/user-name-editor.js";
@@ -23,7 +24,11 @@ export const UserHeaderLayout = function UserHeaderLayout({
   onCancelUserNameEdit,
 }: Props): JSX.Element {
   if (!user) {
-    return <div className={styles.root}></div>;
+    return (
+      <div className={styles.root}>
+        <Skeleton />
+      </div>
+    );
   }
 
   if (mode == "edit") {

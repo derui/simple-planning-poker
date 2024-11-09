@@ -11,7 +11,7 @@ export const root: string = style({
   border: `1px solid ${vars.color.gray[200]}`,
   borderRadius: "8px",
   gap: vars.spacing[3],
-  margin: vars.spacing[2],
+  margin: 0,
   padding: `0 ${vars.spacing[4]}`,
   boxShadow: vars.shadow.md,
 });

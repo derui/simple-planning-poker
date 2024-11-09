@@ -65,6 +65,7 @@
     "@spp/ui-icon": "workspace:^",
     "@spp/ui-input": "workspace:^",
     "@spp/ui-loader": "workspace:^",
+    "@spp/ui-skeleton": "workspace:^",
     "@spp/ui-theme": "workspace:^",
     "@vanilla-extract/css": "catalog:",
     "jotai": "catalog:",
