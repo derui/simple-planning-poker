@@ -3,15 +3,20 @@ import { buttonStyle } from "@spp/ui-button-style";
 import { support, vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
-export const root: string = style({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: vars.spacing[12],
-  backgroundColor: vars.color.orange[100],
-  gap: vars.spacing[3],
-  padding: `0 ${vars.spacing[4]}`,
-});
+export const root: string = style([
+  support.transition.all,
+  {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: vars.spacing[12],
+    gap: vars.spacing[3],
+    padding: `0 ${vars.spacing[4]}`,
+    ":hover": {
+      backgroundColor: vars.color.orange[100],
+    },
+  },
+]);
 
 export const userName: {
   container: string;
@@ -26,14 +31,10 @@ export const userName: {
       overflow: "hidden",
       width: "100%",
       flexDirection: "row",
+      alignItems: "center",
       color: vars.color.orange[800],
       borderBottom: "1px solid transparent",
       padding: vars.spacing[2],
-
-      ":hover": {
-        borderBottom: `1px solid ${vars.color.teal[500]}`,
-        color: vars.color.teal[800],
-      },
     },
   ]);
   const name = style({
@@ -46,6 +47,7 @@ export const userName: {
 
   const icon = style([
     support.transition.all,
+    buttonStyle({ variant: Variant.teal, iconButton: true }),
     {
       cursor: "pointer",
       visibility: "hidden",
