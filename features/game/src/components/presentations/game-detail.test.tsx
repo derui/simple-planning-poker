@@ -35,3 +35,15 @@ test("should call callback onDelete when delete button is clicked", async () => 
   // Assert
   expect(mockCallback.calledOnce).toBeTruthy();
 });
+
+test("should call callback onStartVoting where start voting button is clicked", async () => {
+  // Arrange
+  const mockCallback = Sinon.fake();
+  render(<GameDetail name="name" points="points" onStartVoting={mockCallback} />);
+
+  // Act
+  await userEvent.click(screen.getByRole("button", { name: "Start Voting" }));
+
+  // Assert
+  expect(mockCallback.calledOnce).toBeTruthy();
+});

@@ -52,6 +52,14 @@ exports[`should be able to render 1`] = `
         />
         Delete
       </button>
+      <button
+        class="game-detail_startVotingButton__6k3kyt7 style_enabledButtonVariants_emerald__92u52zr style_enabledBase__92u52z3 style_base__92u52z0 style_transition_all__192bcwg41"
+      >
+        <span
+          class="check_medium_emerald__1oavie2c style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+        Start Voting
+      </button>
     </div>
   </div>
 </div>

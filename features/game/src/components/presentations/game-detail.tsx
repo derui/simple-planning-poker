@@ -16,9 +16,14 @@ export interface Props {
    * The callback to call when the user want to delete this game.
    */
   readonly onDelete?: () => void;
+
+  /**
+   * The callback to call when the user wants to start voting.
+   */
+  readonly onStartVoting?: () => void;
 }
 
-export const GameDetail = function GameDetail({ name, points, onEdit, onDelete }: Props): JSX.Element {
+export const GameDetail = function GameDetail({ name, points, onEdit, onDelete, onStartVoting }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       <button className={styles.editButton} onClick={onEdit} aria-label="Edit">
@@ -36,6 +41,10 @@ export const GameDetail = function GameDetail({ name, points, onEdit, onDelete }
         <button className={styles.deleteButton} onClick={onDelete}>
           <Icon.Trash variant={Variant.cerise} />
           Delete
+        </button>
+        <button className={styles.startVotingButton} onClick={onStartVoting}>
+          <Icon.Check variant={Variant.emerald} />
+          Start Voting
         </button>
       </div>
     </div>

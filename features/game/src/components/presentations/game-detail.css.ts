@@ -43,13 +43,23 @@ export const defListContent: string = style({
 
 export const footer: string = style({
   display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  justifyContent: "center",
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
 });
 
 export const deleteButton: string = style([
   buttonStyle({ variant: Variant.cerise }),
+  {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyItems: "center",
+  },
+]);
+
+export const startVotingButton: string = style([
+  buttonStyle({ variant: Variant.emerald }),
   {
     display: "flex",
     flexDirection: "row",
