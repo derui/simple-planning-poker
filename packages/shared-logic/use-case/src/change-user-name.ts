@@ -1,5 +1,5 @@
-import { EventDispatcher, UseCase } from "./base.js";
 import { User, UserRepository } from "@spp/shared-domain";
+import { EventDispatcher, UseCase } from "./base.js";
 
 export interface ChangeUserNameInput {
   userId: User.Id;
@@ -11,13 +11,15 @@ export type ChangeUserNameOutput =
   | { kind: "canNotChangeName" }
   | { kind: "notFound" };
 
+export type ChangeUserNameUseCase = UseCase<ChangeUserNameInput, ChangeUserNameOutput>;
+
 /**
  * Get new use case instance to chagne user name
  */
 export const newChangeUserNameUseCase = function newChangeUserNameUseCase(
   dispatcher: EventDispatcher,
   userRepository: UserRepository.T
-): UseCase<ChangeUserNameInput, ChangeUserNameOutput> {
+): ChangeUserNameUseCase {
   return async (input) => {
     const user = await userRepository.findBy(input.userId);
     if (!user) {
