@@ -11,7 +11,7 @@ const statusAtom = atom<"deleting" | "editing" | "completed">("completed");
  * Hook definition to list game
  */
 export type UseGameDetail = () => {
-  loading: boolean;
+  status: "deleting" | "editing" | "completed";
 
   /**
    * current selected game.
@@ -53,11 +53,11 @@ export const createUseGameDetail = function createUseGameDetail({
     const setGames = useSetAtom(gamesAtom);
 
     return {
-      loading: status == "editing" || status == "deleting",
+      status,
       game: game ? toGameDto(game) : undefined,
 
       edit: (name: string, points: string): void => {
-        if (!game || !userId) {
+        if (!game || !userId || status != "completed") {
           return;
         }
 
@@ -90,7 +90,7 @@ export const createUseGameDetail = function createUseGameDetail({
       },
 
       delete: () => {
-        if (!game || !userId) {
+        if (!game || !userId || status != "completed") {
           return;
         }
 

@@ -34,7 +34,7 @@ test("initial status", () => {
 
   // Assert
   expect(result.current.game).toBeUndefined();
-  expect(result.current.loading).toBeFalsy();
+  expect(result.current.status).toBe("completed");
 });
 
 test("get games after effect", async () => {
@@ -64,7 +64,7 @@ test("get games after effect", async () => {
 
   // Assert
   expect(result.current.game).toEqual(toGameDto(game));
-  expect(result.current.loading).toBe(false);
+  expect(result.current.status).toBe("completed");
 });
 
 test("set loading after editing", async () => {
@@ -95,7 +95,7 @@ test("set loading after editing", async () => {
   rerender();
 
   // Assert
-  expect(result.current.loading).toBe(true);
+  expect(result.current.status).toBe("editing");
 });
 
 test("should updated edited game", async () => {
@@ -123,11 +123,10 @@ test("should updated edited game", async () => {
 
   // Act
   result.current.edit("new", "1,2,3");
-  await waitFor(async () => !result.current.loading);
+  await waitFor(async () => result.current.status == "completed");
   rerender();
 
   // Assert
-  expect(result.current.loading).toBe(false);
   expect(result.current.game).toEqual({ id: "game", name: "new", points: "1,2,3" });
 });
 
@@ -156,11 +155,11 @@ test("should remove deleted game", async () => {
 
   // Act
   result.current.delete();
-  await waitFor(async () => !result.current.loading);
+  await waitFor(async () => result.current.status == "completed");
   rerender();
 
   // Assert
-  expect(result.current.loading).toBe(false);
+  expect(result.current.status).toBe("completed");
   expect(result.current.game).toBeUndefined();
   expect(store.get(gamesAtom)).toHaveLength(0);
 });

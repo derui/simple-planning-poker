@@ -8,9 +8,9 @@ export interface Props {
   readonly game?: GameDto;
 
   /**
-   * A status to show if the game is being edited
+   * A status to show if some operation is doing
    */
-  readonly editing?: boolean;
+  readonly loading?: boolean;
 
   /**
    * A handler to delete the game
@@ -33,15 +33,15 @@ export const GameDetailLayout = function GameDetailLayout({
   onDelete,
   onSubmit,
   onStartVoting,
-  editing,
+  loading,
 }: Props): JSX.Element {
   const [mode, setMode] = useState<"editing" | "viewing">("viewing");
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = () => {
     if (game) {
       onDelete?.(game.id);
     }
-  }, [game, onDelete]);
+  };
 
   const handleEdit = () => setMode("editing");
 
@@ -55,6 +55,7 @@ export const GameDetailLayout = function GameDetailLayout({
     (name, points) => {
       if (game) {
         onSubmit?.(game.id, name, points);
+        setMode("viewing");
       }
     },
     [game, onSubmit]
@@ -62,16 +63,17 @@ export const GameDetailLayout = function GameDetailLayout({
 
   return (
     <div className={styles.root}>
-      (mode === 'editing' ?{" "}
-      <GameEditor defaultName={game?.name} defaultPoints={game?.points} onSubmit={handleSubmit} loading={editing} /> :
-      <GameDetail
-        name={game?.name}
-        points={game?.points}
-        onDelete={handleDelete}
-        onEdit={handleEdit}
-        onStartVoting={handleStartVoting}
-      />
-      )
+      {mode === "editing" ? (
+        <GameEditor defaultName={game?.name} defaultPoints={game?.points} onSubmit={handleSubmit} loading={loading} />
+      ) : (
+        <GameDetail
+          name={game?.name}
+          points={game?.points}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onStartVoting={handleStartVoting}
+        />
+      )}
     </div>
   );
 };
