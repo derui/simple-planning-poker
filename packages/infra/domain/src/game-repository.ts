@@ -1,9 +1,9 @@
-import { child, Database, get, ref, update } from "firebase/database";
-import * as resolver from "./game-ref-resolver.js";
-import * as UserRefResolver from "./user-ref-resolver.js";
-import { deserializeFrom } from "./game-snapshot-deserializer.js";
-import { Game, User, GameRepository } from "@spp/shared-domain";
 import { filterUndefined } from "@spp/shared-basic";
+import { Game, GameRepository, User } from "@spp/shared-domain";
+import { child, Database, get, ref, set, update } from "firebase/database";
+import * as resolver from "./game-ref-resolver.js";
+import { deserializeFrom } from "./game-snapshot-deserializer.js";
+import * as UserRefResolver from "./user-ref-resolver.js";
 
 const parseUserJoined = function parseUserJoined(_value: unknown): _value is Record<string, { gameId: Game.Id }> {
   return !!_value;
@@ -50,5 +50,9 @@ export class GameRepositoryImpl implements GameRepository.T {
     );
 
     return games.filter(filterUndefined);
+  }
+
+  async delete(game: Game.T): Promise<void> {
+    await set(ref(this.database, resolver.game(game.id)), null);
   }
 }

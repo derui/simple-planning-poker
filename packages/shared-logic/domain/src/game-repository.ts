@@ -19,4 +19,11 @@ export interface T {
    * list games specified user created
    */
   listUserCreated(user: User.Id): Promise<Game.T[]>;
+
+  /**
+   * Delete a game by id.
+   *
+   * @param game the game to delete
+   */
+  delete(game: Game.T): Promise<void>;
 }

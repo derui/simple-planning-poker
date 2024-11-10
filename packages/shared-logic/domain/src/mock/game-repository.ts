@@ -21,5 +21,10 @@ export const newMemoryGameRepository = function newMemoryGameRepository(initial:
     listUserCreated(userId) {
       return Promise.resolve(Array.from(data.values()).filter((v) => v.owner == userId));
     },
+
+    delete(game) {
+      data.delete(game.id);
+      return Promise.resolve();
+    },
   };
 };
