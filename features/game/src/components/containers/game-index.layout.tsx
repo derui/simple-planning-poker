@@ -6,14 +6,24 @@ import { GameListItem } from "../presentations/game-list-item.js";
 import * as styles from "./game-index.css.js";
 
 interface Props {
-  loading?: boolean;
+  readonly loading?: boolean;
 
-  games?: GameDto[];
+  readonly games?: GameDto[];
+
+  readonly selectedGame?: GameDto;
+
+  /**
+   *  handler to select game
+   */
+  readonly onSelect?: (id: string) => void;
 
   /**
    * handler to start voting
    */
-  onStartVoting?: (id: string) => void;
+  readonly onStartVoting?: (id: string) => void;
+
+  readonly onDelete?: (id: string) => void;
+  readonly onStartEdit?: (id: string) => void;
 }
 
 const Empty = () => {
@@ -37,16 +47,15 @@ const Loading = () => {
 
 // eslint-disable-next-line func-style
 export function GameIndexLayout(props: Props): JSX.Element {
-  const { loading = false, games = [], onStartVoting } = props;
+  const { loading = false, games = [], onStartVoting, selectedGame, onSelect } = props;
 
   if (loading) {
     return <Loading />;
   }
 
   const gameComponents = games.map((v) => {
-    return (
-      <GameListItem key={v.id} gameId={v.id} name={v.name} owned={v.owned} onClick={() => onStartVoting?.(v.id)} />
-    );
+    const selected = selectedGame?.id == v.id;
+    return <GameListItem key={v.id} gameId={v.id} name={v.name} selected={selected} onClick={() => onSelect?.(v.id)} />;
   });
 
   return (

@@ -7,6 +7,7 @@ export type Hooks = {
   useCreateGame: UseCreateGame;
   useListGames: UseListGames;
   useUserHeader: UseUserHeader;
+  useGameDetail: UseGameDetail;
 };
 
 const facade: ReturnType<typeof createFacade<Hooks>> = createFacade<Hooks>();

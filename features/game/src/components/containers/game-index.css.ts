@@ -13,13 +13,25 @@ export const root: string = style({
 
 export const container: string = style({
   display: "grid",
-  gridTemplateRows: "auto 1fr auto",
-  gridTemplateColumns: "1fr",
+  gridTemplateRows: "1fr",
+  gridTemplateColumns: "1fr 1fr",
   width: vars.spacing[96],
   borderRadius: "4px",
   border: `1px solid ${vars.color.purple[600]}`,
   overflow: "hidden",
 });
+
+export const list: {
+  container: string;
+} = {
+  container: style({
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "auto 1fr",
+    width: "100%",
+    overflowY: "auto",
+  }),
+};
 
 export const header: string = style({
   padding: vars.spacing[4],
