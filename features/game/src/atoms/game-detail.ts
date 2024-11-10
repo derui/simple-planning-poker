@@ -1,12 +1,11 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { GameRepository, User } from "@spp/shared-domain";
-import { EditGameUseCase, EditGameUseCaseInput } from "@spp/shared-use-case";
-import { atom, useAtom } from "jotai";
-import { useSetAtom } from "jotai/ts3.8/esm/react";
+import { Game, GameRepository, User } from "@spp/shared-domain";
+import { DeleteGameUseCase, EditGameUseCase } from "@spp/shared-use-case";
+import { atom, useAtom, useSetAtom } from "jotai";
 import { GameDto, toGameDto } from "./dto.js";
 import { gamesAtom, selectedGameAtom } from "./game-atom.js";
 
-const statusAtom = atom<"editing" | "completed">("completed");
+const statusAtom = atom<"deleting" | "editing" | "completed">("completed");
 
 /**
  * Hook definition to list game
@@ -36,14 +35,16 @@ export type UseGameDetail = () => {
 /**
  * Create hook implementation of `UseListGame`
  */
-export const useGameDetail = function useGameDetail({
+export const createUseGameDetail = function createUseGameDetail({
   gameRepository,
   useLoginUser,
   editGameUseCase,
+  deleteGameUseCase,
 }: {
   gameRepository: GameRepository.T;
   useLoginUser: UseLoginUser;
   editGameUseCase: EditGameUseCase;
+  deleteGameUseCase: DeleteGameUseCase;
 }): UseGameDetail {
   return () => {
     const [status, setStatus] = useAtom(statusAtom);
@@ -52,7 +53,7 @@ export const useGameDetail = function useGameDetail({
     const setGames = useSetAtom(gamesAtom);
 
     return {
-      loading: status == "editing",
+      loading: status == "editing" || status == "deleting",
       game: game ? toGameDto(game) : undefined,
 
       edit: (name: string, points: string): void => {
@@ -60,16 +61,14 @@ export const useGameDetail = function useGameDetail({
           return;
         }
 
-        const input: EditGameUseCaseInput = {
-          gameId: game.id,
-          name,
-          points: points.split(",").map((v) => parseInt(v)),
-          ownedBy: userId,
-        };
-
-        async function _do() {
+        const _do = async () => {
           try {
-            const ret = await editGameUseCase(input);
+            const ret = await editGameUseCase({
+              gameId: game.id,
+              name,
+              points: points.split(",").map((v) => parseInt(v)),
+              ownedBy: userId,
+            });
 
             switch (ret.kind) {
               case "success":
@@ -84,14 +83,34 @@ export const useGameDetail = function useGameDetail({
           } finally {
             setStatus("completed");
           }
-        }
+        };
 
         setStatus("editing");
         _do();
       },
 
       delete: () => {
-        throw new Error("Not implemented");
+        if (!game || !userId) {
+          return;
+        }
+
+        const _do = async () => {
+          try {
+            const ret = await deleteGameUseCase({ gameId: Game.createId(game.id), ownedBy: User.createId(userId) });
+
+            if (ret.kind == "success") {
+              setGame(undefined);
+              setGames(await gameRepository.listUserCreated(User.createId(userId)));
+            }
+          } catch (err) {
+            console.error(err);
+          } finally {
+            setStatus("completed");
+          }
+        };
+
+        setStatus("deleting");
+        _do();
       },
     };
   };

@@ -1,5 +1,6 @@
 import { createFacade } from "@spp/shared-hook-facade";
 import { UseCreateGame } from "../atoms/create-game.js";
+import { UseGameDetail } from "../atoms/game-detail.js";
 import { UseListGames } from "../atoms/list-games.js";
 import { UseUserHeader } from "../atoms/user-header.js";
 
