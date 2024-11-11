@@ -1,6 +1,6 @@
 import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import { newDeleteGameUseCase } from "@spp/shared-use-case";
+import { newEditGameUseCase } from "@spp/shared-use-case";
 import { renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
@@ -8,7 +8,7 @@ import sinon from "sinon";
 import { expect, test } from "vitest";
 import { toGameDto } from "./dto.js";
 import { gamesAtom, selectedGameAtom } from "./game-atom.js";
-import { createUseGameDetail } from "./game-detail.js";
+import { createUseGameEditor } from "./game-editor.js";
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
@@ -21,10 +21,10 @@ test("initial status", () => {
   // Act
   const { result } = renderHook(
     () =>
-      createUseGameDetail({
+      createUseGameEditor({
         gameRepository: newMemoryGameRepository(),
         useLoginUser: sinon.fake.returns({ userId: undefined }),
-        deleteGameUseCase: newDeleteGameUseCase(newMemoryGameRepository()),
+        editGameUseCase: newEditGameUseCase(newMemoryGameRepository()),
       })(),
     {
       wrapper: createWrapper(store),
@@ -52,10 +52,10 @@ test("get games after effect", async () => {
 
   // Act
   const { result } = renderHook(
-    createUseGameDetail({
+    createUseGameEditor({
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-      deleteGameUseCase: newDeleteGameUseCase(repository),
+      editGameUseCase: newEditGameUseCase(repository),
     }),
     { wrapper }
   );
@@ -79,23 +79,23 @@ test("set loading after editing", async () => {
   store.set(gamesAtom, [game]);
 
   const { result, rerender } = renderHook(
-    createUseGameDetail({
+    createUseGameEditor({
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-      deleteGameUseCase: newDeleteGameUseCase(repository),
+      editGameUseCase: newEditGameUseCase(repository),
     }),
     { wrapper: createWrapper(store) }
   );
 
   // Act
-  result.current.requestEdit();
+  result.current.edit("foo", "1,2,3");
   rerender();
 
   // Assert
-  expect(result.current.loading).toBe(false);
+  expect(result.current.loading).toBe(true);
 });
 
-test("should remove deleted game", async () => {
+test("should updated edited game", async () => {
   // Arrange
   const game = Game.create({
     id: Game.createId("game"),
@@ -109,20 +109,19 @@ test("should remove deleted game", async () => {
   store.set(gamesAtom, [game]);
 
   const { result, rerender } = renderHook(
-    createUseGameDetail({
+    createUseGameEditor({
       gameRepository: repository,
       useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-      deleteGameUseCase: newDeleteGameUseCase(repository),
+      editGameUseCase: newEditGameUseCase(repository),
     }),
     { wrapper: createWrapper(store) }
   );
 
   // Act
-  result.current.delete();
+  result.current.edit("new", "1,2,3");
   await waitFor(async () => !result.current.loading);
   rerender();
 
   // Assert
-  expect(result.current.game).toBeUndefined();
-  expect(store.get(gamesAtom)).toHaveLength(0);
+  expect(result.current.game).toEqual({ id: "game", name: "new", points: "1,2,3" });
 });

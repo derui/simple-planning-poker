@@ -3,6 +3,24 @@ import { atom, PrimitiveAtom } from "jotai";
 import { CreateGameStatus, VoteStartingStatus } from "./type.js";
 
 /**
+ * enum for game status management
+ */
+export enum GameStatus {
+  Create = "create",
+  Creating = "creating",
+  Edit = "edit",
+  Editing = "editing",
+  Deleting = "deleting",
+  Selected = "selected",
+  NotSelected = "notSelected",
+}
+
+/**
+ * Atom to store game status
+ */
+export const gameStatusAtom: PrimitiveAtom<GameStatus> = atom<GameStatus>(GameStatus.NotSelected);
+
+/**
  * games that are owned by or joined by an user
  */
 export const gamesAtom: PrimitiveAtom<Game.T[]> = atom<Game.T[]>([]);
