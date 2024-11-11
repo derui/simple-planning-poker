@@ -1,30 +1,17 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game, GameRepository, User, UserRepository } from "@spp/shared-domain";
-import { StartVotingUseCase, StartVotingUseCaseInput } from "@spp/shared-use-case";
+import { GameRepository } from "@spp/shared-domain";
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
-import { GameDto, toGameDto, toUserDto, UserDto } from "./dto.js";
-import { gamesAtom, selectedGameAtom, voteStartingStatusAtom } from "./game-atom.js";
-import { VoteStartingStatus } from "./type.js";
+import { GameDto, toGameDto } from "./dto.js";
+import { gamesAtom, GameStatus, gameStatusAtom, selectedGameAtom } from "./game-atom.js";
 
-const loadingAtom = atom<"completed" | "loading">("completed");
-const loginUserAtom = atom<User.T | undefined>(undefined);
+const loadingAtom = atom<"completed" | "loading" | "creating">("loading");
 
 /**
  * Hook definition to list game
  */
 export type UseListGames = () => {
-  loading: "completed" | "loading";
-
-  /**
-   * Status of starting voting.
-   */
-  voteStartingStatus?: VoteStartingStatus;
-
-  /**
-   * Current logged in user
-   */
-  loginUser?: UserDto;
+  status: "completed" | "loading" | "creating";
 
   /**
    * Current joined/owned games
@@ -44,12 +31,9 @@ export type UseListGames = () => {
   select: (gameId: string) => void;
 
   /**
-   * Start voting from a game.
-   *
-   * @param gameId Id of the game to start voting from.
-   * @param callback Callback to be called when the voting is started.
+   * Request to create a new game.
    */
-  startVoting: (gameId: string, callback?: (votingId: string) => void) => void;
+  requestCreate: () => void;
 };
 
 /**
@@ -58,82 +42,48 @@ export type UseListGames = () => {
 export const createUseListGames = function createUseListGames({
   gameRepository,
   useLoginUser,
-  userRepository,
-  startVotingUseCase,
 }: {
   gameRepository: GameRepository.T;
   useLoginUser: UseLoginUser;
-  startVotingUseCase: StartVotingUseCase;
-  userRepository: UserRepository.T;
 }): UseListGames {
   return () => {
-    const [loading, setLoading] = useAtom(loadingAtom);
+    const [gameStatus, setGameStatus] = useAtom(gameStatusAtom);
+    const [status, setStatus] = useAtom(loadingAtom);
     const [games, setGames] = useAtom(gamesAtom);
     const [selectedGame, setSelectedGame] = useAtom(selectedGameAtom);
-    const [loginUser, setLoginUser] = useAtom(loginUserAtom);
     const { userId } = useLoginUser();
-    const [voteStartingStatus, setVoteStartingStatus] = useAtom(voteStartingStatusAtom);
 
-    useEffect(() => {
-      setLoading("loading");
+    useEffect((): void => {
+      setStatus("loading");
       if (userId) {
-        const fetchGame = gameRepository
+        gameRepository
           .listUserCreated(userId)
           .then((games) => {
             setGames(games);
+            setStatus("completed");
           })
           .catch(() => {
             setGames([]);
           });
-
-        // fetch user from userRepository
-        const fetchUser = userRepository.findBy(userId).then((user) => {
-          setLoginUser(user);
-        });
-
-        Promise.all([fetchGame, fetchUser]).finally(() => {
-          setTimeout(() => setLoading("completed"), 150);
-        });
       }
-    }, [userId, setGames, setLoading]);
+    }, [userId, setGames, setStatus]);
 
     return {
-      loading,
-      voteStartingStatus,
-      loginUser: loginUser ? toUserDto(loginUser) : undefined,
+      status,
       selectedGame: selectedGame ? toGameDto(selectedGame) : undefined,
 
       games: !userId ? [] : games.map((v) => toGameDto(v)),
 
       select: (gameId: string): void => {
+        if (gameStatus != GameStatus.Selected && gameStatus != GameStatus.NotSelected) {
+          return;
+        }
         setSelectedGame(games.find((v) => v.id === gameId));
       },
 
-      startVoting: (gameId: string, callback): void => {
-        const domainGameId = Game.createId(gameId);
-
-        const input: StartVotingUseCaseInput = { gameId: domainGameId };
-
-        setVoteStartingStatus(VoteStartingStatus.Starting);
-
-        startVotingUseCase(input)
-          .then((input) => {
-            switch (input.kind) {
-              case "success":
-                setVoteStartingStatus(VoteStartingStatus.Started);
-                callback?.(input.voting.id);
-                break;
-              case "failed":
-              case "notFound":
-                setVoteStartingStatus(undefined);
-                console.warn("Can not start voting");
-                break;
-            }
-          })
-          .catch(() => {
-            setVoteStartingStatus(undefined);
-          })
-          .finally(() => {});
+      requestCreate: (): void => {
+        setGameStatus(GameStatus.Create);
+        setStatus("creating");
       },
     };
   };
