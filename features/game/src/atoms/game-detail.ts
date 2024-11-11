@@ -74,7 +74,7 @@ export const createUseGameDetail = function createUseGameDetail({
           } catch (err) {
             console.error(err);
           } finally {
-            setGameStatus(GameStatus.NotSelected);
+            setGameStatus(GameStatus.Detail);
           }
         };
 

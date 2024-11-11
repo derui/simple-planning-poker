@@ -75,7 +75,7 @@ export const createUseListGames = function createUseListGames({
       games: !userId ? [] : games.map((v) => toGameDto(v)),
 
       select: (gameId: string): void => {
-        if (gameStatus != GameStatus.Selected && gameStatus != GameStatus.NotSelected) {
+        if (gameStatus != GameStatus.Detail) {
           return;
         }
         setSelectedGame(games.find((v) => v.id === gameId));

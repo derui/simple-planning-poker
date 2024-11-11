@@ -11,14 +11,13 @@ export enum GameStatus {
   Edit = "edit",
   Editing = "editing",
   Deleting = "deleting",
-  Selected = "selected",
-  NotSelected = "notSelected",
+  Detail = "detail",
 }
 
 /**
  * Atom to store game status
  */
-export const gameStatusAtom: PrimitiveAtom<GameStatus> = atom<GameStatus>(GameStatus.NotSelected);
+export const gameStatusAtom: PrimitiveAtom<GameStatus> = atom<GameStatus>(GameStatus.Detail);
 
 /**
  * games that are owned by or joined by an user
