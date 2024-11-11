@@ -15,10 +15,12 @@ export type CreateGameUseCaseOutput =
   | { kind: "invalidStoryPoints" }
   | { kind: "failed" };
 
+export type CreateGameUseCase = UseCase<CreateGameUseCaseInput, CreateGameUseCaseOutput>;
+
 export const newCreateGameUseCase = function newCreateGameUseCase(
   dispatcher: EventDispatcher,
   gameRepository: Prettify<GameRepository.T>
-): UseCase<CreateGameUseCaseInput, CreateGameUseCaseOutput> {
+): CreateGameUseCase {
   return async (input) => {
     if (!input.points.every(StoryPoint.isValid)) {
       return { kind: "invalidStoryPoint" };
