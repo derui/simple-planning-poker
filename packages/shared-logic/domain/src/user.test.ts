@@ -1,6 +1,7 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import { DOMAIN_EVENTS } from "./event.js";
-import { create, createId, changeName, canChangeName, isUserNameChanged } from "./user.js";
+import { canChangeName, changeDefaultVoterType, changeName, create, createId, isUserNameChanged } from "./user.js";
+import { VoterType } from "./voter-type.js";
 
 test("create user with id", () => {
   // Arrange
@@ -102,4 +103,31 @@ test("should return event to notify user name changed", () => {
   } else {
     expect.fail("should be UserNameChanged");
   }
+});
+
+test("default voter type is normal", () => {
+  // Arrange
+
+  // Act
+  const user = create({
+    id: createId(),
+    name: "foo",
+  });
+
+  // Assert
+  expect(user.defaultVoterType).toEqual(VoterType.Normal);
+});
+
+test("change user default voter type", () => {
+  // Arrange
+  const user = create({
+    id: createId(),
+    name: "foo",
+  });
+
+  // Act
+  const actual = changeDefaultVoterType(user, VoterType.Inspector);
+
+  // Assert
+  expect(actual.defaultVoterType).toEqual(VoterType.Inspector);
 });

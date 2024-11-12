@@ -1,6 +1,7 @@
-import { test, expect } from "vitest";
-import { changeVoterType, createVoter, VoterType } from "./voter.js";
+import { expect, test } from "vitest";
 import * as User from "./user.js";
+import { VoterType } from "./voter-type.js";
+import { changeVoterType, createVoter } from "./voter.js";
 
 test("create user with id", () => {
   // Arrange

@@ -1,10 +1,6 @@
 import { produce } from "immer";
 import * as User from "./user.js";
-
-export enum VoterType {
-  Normal,
-  Inspector,
-}
+import { VoterType } from "./voter-type.js";
 
 /**
  * The type of GamePlayer domain. This type can not be generate from other modules

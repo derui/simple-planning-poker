@@ -5,6 +5,7 @@ import * as Estimations from "./estimations.js";
 import * as Event from "./event.js";
 import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
+import { VoterType } from "./voter-type.js";
 import * as Voter from "./voter.js";
 
 const _tag: unique symbol = Symbol();
@@ -103,7 +104,7 @@ export interface VoterChanged extends Event.T {
   readonly kind: Event.DOMAIN_EVENTS.VoterChanged;
   readonly votingId: Id;
   readonly userId: User.Id;
-  readonly voterType: Voter.VoterType;
+  readonly voterType: VoterType;
 }
 
 export const isVoterChanged = function isVoterChanged(event: Event.T): event is VoterChanged {
