@@ -13,14 +13,14 @@ test("should be able to render", async () => {
 });
 
 test("should be render game", () => {
-  const ret = render(<GameList games={[{ id: "id", name: "Game 1", owned: false }]} />);
+  const ret = render(<GameList games={[{ id: "id", name: "Game 1", points: "1,2,3" }]} />);
 
   expect(ret.container).toMatchSnapshot();
 });
 
 test("should call callback after click Add Game", async () => {
   const callback = Sinon.fake();
-  render(<GameList games={[]} onCreate={callback} />);
+  render(<GameList games={[]} onRequestCreate={callback} />);
 
   await userEvent.click(screen.getByText("Add Game"));
 
@@ -29,7 +29,7 @@ test("should call callback after click Add Game", async () => {
 
 test("should call callback after click a game", async () => {
   const callback = Sinon.fake();
-  render(<GameList games={[{ id: "id", name: "Target", owned: false }]} onSelect={callback} />);
+  render(<GameList games={[{ id: "id", name: "Target", points: "1,2,3" }]} onSelect={callback} />);
 
   await userEvent.click(screen.getByText("Target"));
 

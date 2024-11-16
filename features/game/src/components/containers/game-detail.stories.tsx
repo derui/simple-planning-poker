@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { ApplicablePoints, Game, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import { newDeleteGameUseCase, newEditGameUseCase } from "@spp/shared-use-case";
+import { newDeleteGameUseCase } from "@spp/shared-use-case";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
@@ -31,7 +31,6 @@ export const WaitingPrepared: Story = {
       useGameDetail: createUseGameDetail({
         gameRepository: newMemoryGameRepository(),
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        editGameUseCase: sinon.fake(),
         deleteGameUseCase: sinon.fake(),
       }),
     };
@@ -69,7 +68,6 @@ export const Default: Story = {
         gameRepository: repository,
         useLoginUser: () => ({ userId: User.createId("foo") }),
         deleteGameUseCase: newDeleteGameUseCase(repository),
-        editGameUseCase: newEditGameUseCase(repository),
       }),
     };
 

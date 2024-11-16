@@ -8,9 +8,14 @@ export interface Props {
   games: GameDto[];
 
   /**
+   *  The currently selected game.
+   */
+  selectedGame?: string;
+
+  /**
    *  Callback when request to create a new game is received.
    */
-  onCreate?: () => void;
+  onRequestCreate?: () => void;
 
   /**
    * Callback when a game is selected.
@@ -18,15 +23,28 @@ export interface Props {
   onSelect?: (id: string) => void;
 }
 
-export const GameList = function GameList({ games, onCreate, onSelect }: Props): JSX.Element {
+export const GameList = function GameList({ games, onRequestCreate, onSelect, selectedGame }: Props): JSX.Element {
   const items = games.map((v) => (
-    <GameListItem key={v.id} gameId={v.id} name={v.name} selected={v.owned} onClick={() => onSelect?.(v.id)} />
+    <GameListItem
+      key={v.id}
+      gameId={v.id}
+      name={v.name}
+      selected={v.id == selectedGame}
+      onClick={() => onSelect?.(v.id)}
+    />
   ));
+
+  const handleRequestCreate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    onRequestCreate?.();
+  };
 
   return (
     <ul className={styles.root}>
       {items}
-      <li className={styles.plusContainer} onClick={onCreate}>
+      <li className={styles.plusContainer} onClick={handleRequestCreate}>
         <Icon.Plus size="m" variant={Variant.indigo} />
         Add Game
       </li>

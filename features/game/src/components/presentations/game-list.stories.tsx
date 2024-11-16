@@ -15,9 +15,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     games: [
-      { id: "id1", name: "Normal game", owned: false },
-      { id: "id2", name: "Long name game", owned: true },
+      { id: "id1", name: "Normal game", points: "2,3,4" },
+      { id: "id2", name: "Long name game", points: "1,2,3" },
     ],
+    selectedGame: "id1",
   },
   render(args) {
     return (

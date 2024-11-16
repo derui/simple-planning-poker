@@ -5,7 +5,6 @@ import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository
 import { newChangeUserNameUseCase } from "@spp/shared-use-case";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
-import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { createUseUserHeader } from "../../atoms/user-header.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
@@ -31,17 +30,17 @@ export const WaitingPrepared: Story = {
         useLoginUser: () => ({ userId: User.createId("foo") }),
         userRepository: newMemoryUserRepository(),
         changeUserNameUseCase: sinon.fake(),
+        changeDefaultVoterModeUseCase: sinon.fake(),
       }),
+      useGameDetail: sinon.fake(),
     };
 
     return (
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
-          <MemoryRouter>
-            <div className={themeClass}>
-              <UserHeader />
-            </div>
-          </MemoryRouter>
+          <div className={themeClass}>
+            <UserHeader />
+          </div>
         </Provider>
       </ImplementationProvider>
     );
@@ -63,17 +62,17 @@ export const Loaded: Story = {
         useLoginUser: () => ({ userId: User.createId("foo") }),
         userRepository,
         changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), userRepository),
+        changeDefaultVoterModeUseCase: sinon.fake(),
       }),
+      useGameDetail: sinon.fake(),
     };
 
     return (
       <ImplementationProvider implementation={hooks}>
         <Provider store={store}>
-          <MemoryRouter>
-            <div className={themeClass}>
-              <UserHeader />
-            </div>
-          </MemoryRouter>
+          <div className={themeClass}>
+            <UserHeader />
+          </div>
         </Provider>
       </ImplementationProvider>
     );
