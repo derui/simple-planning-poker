@@ -1,11 +1,12 @@
-import { User } from "@spp/shared-domain";
+import { User, VoterType } from "@spp/shared-domain";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { newChangeUserNameUseCase } from "@spp/shared-use-case";
+import { newChangeDefaultVoterTypeUseCase, newChangeUserNameUseCase } from "@spp/shared-use-case";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
 import sinon from "sinon";
 import { expect, test } from "vitest";
+import { VoterMode } from "../components/type.js";
 import { createUseUserHeader } from "./user-header.js";
 
 const createWrapper =
@@ -24,6 +25,7 @@ test("initial status", () => {
         useLoginUser: sinon.fake.returns({ userId: undefined }),
         userRepository: userRepository,
         changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), userRepository),
+        changeDefaultVoterModeUseCase: sinon.fake(),
       })(),
     {
       wrapper: createWrapper(store),
@@ -52,6 +54,7 @@ test("get user information after effect", async () => {
       useLoginUser: sinon.fake.returns({ userId: User.createId("user") }),
       userRepository: repository,
       changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), repository),
+      changeDefaultVoterModeUseCase: sinon.fake(),
     }),
     { wrapper }
   );
@@ -82,6 +85,7 @@ test("change name after call use case", async () => {
       useLoginUser: sinon.fake.returns({ userId: User.createId("user") }),
       userRepository: repository,
       changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), repository),
+      changeDefaultVoterModeUseCase: sinon.fake(),
     }),
     { wrapper }
   );
@@ -95,4 +99,68 @@ test("change name after call use case", async () => {
   // Assert
   expect(result.current.loginUser).toEqual({ id: "user", name: "new name" });
   expect(result.current.status).toBe("edited");
+});
+
+test("should be able to change default voter type of the user", async () => {
+  // Arrange
+  const store = createStore();
+  const wrapper = createWrapper(store);
+  const repository = newMemoryUserRepository([
+    User.create({ id: User.createId("user"), name: "name", defaultVoterType: VoterType.Inspector }),
+  ]);
+  const { result, rerender } = renderHook(
+    createUseUserHeader({
+      useLoginUser: sinon.fake.returns({ userId: User.createId("user") }),
+      userRepository: repository,
+      changeUserNameUseCase: sinon.fake(),
+      changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(repository),
+    }),
+    {
+      wrapper,
+    }
+  );
+
+  // Act
+  await act(async () => {});
+  result.current.changeDefaultVoterMode(VoterMode.Normal);
+
+  await act(async () => {});
+  rerender();
+
+  // Assert
+  expect(result.current.loginUser).toEqual({ id: "user", name: "name" });
+  expect(result.current.status).toBe("edited");
+});
+
+test("get current voter mode", async () => {
+  // Arrange
+  const store = createStore();
+  const wrapper = createWrapper(store);
+  const repository = newMemoryUserRepository([
+    User.create({ id: User.createId("user"), name: "name", defaultVoterType: VoterType.Inspector }),
+  ]);
+  const { result, rerender } = renderHook(
+    createUseUserHeader({
+      useLoginUser: sinon.fake.returns({ userId: User.createId("user") }),
+      userRepository: repository,
+      changeUserNameUseCase: sinon.fake(),
+      changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(repository),
+    }),
+    {
+      wrapper,
+    }
+  );
+
+  // Act
+  await act(async () => {});
+  const current = result.current.voterMode;
+  result.current.changeDefaultVoterMode(VoterMode.Normal);
+
+  await act(async () => {});
+  rerender();
+  const changed = result.current.voterMode;
+
+  // Assert
+  expect(current).toBe(VoterMode.Inspector);
+  expect(changed).toBe(VoterMode.Normal);
 });
