@@ -1,4 +1,5 @@
 export * from "./base.js";
+export * from "./change-default-voter-type.js";
 export * from "./change-theme.js";
 export * from "./change-user-mode.js";
 export * from "./change-user-name.js";
