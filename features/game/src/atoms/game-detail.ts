@@ -58,7 +58,7 @@ export const createUseGameDetail = function createUseGameDetail({
         setGameStatus(GameStatus.Edit);
       },
 
-      delete: () => {
+      delete: (): void => {
         if (!game || !userId || loading) {
           return;
         }
@@ -74,7 +74,7 @@ export const createUseGameDetail = function createUseGameDetail({
           } catch (err) {
             console.error(err);
           } finally {
-            setGameStatus(GameStatus.Detail);
+            setGameStatus(GameStatus.NotSelect);
           }
         };
 

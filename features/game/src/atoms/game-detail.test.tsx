@@ -7,7 +7,7 @@ import React from "react";
 import sinon from "sinon";
 import { expect, test } from "vitest";
 import { toGameDto } from "./dto.js";
-import { gamesAtom, selectedGameAtom } from "./game-atom.js";
+import { gamesAtom, GameStatus, gameStatusAtom, selectedGameAtom } from "./game-atom.js";
 import { createUseGameDetail } from "./game-detail.js";
 
 const createWrapper =
@@ -125,4 +125,5 @@ test("should remove deleted game", async () => {
   // Assert
   expect(result.current.game).toBeUndefined();
   expect(store.get(gamesAtom)).toHaveLength(0);
+  expect(store.get(gameStatusAtom)).toBe(GameStatus.NotSelect);
 });

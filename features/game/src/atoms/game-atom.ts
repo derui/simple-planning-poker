@@ -6,6 +6,7 @@ import { CreateGameStatus, VoteStartingStatus } from "./type.js";
  * enum for game status management
  */
 export enum GameStatus {
+  NotSelect = "notSelect",
   Create = "create",
   Creating = "creating",
   Edit = "edit",
