@@ -7,7 +7,7 @@ import { Voter } from "./index.js";
 import * as StoryPoint from "./story-point.js";
 import * as UserEstimation from "./user-estimation.js";
 import * as User from "./user.js";
-import { VoterType } from "./voter-type.js";
+import * as VoterType from "./voter-type.js";
 import { changeVoterType } from "./voter.js";
 import {
   canReveal,

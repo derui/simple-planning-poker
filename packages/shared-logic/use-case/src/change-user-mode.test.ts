@@ -1,4 +1,13 @@
-import { ApplicablePoints, DomainEvent, Estimations, StoryPoint, User, Voter, Voting } from "@spp/shared-domain";
+import {
+  ApplicablePoints,
+  DomainEvent,
+  Estimations,
+  StoryPoint,
+  User,
+  Voter,
+  VoterType,
+  Voting,
+} from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
 import { expect, test } from "vitest";
@@ -9,7 +18,7 @@ test("should return error if user not found", async () => {
   const input = {
     userId: User.createId(),
     votingId: Voting.createId(),
-    voterType: Voter.VoterType.Inspector,
+    voterType: VoterType.Inspector,
   };
 
   const repository = newMemoryVotingRepository();
@@ -34,7 +43,7 @@ test("should return error if voter not found", async () => {
   const input = {
     userId: User.createId("changed"),
     votingId: voting.id,
-    voterType: Voter.VoterType.Inspector,
+    voterType: VoterType.Inspector,
   };
 
   const repository = newMemoryVotingRepository([voting]);
@@ -54,12 +63,12 @@ test("should save voting", async () => {
     id: Voting.createId(),
     points: ApplicablePoints.create([StoryPoint.create(1)]),
     estimations: Estimations.empty(),
-    voters: [Voter.createVoter({ user, type: Voter.VoterType.Inspector })],
+    voters: [Voter.createVoter({ user, type: VoterType.Inspector })],
   });
   const input = {
     userId: user,
     votingId: voting.id,
-    voterType: Voter.VoterType.Normal,
+    voterType: VoterType.Normal,
   };
 
   const repository = newMemoryVotingRepository([voting]);
@@ -72,7 +81,7 @@ test("should save voting", async () => {
   // Assert
   expect(ret.kind).toBe("success");
   const saved = await repository.findBy(input.votingId);
-  expect(saved?.participatedVoters?.find((v) => v.user == user)?.type).toBe(Voter.VoterType.Normal);
+  expect(saved?.participatedVoters?.find((v) => v.user == user)?.type).toBe(VoterType.Normal);
   expect(fake.calledOnce).toBeTruthy();
 
   const event = fake.lastCall.args[0];

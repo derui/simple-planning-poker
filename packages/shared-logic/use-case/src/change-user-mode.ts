@@ -1,10 +1,10 @@
+import { User, Voter, VoterType, Voting, VotingRepository } from "@spp/shared-domain";
 import { EventDispatcher, UseCase } from "./base.js";
-import { User, VotingRepository, Voter, Voting } from "@spp/shared-domain";
 
 export interface ChangeUserModeInput {
   userId: User.Id;
   votingId: Voting.Id;
-  voterType: Voter.VoterType;
+  voterType: VoterType.T;
 }
 
 export type ChangeUserModeOutput = { kind: "success"; voting: Voting.T } | { kind: "notFound" };

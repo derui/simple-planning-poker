@@ -1,7 +1,7 @@
 import { produce } from "immer";
 import * as Base from "./base.js";
 import * as Event from "./event.js";
-import { VoterType } from "./voter-type.js";
+import * as VoterType from "./voter-type.js";
 
 const _tag: unique symbol = Symbol();
 type tag = typeof _tag;
@@ -19,7 +19,7 @@ export const createId = (value?: string): Id => {
 export type T = {
   readonly id: Id;
   readonly name: string;
-  readonly defaultVoterType: VoterType;
+  readonly defaultVoterType: VoterType.T;
 };
 
 export interface UserNameChanged extends Event.T {
@@ -38,7 +38,7 @@ export const create = ({
 }: {
   id: Id;
   name: string;
-  defaultVoterType?: VoterType;
+  defaultVoterType?: VoterType.T;
 }): T => {
   if (name === "") {
     throw new Error("can not create user with empty name");
@@ -91,7 +91,7 @@ export const changeName = (user: T, name: string): [T, Event.T] => {
 /**
  *  Change default voter type
  */
-export const changeDefaultVoterType = (user: T, voterType: VoterType): T => {
+export const changeDefaultVoterType = (user: T, voterType: VoterType.T): T => {
   return produce(user, (draft) => {
     draft.defaultVoterType = voterType;
   });

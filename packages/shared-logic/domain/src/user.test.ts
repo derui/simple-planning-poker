@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { DOMAIN_EVENTS } from "./event.js";
 import { canChangeName, changeDefaultVoterType, changeName, create, createId, isUserNameChanged } from "./user.js";
-import { VoterType } from "./voter-type.js";
+import * as VoterType from "./voter-type.js";
 
 test("create user with id", () => {
   // Arrange

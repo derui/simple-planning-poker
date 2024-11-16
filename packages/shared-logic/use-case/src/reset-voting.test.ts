@@ -6,6 +6,7 @@ import {
   User,
   UserEstimation,
   Voter,
+  VoterType,
   Voting,
 } from "@spp/shared-domain";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
@@ -34,7 +35,7 @@ test("should return error if game is not found", async () => {
 test("should save reseted voting", async () => {
   // Arrange
   const points = ApplicablePoints.create([StoryPoint.create(1)]);
-  const voter = Voter.createVoter({ user: User.createId("id"), type: Voter.VoterType.Normal });
+  const voter = Voter.createVoter({ user: User.createId("id"), type: VoterType.Normal });
   const voting = Voting.votingOf({
     id: Voting.createId("id"),
     points,
@@ -62,7 +63,7 @@ test("should save reseted voting", async () => {
 test("should dispatch VotingStarted event", async () => {
   // Arrange
   const points = ApplicablePoints.create([StoryPoint.create(1)]);
-  const voter = Voter.createVoter({ user: User.createId("id"), type: Voter.VoterType.Normal });
+  const voter = Voter.createVoter({ user: User.createId("id"), type: VoterType.Normal });
   const voting = Voting.votingOf({
     id: Voting.createId(),
     points,
