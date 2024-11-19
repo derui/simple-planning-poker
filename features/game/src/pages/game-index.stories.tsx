@@ -2,12 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { newChangeDefaultVoterTypeUseCase, newChangeUserNameUseCase, newDeleteGameUseCase } from "@spp/shared-use-case";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
-import { createUseListGames } from "../../atoms/list-games.js";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { createUseCreateGame } from "../atoms/create-game.js";
+import { createUseGameDetail } from "../atoms/game-detail.js";
+import { createUseGameIndex } from "../atoms/game-index.js";
+import { createUseListGames } from "../atoms/list-games.js";
+import { createUseUserHeader } from "../atoms/user-header.js";
+import { Hooks, ImplementationProvider } from "../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
 const meta: Meta<typeof GameIndex> = {
@@ -27,12 +33,27 @@ export const WaitingPrepared: Story = {
   render() {
     const store = createStore();
     const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
+      useCreateGame: createUseCreateGame({
+        gameRepository: newMemoryGameRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        dispatcher: sinon.fake(),
+      }),
       useListGames: createUseListGames({
         gameRepository: newMemoryGameRepository(),
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
       }),
+      useGameDetail: createUseGameDetail({
+        gameRepository: newMemoryGameRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        deleteGameUseCase: newDeleteGameUseCase(newMemoryGameRepository()),
+      }),
+      useUserHeader: createUseUserHeader({
+        userRepository: newMemoryUserRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), newMemoryUserRepository()),
+        changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(newMemoryUserRepository()),
+      }),
+      useGameIndex: createUseGameIndex(),
     };
 
     return (
@@ -55,12 +76,27 @@ export const Empty: Story = {
     const repository = newMemoryGameRepository();
 
     const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
-      useListGames: createUseListGames({
-        gameRepository: repository,
+      useCreateGame: createUseCreateGame({
+        gameRepository: newMemoryGameRepository(),
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
+        dispatcher: sinon.fake(),
       }),
+      useListGames: createUseListGames({
+        gameRepository: newMemoryGameRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+      }),
+      useGameDetail: createUseGameDetail({
+        gameRepository: newMemoryGameRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        deleteGameUseCase: newDeleteGameUseCase(repositry),
+      }),
+      useUserHeader: createUseUserHeader({
+        userRepository: newMemoryUserRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), newMemoryUserRepository()),
+        changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(newMemoryUserRepository()),
+      }),
+      useGameIndex: createUseGameIndex(),
     };
 
     return (
@@ -99,12 +135,27 @@ export const SomeGames: Story = {
     ]);
 
     const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
+      useCreateGame: createUseCreateGame({
+        gameRepository: repository,
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        dispatcher: sinon.fake(),
+      }),
       useListGames: createUseListGames({
         gameRepository: repository,
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
       }),
+      useGameDetail: createUseGameDetail({
+        gameRepository: repository,
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        deleteGameUseCase: newDeleteGameUseCase(repository),
+      }),
+      useUserHeader: createUseUserHeader({
+        userRepository: newMemoryUserRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), newMemoryUserRepository()),
+        changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(newMemoryUserRepository()),
+      }),
+      useGameIndex: createUseGameIndex(),
     };
 
     return (
@@ -141,12 +192,27 @@ export const TenGames: Story = {
     );
 
     const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
+      useCreateGame: createUseCreateGame({
+        gameRepository: repository,
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        dispatcher: sinon.fake(),
+      }),
       useListGames: createUseListGames({
         gameRepository: repository,
         useLoginUser: () => ({ userId: User.createId("foo") }),
-        startVotingUseCase: sinon.fake(),
       }),
+      useGameDetail: createUseGameDetail({
+        gameRepository: repository,
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        deleteGameUseCase: newDeleteGameUseCase(repository),
+      }),
+      useUserHeader: createUseUserHeader({
+        userRepository: newMemoryUserRepository(),
+        useLoginUser: () => ({ userId: User.createId("foo") }),
+        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), newMemoryUserRepository()),
+        changeDefaultVoterModeUseCase: newChangeDefaultVoterTypeUseCase(newMemoryUserRepository()),
+      }),
+      useGameIndex: createUseGameIndex(),
     };
 
     return (
