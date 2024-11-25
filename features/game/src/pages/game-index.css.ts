@@ -7,15 +7,8 @@ export const root: string = style({
   height: "100%",
   placeContent: "center",
   position: "relative",
-});
-
-export const container: string = style({
-  display: "grid",
   gridTemplateRows: "auto 1fr 1fr",
   gridTemplateColumns: `${vars.spacing[64]} 1fr`,
-  width: "50%",
-  borderRadius: "4px",
-  overflow: "hidden",
 });
 
 export const list: string = style({

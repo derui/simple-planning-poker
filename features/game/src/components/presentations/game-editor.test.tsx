@@ -37,3 +37,14 @@ test("show initial value", async () => {
   expect(screen.getByLabelText<HTMLInputElement>("Name").value).toEqual("name");
   expect(screen.getByLabelText<HTMLInputElement>("Points").value).toEqual("1,2,3");
 });
+test("call cancel callback", async () => {
+  // Arrange
+  const fake = sinon.fake();
+  render(<GameEditor defaultName="name" defaultPoints="1,2,3" onCancel={fake} />);
+
+  // Act
+  await userEvent.click(screen.getByText("Cancel"));
+
+  // Assert
+  expect(fake.calledOnce).toBe(true);
+});

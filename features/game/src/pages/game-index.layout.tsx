@@ -27,10 +27,10 @@ export function GameIndexLayout({ onStartVoting }: Props): JSX.Element {
       <div className={styles.header}>
         <UserHeader />
       </div>
-      <div className={styles.list.container}>
+      <div className={styles.list}>
         <GameList />
       </div>
-      <div className={styles.detailContainer}>{component}</div>
+      <div className={styles.detail}>{component}</div>
     </div>
   );
 }

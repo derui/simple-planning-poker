@@ -14,6 +14,8 @@ interface Props {
 
   onSubmit?: (name: string, points: string) => void;
 
+  onCancel?: () => void;
+
   loading?: boolean;
 }
 
@@ -32,7 +34,7 @@ const schema = z.object({
 
 // eslint-disable-next-line func-style
 export function GameEditor(props: Props): JSX.Element {
-  const { defaultName, defaultPoints, onSubmit, loading = false } = props;
+  const { defaultName, defaultPoints, onSubmit, loading = false, onCancel } = props;
 
   const {
     register,
@@ -78,7 +80,7 @@ export function GameEditor(props: Props): JSX.Element {
         {errors?.points?.message ? <p className={styles.input.error}>{errors.points.message}</p> : undefined}
       </div>
       <div className={styles.footer.root}>
-        <button type="button" className={loading ? styles.cancelDisabled : styles.cancel}>
+        <button type="button" className={loading ? styles.cancelDisabled : styles.cancel} onClick={onCancel}>
           Cancel
         </button>
         <button className={loading ? styles.submitLoading : styles.footer.submit} type="submit" aria-busy={loading}>
