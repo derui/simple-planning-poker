@@ -37,6 +37,7 @@ test("show initial value", async () => {
   expect(screen.getByLabelText<HTMLInputElement>("Name").value).toEqual("name");
   expect(screen.getByLabelText<HTMLInputElement>("Points").value).toEqual("1,2,3");
 });
+
 test("call cancel callback", async () => {
   // Arrange
   const fake = sinon.fake();
@@ -47,4 +48,36 @@ test("call cancel callback", async () => {
 
   // Assert
   expect(fake.calledOnce).toBe(true);
+});
+
+test("do not callback if validation returns specific error", async () => {
+  // Arrange
+  const submit = sinon.fake();
+  render(
+    <GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} onValidate={() => ["NameConflicted"]} />
+  );
+
+  // Act
+
+  // Assert
+  expect(screen.getByLabelText<HTMLInputElement>("Name").value).toEqual("name");
+  expect(screen.getByLabelText<HTMLInputElement>("Points").value).toEqual("1,2,3");
+  await userEvent.click(screen.getByText("Submit"));
+
+  expect(submit.calledOnce).toBe(false);
+});
+
+test("call submit if custom callback returns no errors", async () => {
+  // Arrange
+  const submit = sinon.fake();
+  render(<GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} onValidate={() => []} />);
+
+  // Act
+
+  // Assert
+  expect(screen.getByLabelText<HTMLInputElement>("Name").value).toEqual("name");
+  expect(screen.getByLabelText<HTMLInputElement>("Points").value).toEqual("1,2,3");
+  await userEvent.click(screen.getByText("Submit"));
+
+  expect(submit.calledOnce).toBe(true);
 });

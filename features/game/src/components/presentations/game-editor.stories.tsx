@@ -21,3 +21,21 @@ export const Default: Story = {
     );
   },
 };
+
+export const CustomValidation: Story = {
+  render() {
+    return (
+      <div className={themeClass}>
+        <GameEditor
+          onValidate={(name) => {
+            if (name == "error") {
+              return ["NameConflicted"];
+            }
+
+            return [];
+          }}
+        />
+      </div>
+    );
+  },
+};
