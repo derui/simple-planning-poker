@@ -1,5 +1,5 @@
+import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { DataSnapshot } from "firebase/database";
-import { Game, StoryPoint, ApplicablePoints, User } from "@spp/shared-domain";
 
 /**
  * Snapshot type for game
@@ -31,7 +31,7 @@ export const deserializeFrom = function deserializeFrom(id: Game.Id, snapshot: D
   const selectableCards = ApplicablePoints.create(points.map(StoryPoint.create));
   const [game] = Game.create({
     id,
-    name,
+    name: GameName.create(name),
     owner: User.createId(owner),
     points: selectableCards,
   });

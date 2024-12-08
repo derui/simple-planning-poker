@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ApplicablePoints, Estimations, StoryPoint, User, Voter, Voting } from "@spp/shared-domain";
+import { ApplicablePoints, Estimations, StoryPoint, User, Voter, VoterType, Voting } from "@spp/shared-domain";
 import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import {
@@ -52,7 +52,7 @@ export const Default: Story = {
         estimations: Estimations.empty(),
         voters: [
           Voter.createVoter({ user: users.player }),
-          Voter.createVoter({ user: users.inspector, type: Voter.VoterType.Inspector }),
+          Voter.createVoter({ user: users.inspector, type: VoterType.Inspector }),
         ],
       }),
     ]);

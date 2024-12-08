@@ -1,11 +1,11 @@
-import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
-import { v4 } from "uuid";
-import { UserRepositoryImpl } from "../user-repository.js";
-import { GameRepositoryImpl } from "../game-repository.js";
-import { CreateGameEventListener } from "./create-game-event-listener.js";
-import { Game, ApplicablePoints, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { Database } from "firebase/database";
+import { v4 } from "uuid";
+import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
+import { GameRepositoryImpl } from "../game-repository.js";
+import { UserRepositoryImpl } from "../user-repository.js";
+import { CreateGameEventListener } from "./create-game-event-listener.js";
 
 let database: Database;
 let testEnv: RulesTestEnvironment;
@@ -35,7 +35,7 @@ test("should be created user as owner", async () => {
   const owner = User.create({ id: User.createId(), name: "name" });
   const [game, event] = Game.create({
     id: Game.createId(),
-    name: "test",
+    name: GameName.create("test"),
     owner: owner.id,
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });

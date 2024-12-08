@@ -1,10 +1,19 @@
-import { test, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
-import { v4 } from "uuid";
-import { VotingRepositoryImpl } from "./voting-repository.js";
-import { Voting, ApplicablePoints, StoryPoint, User, UserEstimation, Estimations, Voter } from "@spp/shared-domain";
+import {
+  ApplicablePoints,
+  Estimations,
+  StoryPoint,
+  User,
+  UserEstimation,
+  Voter,
+  VoterType,
+  Voting,
+} from "@spp/shared-domain";
 import { Database } from "firebase/database";
 import { enableMapSet } from "immer";
+import { v4 } from "uuid";
+import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
+import { VotingRepositoryImpl } from "./voting-repository.js";
 
 enableMapSet();
 
@@ -45,10 +54,10 @@ test("should be able to save and find a voting", async () => {
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
     voters: [
-      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: VoterType.Normal }),
     ],
   });
 
@@ -71,10 +80,10 @@ test("should be able to save and find a voting", async () => {
   expect(instance?.points).toEqual(voting.points);
   expect(instance?.theme).toBeUndefined();
   expect(instance?.participatedVoters).toEqual([
-    Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user3"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user4"), type: VoterType.Normal }),
   ]);
 });
 
@@ -91,10 +100,10 @@ test("should be able to save and find a finished voting", async () => {
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
     voters: [
-      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+      Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: VoterType.Inspector }),
     ],
   });
   const [finished] = Voting.reveal(voting);
@@ -119,10 +128,10 @@ test("should be able to save and find a finished voting", async () => {
   );
   expect(instance?.theme).toBeUndefined();
   expect(instance?.participatedVoters).toEqual([
-    Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
-    Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+    Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user3"), type: VoterType.Normal }),
+    Voter.createVoter({ user: User.createId("user4"), type: VoterType.Inspector }),
   ]);
 });
 
@@ -140,10 +149,10 @@ test("empty theme as undefined", async () => {
     }),
     theme: "",
     voters: [
-      Voter.createVoter({ user: User.createId("user1"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user2"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user3"), type: Voter.VoterType.Normal }),
-      Voter.createVoter({ user: User.createId("user4"), type: Voter.VoterType.Inspector }),
+      Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user3"), type: VoterType.Normal }),
+      Voter.createVoter({ user: User.createId("user4"), type: VoterType.Inspector }),
     ],
   });
 

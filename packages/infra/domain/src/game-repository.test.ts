@@ -1,5 +1,5 @@
 import { initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
-import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { Database, push, ref, set } from "firebase/database";
 import { v4 } from "uuid";
 import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
@@ -34,7 +34,7 @@ test("should be able to save and find a game", async () => {
   // Arrange
   const [game] = Game.create({
     id: Game.createId(),
-    name: "test",
+    name: GameName.create("test"),
     owner: User.createId("id"),
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });
@@ -68,13 +68,13 @@ test("should be able to list games an user created", async () => {
 
   const [game] = Game.create({
     id: Game.createId("1"),
-    name: "name",
+    name: GameName.create("name"),
     owner: User.createId("1"),
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });
   const [otherGame] = Game.create({
     id: Game.createId("2"),
-    name: "name2",
+    name: GameName.create("name2"),
     owner: User.createId("2"),
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });

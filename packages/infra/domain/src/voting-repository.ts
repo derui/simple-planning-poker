@@ -1,8 +1,8 @@
+import { User, VoterType, Voting, VotingRepository } from "@spp/shared-domain";
 import { child, Database, get, ref, update } from "firebase/database";
 import { serialize, Serialized } from "./user-estimation-converter.js";
-import * as resolver from "./voting-ref-resolver.js";
 import { deserializeFrom } from "./voting-database-deserializer.js";
-import { User, Voter, Voting, VotingRepository } from "@spp/shared-domain";
+import * as resolver from "./voting-ref-resolver.js";
 
 /**
  * Implementation of `VotingRepository`
@@ -23,7 +23,7 @@ export class VotingRepositoryImpl implements VotingRepository.T {
     updates[resolver.points(voting.id)] = voting.points;
 
     const voters = voting.participatedVoters;
-    updates[resolver.voters(voting.id)] = voters.reduce<Record<User.Id, Voter.VoterType>>((accum, voter) => {
+    updates[resolver.voters(voting.id)] = voters.reduce<Record<User.Id, VoterType.T>>((accum, voter) => {
       accum[voter.user] = voter.type;
       return accum;
     }, {});

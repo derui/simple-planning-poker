@@ -1,12 +1,12 @@
+import { ApplicablePoints, Estimations, StoryPoint, User, Voter, VoterType, Voting } from "@spp/shared-domain";
 import { DataSnapshot } from "firebase/database";
 import { deserialize as deserializeEstimation, Serialized } from "./user-estimation-converter.js";
-import { Estimations, Voting, StoryPoint, ApplicablePoints, User, Voter } from "@spp/shared-domain";
 
 type VotingData = {
   revealed: boolean;
   points: number[];
   estimations: Record<User.Id, Serialized> | undefined;
-  voters: Record<User.Id, Voter.VoterType> | undefined;
+  voters: Record<User.Id, VoterType.T> | undefined;
   theme: string | undefined;
 };
 
