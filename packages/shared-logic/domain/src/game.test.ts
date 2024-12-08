@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import * as ApplicablePoints from "./applicable-points.js";
+import * as GameName from "./game-name.js";
 import { changeName, changePoints, create, createId, isGameCreated, isVotingStarted, newVoting } from "./game.js";
 import { Voter } from "./index.js";
 import * as StoryPoint from "./story-point.js";
@@ -10,7 +11,7 @@ const points = ApplicablePoints.create([1, 2].map(StoryPoint.create));
 test("get aggregate and event when game created ", () => {
   const [game, event] = create({
     id: createId("id"),
-    name: "name",
+    name: GameName.create("name"),
     owner: User.createId("user"),
     points,
   });
@@ -31,7 +32,7 @@ test("get aggregate and event when game created ", () => {
 describe("game name", () => {
   const [game] = create({
     id: createId("id"),
-    name: "name",
+    name: GameName.create("name"),
     owner: User.createId("user"),
     points: points,
   });
@@ -51,7 +52,7 @@ describe("game name", () => {
 describe("game points", () => {
   const [game] = create({
     id: createId("id"),
-    name: "name",
+    name: GameName.create("name"),
     owner: User.createId("user"),
     points: points,
   });
@@ -69,7 +70,7 @@ describe("create voting", () => {
     // Arrange
     const [game] = create({
       id: createId("id"),
-      name: "name",
+      name: GameName.create("name"),
       owner: User.createId("user"),
       points: points,
     });
@@ -90,7 +91,7 @@ describe("create voting", () => {
     // Arrange
     const [game] = create({
       id: createId("id"),
-      name: "name",
+      name: GameName.create("name"),
       owner: User.createId("user"),
       points: points,
     });

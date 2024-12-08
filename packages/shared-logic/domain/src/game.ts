@@ -2,6 +2,7 @@ import { castDraft, Draft, produce } from "immer";
 import * as ApplicablePoints from "./applicable-points.js";
 import * as Base from "./base.js";
 import * as DomainEvent from "./event.js";
+import * as GameName from "./game-name.js";
 import { Estimations, Voter, Voting } from "./index.js";
 import * as User from "./user.js";
 
@@ -52,7 +53,7 @@ export const create = ({
   owner,
 }: {
   id: Id;
-  name: string;
+  name: GameName.T;
   owner: User.Id;
   points: ApplicablePoints.T;
 }): [T, DomainEvent.T] => {
