@@ -3,6 +3,7 @@
 export * as ApplicablePoints from "./applicable-points.js";
 export * as Estimations from "./estimations.js";
 export * as DomainEvent from "./event.js";
+export * as GameName from "./game-name.js";
 export * as GameRepository from "./game-repository.js";
 export * as Game from "./game.js";
 export * as StoryPoint from "./story-point.js";

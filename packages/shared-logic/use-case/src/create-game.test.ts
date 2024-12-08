@@ -1,8 +1,8 @@
-import { test, expect } from "vitest";
-import * as sinon from "sinon";
-import { newCreateGameUseCase } from "./create-game.js";
-import { ApplicablePoints, DomainEvent, StoryPoint, User, Game, GameRepository } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import * as sinon from "sinon";
+import { expect, test } from "vitest";
+import { newCreateGameUseCase } from "./create-game.js";
 
 test("should return error if numbers is invalid", async () => {
   // Arrange
@@ -22,6 +22,24 @@ test("should return error if numbers is invalid", async () => {
   expect(ret.kind).toBe("invalidStoryPoints");
 });
 
+test("should return error if name is invalid", async () => {
+  // Arrange
+  const input = {
+    name: "   ",
+    points: [1],
+    createdBy: User.createId(),
+  };
+  const dispatcher = sinon.fake();
+  const repository = newMemoryGameRepository();
+  const useCase = newCreateGameUseCase(dispatcher, repository);
+
+  // Act
+  const ret = await useCase(input);
+
+  // Assert
+  expect(ret.kind).toBe("invalidName");
+});
+
 test("should return error if numbers contains invalid story point", async () => {
   // Arrange
   const input = {
@@ -37,7 +55,7 @@ test("should return error if numbers contains invalid story point", async () => 
   const ret = await useCase(input);
 
   // Assert
-  expect(ret.kind).toBe("invalidStoryPoint");
+  expect(ret.kind).toBe("invalidStoryPoints");
 });
 
 test("should save new game into repository", async () => {
@@ -126,7 +144,7 @@ test("get error if some games having same name already exist", async () => {
     Game.create({
       id: Game.createId(),
       owner: input.createdBy,
-      name: "foo",
+      name: GameName.create("foo"),
       points: ApplicablePoints.create([StoryPoint.create(1)]),
     })[0],
   ]);

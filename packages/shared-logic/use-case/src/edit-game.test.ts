@@ -1,4 +1,4 @@
-import { ApplicablePoints, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import * as sinon from "sinon";
 import { expect, test } from "vitest";
@@ -20,6 +20,24 @@ test("should return error if numbers is invalid", async () => {
 
   // Assert
   expect(ret.kind).toBe("invalidStoryPoint");
+});
+
+test("should return error if the name is invalid", async () => {
+  // Arrange
+  const input = {
+    gameId: Game.createId("game"),
+    name: "   ",
+    points: [11],
+    ownedBy: User.createId(),
+  };
+  const repository = newMemoryGameRepository();
+  const useCase = newEditGameUseCase(repository);
+
+  // Act
+  const ret = await useCase(input);
+
+  // Assert
+  expect(ret.kind).toBe("invalidName");
 });
 
 test("should return error if numbers contains invalid story point", async () => {
@@ -51,7 +69,7 @@ test("should save new game into repository", async () => {
   const repository = newMemoryGameRepository([
     Game.create({
       id: Game.createId("game"),
-      name: "before",
+      name: GameName.create("before"),
       points: ApplicablePoints.parse("1")!,
       owner: User.createId("user"),
     })[0],
@@ -84,7 +102,7 @@ test("should fail if repository throws error", async () => {
     ...newMemoryGameRepository([
       Game.create({
         id: input.gameId,
-        name: input.name,
+        name: GameName.create(input.name),
         points: ApplicablePoints.parse(input.points.join(","))!,
         owner: input.ownedBy,
       })[0],
@@ -112,16 +130,17 @@ test("get error if some games having same name already exist", async () => {
     Game.create({
       id: Game.createId(),
       owner: input.ownedBy,
-      name: "foo",
+      name: GameName.create("foo"),
       points: ApplicablePoints.create([StoryPoint.create(1)]),
     })[0],
     Game.create({
       id: input.gameId,
       owner: input.ownedBy,
-      name: "before",
+      name: GameName.create("before"),
       points: ApplicablePoints.create([StoryPoint.create(1)]),
     })[0],
   ]);
+
   const useCase = newEditGameUseCase(repository);
 
   // Act

@@ -1,4 +1,4 @@
-import { ApplicablePoints, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import * as sinon from "sinon";
 import { expect, test } from "vitest";
@@ -13,7 +13,7 @@ test("should delete the game if it exists", async () => {
   const repository = newMemoryGameRepository([
     Game.create({
       id: Game.createId("game"),
-      name: "before",
+      name: GameName.create("before"),
       points: ApplicablePoints.parse("1")!,
       owner: User.createId("user"),
     })[0],
@@ -43,7 +43,7 @@ test("should fail if repository throws error", async () => {
     ...newMemoryGameRepository([
       Game.create({
         id: input.gameId,
-        name: "name",
+        name: GameName.create("name"),
         points: ApplicablePoints.parse("1,3")!,
         owner: input.ownedBy,
       })[0],
@@ -69,7 +69,7 @@ test("get error if the game do not owned", async () => {
     Game.create({
       id: Game.createId("game"),
       owner: User.createId("other"),
-      name: "foo",
+      name: GameName.create("foo"),
       points: ApplicablePoints.create([StoryPoint.create(1)]),
     })[0],
   ]);

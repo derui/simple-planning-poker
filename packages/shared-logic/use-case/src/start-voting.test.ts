@@ -1,4 +1,4 @@
-import { ApplicablePoints, DomainEvent, Game, StoryPoint, User, VotingRepository } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User, VotingRepository } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
 import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
@@ -29,7 +29,7 @@ describe("errors", () => {
       newMemoryGameRepository([
         Game.create({
           id: gameId,
-          name: "name",
+          name: GameName.create("name"),
           owner: User.createId(),
           points: ApplicablePoints.create([StoryPoint.create(1)]),
         })[0],
@@ -55,7 +55,7 @@ describe("happy path", () => {
       newMemoryGameRepository([
         Game.create({
           id: gameId,
-          name: "name",
+          name: GameName.create("name"),
           owner: User.createId(),
           points: ApplicablePoints.create([StoryPoint.create(1)]),
         })[0],
@@ -84,7 +84,7 @@ describe("happy path", () => {
       newMemoryGameRepository([
         Game.create({
           id: gameId,
-          name: "name",
+          name: GameName.create("name"),
           owner: User.createId(),
           points: ApplicablePoints.create([StoryPoint.create(1)]),
         })[0],

@@ -1,4 +1,4 @@
-import { ApplicablePoints, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { Prettify } from "@spp/shared-type-util";
 import { UseCase } from "./base.js";
 
@@ -14,6 +14,7 @@ export type EditGameUseCaseOutput =
   | { kind: "notFound" }
   | { kind: "conflictName" }
   | { kind: "invalidStoryPoint" }
+  | { kind: "invalidName" }
   | { kind: "failed" };
 
 export type EditGameUseCase = UseCase<EditGameUseCaseInput, EditGameUseCaseOutput>;
@@ -30,6 +31,10 @@ export const newEditGameUseCase = function newEditGameUseCase(
 
     if (!ApplicablePoints.isValidStoryPoints(storyPoints)) {
       return { kind: "invalidStoryPoint" };
+    }
+
+    if (!GameName.isValid(input.name)) {
+      return { kind: "invalidName" };
     }
 
     const game = await gameRepository.findBy(input.gameId);
