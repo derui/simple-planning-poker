@@ -5,7 +5,7 @@ import {
   User,
   UserEstimation,
   UserRepository,
-  Voter,
+  VoterType,
   Voting,
   VotingRepository,
 } from "@spp/shared-domain";
@@ -240,8 +240,8 @@ export const createUsePollingPlace = function createUsePollingPlace(): UsePollin
     const loading = useAtomValue(votingLoadingAtom);
     const userRole = useAtomValue(userRoleAtom);
 
-    const voters = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Normal == v.type);
-    const inspectors = (voting?.participatedVoters ?? []).filter((v) => Voter.VoterType.Inspector == v.type);
+    const voters = (voting?.participatedVoters ?? []).filter((v) => VoterType.Normal == v.type);
+    const inspectors = (voting?.participatedVoters ?? []).filter((v) => VoterType.Inspector == v.type);
     const estimations = Array.from(voters).map<EstimationDto>((voter) => {
       const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
@@ -319,7 +319,7 @@ export const createUseVoting = function createUseVoting(dependencies: {
         if (!voting || !userId) {
           return;
         }
-        const voterType = newRole == "inspector" ? Voter.VoterType.Inspector : Voter.VoterType.Normal;
+        const voterType = newRole == "inspector" ? VoterType.Inspector : VoterType.Normal;
 
         const input = {
           userId,
