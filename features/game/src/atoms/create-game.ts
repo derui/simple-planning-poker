@@ -1,8 +1,8 @@
 import { UseLoginUser } from "@spp/feature-login";
-import { Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { GameRepository, User } from "@spp/shared-domain";
 import { EventDispatcher, newCreateGameUseCase } from "@spp/shared-use-case";
 import { useAtom } from "jotai";
-import { createGameStatusAtom, CreateGameValidation, createGameValidationsAtom, gamesAtom } from "./game-atom.js";
+import { CreateGameError, createGameErrorsAtom, createGameStatusAtom, gamesAtom } from "./game-atom.js";
 import { CreateGameStatus } from "./type.js";
 
 // Hook definitions
@@ -14,17 +14,9 @@ export type UseCreateGame = () => {
   status?: CreateGameStatus;
 
   /**
-   * Errors varidation or creation
+   * errors while creating game
    */
-  errors: CreateGameValidation[];
-
-  /**
-   * Return creatable or not with inputs.
-   *
-   * @param name current input for name
-   * @param points current input for points
-   */
-  validate: (name: string, points: string) => void;
+  errors: CreateGameError[];
 
   /**
    * Create game with inputs. If this method failed, update status.
@@ -46,33 +38,11 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
     const [status, setStatus] = useAtom(createGameStatusAtom);
     const { userId } = useLoginUser();
     const [, setGames] = useAtom(gamesAtom);
-    const [errors, setErrors] = useAtom(createGameValidationsAtom);
+    const [errors, setErrors] = useAtom(createGameErrorsAtom);
 
     return {
       status,
       errors,
-
-      validate: (name, points) => {
-        const errors: CreateGameValidation[] = [];
-        if (!Game.canChangeName(name)) {
-          errors.push("InvalidName");
-        }
-
-        const normalizedPoints = points
-          .split(",")
-          .filter((v) => !!v.trim())
-          .map((v) => Number(v));
-
-        if (normalizedPoints.length == 0) {
-          errors.push("InvalidPoints");
-        }
-
-        if (!normalizedPoints.every(StoryPoint.isValid)) {
-          errors.push("InvalidPoints");
-        }
-
-        setErrors(errors);
-      },
 
       create: (name, points, callback) => {
         if (errors.length > 0 || !userId) {
@@ -88,8 +58,12 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
           )({
             createdBy: userId,
             name,
-            points: points.split(",").map((v) => Number(v)),
+            points: points
+              .split(",")
+              .filter((v) => v.trim() !== "")
+              .map((v) => Number(v)),
           });
+          console.log(ret);
 
           switch (ret.kind) {
             case "success":
@@ -97,11 +71,17 @@ export const createUseCreateGame = function createUseCreateGame(dependencies: {
               callback?.(ret.game.id);
               break;
             case "conflictName":
-              setStatus(CreateGameStatus.Failed);
               setErrors(["NameConflicted"]);
+              setStatus(CreateGameStatus.Failed);
               return;
-            case "invalidStoryPoint":
+            case "invalidName":
+              setErrors(["InvalidName"]);
+              setStatus(CreateGameStatus.Failed);
+              return;
             case "invalidStoryPoints":
+              setErrors(["InvalidPoints"]);
+              setStatus(CreateGameStatus.Failed);
+              return;
             case "failed":
               setStatus(CreateGameStatus.Failed);
               return;

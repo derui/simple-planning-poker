@@ -5,7 +5,7 @@ import { Input } from "@spp/ui-input";
 import { Loader } from "@spp/ui-loader";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { CreateGameValidation } from "../../atoms/game-atom.js";
+import { CreateGameError } from "../../atoms/game-atom.js";
 import * as styles from "./game-editor.css.js";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   /**
    * validate input. return errors if exists. This function should return empty array if all argument is valid.
    */
-  onValidate?: (name: string, points: string) => CreateGameValidation[];
+  onValidate?: (name: string, points: string) => CreateGameError[];
 
   onCancel?: () => void;
 

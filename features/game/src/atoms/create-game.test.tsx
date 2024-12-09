@@ -34,7 +34,7 @@ test("initial status is creating", () => {
 });
 
 describe("validation", () => {
-  test("get error if name is empty", () => {
+  test("get error if name is empty", async () => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
@@ -43,20 +43,20 @@ describe("validation", () => {
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("", "");
+    await act(async () => Promise.resolve(result.current.create("", "1")));
     rerender();
 
     // Assert
     expect(result.current.errors).toContain("InvalidName");
   });
 
-  test("get error if name is blank", () => {
+  test("get error if name is blank", async () => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
@@ -65,20 +65,20 @@ describe("validation", () => {
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("   ", "");
+    await act(async () => Promise.resolve(result.current.create("   ", "1")));
     rerender();
 
     // Assert
     expect(result.current.errors).toContain("InvalidName");
   });
 
-  test.each(["", "  "])(`get error if point is empty or blank`, (v) => {
+  test.each(["", "  "])(`get error if point is empty or blank`, async (v) => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
@@ -87,13 +87,13 @@ describe("validation", () => {
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("foo", v);
+    await act(async () => Promise.resolve(result.current.create("foo", v)));
     rerender();
 
     // Assert
@@ -101,7 +101,7 @@ describe("validation", () => {
     expect(result.current.errors).toContain("InvalidPoints");
   });
 
-  test("get error if points have non-numeric character", () => {
+  test("get error if points have non-numeric character", async () => {
     // Arrange
     const repository = newMemoryGameRepository();
     const store = createStore();
@@ -110,13 +110,13 @@ describe("validation", () => {
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("foo", "a,b");
+    await act(async () => Promise.resolve(result.current.create("foo", "a,b")));
     rerender();
 
     // Assert
@@ -129,17 +129,18 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result } = renderHook(
+    const { result, rerender } = renderHook(
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("foo", "1,2");
+    result.current.create("foo", "1,3");
+    rerender();
 
     // Assert
     expect(result.current.errors).toHaveLength(0);
@@ -150,17 +151,18 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result } = renderHook(
+    const { result, rerender } = renderHook(
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
+        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
       }),
       { wrapper }
     );
 
     // Act
-    result.current.validate("foo", "1,30");
+    result.current.create("foo", "1,30");
+    rerender();
 
     // Assert
     expect(result.current.errors).toHaveLength(0);
@@ -290,11 +292,14 @@ describe("Create", () => {
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
-    await act(async () => Promise.resolve(result.current.create("foo", "1,3,5")));
+
+    const games = await repository.listUserCreated(User.createId("foo"));
 
     // Assert
-    expect(result.current.errors).toHaveLength(1);
-    expect(result.current.errors).toContain("NameConflicted");
+    expect(games).toHaveLength(1);
+    expect(games[0].name).toEqual("foo");
+    expect(games[0].points).toEqual(ApplicablePoints.parse("1"));
+    expect(games[0].owner).toEqual(User.createId("foo"));
   });
 
   test("set failed state if create is failed", async () => {
@@ -336,7 +341,7 @@ describe("Create", () => {
     ]);
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
+    const { result } = renderHook(
       createUseCreateGame({
         gameRepository: repository,
         dispatcher: sinon.fake(),
@@ -344,7 +349,6 @@ describe("Create", () => {
       }),
       { wrapper }
     );
-    act(() => rerender());
 
     // Act
     result.current.create("bar", "1");

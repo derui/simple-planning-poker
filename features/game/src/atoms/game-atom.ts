@@ -35,12 +35,12 @@ export const voteStartingStatusAtom: PrimitiveAtom<VoteStartingStatus | undefine
 /**
  * A validation errors
  */
-export type CreateGameValidation = "InvalidName" | "InvalidPoints" | "NameConflicted";
+export type CreateGameError = "NameConflicted" | "InvalidPoints" | "InvalidName";
 
 /**
  * An atom to store validation
  */
-export const createGameValidationsAtom: PrimitiveAtom<CreateGameValidation[]> = atom<CreateGameValidation[]>([]);
+export const createGameErrorsAtom: PrimitiveAtom<CreateGameError[]> = atom<CreateGameError[]>([]);
 
 export const createGameStatusAtom: PrimitiveAtom<CreateGameStatus | undefined> = atom<CreateGameStatus | undefined>();
 
