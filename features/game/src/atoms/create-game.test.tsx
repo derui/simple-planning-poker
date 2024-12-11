@@ -1,10 +1,11 @@
-import { ApplicablePoints, DomainEvent, Game, GameRepository, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
 import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { newCreateGameUseCase } from "@spp/shared-use-case";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { describe, expect, test } from "vitest";
-import { createUseCreateGame } from "./create-game.js";
+import { injectUseCreataGame, useCreateGame } from "./create-game.js";
 import { CreateGameStatus } from "./type.js";
 
 const createWrapper =
@@ -15,19 +16,15 @@ test("initial status is creating", () => {
   // Arrange
   const repository = newMemoryGameRepository();
   const store = createStore();
+  injectUseCreataGame({
+    createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+    useLoginUser: sinon.fake.returns({ userId: undefined }),
+  });
 
   // Act
-  const { result } = renderHook(
-    () =>
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
-      })(),
-    {
-      wrapper: createWrapper(store),
-    }
-  );
+  const { result } = renderHook(useCreateGame, {
+    wrapper: createWrapper(store),
+  });
 
   // Assert
   expect(result.current.status).toBeUndefined();
@@ -39,14 +36,13 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId() }),
+    });
+
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("", "1")));
@@ -61,14 +57,11 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("   ", "1")));
@@ -83,14 +76,11 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", v)));
@@ -106,14 +96,11 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "a,b")));
@@ -129,14 +116,11 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     result.current.create("foo", "1,3");
@@ -151,14 +135,11 @@ describe("validation", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     result.current.create("foo", "1,30");
@@ -175,14 +156,11 @@ describe("Create", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     result.current.create("foo", "1");
@@ -198,14 +176,11 @@ describe("Create", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher,
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(dispatcher, repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
     });
@@ -225,14 +200,11 @@ describe("Create", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher,
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(dispatcher, repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
     });
@@ -250,14 +222,11 @@ describe("Create", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
     });
@@ -278,14 +247,11 @@ describe("Create", () => {
     const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
     });
@@ -311,14 +277,11 @@ describe("Create", () => {
 
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
     result.current.create("foo", "1");
@@ -334,21 +297,18 @@ describe("Create", () => {
     const repository = newMemoryGameRepository([
       Game.create({
         id: Game.createId(),
-        name: "bar",
+        name: GameName.create("bar"),
         owner: User.createId("foo"),
         points: ApplicablePoints.create([StoryPoint.create(1)]),
       })[0],
     ]);
     const store = createStore();
     const wrapper = createWrapper(store);
-    const { result } = renderHook(
-      createUseCreateGame({
-        gameRepository: repository,
-        dispatcher: sinon.fake(),
-        useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-      }),
-      { wrapper }
-    );
+    injectUseCreataGame({
+      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
+      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
+    });
+    const { result } = renderHook(useCreateGame, { wrapper });
 
     // Act
     result.current.create("bar", "1");
