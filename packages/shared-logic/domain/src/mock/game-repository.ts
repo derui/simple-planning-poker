@@ -1,30 +1,31 @@
-import * as R from "../game-repository.js";
+import { type GameRepository as I } from "../game-repository.js";
 import * as Game from "../game.js";
+
+/**
+ * In-memory version `GameRepository.T` for testing purpose.
+ */
+const data = new Map<Game.Id, Game.T>();
 
 /**
  * Make In-memory version `GameRepository.T` for testing purpose.
  */
-export const newMemoryGameRepository = function newMemoryGameRepository(initial: Game.T[] = []): R.T {
-  const data = new Map<Game.Id, Game.T>(initial.map((v) => [v.id, v]));
+export const GameRepository: I = {
+  save: ({ game }) => {
+    data.set(game.id, game);
 
-  return {
-    save(voting: Game.T) {
-      data.set(voting.id, voting);
+    return Promise.resolve();
+  },
 
-      return Promise.resolve();
-    },
+  findBy: ({ id }) => {
+    return Promise.resolve(data.get(id));
+  },
 
-    findBy(id: Game.Id) {
-      return Promise.resolve(data.get(id));
-    },
+  listUserCreated: ({ user }) => {
+    return Promise.resolve(Array.from(data.values()).filter((v) => v.owner == user));
+  },
 
-    listUserCreated(userId) {
-      return Promise.resolve(Array.from(data.values()).filter((v) => v.owner == userId));
-    },
-
-    delete(game) {
-      data.delete(game.id);
-      return Promise.resolve();
-    },
-  };
+  delete: ({ game }) => {
+    data.delete(game.id);
+    return Promise.resolve();
+  },
 };
