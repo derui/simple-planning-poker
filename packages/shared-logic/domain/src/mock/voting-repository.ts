@@ -7,6 +7,13 @@ import * as Voting from "../voting.js";
 const data = new Map<Voting.Id, Voting.T>();
 
 /**
+ * Clear test data
+ */
+export const clear = (): void => {
+  data.clear();
+};
+
+/**
  * Make In-memory version `VotingRepository.T` for testing purpose.
  */
 export const VotingRepository: I = {

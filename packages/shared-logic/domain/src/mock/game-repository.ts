@@ -5,6 +5,12 @@ import * as Game from "../game.js";
  * In-memory version `GameRepository.T` for testing purpose.
  */
 const data = new Map<Game.Id, Game.T>();
+/**
+ * Clear test data
+ */
+export const clear = (): void => {
+  data.clear();
+};
 
 /**
  * Make In-memory version `GameRepository.T` for testing purpose.

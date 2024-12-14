@@ -6,6 +6,12 @@ import * as User from "../user.js";
  * In-memory version `UserRepository.T` for testing purpose.
  */
 const data = new Map<User.Id, User.T>();
+/**
+ * Clear test data
+ */
+export const clear = (): void => {
+  data.clear();
+};
 
 /**
  * Make In-memory version `UserRepository.T` for testing purpose.
