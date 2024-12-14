@@ -1,10 +1,15 @@
-import { test, expect } from "vitest";
-import { newChangeThemeUseCase } from "./change-theme.js";
-import { Voting, User, UserEstimation, ApplicablePoints, StoryPoint, Estimations, Voter } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
+import { clear } from "@spp/shared-domain/mock/voting-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { enableMapSet } from "immer";
+import { beforeEach, expect, test } from "vitest";
+import { ChangeThemeUseCase } from "./change-theme.js";
 
 enableMapSet();
+
+beforeEach(() => {
+  clear();
+});
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -12,11 +17,9 @@ test("should return error if user not found", async () => {
     votingId: Voting.createId(),
     theme: "foo",
   };
-  const repository = newMemoryVotingRepository();
-  const useCase = newChangeThemeUseCase(repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeThemeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("notFound");
@@ -36,17 +39,15 @@ test("should be able to change theme", async () => {
     theme: "not changed",
     voters: [Voter.createVoter({ user: User.createId("user") })],
   });
-
-  const repository = newMemoryVotingRepository([voting]);
-  const useCase = newChangeThemeUseCase(repository);
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeThemeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
 
-  const saved = await repository.findBy(id);
+  const saved = await VotingRepository.findBy({ id });
   expect(saved!.theme).toBe("name");
 });
 
@@ -66,11 +67,10 @@ test("can not change theme when voting is revealed", async () => {
   });
   voting = Voting.takePlayerEstimation(voting, User.createId("id"), UserEstimation.submittedOf(voting.points[0]));
   voting = Voting.reveal(voting)[0];
-  const repository = newMemoryVotingRepository([voting]);
-  const useCase = newChangeThemeUseCase(repository);
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeThemeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("canNotChangeTheme");

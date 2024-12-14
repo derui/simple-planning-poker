@@ -8,10 +8,17 @@ import {
   VoterType,
   Voting,
 } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { clear } from "@spp/shared-domain/mock/voting-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import sinon from "sinon";
-import { expect, test } from "vitest";
-import { newChangeUserModeUseCase } from "./change-user-mode.js";
+import { beforeEach, expect, test } from "vitest";
+import { ChangeUserModeUseCase } from "./change-user-mode.js";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -21,11 +28,8 @@ test("should return error if user not found", async () => {
     voterType: VoterType.Inspector,
   };
 
-  const repository = newMemoryVotingRepository();
-  const useCase = newChangeUserModeUseCase(repository, sinon.fake());
-
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserModeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("notFound");
@@ -46,11 +50,10 @@ test("should return error if voter not found", async () => {
     voterType: VoterType.Inspector,
   };
 
-  const repository = newMemoryVotingRepository([voting]);
-  const useCase = newChangeUserModeUseCase(repository, sinon.fake());
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserModeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("notFound");
@@ -71,16 +74,16 @@ test("should save voting", async () => {
     voterType: VoterType.Normal,
   };
 
-  const repository = newMemoryVotingRepository([voting]);
   const fake = sinon.fake<[DomainEvent.T]>();
-  const useCase = newChangeUserModeUseCase(repository, fake);
+  await VotingRepository.save({ voting });
+  subscribe(fake);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserModeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
-  const saved = await repository.findBy(input.votingId);
+  const saved = await VotingRepository.findBy({ id: input.votingId });
   expect(saved?.participatedVoters?.find((v) => v.user == user)?.type).toBe(VoterType.Normal);
   expect(fake.calledOnce).toBeTruthy();
 

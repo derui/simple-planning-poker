@@ -1,30 +1,33 @@
-import { User, UserRepository, VoterType } from "@spp/shared-domain";
+import { User, VoterType } from "@spp/shared-domain";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { UseCase } from "./base.js";
 
-export interface ChangeDefaultVoterTypeUseCaseInput {
-  userId: User.Id;
-  voterType: VoterType.T;
-}
+/**
+ * The command to change the default voter type of a user.
+ */
+export const ChangeDefaultVoterTypeUseCase: ChangeDefaultVoterTypeUseCase = async (input) => {
+  const user = await UserRepository.findBy({ id: input.userId });
+  if (!user) {
+    return { kind: "notFound" };
+  }
 
-export type ChangeDefaultVoterTypeUseCaseOutput = { kind: "success"; user: User.T } | { kind: "notFound" };
+  const newUser = User.changeDefaultVoterType(user, input.voterType);
+
+  await UserRepository.save({ user: newUser });
+
+  return { kind: "success", user: newUser };
+};
+
 export type ChangeDefaultVoterTypeUseCase = UseCase<
-  ChangeDefaultVoterTypeUseCaseInput,
-  ChangeDefaultVoterTypeUseCaseOutput
+  ChangeDefaultVoterTypeUseCase.Input,
+  ChangeDefaultVoterTypeUseCase.Output
 >;
 
-export const newChangeDefaultVoterTypeUseCase = function newChangeDefaultVoterTypeUseCase(
-  userRepository: UserRepository.T
-): ChangeDefaultVoterTypeUseCase {
-  return async (input: ChangeDefaultVoterTypeUseCaseInput): Promise<ChangeDefaultVoterTypeUseCaseOutput> => {
-    const user = await userRepository.findBy(input.userId);
-    if (!user) {
-      return { kind: "notFound" };
-    }
+export namespace ChangeDefaultVoterTypeUseCase {
+  export interface Input {
+    userId: User.Id;
+    voterType: VoterType.T;
+  }
 
-    const newUser = User.changeDefaultVoterType(user, input.voterType);
-
-    await userRepository.save(newUser);
-
-    return { kind: "success", user: newUser };
-  };
-};
+  export type Output = { kind: "success"; user: User.T } | { kind: "notFound" };
+}

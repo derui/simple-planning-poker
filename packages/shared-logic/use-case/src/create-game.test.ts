@@ -1,8 +1,15 @@
-import { ApplicablePoints, DomainEvent, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/game-repository";
+import { clear } from "@spp/shared-domain/mock/game-repository";
 import * as sinon from "sinon";
-import { expect, test } from "vitest";
-import { newCreateGameUseCase } from "./create-game.js";
+import { beforeEach, expect, test } from "vitest";
+import { CreateGameUseCase } from "./create-game.js";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 test("should return error if numbers is invalid", async () => {
   // Arrange
@@ -11,12 +18,9 @@ test("should return error if numbers is invalid", async () => {
     points: [],
     createdBy: User.createId(),
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryGameRepository();
-  const useCase = newCreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("invalidStoryPoints");
@@ -29,12 +33,9 @@ test("should return error if name is invalid", async () => {
     points: [1],
     createdBy: User.createId(),
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryGameRepository();
-  const useCase = newCreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("invalidName");
@@ -47,12 +48,9 @@ test("should return error if numbers contains invalid story point", async () => 
     points: [-1],
     createdBy: User.createId(),
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryGameRepository();
-  const useCase = newCreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("invalidStoryPoints");
@@ -65,17 +63,14 @@ test("should save new game into repository", async () => {
     points: [1],
     createdBy: User.createId(),
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryGameRepository();
-  const useCase = newCreateGameUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
 
   if (ret.kind == "success") {
-    const saved = await repository.findBy(ret.game.id);
+    const saved = await GameRepository.findBy({ id: ret.game.id });
     expect(saved!.name).toEqual("foo");
     expect(saved!.owner).toEqual(input.createdBy);
   } else {
@@ -90,12 +85,12 @@ test("should dispatch game created event", async () => {
     points: [1],
     createdBy: User.createId(),
   };
+
   const dispatcher = sinon.fake<DomainEvent.T[]>();
-  const repository = newMemoryGameRepository();
-  const useCase = newCreateGameUseCase(dispatcher, repository);
+  subscribe(dispatcher);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
@@ -111,27 +106,6 @@ test("should dispatch game created event", async () => {
   }
 });
 
-test("should fail if repository throws error", async () => {
-  // Arrange
-  const input = {
-    name: "foo",
-    points: [1],
-    createdBy: User.createId(),
-  };
-  const dispatcher = sinon.fake();
-  const repository: GameRepository.T = {
-    ...newMemoryGameRepository(),
-    save: sinon.fake.throws("error"),
-  };
-  const useCase = newCreateGameUseCase(dispatcher, repository);
-
-  // Act
-  const ret = await useCase(input);
-
-  // Assert
-  expect(ret.kind).toEqual("failed");
-});
-
 test("get error if some games having same name already exist", async () => {
   // Arrange
   const input = {
@@ -139,19 +113,18 @@ test("get error if some games having same name already exist", async () => {
     points: [1],
     createdBy: User.createId(),
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryGameRepository([
-    Game.create({
+
+  await GameRepository.save({
+    game: Game.create({
       id: Game.createId(),
       owner: input.createdBy,
       name: GameName.create("foo"),
       points: ApplicablePoints.create([StoryPoint.create(1)]),
     })[0],
-  ]);
-  const useCase = newCreateGameUseCase(dispatcher, repository);
+  });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await CreateGameUseCase(input);
 
   // Assert
   expect(ret.kind).toEqual("conflictName");

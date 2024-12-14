@@ -9,10 +9,17 @@ import {
   VoterType,
   Voting,
 } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { clear } from "@spp/shared-domain/mock/voting-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import * as sinon from "sinon";
-import { expect, test } from "vitest";
-import { newResetVotingUseCase } from "./reset-voting.js";
+import { beforeEach, expect, test } from "vitest";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+import { ResetVotingUseCase } from "./reset-voting.js";
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 test("should return error if game is not found", async () => {
   // Arrange
@@ -20,13 +27,8 @@ test("should return error if game is not found", async () => {
     votingId: Voting.createId(),
   };
 
-  const votingRepository = newMemoryVotingRepository();
-  const dispatcher = sinon.fake();
-
-  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
-
   // Act
-  const ret = await useCase(input);
+  const ret = await ResetVotingUseCase(input);
 
   // Assert
   expect(ret.kind).toEqual("notFound");
@@ -48,13 +50,10 @@ test("should save reseted voting", async () => {
   const input = {
     votingId: voting.id,
   };
-  const votingRepository = newMemoryVotingRepository([voting]);
-  const dispatcher = sinon.fake();
-
-  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ResetVotingUseCase(input);
 
   // Assert
   expect(ret.kind).toEqual("success");
@@ -76,13 +75,12 @@ test("should dispatch VotingStarted event", async () => {
   const input = {
     votingId: voting.id,
   };
-  const votingRepository = newMemoryVotingRepository([voting]);
+  await VotingRepository.save({ voting });
   const dispatcher = sinon.fake<DomainEvent.T[]>();
-
-  const useCase = newResetVotingUseCase(dispatcher, votingRepository);
+  subscribe(dispatcher);
 
   // Act
-  await useCase(input);
+  await ResetVotingUseCase(input);
 
   // Assert
   expect(dispatcher.callCount).toBe(1);

@@ -1,10 +1,17 @@
-import { test, expect } from "vitest";
-import { newEstimatePlayerUseCase } from "./estimate-player.js";
-import { ApplicablePoints, StoryPoint, User, Voting, UserEstimation, Estimations, Voter } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
+import { clear } from "@spp/shared-domain/mock/voting-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { enableMapSet } from "immer";
+import { beforeEach, expect, test } from "vitest";
+import { EstimatePlayerUseCase } from "./estimate-player.js";
+import { clearSubsctiptions } from "./event-dispatcher.js";
 
 enableMapSet();
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 const POINTS = ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(5)]);
 
@@ -16,15 +23,11 @@ test("should return error if game is not found", async () => {
     userEstimation: UserEstimation.submittedOf(POINTS[0]),
   };
 
-  const repository = newMemoryVotingRepository();
-
-  const useCase = newEstimatePlayerUseCase(repository);
-
   // Act
-  const ret = await useCase(input);
+  const ret = await EstimatePlayerUseCase(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "notFound" });
+  expect(ret).toEqual({ kind: "error", detail: "notFound" });
 });
 
 test("should save player with card selected by user", async () => {
@@ -43,14 +46,13 @@ test("should save player with card selected by user", async () => {
     userEstimation: UserEstimation.submittedOf(POINTS[1]),
   };
 
-  const repository = newMemoryVotingRepository([voting]);
+  await VotingRepository.save({ voting });
 
   // Act
-  const useCase = newEstimatePlayerUseCase(repository);
-  const ret = await useCase(input);
+  const ret = await EstimatePlayerUseCase(input);
 
   // Assert
-  const saved = await repository.findBy(voting.id);
+  const saved = await VotingRepository.findBy({ id: voting.id });
 
   expect(ret).toEqual({ kind: "success", voting: saved! });
   expect(saved?.estimations).toEqual(

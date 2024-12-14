@@ -1,7 +1,11 @@
 import { User, VoterType } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { expect, test } from "vitest";
-import { newChangeDefaultVoterTypeUseCase } from "./change-default-voter-type.js";
+import { clear, UserRepository } from "@spp/shared-domain/mock/user-repository";
+import { beforeEach, expect, test } from "vitest";
+import { ChangeDefaultVoterTypeUseCase } from "./change-default-voter-type.js";
+
+beforeEach(() => {
+  clear();
+});
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -10,11 +14,8 @@ test("should return error if user not found", async () => {
     voterType: VoterType.Inspector,
   };
 
-  const repository = newMemoryUserRepository();
-  const useCase = newChangeDefaultVoterTypeUseCase(repository);
-
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeDefaultVoterTypeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("notFound");
@@ -29,20 +30,19 @@ test("should save user", async () => {
     voterType: VoterType.Normal,
   };
 
-  const repository = newMemoryUserRepository([
-    User.create({
+  await UserRepository.save({
+    user: User.create({
       id: user,
       name: "foo",
       defaultVoterType: VoterType.Inspector,
     }),
-  ]);
-  const useCase = newChangeDefaultVoterTypeUseCase(repository);
+  });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeDefaultVoterTypeUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
-  const saved = await repository.findBy(input.userId);
+  const saved = await UserRepository.findBy({ id: input.userId });
   expect(saved?.defaultVoterType).toBe(VoterType.Normal);
 });

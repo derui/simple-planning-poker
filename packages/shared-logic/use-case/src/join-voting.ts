@@ -1,48 +1,48 @@
-import { EventDispatcher, UseCase } from "./base.js";
-import { User, UserRepository, Voting, VotingRepository } from "@spp/shared-domain";
+import { User, Voting } from "@spp/shared-domain";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
+import { UseCase } from "./base.js";
+import { dispatch } from "./event-dispatcher.js";
 
-export interface JoinVotingUseCaseInput {
-  userId: User.Id;
-  votingId: Voting.Id;
+export namespace JoinVotingUseCase {
+  export interface Input {
+    userId: User.Id;
+    votingId: Voting.Id;
+  }
+
+  export type Output = { kind: "success"; voting: Voting.T } | { kind: "error"; detail: ErrorDetail };
+
+  export type ErrorDetail = "notFound" | "userNotFound" | "AlreadyJoined";
 }
 
-export type JoinVotingUseCaseOutput =
-  | { kind: "success"; voting: Voting.T }
-  | { kind: "notFound" }
-  | { kind: "userNotFound" }
-  | { kind: "AlreadyJoined" };
+export type JoinVotingUseCase = UseCase<JoinVotingUseCase.Input, JoinVotingUseCase.Output>;
 
-export type JoinVotingUseCase = UseCase<JoinVotingUseCaseInput, JoinVotingUseCaseOutput>;
+/**
+ * The command to join a voting.
+ */
+export const JoinVotingUseCase: JoinVotingUseCase = async (input) => {
+  const voting = await VotingRepository.findBy({ id: input.votingId });
+  if (!voting) {
+    return { kind: "error", detail: "notFound" };
+  }
 
-export const newJoinVotingUseCase = function newJoinVotingUseCase(
-  votingRepository: VotingRepository.T,
-  userRepository: UserRepository.T,
-  dispatcher: EventDispatcher
-): JoinVotingUseCase {
-  return async (input: JoinVotingUseCaseInput): Promise<JoinVotingUseCaseOutput> => {
-    const voting = await votingRepository.findBy(input.votingId);
-    if (!voting) {
-      return { kind: "notFound" };
+  const user = await UserRepository.findBy({ id: input.userId });
+  if (!user) {
+    return { kind: "error", detail: "userNotFound" };
+  }
+
+  try {
+    const [newVoting, event] = Voting.joinUser(voting, user.id);
+    await VotingRepository.save({ voting: newVoting });
+
+    if (event) {
+      dispatch(event);
     }
 
-    const user = await userRepository.findBy(input.userId);
-    if (!user) {
-      return { kind: "userNotFound" };
-    }
+    return { kind: "success", voting: newVoting };
+  } catch (e) {
+    console.error(e);
 
-    try {
-      const [newVoting, event] = Voting.joinUser(voting, user.id);
-      await votingRepository.save(newVoting);
-
-      if (event) {
-        dispatcher(event);
-      }
-
-      return { kind: "success", voting: newVoting };
-    } catch (e) {
-      console.error(e);
-
-      return { kind: "AlreadyJoined" };
-    }
-  };
+    return { kind: "error", detail: "AlreadyJoined" };
+  }
 };

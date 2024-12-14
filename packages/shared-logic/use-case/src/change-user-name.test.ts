@@ -1,8 +1,15 @@
-import { test, expect } from "vitest";
-import * as sinon from "sinon";
-import { newChangeUserNameUseCase } from "./change-user-name.js";
 import { DomainEvent, User } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
+import { clear } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import * as sinon from "sinon";
+import { beforeEach, expect, test } from "vitest";
+import { ChangeUserNameUseCase } from "./change-user-name.js";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 test("should return error if user not found", async () => {
   // Arrange
@@ -10,12 +17,9 @@ test("should return error if user not found", async () => {
     userId: User.createId(),
     name: "foo",
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryUserRepository();
-  const useCase = newChangeUserNameUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserNameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("notFound");
@@ -28,12 +32,10 @@ test("should return error if can not change name of the user", async () => {
     userId,
     name: "",
   };
-  const dispatcher = sinon.fake();
-  const repository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-  const useCase = newChangeUserNameUseCase(dispatcher, repository);
+  await UserRepository.save({ user: User.create({ id: userId, name: "foo" }) });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserNameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("canNotChangeName");
@@ -47,16 +49,16 @@ test("should dispatch event", async () => {
     name: "name",
   };
   const dispatcher = sinon.fake();
-  const repository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-  const useCase = newChangeUserNameUseCase(dispatcher, repository);
+  subscribe(dispatcher);
+  await UserRepository.save({ user: User.create({ id: userId, name: "foo" }) });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await ChangeUserNameUseCase(input);
 
   // Assert
   expect(ret.kind).toBe("success");
 
-  const saved = await repository.findBy(userId);
+  const saved = await UserRepository.findBy({ id: userId });
   expect(saved!.name).toEqual("name");
   expect(dispatcher.lastCall.firstArg).toEqual({
     kind: DomainEvent.DOMAIN_EVENTS.UserNameChanged,

@@ -1,42 +1,40 @@
-import { EventDispatcher, UseCase } from "./base.js";
-import { Voting, VotingRepository } from "@spp/shared-domain";
+import { Voting } from "@spp/shared-domain";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
+import { UseCase } from "./base.js";
+import { dispatch } from "./event-dispatcher.js";
 
-export interface ResetVotingUseCaseInput {
-  votingId: Voting.Id;
+export namespace ResetVotingUseCase {
+  export interface Input {
+    votingId: Voting.Id;
+  }
+
+  export type Output = { kind: "success"; voting: Voting.T } | { kind: "error"; detail: ErrorDetail };
+
+  export type ErrorDetail = "notFound" | "canNotResetVoting";
 }
 
-export type ResetVotingUseCaseOutput =
-  | { kind: "success"; voting: Voting.T }
-  | { kind: "notFound" }
-  | { kind: "canNotResetVoting" };
-
-export type ResetVotingUseCase = UseCase<ResetVotingUseCaseInput, ResetVotingUseCaseOutput>;
+export type ResetVotingUseCase = UseCase<ResetVotingUseCase.Input, ResetVotingUseCase.Output>;
 
 /**
  * Get new instance of use case to reset voting
  */
-export const newResetVotingUseCase = function newResetVotingUseCase(
-  dispatcher: EventDispatcher,
-  votingRepository: VotingRepository.T
-): ResetVotingUseCase {
-  return async (input) => {
-    const voting = await votingRepository.findBy(input.votingId);
-    if (!voting) {
-      return { kind: "notFound" };
-    }
+export const ResetVotingUseCase: ResetVotingUseCase = async (input) => {
+  const voting = await VotingRepository.findBy({ id: input.votingId });
+  if (!voting) {
+    return { kind: "error", detail: "notFound" };
+  }
 
-    try {
-      const [newVoting, event] = Voting.reset(voting);
+  try {
+    const [newVoting, event] = Voting.reset(voting);
 
-      await votingRepository.save(newVoting);
+    await VotingRepository.save({ voting: newVoting });
 
-      dispatcher(event);
+    dispatch(event);
 
-      return { kind: "success", voting: newVoting };
-    } catch (e) {
-      console.error(e);
+    return { kind: "success", voting: newVoting };
+  } catch (e) {
+    console.error(e);
 
-      return { kind: "canNotResetVoting" };
-    }
-  };
+    return { kind: "error", detail: "canNotResetVoting" };
+  }
 };

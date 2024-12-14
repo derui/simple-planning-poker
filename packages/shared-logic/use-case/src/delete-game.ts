@@ -1,40 +1,36 @@
-import { Game, GameRepository, User } from "@spp/shared-domain";
-import { Prettify } from "@spp/shared-type-util";
+import { Game, User } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/game-repository";
 import { UseCase } from "./base.js";
 
-export interface DeleteGameUseCaseInput {
-  gameId: Game.Id;
-  ownedBy: User.Id;
+export namespace DeleteGameUseCase {
+  export interface Input {
+    gameId: Game.Id;
+    ownedBy: User.Id;
+  }
+
+  export type Output = { kind: "success"; game: Game.T } | { kind: "error"; detail: Error } | { kind: "failed" };
+
+  export type Error = { kind: "notFound" } | { kind: "doNotOwned" };
 }
 
-export type DeleteGameUseCaseOutput =
-  | { kind: "success"; game: Game.T }
-  | { kind: "notFound" }
-  | { kind: "doNotOwned" }
-  | { kind: "failed" };
+export type DeleteGameUseCase = UseCase<DeleteGameUseCase.Input, DeleteGameUseCase.Output>;
 
-export type DeleteGameUseCase = UseCase<DeleteGameUseCaseInput, DeleteGameUseCaseOutput>;
+export const DeleteGameUseCase: DeleteGameUseCase = async (input) => {
+  const target = await GameRepository.findBy({ id: input.gameId });
+  if (!target) {
+    return { kind: "error", detail: { kind: "notFound" } };
+  }
 
-export const newDeleteGameUseCase = function newDeleteGameUseCase(
-  gameRepository: Prettify<GameRepository.T>
-): DeleteGameUseCase {
-  return async (input) => {
-    const target = await gameRepository.findBy(input.gameId);
-    if (!target) {
-      return { kind: "notFound" };
-    }
+  if (target.owner != input.ownedBy) {
+    return { kind: "error", detail: { kind: "doNotOwned" } };
+  }
 
-    if (target.owner != input.ownedBy) {
-      return { kind: "doNotOwned" };
-    }
+  try {
+    await GameRepository.delete({ game: target });
 
-    try {
-      await gameRepository.delete(target);
-
-      return { kind: "success", game: target };
-    } catch (e) {
-      console.warn(e);
-      return { kind: "failed" };
-    }
-  };
+    return { kind: "success", game: target };
+  } catch (e) {
+    console.warn(e);
+    return { kind: "failed" };
+  }
 };

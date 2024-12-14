@@ -1,12 +1,20 @@
 import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { clear as clearVoting } from "@spp/shared-domain/mock/voting-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { enableMapSet } from "immer";
-import sinon from "sinon";
-import { expect, test } from "vitest";
-import { newJoinVotingUseCase } from "./join-voting.js";
+import { beforeEach, expect, test } from "vitest";
+import { clearSubsctiptions } from "./event-dispatcher.js";
+import { JoinVotingUseCase } from "./join-voting.js";
 
 enableMapSet();
+
+beforeEach(() => {
+  clearUser();
+  clearVoting();
+  clearSubsctiptions();
+});
 
 const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
 
@@ -17,13 +25,8 @@ test("should return error if game is not found", async () => {
     votingId: Voting.createId(),
   };
 
-  const repository = newMemoryVotingRepository();
-  const userRepository = newMemoryUserRepository();
-
-  const useCase = newJoinVotingUseCase(repository, userRepository, sinon.fake());
-
   // Act
-  const ret = await useCase(input);
+  const ret = JoinVotingUseCase(input);
 
   // Assert
   expect(ret).toEqual({ kind: "notFound" });
@@ -43,13 +46,10 @@ test("should return error if user not found", async () => {
     votingId: voting.id,
   };
 
-  const repository = newMemoryVotingRepository([voting]);
-  const userRepository = newMemoryUserRepository();
-
-  const useCase = newJoinVotingUseCase(repository, userRepository, sinon.fake());
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = JoinVotingUseCase(input);
 
   // Assert
   expect(ret).toEqual({ kind: "userNotFound" });
@@ -72,18 +72,15 @@ test("join user to the voting", async () => {
     userEstimation: UserEstimation.submittedOf(POINTS[0]),
   };
 
-  const repository = newMemoryVotingRepository([voting]);
-  const userRepository = newMemoryUserRepository([
-    User.create({ id: owner, name: owner }),
-    User.create({ id: other, name: other }),
-  ]);
+  await VotingRepository.save({ voting });
+  await UserRepository.save({ user: User.create({ id: owner, name: owner }) });
+  await UserRepository.save({ user: User.create({ id: other, name: other }) });
 
   // Act
-  const useCase = newJoinVotingUseCase(repository, userRepository, sinon.fake());
-  const ret = await useCase(input);
+  const ret = JoinVotingUseCase(input);
 
   // Assert
-  const saved = await repository.findBy(voting.id);
+  const saved = await VotingRepository.findBy({ id: voting.id });
 
   expect(ret).toEqual({ kind: "success", voting: saved! });
   expect(saved?.participatedVoters).toEqual([
@@ -109,18 +106,15 @@ test("do not join user twice", async () => {
     userEstimation: UserEstimation.submittedOf(POINTS[0]),
   };
 
-  const repository = newMemoryVotingRepository([voting]);
-  const userRepository = newMemoryUserRepository([
-    User.create({ id: owner, name: owner }),
-    User.create({ id: other, name: other }),
-  ]);
+  await VotingRepository.save({ voting });
+  await UserRepository.save({ user: User.create({ id: owner, name: owner }) });
+  await UserRepository.save({ user: User.create({ id: other, name: other }) });
 
   // Act
-  const useCase = newJoinVotingUseCase(repository, userRepository, sinon.fake());
-  const ret = await useCase(input);
+  const ret = JoinVotingUseCase(input);
 
   // Assert
-  const saved = await repository.findBy(voting.id);
+  const saved = await VotingRepository.findBy({ id: voting.id });
 
   expect(ret).toEqual({ kind: "success", voting: saved! });
   expect(saved?.participatedVoters).toEqual([Voter.createVoter({ user: owner })]);
