@@ -8,9 +8,9 @@ export namespace DeleteGameUseCase {
     ownedBy: User.Id;
   }
 
-  export type Output = { kind: "success"; game: Game.T } | { kind: "error"; detail: Error } | { kind: "failed" };
+  export type Output = { kind: "success"; game: Game.T } | { kind: "error"; detail: ErrorDetail };
 
-  export type Error = { kind: "notFound" } | { kind: "doNotOwned" };
+  export type ErrorDetail = "notFound" | "doNotOwned" | "failed";
 }
 
 export type DeleteGameUseCase = UseCase<DeleteGameUseCase.Input, DeleteGameUseCase.Output>;
@@ -18,11 +18,11 @@ export type DeleteGameUseCase = UseCase<DeleteGameUseCase.Input, DeleteGameUseCa
 export const DeleteGameUseCase: DeleteGameUseCase = async (input) => {
   const target = await GameRepository.findBy({ id: input.gameId });
   if (!target) {
-    return { kind: "error", detail: { kind: "notFound" } };
+    return { kind: "error", detail: "notFound" };
   }
 
   if (target.owner != input.ownedBy) {
-    return { kind: "error", detail: { kind: "doNotOwned" } };
+    return { kind: "error", detail: "doNotOwned" };
   }
 
   try {
@@ -31,6 +31,6 @@ export const DeleteGameUseCase: DeleteGameUseCase = async (input) => {
     return { kind: "success", game: target };
   } catch (e) {
     console.warn(e);
-    return { kind: "failed" };
+    return { kind: "error", detail: "failed" };
   }
 };

@@ -1,49 +1,49 @@
-import { EventDispatcher, UseCase } from "./base.js";
-import { Voting, VotingRepository } from "@spp/shared-domain";
+import { Voting } from "@spp/shared-domain";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
+import { UseCase } from "./base.js";
+import { dispatch } from "./event-dispatcher.js";
 
-export interface RevealUseCaseInput {
-  votingId: Voting.Id;
+export namespace RevealUseCase {
+  export interface Input {
+    votingId: Voting.Id;
+  }
+
+  export type ErrorDetail = "notFoundVoting" | "revealed" | "failed";
+
+  export type Output =
+    | {
+        kind: "success";
+        voting: Voting.T;
+      }
+    | { kind: "error"; detail: ErrorDetail };
 }
 
-export type RevealUseCaseOutput =
-  | {
-      kind: "success";
-      voting: Voting.T;
-    }
-  | { kind: "notFoundVoting" }
-  | { kind: "revealed" };
-
-export type RevealUseCase = UseCase<RevealUseCaseInput, RevealUseCaseOutput>;
+export type RevealUseCase = UseCase<RevealUseCase.Input, RevealUseCase.Output>;
 
 /**
  * Get new instance of use case to reveal a voting
  */
-export const newRevealUseCase = function newRevealUseCase(
-  dispatcher: EventDispatcher,
-  votingRepository: VotingRepository.T
-): RevealUseCase {
-  return async (input) => {
-    const voting = await votingRepository.findBy(input.votingId);
-    if (!voting) {
-      return { kind: "notFoundVoting" };
-    }
+export const RevealUseCase: RevealUseCase = async (input) => {
+  const voting = await VotingRepository.findBy({ id: input.votingId });
+  if (!voting) {
+    return { kind: "error", detail: "notFoundVoting" };
+  }
 
-    if (voting.status == Voting.VotingStatus.Revealed) {
-      return { kind: "revealed" };
-    }
+  if (voting.status == Voting.VotingStatus.Revealed) {
+    return { kind: "error", detail: "revealed" };
+  }
 
-    try {
-      const [newVoting, event] = Voting.reveal(voting);
+  try {
+    const [newVoting, event] = Voting.reveal(voting);
 
-      await votingRepository.save(newVoting);
+    await VotingRepository.save({ voting: newVoting });
 
-      dispatcher(event);
+    dispatch(event);
 
-      return { kind: "success", voting: newVoting };
-    } catch (e) {
-      console.error(e);
+    return { kind: "success", voting: newVoting };
+  } catch (e) {
+    console.error(e);
 
-      return { kind: "revealed" };
-    }
-  };
+    return { kind: "error", detail: "failed" };
+  }
 };

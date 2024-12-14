@@ -1,20 +1,29 @@
-import { test, expect } from "vitest";
 import sinon from "sinon";
-import { newRevealUseCase } from "./reveal.js";
+import { beforeEach, expect, test } from "vitest";
+
 import {
-  User,
-  Voting,
   ApplicablePoints,
-  StoryPoint,
-  UserEstimation,
-  Estimations,
   DomainEvent,
+  Estimations,
+  StoryPoint,
+  User,
+  UserEstimation,
   Voter,
+  Voting,
 } from "@spp/shared-domain";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+
+import { clear } from "@spp/shared-domain/mock/voting-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { enableMapSet } from "immer";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+import { RevealUseCase } from "./reveal.js";
 
 enableMapSet();
+
+beforeEach(() => {
+  clear();
+  clearSubsctiptions();
+});
 
 const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
 
@@ -23,16 +32,12 @@ test("should return error if game is not found", async () => {
   const input = {
     votingId: Voting.createId(),
   };
-  const repository = newMemoryVotingRepository();
-  const dispatcher = sinon.fake();
-
-  const useCase = newRevealUseCase(dispatcher, repository);
 
   // Act
-  const ret = await useCase(input);
+  const ret = await RevealUseCase(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "notFoundVoting" });
+  expect(ret).toEqual({ kind: "error", detail: "notFoundVoting" });
 });
 
 test("should save game showed down", async () => {
@@ -50,16 +55,13 @@ test("should save game showed down", async () => {
   const input = {
     votingId: voting.id,
   };
-  const repository = newMemoryVotingRepository([changed]);
-  const dispatcher = sinon.fake();
-
-  const useCase = newRevealUseCase(dispatcher, repository);
+  await VotingRepository.save({ voting: changed });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await RevealUseCase(input);
 
   // Assert
-  const saved = await repository.findBy(voting.id);
+  const saved = await VotingRepository.findBy({ id: voting.id });
   expect(ret).toEqual({ kind: "success", voting: saved });
 });
 
@@ -76,16 +78,13 @@ test("should return error if the round can not show down", async () => {
   const input = {
     votingId: voting.id,
   };
-  const repository = newMemoryVotingRepository([voting]);
-  const dispatcher = sinon.fake();
-
-  const useCase = newRevealUseCase(dispatcher, repository);
+  await VotingRepository.save({ voting });
 
   // Act
-  const ret = await useCase(input);
+  const ret = await RevealUseCase(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "revealed" });
+  expect(ret).toEqual({ kind: "error", detail: "failed" });
 });
 
 test("should dispatch Revealed event", async () => {
@@ -101,13 +100,12 @@ test("should dispatch Revealed event", async () => {
   const input = {
     votingId: voting.id,
   };
-  const repository = newMemoryVotingRepository([changed]);
+  await VotingRepository.save({ voting: changed });
   const dispatcher = sinon.fake<DomainEvent.T[]>();
-
-  const useCase = newRevealUseCase(dispatcher, repository);
+  subscribe(dispatcher);
 
   // Act
-  await useCase(input);
+  await RevealUseCase(input);
 
   // Assert
   expect(dispatcher.callCount).toBe(1);

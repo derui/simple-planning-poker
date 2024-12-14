@@ -58,5 +58,5 @@ test("get error if the game do not owned", async () => {
   const ret = await DeleteGameUseCase(input);
 
   // Assert
-  expect(ret.kind).toEqual("doNotOwned");
+  expect(ret).toEqual({ kind: "error", detail: "doNotOwned" });
 });

@@ -10,35 +10,32 @@ export namespace CreateGameUseCase {
     createdBy: User.Id;
   }
 
-  export type ValidationError = { kind: "conflictName" } | { kind: "invalidName" } | { kind: "invalidStoryPoints" };
+  export type ErrorDetail = "conflictName" | "invalidName" | "invalidStoryPoints" | "failed";
 
-  export type Output =
-    | { kind: "success"; game: Game.T }
-    | { kind: "error"; detail: ValidationError }
-    | { kind: "failed" };
+  export type Output = { kind: "success"; game: Game.T } | { kind: "error"; detail: ErrorDetail };
 }
 
 export type CreateGameUseCase = UseCase<CreateGameUseCase.Input, CreateGameUseCase.Output>;
 
 export const CreateGameUseCase: CreateGameUseCase = async (input) => {
   if (!input.points.every(StoryPoint.isValid)) {
-    return { kind: "error", detail: { kind: "invalidStoryPoints" } };
+    return { kind: "error", detail: "invalidStoryPoints" };
   }
 
   const storyPoints = input.points.map(StoryPoint.create);
 
   if (!ApplicablePoints.isValidStoryPoints(storyPoints)) {
-    return { kind: "error", detail: { kind: "invalidStoryPoints" } };
+    return { kind: "error", detail: "invalidStoryPoints" };
   }
 
   if (!GameName.isValid(input.name)) {
-    return { kind: "error", detail: { kind: "invalidName" } };
+    return { kind: "error", detail: "invalidName" };
   }
 
   const ownedGames = await GameRepository.listUserCreated({ user: input.createdBy });
 
   if (ownedGames.some((v) => v.name == input.name)) {
-    return { kind: "error", detail: { kind: "conflictName" } };
+    return { kind: "error", detail: "conflictName" };
   }
 
   const points = ApplicablePoints.create(storyPoints);
@@ -55,7 +52,7 @@ export const CreateGameUseCase: CreateGameUseCase = async (input) => {
     await GameRepository.save({ game });
   } catch (e) {
     console.warn(e);
-    return { kind: "failed" };
+    return { kind: "error", detail: "failed" };
   }
 
   dispatch(event);

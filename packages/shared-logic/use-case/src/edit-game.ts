@@ -13,19 +13,7 @@ export namespace EditGameUseCase {
 
   export type Output = { kind: "success"; game: Game.T } | { kind: "error"; detail: ErrorDetail } | { kind: "failed" };
 
-  export type ErrorDetail =
-    | {
-        kind: "notFound";
-      }
-    | {
-        kind: "conflictName";
-      }
-    | {
-        kind: "invalidStoryPoint";
-      }
-    | {
-        kind: "invalidName";
-      };
+  type ErrorDetail = "notFound" | "conflictName" | "invalidStoryPoint" | "invalidName";
 }
 
 export type EditGameUseCase = UseCase<Prettify<EditGameUseCase.Input>, EditGameUseCase.Output>;
@@ -35,27 +23,27 @@ export type EditGameUseCase = UseCase<Prettify<EditGameUseCase.Input>, EditGameU
  */
 export const EditGameUseCase: EditGameUseCase = async (input) => {
   if (!input.points.every(StoryPoint.isValid)) {
-    return { kind: "error", detail: { kind: "invalidStoryPoint" } };
+    return { kind: "error", detail: "invalidStoryPoint" };
   }
 
   const storyPoints = input.points.map(StoryPoint.create);
 
   if (!ApplicablePoints.isValidStoryPoints(storyPoints)) {
-    return { kind: "error", detail: { kind: "invalidStoryPoint" } };
+    return { kind: "error", detail: "invalidStoryPoint" };
   }
 
   if (!GameName.isValid(input.name)) {
-    return { kind: "error", detail: { kind: "invalidName" } };
+    return { kind: "error", detail: "invalidName" };
   }
 
   const game = await GameRepository.findBy({ id: input.gameId });
   if (!game) {
-    return { kind: "error", detail: { kind: "notFound" } };
+    return { kind: "error", detail: "notFound" };
   }
   const games = await GameRepository.listUserCreated({ user: input.ownedBy });
 
   if (games.filter((v) => v.id != game.id).some((v) => v.name == input.name)) {
-    return { kind: "error", detail: { kind: "conflictName" } };
+    return { kind: "error", detail: "conflictName" };
   }
 
   const points = ApplicablePoints.create(storyPoints);

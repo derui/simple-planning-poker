@@ -1,48 +1,50 @@
-import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User, VotingRepository } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
+import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
+import { clear as clearGame } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearVoting, injectErrorOnSave } from "@spp/shared-domain/mock/voting-repository";
 import sinon from "sinon";
-import { describe, expect, test } from "vitest";
-import { newStartVotingUseCase } from "./start-voting.js";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { GameRepository } from "@spp/shared-domain/game-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
+import { clearSubsctiptions, subscribe } from "./event-dispatcher.js";
+import { StartVotingUseCase } from "./start-voting.js";
+
+beforeEach(() => {
+  clearVoting();
+  clearGame();
+  clearSubsctiptions();
+});
 
 describe("errors", () => {
   test("should return error if game does not exist", async () => {
     // Arrange
     const gameId = Game.createId();
-    const useCase = newStartVotingUseCase(newMemoryGameRepository(), newMemoryVotingRepository(), sinon.fake());
 
     // Act
-    const result = await useCase({ gameId });
+    const result = await StartVotingUseCase({ gameId });
 
     // Assert
-    expect(result.kind).toEqual("notFound");
+    expect(result).toEqual({ kind: "error", detail: "notFound" });
   });
 
   test("should fail when raised exception on save", async () => {
     // Arrange
-    const mockRepository: VotingRepository.T = {
-      ...newMemoryVotingRepository(),
-      save: sinon.fake.throws(""),
-    };
     const gameId = Game.createId();
-    const useCase = newStartVotingUseCase(
-      newMemoryGameRepository([
-        Game.create({
-          id: gameId,
-          name: GameName.create("name"),
-          owner: User.createId(),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-        })[0],
-      ]),
-      mockRepository,
-      sinon.fake()
-    );
+    await GameRepository.save({
+      game: Game.create({
+        id: gameId,
+        name: GameName.create("name"),
+        owner: User.createId(),
+        points: ApplicablePoints.create([StoryPoint.create(1)]),
+      })[0],
+    });
+    injectErrorOnSave("");
 
     // Act
-    const ret = await useCase({ gameId });
+    const ret = await StartVotingUseCase({ gameId });
 
     // Assert
-    expect(ret.kind).toEqual("failed");
+    expect(ret).toEqual({ kind: "error", detail: "failed" });
   });
 });
 
@@ -50,26 +52,21 @@ describe("happy path", () => {
   test("should successfully start voting", async () => {
     // Arrange
     const gameId = Game.createId();
-    const repository = newMemoryVotingRepository();
-    const useCase = newStartVotingUseCase(
-      newMemoryGameRepository([
-        Game.create({
-          id: gameId,
-          name: GameName.create("name"),
-          owner: User.createId(),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-        })[0],
-      ]),
-      repository,
-      sinon.fake()
-    );
+    await GameRepository.save({
+      game: Game.create({
+        id: gameId,
+        name: GameName.create("name"),
+        owner: User.createId(),
+        points: ApplicablePoints.create([StoryPoint.create(1)]),
+      })[0],
+    });
 
     // Act
-    const result = await useCase({ gameId });
+    const result = await StartVotingUseCase({ gameId });
 
     // Assert
     if (result.kind == "success") {
-      expect(result.voting).toEqual(await repository.findBy(result.voting.id));
+      expect(result.voting).toEqual(await VotingRepository.findBy({ id: result.voting.id }));
     } else {
       expect.fail("should succeeed");
     }
@@ -78,23 +75,20 @@ describe("happy path", () => {
   test("dispatch event", async () => {
     // Arrange
     const gameId = Game.createId();
-    const repository = newMemoryVotingRepository();
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    const useCase = newStartVotingUseCase(
-      newMemoryGameRepository([
-        Game.create({
-          id: gameId,
-          name: GameName.create("name"),
-          owner: User.createId(),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-        })[0],
-      ]),
-      repository,
-      dispatcher
-    );
+    await GameRepository.save({
+      game: Game.create({
+        id: gameId,
+        name: GameName.create("name"),
+        owner: User.createId(),
+        points: ApplicablePoints.create([StoryPoint.create(1)]),
+      })[0],
+    });
+
+    subscribe(dispatcher);
 
     // Act
-    await useCase({ gameId });
+    await StartVotingUseCase({ gameId });
 
     // Assert
     expect(dispatcher.callCount).toEqual(1);

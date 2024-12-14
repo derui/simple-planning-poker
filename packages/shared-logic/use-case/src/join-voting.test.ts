@@ -26,10 +26,10 @@ test("should return error if game is not found", async () => {
   };
 
   // Act
-  const ret = JoinVotingUseCase(input);
+  const ret = await JoinVotingUseCase(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "notFound" });
+  expect(ret).toEqual({ kind: "error", detail: "notFound" });
 });
 
 test("should return error if user not found", async () => {
@@ -49,10 +49,10 @@ test("should return error if user not found", async () => {
   await VotingRepository.save({ voting });
 
   // Act
-  const ret = JoinVotingUseCase(input);
+  const ret = await JoinVotingUseCase(input);
 
   // Assert
-  expect(ret).toEqual({ kind: "userNotFound" });
+  expect(ret).toEqual({ kind: "error", detail: "userNotFound" });
 });
 
 test("join user to the voting", async () => {
@@ -77,7 +77,7 @@ test("join user to the voting", async () => {
   await UserRepository.save({ user: User.create({ id: other, name: other }) });
 
   // Act
-  const ret = JoinVotingUseCase(input);
+  const ret = await JoinVotingUseCase(input);
 
   // Assert
   const saved = await VotingRepository.findBy({ id: voting.id });
@@ -111,7 +111,7 @@ test("do not join user twice", async () => {
   await UserRepository.save({ user: User.create({ id: other, name: other }) });
 
   // Act
-  const ret = JoinVotingUseCase(input);
+  const ret = await JoinVotingUseCase(input);
 
   // Assert
   const saved = await VotingRepository.findBy({ id: voting.id });

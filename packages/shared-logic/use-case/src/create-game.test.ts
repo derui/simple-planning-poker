@@ -23,7 +23,7 @@ test("should return error if numbers is invalid", async () => {
   const ret = await CreateGameUseCase(input);
 
   // Assert
-  expect(ret.kind).toBe("invalidStoryPoints");
+  expect(ret).toEqual({ kind: "error", detail: "invalidStoryPoints" });
 });
 
 test("should return error if name is invalid", async () => {
@@ -38,7 +38,7 @@ test("should return error if name is invalid", async () => {
   const ret = await CreateGameUseCase(input);
 
   // Assert
-  expect(ret.kind).toBe("invalidName");
+  expect(ret).toEqual({ kind: "error", detail: "invalidName" });
 });
 
 test("should return error if numbers contains invalid story point", async () => {
@@ -53,7 +53,7 @@ test("should return error if numbers contains invalid story point", async () => 
   const ret = await CreateGameUseCase(input);
 
   // Assert
-  expect(ret.kind).toBe("invalidStoryPoints");
+  expect(ret).toEqual({ kind: "error", detail: "invalidStoryPoints" });
 });
 
 test("should save new game into repository", async () => {
@@ -127,5 +127,5 @@ test("get error if some games having same name already exist", async () => {
   const ret = await CreateGameUseCase(input);
 
   // Assert
-  expect(ret.kind).toEqual("conflictName");
+  expect(ret).toEqual({ kind: "error", detail: "conflictName" });
 });

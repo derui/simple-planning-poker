@@ -31,7 +31,7 @@ test("should return error if game is not found", async () => {
   const ret = await ResetVotingUseCase(input);
 
   // Assert
-  expect(ret.kind).toEqual("notFound");
+  expect(ret).toEqual({ kind: "error", detail: "notFound" });
 });
 
 test("should save reseted voting", async () => {

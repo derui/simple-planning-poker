@@ -9,5 +9,4 @@ export * from "./edit-game.js";
 export * from "./estimate-player.js";
 export * from "./reset-voting.js";
 export * from "./reveal.js";
-export { newStartVotingUseCase } from "./start-voting.js";
-export type { StartVotingUseCase, StartVotingUseCaseInput, StartVotingUseCaseOutput } from "./start-voting.js";
+export * from "./start-voting.js";
