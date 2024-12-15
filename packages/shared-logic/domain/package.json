@@ -30,7 +30,7 @@
         "default": "./dist/mock/user-repository.js"
       }
     },
-      "./voting-repository": {
+    "./voting-repository": {
       "import": {
         "types": "./src/voting-repository.ts",
         "default": "./dist/voting-repository.js"

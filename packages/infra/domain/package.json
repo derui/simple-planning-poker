@@ -12,6 +12,24 @@
         "types": "./src/index.ts",
         "default": "./dist/index.js"
       }
+    },
+    "./voting-repository": {
+      "import": {
+        "types": "./src/voting-repository.ts",
+        "default": "./dist/voting-repository.js"
+      }
+    },
+    "./game-repository": {
+      "import": {
+        "types": "./src/game-repository.ts",
+        "default": "./dist/game-repository.js"
+      }
+    },
+    "./user-repository": {
+      "import": {
+        "types": "./src/user-repository.ts",
+        "default": "./dist/user-repository.js"
+      }
     }
   },
   "type": "module",

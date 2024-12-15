@@ -1,5 +1,7 @@
-import { User, VoterType, Voting, VotingRepository } from "@spp/shared-domain";
-import { child, Database, get, ref, update } from "firebase/database";
+import { User, VoterType, Voting } from "@spp/shared-domain";
+import { type VotingRepository as I } from "@spp/shared-domain/voting-repository";
+import { child, get, ref, update } from "firebase/database";
+import { getDatabase } from "./database.js";
 import { serialize, Serialized } from "./user-estimation-converter.js";
 import { deserializeFrom } from "./voting-database-deserializer.js";
 import * as resolver from "./voting-ref-resolver.js";
@@ -7,10 +9,8 @@ import * as resolver from "./voting-ref-resolver.js";
 /**
  * Implementation of `VotingRepository`
  */
-export class VotingRepositoryImpl implements VotingRepository.T {
-  constructor(private database: Database) {}
-
-  async save(voting: Voting.T): Promise<void> {
+export const VotingRepository: I = {
+  save: async ({ voting }) => {
     const updates: Record<string, unknown> = {};
     updates[resolver.revealed(voting.id)] = voting.status == Voting.VotingStatus.Revealed;
     updates[resolver.estimations(voting.id)] = Array.from(voting.estimations.userEstimations.entries()).reduce<
@@ -34,15 +34,15 @@ export class VotingRepositoryImpl implements VotingRepository.T {
       updates[resolver.theme(voting.id)] = voting.theme;
     }
 
-    await update(ref(this.database), updates);
-  }
+    await update(ref(getDatabase()), updates);
+  },
 
-  async findBy(id: Voting.Id): Promise<Voting.T | undefined> {
+  findBy: async ({ id }) => {
     if (id === "") {
       return;
     }
-    const snapshot = await get(child(ref(this.database, "voting"), id));
+    const snapshot = await get(child(ref(getDatabase(), "voting"), id));
 
     return deserializeFrom(id, snapshot);
-  }
-}
+  },
+};

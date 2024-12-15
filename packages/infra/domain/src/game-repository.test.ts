@@ -3,10 +3,10 @@ import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-
 import { Database, push, ref, set } from "firebase/database";
 import { v4 } from "uuid";
 import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
-import { GameRepositoryImpl } from "./game-repository.js";
+import { getDatabase, setDatabase } from "./database.js";
+import { GameRepository } from "./game-repository.js";
 import { ownerGames } from "./user-ref-resolver.js";
 
-let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -19,7 +19,8 @@ beforeAll(async () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  const database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  setDatabase(database);
 });
 
 afterAll(async () => {
@@ -39,11 +40,9 @@ test("should be able to save and find a game", async () => {
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });
 
-  const repository = new GameRepositoryImpl(database);
-
   // Act
-  await repository.save(game);
-  const instance = await repository.findBy(game.id);
+  await GameRepository.save({ game });
+  const instance = await GameRepository.findBy({ id: game.id });
 
   // Assert
   expect(instance?.id).toEqual(game.id);
@@ -53,10 +52,9 @@ test("should be able to save and find a game", async () => {
 
 test("should not be able find a game if it did not save before", async () => {
   // Arrange
-  const repository = new GameRepositoryImpl(database);
 
   // Act
-  const instance = await repository.findBy(Game.createId());
+  const instance = await GameRepository.findBy({ id: Game.createId() });
 
   // Assert
   expect(instance).toBeUndefined();
@@ -64,8 +62,6 @@ test("should not be able find a game if it did not save before", async () => {
 
 test("should be able to list games an user created", async () => {
   // Arrange
-  const repository = new GameRepositoryImpl(database);
-
   const [game] = Game.create({
     id: Game.createId("1"),
     name: GameName.create("name"),
@@ -79,8 +75,8 @@ test("should be able to list games an user created", async () => {
     points: ApplicablePoints.create([1, 2].map(StoryPoint.create)),
   });
 
-  await repository.save(game);
-  await repository.save(otherGame);
+  await GameRepository.save({ game });
+  await GameRepository.save({ game: otherGame });
 
   const data = [
     { id: User.createId("1"), gameId: game.id },
@@ -88,12 +84,12 @@ test("should be able to list games an user created", async () => {
   ];
 
   for (const { id, gameId } of data) {
-    const newRef = push(ref(database, ownerGames(User.createId(id))));
+    const newRef = push(ref(getDatabase(), ownerGames(User.createId(id))));
     await set(newRef, { gameId });
   }
 
   // Act
-  const ret = await repository.listUserCreated(User.createId("1"));
+  const ret = await GameRepository.listUserCreated({ user: User.createId("1") });
 
   // Assert
   expect(ret.map((v) => v.id)).toEqual(expect.arrayContaining([game.id]));

@@ -13,11 +13,11 @@ import { Database } from "firebase/database";
 import { enableMapSet } from "immer";
 import { v4 } from "uuid";
 import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
-import { VotingRepositoryImpl } from "./voting-repository.js";
+import { setDatabase } from "./database.js";
+import { VotingRepository } from "./voting-repository.js";
 
 enableMapSet();
 
-let database: Database;
 let testEnv: RulesTestEnvironment;
 
 beforeAll(async () => {
@@ -30,7 +30,8 @@ beforeAll(async () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  const database = testEnv.authenticatedContext("alice").database() as unknown as Database;
+  setDatabase(database);
 });
 
 afterAll(async () => {
@@ -61,11 +62,9 @@ test("should be able to save and find a voting", async () => {
     ],
   });
 
-  const repository = new VotingRepositoryImpl(database);
-
   // Act
-  await repository.save(voting);
-  const instance = await repository.findBy(voting.id);
+  await VotingRepository.save({ voting });
+  const instance = await VotingRepository.findBy({ id: voting.id });
 
   // Assert
   expect(instance?.id).toEqual(voting.id);
@@ -108,12 +107,10 @@ test("should be able to save and find a finished voting", async () => {
   });
   const [finished] = Voting.reveal(voting);
 
-  const repository = new VotingRepositoryImpl(database);
-
   // Act
-  await repository.save(voting);
-  await repository.save(finished);
-  const instance = await repository.findBy(voting.id);
+  await VotingRepository.save({ voting });
+  await VotingRepository.save({ voting: finished });
+  const instance = await VotingRepository.findBy({ id: voting.id });
 
   // Assert
   expect(instance?.status).toBe(Voting.VotingStatus.Revealed);
@@ -156,11 +153,9 @@ test("empty theme as undefined", async () => {
     ],
   });
 
-  const repository = new VotingRepositoryImpl(database);
-
   // Act
-  await repository.save(voting);
-  const instance = await repository.findBy(voting.id);
+  await VotingRepository.save({ voting });
+  const instance = await VotingRepository.findBy({ id: voting.id });
 
   // Assert
   expect(instance?.id).toEqual(voting.id);
@@ -177,10 +172,9 @@ test("empty theme as undefined", async () => {
 
 test("should not be able find a game if it did not save before", async () => {
   // Arrange
-  const repository = new VotingRepositoryImpl(database);
 
   // Act
-  const instance = await repository.findBy(Voting.createId());
+  const instance = await VotingRepository.findBy({ id: Voting.createId() });
 
   // Assert
   expect(instance).toBeUndefined();
