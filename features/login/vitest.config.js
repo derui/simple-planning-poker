@@ -8,6 +8,10 @@ export default mergeConfig(
     test: {
       environment: "jsdom",
       include: ["src/**/*.test.{ts,tsx}"],
+      alias: {
+        "@spp/shared-domain/user-repository": "@spp/shared-domain/mock/user-repository",
+        "@spp/infra-authenticator/base": "@spp/infra-authenticator/memory",
+      },
     },
   })
 );

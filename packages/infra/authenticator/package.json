@@ -7,19 +7,19 @@
     "./dist/"
   ],
   "exports": {
-    ".": {
+    "./base": {
       "import": {
-        "types": "./src/index.ts",
-        "default": "./dist/index.js"
+        "types": "./src/base.ts",
+        "default": "./dist/base.js"
       }
     },
-    "./firebase.js": {
+    "./firebase": {
       "import": {
         "types": "./src/firebase.ts",
         "default": "./dist/firebase.js"
       }
     },
-    "./memory.js": {
+    "./memory": {
       "import": {
         "types": "./src/memory.ts",
         "default": "./dist/memory.js"

@@ -12,6 +12,13 @@ export const setLoggedUser = (userId: User.Id): void => {
 };
 
 /**
+ * Reset logged user
+ */
+export const resetLoggedInUser = (): void => {
+  loggedInUser = undefined;
+};
+
+/**
  * In memory version authenticator
  */
 export const Authenticator: I = {
