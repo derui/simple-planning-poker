@@ -1,49 +1,54 @@
-import { User, UserRepository } from "@spp/shared-domain";
-import { Authenticator } from "./type.js";
+import { User } from "@spp/shared-domain";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { type Authenticator as I } from "./base.js";
+
+let loggedInUser: User.Id | undefined = undefined;
+
+/**
+ * Set logged user
+ */
+export const setLoggedUser = (userId: User.Id): void => {
+  loggedInUser = userId;
+};
 
 /**
  * In memory version authenticator
  */
-export const newMemoryAuthenticator = function newMemoryAuthenticator(
-  userRepository: UserRepository.T,
-  loginedUser?: User.Id
-): Authenticator {
-  return {
-    async signIn(email: string, password: string): Promise<User.Id | undefined> {
-      try {
-        const userId = User.createId(`${email}/${password}`);
-        const user = await userRepository.findBy(userId);
-        if (!user) {
-          return;
-        }
-
-        return user.id;
-      } catch (e) {
-        console.error(e);
-        throw e;
+export const Authenticator: I = {
+  async signIn({ email, password }): Promise<User.Id | undefined> {
+    try {
+      const userId = User.createId(`${email}/${password}`);
+      const user = await UserRepository.findBy({ id: userId });
+      if (!user) {
+        return;
       }
-    },
 
-    async signUp(name: string, email: string, password: string): Promise<User.Id | undefined> {
-      try {
-        const userId = User.createId(`${email}/${password}`);
-        const user = User.create({ id: userId, name });
+      return user.id;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
 
-        if (await userRepository.findBy(userId)) {
-          return;
-        }
+  async signUp({ name, email, password }): Promise<User.Id | undefined> {
+    try {
+      const userId = User.createId(`${email}/${password}`);
+      const user = User.create({ id: userId, name });
 
-        await userRepository.save(user);
-
-        return userId;
-      } catch (e) {
-        console.error(e);
-        throw e;
+      if (await UserRepository.findBy({ id: userId })) {
+        return;
       }
-    },
 
-    async currentUserIdIfExists(): Promise<User.Id | undefined> {
-      return Promise.resolve(loginedUser);
-    },
-  };
+      await UserRepository.save({ user });
+
+      return userId;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+
+  async currentUserIdIfExists(): Promise<User.Id | undefined> {
+    return Promise.resolve(loggedInUser);
+  },
 };

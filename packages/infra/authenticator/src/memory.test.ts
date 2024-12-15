@@ -1,15 +1,18 @@
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { expect, test } from "vitest";
-import { newMemoryAuthenticator } from "./memory.js";
 import { User } from "@spp/shared-domain";
+import { clear } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { beforeEach, expect, test } from "vitest";
+import { Authenticator } from "./memory.js";
+
+beforeEach(() => {
+  clear();
+});
 
 test("should be able to sign up", async () => {
   // Arrange
-  const repository = newMemoryUserRepository();
-  const authenticator = newMemoryAuthenticator(repository);
 
   // Act
-  const ret = await authenticator.signUp("name", "test@example.com", "password");
+  const ret = await Authenticator.signUp({ name: "name", email: "test@example.com", password: "password" });
 
   // Assert
   expect(ret).toEqual(User.createId("test@example.com/password"));
@@ -17,12 +20,10 @@ test("should be able to sign up", async () => {
 
 test("create user when sign up succeeded", async () => {
   // Arrange
-  const repository = newMemoryUserRepository();
-  const authenticator = newMemoryAuthenticator(repository);
 
   // Act
-  const ret = await authenticator.signUp("name", "test@example.com", "password");
-  const user = await repository.findBy(ret!);
+  const ret = await Authenticator.signUp({ name: "name", email: "test@example.com", password: "password" });
+  const user = await UserRepository.findBy({ id: ret! });
 
   // Assert
   expect(user!.name).toEqual("name");
@@ -30,11 +31,9 @@ test("create user when sign up succeeded", async () => {
 
 test("can not sign in if user does not exist", async () => {
   // Arrange
-  const repository = newMemoryUserRepository();
-  const authenticator = newMemoryAuthenticator(repository);
 
   // Act
-  const ret = await authenticator.signIn("test@example.com", "password");
+  const ret = await Authenticator.signIn({ email: "test@example.com", password: "password" });
 
   // Assert
   expect(ret).toBeUndefined();
@@ -42,13 +41,10 @@ test("can not sign in if user does not exist", async () => {
 
 test("can sign in after sign up", async () => {
   // Arrange
-  const repository = newMemoryUserRepository();
-  const authenticator = newMemoryAuthenticator(repository);
-
-  const signInRet = await authenticator.signUp("name", "test@example.com", "password");
+  const signInRet = await Authenticator.signUp({ name: "name", email: "test@example.com", password: "password" });
 
   // Act
-  const ret = await authenticator.signIn("test@example.com", "password");
+  const ret = await Authenticator.signIn({ email: "test@example.com", password: "password" });
 
   // Assert
   expect(ret).toEqual(signInRet);
