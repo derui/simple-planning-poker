@@ -7,6 +7,7 @@ export * from "./create-game.js";
 export * from "./delete-game.js";
 export * from "./edit-game.js";
 export * from "./estimate-player.js";
+export * from "./event-dispatcher.js";
 export * from "./reset-voting.js";
 export * from "./reveal.js";
 export * from "./start-voting.js";
