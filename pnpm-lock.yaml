@@ -400,6 +400,9 @@ importers:
       '@spp/eslint-config':
         specifier: workspace:^
         version: link:../../configs/eslint-config
+      '@spp/infra-authenticator':
+        specifier: workspace:^
+        version: link:../../packages/infra/authenticator
       '@spp/typescript-config':
         specifier: workspace:^
         version: link:../../configs/typescript-config

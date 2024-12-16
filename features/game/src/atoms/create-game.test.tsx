@@ -1,12 +1,21 @@
-import { ApplicablePoints, DomainEvent, Game, GameName, GameRepository, StoryPoint, User } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
-import { newCreateGameUseCase } from "@spp/shared-use-case";
+import { resetLoggedInUser, setLoggedUser } from "@spp/infra-authenticator/memory";
+import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/game-repository";
+import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
+import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
-import { describe, expect, test } from "vitest";
-import { injectUseCreataGame, useCreateGame } from "./create-game.js";
+import { beforeEach, describe, expect, test } from "vitest";
+import { useCreateGame } from "./create-game.js";
 import { CreateGameStatus } from "./type.js";
+
+beforeEach(() => {
+  clear();
+  resetLoggedInUser();
+  clearSubsctiptions();
+  injectErrorOnSave(undefined);
+});
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
@@ -14,12 +23,7 @@ const createWrapper =
 
 test("initial status is creating", () => {
   // Arrange
-  const repository = newMemoryGameRepository();
   const store = createStore();
-  injectUseCreataGame({
-    createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-    useLoginUser: sinon.fake.returns({ userId: undefined }),
-  });
 
   // Act
   const { result } = renderHook(useCreateGame, {
@@ -33,14 +37,10 @@ test("initial status is creating", () => {
 describe("validation", () => {
   test("get error if name is empty", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
 
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId() }),
-    });
+    setLoggedUser(User.createId());
 
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -54,13 +54,10 @@ describe("validation", () => {
 
   test("get error if name is blank", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -73,13 +70,9 @@ describe("validation", () => {
 
   test.each(["", "  "])(`get error if point is empty or blank`, async (v) => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -93,13 +86,9 @@ describe("validation", () => {
 
   test("get error if points have non-numeric character", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -113,13 +102,9 @@ describe("validation", () => {
 
   test("accept comma-separated list", () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -132,13 +117,9 @@ describe("validation", () => {
 
   test("accept large number in points", () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -153,13 +134,9 @@ describe("validation", () => {
 describe("Create", () => {
   test("change waiting status while creating game", () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -172,14 +149,10 @@ describe("Create", () => {
 
   test("completed status after creating is finished", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(dispatcher, repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
@@ -196,14 +169,12 @@ describe("Create", () => {
 
   test("call callback after created", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(dispatcher, repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+
+    subscribe(dispatcher);
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
@@ -219,13 +190,9 @@ describe("Create", () => {
 
   test("created game should have valid values", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
@@ -234,7 +201,7 @@ describe("Create", () => {
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
-    const game = await repository.listUserCreated(User.createId("foo"));
+    const game = await GameRepository.listUserCreated({ user: User.createId("foo") });
 
     // Assert
     expect(game[0].name).toEqual("foo");
@@ -244,13 +211,9 @@ describe("Create", () => {
 
   test("after completed, update owned game list", async () => {
     // Arrange
-    const repository = newMemoryGameRepository();
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     act(() => {
       rerender();
@@ -259,7 +222,7 @@ describe("Create", () => {
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
-    const games = await repository.listUserCreated(User.createId("foo"));
+    const games = await GameRepository.listUserCreated({ user: User.createId("foo") });
 
     // Assert
     expect(games).toHaveLength(1);
@@ -270,17 +233,10 @@ describe("Create", () => {
 
   test("set failed state if create is failed", async () => {
     // Arrange
-    const repository: GameRepository.T = {
-      ...newMemoryGameRepository(),
-      save: sinon.fake.throws(new Error("failed")),
-    };
-
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId());
+    injectErrorOnSave("failed");
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -294,20 +250,17 @@ describe("Create", () => {
 
   test("get error if name is conflicted in owned games", async () => {
     // Arrange
-    const repository = newMemoryGameRepository([
-      Game.create({
+    await GameRepository.save({
+      game: Game.create({
         id: Game.createId(),
         name: GameName.create("bar"),
         owner: User.createId("foo"),
         points: ApplicablePoints.create([StoryPoint.create(1)]),
       })[0],
-    ]);
+    });
     const store = createStore();
     const wrapper = createWrapper(store);
-    injectUseCreataGame({
-      createGameUseCase: newCreateGameUseCase(sinon.fake(), repository),
-      useLoginUser: sinon.fake.returns({ userId: User.createId("foo") }),
-    });
+    setLoggedUser(User.createId("foo"));
     const { result } = renderHook(useCreateGame, { wrapper });
 
     // Act

@@ -17,7 +17,7 @@ export const clear = (): void => {
 /**
  * Inject error on save
  */
-export const injectErrorOnSave = (error: string): void => {
+export const injectErrorOnSave = (error: string | undefined): void => {
   errorOnSave = error;
 };
 
@@ -26,6 +26,10 @@ export const injectErrorOnSave = (error: string): void => {
  */
 export const GameRepository: I = {
   save: ({ game }) => {
+    if (errorOnSave) {
+      throw new Error(errorOnSave);
+    }
+
     data.set(game.id, game);
 
     return Promise.resolve();

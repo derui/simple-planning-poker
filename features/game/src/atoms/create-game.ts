@@ -1,4 +1,4 @@
-import { UseLoginUser } from "@spp/feature-login";
+import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { CreateGameUseCase } from "@spp/shared-use-case";
 import { useAtom } from "jotai";
@@ -6,27 +6,10 @@ import { useCallback } from "react";
 import { CreateGameError, createGameErrorsAtom, createGameStatusAtom } from "./game-atom.js";
 import { CreateGameStatus } from "./type.js";
 
-let createGameUseCase: CreateGameUseCase;
-let useLoginUser: UseLoginUser;
-
-/**
- * Initialize the create game use case
- * @param dep
- */
-export const injectUseCreataGame = (dep: {
-  createGameUseCase: CreateGameUseCase;
-  useLoginUser: UseLoginUser;
-}): void => {
-  createGameUseCase = dep.createGameUseCase;
-  useLoginUser = dep.useLoginUser;
-};
-
-// Hook definitions
-
 /**
  * Hook definition to create game
  */
-export type UseCreateGame = {
+export type UseCreateGame = () => {
   status?: CreateGameStatus;
 
   /**
@@ -43,7 +26,7 @@ export type UseCreateGame = {
 };
 
 // hook implementations
-export const useCreateGame = function useCreateGame(): UseCreateGame {
+export const useCreateGame: UseCreateGame = () => {
   const [status, setStatus] = useAtom(createGameStatusAtom);
   const { userId } = useLoginUser();
   const [errors, setErrors] = useAtom(createGameErrorsAtom);
@@ -57,7 +40,7 @@ export const useCreateGame = function useCreateGame(): UseCreateGame {
       setStatus(CreateGameStatus.Waiting);
 
       const _do = async function _do(userId: User.Id) {
-        const ret = await createGameUseCase({
+        const ret = await CreateGameUseCase({
           createdBy: userId,
           name,
           points: points
@@ -72,21 +55,24 @@ export const useCreateGame = function useCreateGame(): UseCreateGame {
             setStatus(CreateGameStatus.Completed);
             callback?.(ret.game.id);
             break;
-          case "conflictName":
-            setErrors(["NameConflicted"]);
-            setStatus(CreateGameStatus.Failed);
-            return;
-          case "invalidName":
-            setErrors(["InvalidName"]);
-            setStatus(CreateGameStatus.Failed);
-            return;
-          case "invalidStoryPoints":
-            setErrors(["InvalidPoints"]);
-            setStatus(CreateGameStatus.Failed);
-            return;
-          case "failed":
-            setStatus(CreateGameStatus.Failed);
-            return;
+          case "error":
+            switch (ret.detail) {
+              case "invalidName":
+                setErrors(["InvalidName"]);
+                setStatus(CreateGameStatus.Failed);
+                return;
+              case "conflictName":
+                setErrors(["NameConflicted"]);
+                setStatus(CreateGameStatus.Failed);
+                return;
+              case "invalidStoryPoints":
+                setErrors(["InvalidPoints"]);
+                setStatus(CreateGameStatus.Failed);
+                return;
+              case "failed":
+                setStatus(CreateGameStatus.Failed);
+                return;
+            }
         }
       };
 

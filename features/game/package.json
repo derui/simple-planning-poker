@@ -31,6 +31,7 @@
   "license": "ISC",
   "devDependencies": {
     "@spp/eslint-config": "workspace:^",
+    "@spp/infra-authenticator": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@storybook/addon-controls": "catalog:",
     "@storybook/cli": "catalog:",
