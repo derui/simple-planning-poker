@@ -1,5 +1,6 @@
 import { createFacade } from "@spp/shared-hook-facade";
-import { UseAuth, UseLogin } from "../atoms/atom.js";
+import { UseAuth } from "../atoms/use-auth.js";
+import { UseLogin } from "../atoms/use-login.js";
 
 export type Hooks = {
   useAuth: UseAuth;

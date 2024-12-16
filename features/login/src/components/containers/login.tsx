@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AuthStatus } from "../../atoms/atom.js";
+import { AuthStatus } from "../../atoms/use-auth.js";
 import { hooks } from "../../hooks/facade.js";
 import { LoginLayout } from "./login.layout.js";
 

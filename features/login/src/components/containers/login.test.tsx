@@ -4,7 +4,7 @@ import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
-import { AuthStatus } from "../../atoms/atom.js";
+import { AuthStatus } from "../../atoms/use-auth.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { Login } from "./login.js";
 
