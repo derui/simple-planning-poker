@@ -1,4 +1,4 @@
-import { Authenticator } from "@spp/infra-authenticator";
+import { Authenticator } from "@spp/infra-authenticator/base";
 import { atom, useAtom } from "jotai";
 import { useCallback } from "react";
 import { useLoginUser } from "./use-login-user.js";
