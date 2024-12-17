@@ -2,12 +2,12 @@ import { createFacade } from "@spp/shared-hook-facade";
 import { UseCreateGame } from "../atoms/create-game.js";
 import { UseGameDetail } from "../atoms/game-detail.js";
 import { UseGameIndex } from "../atoms/game-index.js";
-import { UseListGames } from "../atoms/list-games.js";
+import { UseGames } from "../atoms/list-games.js";
 import { UseUserHeader } from "../atoms/user-header.js";
 
 export type Hooks = {
   useCreateGame: UseCreateGame;
-  useListGames: UseListGames;
+  useListGames: UseGames;
   useUserHeader: UseUserHeader;
   useGameDetail: UseGameDetail;
   useGameIndex: UseGameIndex;
