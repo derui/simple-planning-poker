@@ -1,10 +1,27 @@
 import { useLoginUser } from "@spp/feature-login";
-import { Game, User } from "@spp/shared-domain";
+import { Game } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/mock/game-repository";
 import { DeleteGameUseCase } from "@spp/shared-use-case";
-import { useAtom, useAtomValue } from "jotai";
-import { useCallback, useState } from "react";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { loadable } from "jotai/utils";
+import { useCallback, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { gamesAtom, selectedGameAtom } from "./game-atom.js";
+
+/**
+ * An atom to store selected game
+ */
+const selectedGameIdAtom = atom<string | undefined>(undefined);
+const asyncSelectedGameAtom = atom<Promise<Game.T | undefined>>(async (get) => {
+  const id = get(selectedGameIdAtom);
+
+  if (!id) {
+    return;
+  }
+
+  return await GameRepository.findBy({ id: Game.createId(id) });
+});
+
+const selectedGameAtom = loadable(asyncSelectedGameAtom);
 
 /**
  * Hook definition to list game
@@ -32,58 +49,64 @@ export type UseCurrentGame = () => {
  * Current game status.
  */
 enum CurrentGameStatus {
-  NotSelect,
-  Selected,
-  Deleting,
+  NotSelect = "not select",
+  Selecting = "selecting",
+  Selected = "selected",
+  Deleting = "deleting",
 }
 
+const currentGameStatusAtom = atom(CurrentGameStatus.NotSelect);
+
 /**
- * Create hook implementation of `UseGameDetail`
+ * Create hook implementation of `CurrentGame`
  */
 export const useCurrentGame: UseCurrentGame = () => {
-  const [state, setState] = useState(CurrentGameStatus.NotSelect);
+  const [state, setStatus] = useAtom(currentGameStatusAtom);
+  const setSelectedId = useSetAtom(selectedGameIdAtom);
   const { userId } = useLoginUser();
-  const [game, setGame] = useAtom(selectedGameAtom);
-  const games = useAtomValue(gamesAtom);
-  const loading = state == CurrentGameStatus.Deleting;
+  const [game] = useAtom(selectedGameAtom);
+  const _game = useMemo(() => {
+    if (game.state == "hasData" && game.data) {
+      return toGameDto(game.data);
+    } else {
+      return;
+    }
+  }, [game.state]);
+  const loading = userId === undefined || state == CurrentGameStatus.Deleting;
   const _delete = useCallback(() => {
-    if (!game || !userId || loading) {
+    if (!_game || !userId || loading) {
       return;
     }
 
     const _do = async () => {
       try {
-        const ret = await DeleteGameUseCase({ gameId: Game.createId(game.id), ownedBy: User.createId(userId) });
+        const ret = await DeleteGameUseCase({ gameId: Game.createId(_game.id), ownedBy: userId });
 
         if (ret.kind == "success") {
-          setGame(undefined);
+          setSelectedId(undefined);
         }
       } catch (err) {
         console.error(err);
       } finally {
-        setState(CurrentGameStatus.NotSelect);
+        setStatus(CurrentGameStatus.NotSelect);
       }
     };
 
-    setState(CurrentGameStatus.Deleting);
-    _do();
-  }, [game, userId, loading]);
+    setStatus(CurrentGameStatus.Deleting);
+    new Promise(async (r) => {
+      await _do();
+      r(undefined);
+    });
+  }, [_game, userId, loading]);
 
-  const select = useCallback(
-    (gameId: string) => {
-      const game = games.find((g) => g.id === gameId);
-
-      setGame(game);
-      if (game) {
-        setState(CurrentGameStatus.Selected);
-      }
-    },
-    [games]
-  );
+  const select = useCallback(async (gameId: string) => {
+    setStatus(CurrentGameStatus.Selecting);
+    setSelectedId(gameId);
+  }, []);
 
   return {
     loading,
-    game: game ? toGameDto(game) : undefined,
+    game: _game,
     select,
     delete: _delete,
   };

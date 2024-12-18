@@ -1,5 +1,7 @@
+import { Authenticator } from "@spp/infra-authenticator/base";
 import { User } from "@spp/shared-domain";
 import { atom, useAtom } from "jotai";
+import { useCallback } from "react";
 
 /**
  * User id that is logined.
@@ -20,6 +22,11 @@ export type UseLoginUser = () => {
    * @param userId
    */
   loginUser: (userId: User.Id | undefined) => void;
+
+  /**
+   *  Check login status
+   */
+  checkLoggedIn: () => void;
 };
 
 /**
@@ -28,8 +35,16 @@ export type UseLoginUser = () => {
 export const useLoginUser: UseLoginUser = () => {
   const [currentUserId, setCurrentUserId] = useAtom(currentUserIdAtom);
 
+  const checkLoggedIn = useCallback(async () => {
+    const userId = await Authenticator.currentUserIdIfExists(undefined);
+    if (userId) {
+      setCurrentUserId(userId);
+    }
+  }, [currentUserId]);
+
   return {
     userId: currentUserId,
     loginUser: setCurrentUserId,
+    checkLoggedIn,
   };
 };
