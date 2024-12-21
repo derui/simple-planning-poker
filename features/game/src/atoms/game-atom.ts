@@ -38,6 +38,11 @@ export const voteStartingStatusAtom: PrimitiveAtom<VoteStartingStatus | undefine
 export type CreateGameError = "NameConflicted" | "InvalidPoints" | "InvalidName";
 
 /**
+ * A validation errors while editing
+ */
+export type EditGameError = "NotFound" | "NameConflicted" | "InvalidPoints" | "InvalidName";
+
+/**
  * An atom to store validation
  */
 export const createGameErrorsAtom: PrimitiveAtom<CreateGameError[]> = atom<CreateGameError[]>([]);

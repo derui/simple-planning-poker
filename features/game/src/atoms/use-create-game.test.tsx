@@ -7,8 +7,8 @@ import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { beforeEach, describe, expect, test } from "vitest";
-import { useCreateGame } from "./create-game.js";
 import { CreateGameStatus } from "./type.js";
+import { useCreateGame } from "./use-create-game.js";
 
 beforeEach(() => {
   clear();

@@ -2,7 +2,7 @@ import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { CreateGameUseCase } from "@spp/shared-use-case";
 import { useAtom } from "jotai";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { CreateGameError, createGameErrorsAtom, createGameStatusAtom } from "./game-atom.js";
 import { CreateGameStatus } from "./type.js";
 
@@ -28,7 +28,7 @@ export type UseCreateGame = () => {
 // hook implementations
 export const useCreateGame: UseCreateGame = () => {
   const [status, setStatus] = useAtom(createGameStatusAtom);
-  const { userId } = useLoginUser();
+  const { userId, checkLoggedIn } = useLoginUser();
   const [errors, setErrors] = useAtom(createGameErrorsAtom);
   const create = useCallback(
     (name: string, points: string, callback?: (gameId: string) => void) => {
@@ -82,6 +82,10 @@ export const useCreateGame: UseCreateGame = () => {
     },
     [userId]
   );
+
+  useEffect(() => {
+    checkLoggedIn();
+  }, [checkLoggedIn]);
 
   return {
     status,
