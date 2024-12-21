@@ -1,6 +1,6 @@
 import { Game } from "@spp/shared-domain";
 import { atom, PrimitiveAtom } from "jotai";
-import { CreateGameStatus, VoteStartingStatus } from "./type.js";
+import { VoteStartingStatus } from "./type.js";
 
 /**
  * enum for game status management
@@ -41,13 +41,6 @@ export type CreateGameError = "NameConflicted" | "InvalidPoints" | "InvalidName"
  * A validation errors while editing
  */
 export type EditGameError = "NotFound" | "NameConflicted" | "InvalidPoints" | "InvalidName";
-
-/**
- * An atom to store validation
- */
-export const createGameErrorsAtom: PrimitiveAtom<CreateGameError[]> = atom<CreateGameError[]>([]);
-
-export const createGameStatusAtom: PrimitiveAtom<CreateGameStatus | undefined> = atom<CreateGameStatus | undefined>();
 
 /**
  * An atom to store selected game
