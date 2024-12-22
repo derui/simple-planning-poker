@@ -61,10 +61,20 @@ export const GameDetailLayout = function GameDetailLayout({
     [game, onSubmit]
   );
 
+  const handleCancel = useCallback(() => {
+    setMode("viewing");
+  }, []);
+
   return (
     <div className={styles.root}>
       {mode === "editing" ? (
-        <GameEditor defaultName={game?.name} defaultPoints={game?.points} onSubmit={handleSubmit} loading={loading} />
+        <GameEditor
+          defaultName={game?.name}
+          defaultPoints={game?.points}
+          onSubmit={handleSubmit}
+          loading={loading}
+          onCancel={handleCancel}
+        />
       ) : (
         <GameDetail
           name={game?.name}

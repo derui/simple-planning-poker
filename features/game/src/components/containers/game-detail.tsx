@@ -1,7 +1,9 @@
 import { Game } from "@spp/shared-domain";
-import { useCallback } from "react";
-import { hooks } from "../../hooks/facade.js";
+import { useCallback, useEffect } from "react";
 import { GameDetailLayout } from "./game-detail.layout.js";
+
+import { useCurrentGame } from "../../atoms/use-current-game.js";
+import { useEditGame } from "../../atoms/use-edit-game.js";
 
 interface Props {
   /**
@@ -11,8 +13,12 @@ interface Props {
 }
 
 export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Element {
-  const { loading, delete: _delete, game } = hooks.useCurrentGame();
-  const { edit } = hooks.useEditGame();
+  const { loading, delete: _delete, game, reload } = useCurrentGame();
+  const { edit, loading: editing } = useEditGame();
+
+  useEffect(() => {
+    reload();
+  }, [editing]);
 
   const handleDelete = useCallback(() => {
     _delete();
@@ -38,7 +44,7 @@ export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Ele
       onDelete={handleDelete}
       onSubmit={handleSubmit}
       onStartVoting={handleStartVoting}
-      loading={loading}
+      loading={loading || editing}
     />
   );
 };

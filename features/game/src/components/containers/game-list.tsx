@@ -1,5 +1,6 @@
 import { useCallback } from "react";
-import { hooks } from "../../hooks/facade.js";
+import { useCurrentGame } from "../../atoms/use-current-game.js";
+import { useGames } from "../../atoms/use-games.js";
 import { GameListLayout } from "./game-list.layout.js";
 
 interface Props {
@@ -10,8 +11,8 @@ interface Props {
 }
 
 export const GameList = function GameList({ onCreate }: Props): JSX.Element {
-  const { games } = hooks.useGames();
-  const { game, select } = hooks.useCurrentGame();
+  const { games } = useGames();
+  const { game, select } = useCurrentGame();
 
   const handleSelect = useCallback((gameId: string) => {
     select(gameId);

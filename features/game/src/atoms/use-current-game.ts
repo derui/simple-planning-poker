@@ -11,7 +11,9 @@ import { GameDto, toGameDto } from "./dto.js";
  * An atom to store selected game
  */
 const selectedGameIdAtom = atom<string | undefined>(undefined);
+const forceReloadAtom = atom<{}>({});
 const asyncSelectedGameAtom = atom<Promise<Game.T | undefined>>(async (get) => {
+  get(forceReloadAtom);
   const id = get(selectedGameIdAtom);
 
   if (!id) {
@@ -27,22 +29,24 @@ const selectedGameAtom = loadable(asyncSelectedGameAtom);
  * Hook definition to list game
  */
 export type UseCurrentGame = () => {
-  loading: boolean;
+  readonly loading: boolean;
 
   /**
    * current selected game.
    */
-  game?: GameDto;
+  readonly game?: GameDto;
 
   /**
    * requesting to select game.
    */
-  select: (gameId: string) => void;
+  readonly select: (gameId: string) => void;
 
   /**
    * Delete current selected game.
    */
-  delete: () => void;
+  readonly delete: () => void;
+
+  readonly reload: () => void;
 };
 
 /**
@@ -63,6 +67,7 @@ const currentGameStatusAtom = atom(CurrentGameStatus.NotSelect);
 export const useCurrentGame: UseCurrentGame = () => {
   const [state, setStatus] = useAtom(currentGameStatusAtom);
   const setSelectedId = useSetAtom(selectedGameIdAtom);
+  const forceReload = useSetAtom(forceReloadAtom);
   const { userId } = useLoginUser();
   const [game] = useAtom(selectedGameAtom);
   const _game = useMemo(() => {
@@ -73,6 +78,11 @@ export const useCurrentGame: UseCurrentGame = () => {
     }
   }, [game]);
   const loading = userId === undefined || state == CurrentGameStatus.Deleting;
+
+  const reload = useCallback(() => {
+    forceReload({});
+  }, []);
+
   const _delete = useCallback(() => {
     if (!_game || !userId || loading) {
       return;
@@ -109,5 +119,6 @@ export const useCurrentGame: UseCurrentGame = () => {
     game: _game,
     select,
     delete: _delete,
+    reload,
   };
 };
