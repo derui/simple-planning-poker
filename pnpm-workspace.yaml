@@ -40,10 +40,10 @@ catalog:
   zod: 3.23.8
 
   # dev:storybook
-  "@storybook/addon-controls": 8.3.3
-  "@storybook/cli": 8.3.3
-  "@storybook/react": 8.3.3
-  "@storybook/react-vite": 8.3.3
+  storybook: 8.4.7
+  "@storybook/addon-controls": 8.4.7
+  "@storybook/react": 8.4.7
+  "@storybook/react-vite": 8.4.7
 
   # dev:eslint and related
   "eslint": 9.13.0

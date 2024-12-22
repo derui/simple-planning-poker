@@ -1,20 +1,31 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { newChangeUserNameUseCase } from "@spp/shared-use-case";
+import { clear } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
-import sinon from "sinon";
-import { createUseUserHeader } from "../../atoms/user-header.js";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
-import { GameIndex } from "./game-index.js";
+import React, { useEffect } from "react";
 import { UserHeader } from "./user-header.js";
 
-const meta: Meta<typeof GameIndex> = {
+const meta: Meta<typeof UserHeader> = {
   title: "Container/User Header",
   component: UserHeader,
   tags: ["autodocs"],
+  beforeEach: () => {
+    clear();
+  },
+};
+
+const Logined = ({ children }: React.PropsWithChildren) => {
+  const { loginUser } = useLoginUser();
+
+  useEffect(() => {
+    loginUser(User.createId("foo"));
+  }, []);
+
+  return children;
 };
 
 export default meta;
@@ -23,58 +34,37 @@ type Story = StoryObj<typeof meta>;
 export const WaitingPrepared: Story = {
   render() {
     const store = createStore();
-    const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
-      useListGames: sinon.fake(),
-      useUserHeader: createUseUserHeader({
-        useLoginUser: () => ({ userId: User.createId("foo") }),
-        userRepository: newMemoryUserRepository(),
-        changeUserNameUseCase: sinon.fake(),
-        changeDefaultVoterModeUseCase: sinon.fake(),
-      }),
-      useGameDetail: sinon.fake(),
-    };
 
     return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
-          <div className={themeClass}>
-            <UserHeader />
-          </div>
-        </Provider>
-      </ImplementationProvider>
+      <Provider store={store}>
+        <div className={themeClass}>
+          <UserHeader />
+        </div>
+      </Provider>
     );
   },
 };
 export const Loaded: Story = {
   render() {
     const store = createStore();
-    const userRepository = newMemoryUserRepository([
-      User.create({
-        id: User.createId("foo"),
-        name: "foobar",
-      }),
-    ]);
-    const hooks: Hooks = {
-      useCreateGame: sinon.fake(),
-      useListGames: sinon.fake(),
-      useUserHeader: createUseUserHeader({
-        useLoginUser: () => ({ userId: User.createId("foo") }),
-        userRepository,
-        changeUserNameUseCase: newChangeUserNameUseCase(sinon.fake(), userRepository),
-        changeDefaultVoterModeUseCase: sinon.fake(),
-      }),
-      useGameDetail: sinon.fake(),
-    };
+
+    useEffect(() => {
+      UserRepository.save({
+        user: User.create({
+          id: User.createId("foo"),
+          name: "foobar",
+        }),
+      });
+    }, []);
 
     return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
+      <Provider store={store}>
+        <Logined>
           <div className={themeClass}>
             <UserHeader />
           </div>
-        </Provider>
-      </ImplementationProvider>
+        </Logined>
+      </Provider>
     );
   },
 };

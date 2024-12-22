@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { hooks } from "../../hooks/facade.js";
+import { useUserInfo } from "../../atoms/use-user-info.js";
 import { UserHeaderLayout } from "./user-header.layout.js";
 
 /**
  * Container for the user header.
  */
 export const UserHeader = function UserHeader(): JSX.Element {
-  const { loginUser, loading: status, changeDefaultVoterMode, editName } = hooks.useUserHeader();
+  const { loginUser, loading, changeDefaultVoterMode, editName } = useUserInfo();
   const [mode, setMode] = useState<"edit" | "view">("view");
 
   useEffect(() => {
-    if (status == "edited") {
+    if (!loading) {
       setMode("view");
     }
-  }, [status]);
+  }, [loading]);
 
   return (
     <UserHeaderLayout

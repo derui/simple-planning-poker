@@ -4,7 +4,7 @@ import { createStore, Provider } from "jotai";
 import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { Hooks, ImplementationProvider } from "../hooks/facade.js";
 import { GameIndex } from "./game-index.js";
 
 afterEach(cleanup);

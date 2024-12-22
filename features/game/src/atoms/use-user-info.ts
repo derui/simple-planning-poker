@@ -68,7 +68,7 @@ export const useUserInfo: UseUserInfo = () => {
         .catch(() => setLoginUser(undefined))
         .finally(() => setLoading(false));
     }
-  }, [userId, setLoading, setLoginUser]);
+  }, [userId]);
 
   const editName = useCallback(
     (newName: string) => {

@@ -53,9 +53,7 @@ test("call cancel callback", async () => {
 test("do not callback if validation returns specific error", async () => {
   // Arrange
   const submit = sinon.fake();
-  render(
-    <GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} onValidate={() => ["NameConflicted"]} />
-  );
+  render(<GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} errors={["NameConflicted"]} />);
 
   // Act
 
@@ -70,7 +68,7 @@ test("do not callback if validation returns specific error", async () => {
 test("call submit if custom callback returns no errors", async () => {
   // Arrange
   const submit = sinon.fake();
-  render(<GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} onValidate={() => []} />);
+  render(<GameEditor defaultName="name" defaultPoints="1,2,3" onSubmit={submit} errors={[]} />);
 
   // Act
 

@@ -33,7 +33,6 @@
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@storybook/addon-controls": "catalog:",
-    "@storybook/cli": "catalog:",
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
@@ -72,6 +71,7 @@
     "react": "catalog:",
     "react-hook-form": "catalog:",
     "react-router-dom": "catalog:",
+    "storybook": "catalog:",
     "zod": "catalog:"
   }
 }

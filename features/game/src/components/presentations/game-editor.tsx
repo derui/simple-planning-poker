@@ -21,7 +21,7 @@ interface Props {
   /**
    * validate input. return errors if exists. This function should return empty array if all argument is valid.
    */
-  onValidate?: (name: string, points: string) => CreateGameError[];
+  errors?: CreateGameError[];
 
   onCancel?: () => void;
 
@@ -41,11 +41,9 @@ const schema = z.object({
     .refine((v) => ApplicablePoints.parse(v), { message: "Invalid points" }),
 });
 
-type Scheme = z.infer<typeof schema>;
-
 // eslint-disable-next-line func-style
 export function GameEditor(props: Props): JSX.Element {
-  const { defaultName, defaultPoints, onSubmit, loading = false, onCancel, onValidate } = props;
+  const { defaultName, defaultPoints, onSubmit, loading = false, onCancel, errors: submitErrors = [] } = props;
 
   const {
     register,
@@ -54,12 +52,9 @@ export function GameEditor(props: Props): JSX.Element {
   } = useForm<Input>({
     resolver: zodResolver(
       schema.refine(
-        (args): args is Scheme => {
-          const { name, points } = args;
-          const errors = onValidate?.(name, points) ?? [];
-
-          if (errors.length > 0) {
-            return errors.every((e) => e != "NameConflicted");
+        () => {
+          if (submitErrors.length > 0) {
+            return submitErrors.every((e) => e != "NameConflicted");
           } else {
             return true;
           }
