@@ -1,11 +1,31 @@
-import { ApplicablePoints, Game, StoryPoint, User } from "@spp/shared-domain";
-import { newMemoryGameRepository } from "@spp/shared-domain/mock/game-repository";
+import { useLoginUser } from "@spp/feature-login";
+import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/game-repository";
+import { clear } from "@spp/shared-domain/mock/game-repository";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
-import sinon from "sinon";
-import { expect, test } from "vitest";
-import { createUseListGames } from "./list-games.js";
+import { beforeEach, expect, test, vi } from "vitest";
+import { useGames } from "./use-games.js";
+
+vi.mock(import("@spp/feature-login"), async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    useLoginUser: vi.fn(),
+  };
+});
+
+beforeEach(() => {
+  clear();
+
+  vi.mocked(useLoginUser).mockReturnValue({
+    userId: User.createId("id"),
+    checkLoggedIn: vi.fn(),
+    loginUser: vi.fn(),
+  });
+});
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
@@ -16,43 +36,30 @@ test("initial status", () => {
   const store = createStore();
 
   // Act
-  const { result } = renderHook(
-    () =>
-      createUseListGames({
-        gameRepository: newMemoryGameRepository(),
-        useLoginUser: sinon.fake.returns({ userId: undefined }),
-      })(),
-    {
-      wrapper: createWrapper(store),
-    }
-  );
+  const { result } = renderHook(useGames, {
+    wrapper: createWrapper(store),
+  });
 
   // Assert
   expect(result.current.games).toHaveLength(0);
-  expect(result.current.status).toBe("loading");
+  expect(result.current.loading).toBe(true);
 });
 
 test("get games after effect", async () => {
   // Arrange
-  const repository = newMemoryGameRepository([
-    Game.create({
-      id: Game.createId(),
-      owner: User.createId("id"),
-      points: ApplicablePoints.create([StoryPoint.create(3)]),
-      name: "game",
-    })[0],
-  ]);
+  const game = Game.create({
+    id: Game.createId(),
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([StoryPoint.create(3)]),
+    name: GameName.create("game"),
+  })[0];
+
+  await GameRepository.save({ game });
   const store = createStore();
   const wrapper = createWrapper(store);
 
   // Act
-  const { result, rerender } = renderHook(
-    createUseListGames({
-      gameRepository: repository,
-      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-    }),
-    { wrapper }
-  );
+  const { result, rerender } = renderHook(useGames, { wrapper });
 
   // Wait a promise
   await act(async () => {});
@@ -60,66 +67,4 @@ test("get games after effect", async () => {
 
   // Assert
   expect(result.current.games).toHaveLength(1);
-});
-
-test("Request to create game", async () => {
-  // Arrange
-  const gameId = Game.createId("game");
-  const repository = newMemoryGameRepository([
-    Game.create({
-      id: gameId,
-      owner: User.createId("id"),
-      points: ApplicablePoints.create([StoryPoint.create(3)]),
-      name: "game",
-    })[0],
-  ]);
-  const store = createStore();
-  const wrapper = createWrapper(store);
-  const { result, rerender } = renderHook(
-    createUseListGames({
-      gameRepository: repository,
-      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-    }),
-    { wrapper }
-  );
-  await act(async () => {});
-
-  // Act
-  result.current.requestCreate();
-  rerender();
-
-  // Assert
-  expect(result.current.status).toBe("creating");
-});
-
-test("select game", async () => {
-  // Arrange
-  const gameId = Game.createId("game");
-  const game = Game.create({
-    id: gameId,
-    owner: User.createId("id"),
-    points: ApplicablePoints.create([StoryPoint.create(3)]),
-    name: "game name",
-  })[0];
-  const repository = newMemoryGameRepository([game]);
-  const store = createStore();
-  const wrapper = createWrapper(store);
-  const { result, rerender } = renderHook(
-    createUseListGames({
-      gameRepository: repository,
-      useLoginUser: sinon.fake.returns({ userId: User.createId("id") }),
-    }),
-    { wrapper }
-  );
-  await act(async () => {});
-
-  // Act
-  result.current.select("game");
-
-  await act(async () => {});
-  rerender();
-
-  // Assert
-  expect(result.current.selectedGame?.id).toEqual("game");
-  expect(result.current.selectedGame?.name).toEqual("game name");
 });

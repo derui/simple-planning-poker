@@ -2,7 +2,7 @@ import { useLoginUser } from "@spp/feature-login";
 import { Game } from "@spp/shared-domain";
 import { EditGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom } from "jotai";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { EditGameError } from "./game-atom.js";
 
 /**
@@ -36,7 +36,7 @@ export type UseEditGame = () => {
  * Create hook implementation of `UseGameEditor`
  */
 export const useEditGame: UseEditGame = () => {
-  const { userId, checkLoggedIn } = useLoginUser();
+  const { userId } = useLoginUser();
   const [loading, setLoading] = useAtom(editingGameAtom);
   const [errors, setErrors] = useAtom(editGameErrorsAtom);
   const edit = useCallback(
@@ -90,10 +90,6 @@ export const useEditGame: UseEditGame = () => {
     },
     [userId, loading]
   );
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, [checkLoggedIn]);
 
   return {
     loading,

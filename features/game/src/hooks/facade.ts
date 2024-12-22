@@ -3,12 +3,12 @@ import { UseCreateGame } from "../atoms/create-game.js";
 import { UseGameDetail } from "../atoms/game-detail.js";
 import { UseGameIndex } from "../atoms/game-index.js";
 import { UseGames } from "../atoms/list-games.js";
-import { UseUserHeader } from "../atoms/user-header.js";
+import { UseUserInfo } from "../atoms/user-header.js";
 
 export type Hooks = {
   useCreateGame: UseCreateGame;
   useListGames: UseGames;
-  useUserHeader: UseUserHeader;
+  useUserHeader: UseUserInfo;
   useGameDetail: UseGameDetail;
   useGameIndex: UseGameIndex;
 };

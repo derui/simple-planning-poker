@@ -10,7 +10,7 @@ export default mergeConfig(
       include: ["src/**/*.test.{ts,tsx}"],
       alias: {
         "@spp/shared-domain/game-repository": "@spp/shared-domain/mock/game-repository",
-        "@spp/infra-authenticator/base": "@spp/infra-authenticator/memory",
+        "@spp/shared-domain/user-repository": "@spp/shared-domain/mock/user-repository",
       },
     },
   })

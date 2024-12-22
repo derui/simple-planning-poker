@@ -1,40 +1,34 @@
 import { useLoginUser } from "@spp/feature-login";
-import { resetLoggedInUser, setLoggedUser } from "@spp/infra-authenticator/memory";
 import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear } from "@spp/shared-domain/mock/game-repository";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import React, { useEffect } from "react";
-import { beforeEach, expect, test } from "vitest";
+import { beforeEach, expect, test, vi } from "vitest";
 import { toGameDto } from "./dto.js";
 import { useCurrentGame } from "./use-current-game.js";
 
+vi.mock(import("@spp/feature-login"), async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    useLoginUser: vi.fn(),
+  };
+});
+
 beforeEach(() => {
   clear();
-  resetLoggedInUser();
-  setLoggedUser(User.createId("id"));
+  vi.mocked(useLoginUser).mockReturnValue({
+    userId: User.createId("id"),
+    checkLoggedIn: vi.fn(),
+    loginUser: vi.fn(),
+  });
 });
 
 const createWrapper =
   (store: ReturnType<typeof createStore>) =>
-  ({ children }: { children: React.ReactNode }) => {
-    const C = ({ children }: { children: React.ReactNode }) => {
-      const { checkLoggedIn } = useLoginUser();
-
-      useEffect(() => {
-        checkLoggedIn();
-      }, []);
-
-      return children;
-    };
-
-    return (
-      <Provider store={store}>
-        <C>{children}</C>
-      </Provider>
-    );
-  };
+  ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
 
 test("initial status", async () => {
   // Arrange
@@ -112,16 +106,14 @@ test("should be able to delete game", async () => {
   await GameRepository.save({ game });
   const store = createStore();
 
-  const { result, rerender } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
+  const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
   // Act
   await act(async () => {
     result.current.select(game.id);
   });
-  rerender();
-  result.current.delete();
+  await act(async () => result.current.delete());
   await waitFor(async () => !result.current.loading);
-  rerender();
 
   // Assert
   expect(result.current.game).toBeUndefined();

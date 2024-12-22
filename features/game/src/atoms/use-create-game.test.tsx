@@ -1,4 +1,3 @@
-import { resetLoggedInUser, setLoggedUser } from "@spp/infra-authenticator/memory";
 import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
@@ -6,12 +5,20 @@ import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { useCreateGame } from "./use-create-game.js";
+
+vi.mock("@spp/feature-login", () => {
+  return {
+    useLoginUser: () => ({
+      userId: "user",
+      checkLoggedIn: () => {},
+    }),
+  };
+});
 
 beforeEach(() => {
   clear();
-  resetLoggedInUser();
   clearSubsctiptions();
   injectErrorOnSave(undefined);
 });
@@ -40,12 +47,9 @@ describe("validation", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
 
-    setLoggedUser(User.createId());
-
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
     await act(async () => result.current.create("", "1"));
     rerender();
 
@@ -58,11 +62,9 @@ describe("validation", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
 
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
     await act(async () => Promise.resolve(result.current.create("   ", "1")));
     rerender();
 
@@ -74,11 +76,9 @@ describe("validation", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
     await act(async () => Promise.resolve(result.current.create("foo", v)));
     rerender();
 
@@ -91,11 +91,9 @@ describe("validation", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
     await act(async () => Promise.resolve(result.current.create("foo", "a,b")));
     rerender();
 
@@ -108,7 +106,6 @@ describe("validation", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -124,7 +121,6 @@ describe("validation", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
@@ -142,7 +138,6 @@ describe("Create", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
@@ -159,9 +154,8 @@ describe("Create", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
-    setLoggedUser(User.createId("foo"));
     subscribe(dispatcher);
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
     // Act
@@ -181,8 +175,7 @@ describe("Create", () => {
     const dispatcher = sinon.fake<[DomainEvent.T]>();
 
     subscribe(dispatcher);
-    setLoggedUser(User.createId("foo"));
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
     // Act
@@ -197,48 +190,45 @@ describe("Create", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
-    const game = await GameRepository.listUserCreated({ user: User.createId("foo") });
+    const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
     // Assert
-    expect(game[0].name).toEqual("foo");
-    expect(ApplicablePoints.contains(game[0].points, StoryPoint.create(1))).toBeTruthy();
-    expect(game[0].points).toHaveLength(1);
+    expect(games[0].name).toEqual("foo");
+    expect(ApplicablePoints.contains(games[0].points, StoryPoint.create(1))).toBeTruthy();
+    expect(games[0].points).toHaveLength(1);
   });
 
   test("after completed, update owned game list", async () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
-    const games = await GameRepository.listUserCreated({ user: User.createId("foo") });
+    const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
     // Assert
     expect(games).toHaveLength(1);
     expect(games[0].name).toEqual("foo");
     expect(games[0].points).toEqual(ApplicablePoints.parse("1"));
-    expect(games[0].owner).toEqual(User.createId("foo"));
+    expect(games[0].owner).toEqual(User.createId("user"));
   });
 
   test("set failed state if create is failed", async () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId());
     injectErrorOnSave("failed");
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
 
     // Act
@@ -254,15 +244,13 @@ describe("Create", () => {
       game: Game.create({
         id: Game.createId(),
         name: GameName.create("bar"),
-        owner: User.createId("foo"),
+        owner: User.createId("user"),
         points: ApplicablePoints.create([StoryPoint.create(1)]),
       })[0],
     });
     const store = createStore();
     const wrapper = createWrapper(store);
-    setLoggedUser(User.createId("foo"));
     const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
 
     // Act
     await act(async () => result.current.create("bar", "1"));

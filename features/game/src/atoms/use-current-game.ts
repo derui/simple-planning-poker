@@ -15,7 +15,7 @@ const asyncSelectedGameAtom = atom<Promise<Game.T | undefined>>(async (get) => {
   const id = get(selectedGameIdAtom);
 
   if (!id) {
-    return;
+    return undefined;
   }
 
   return await GameRepository.findBy({ id: Game.createId(id) });
@@ -71,7 +71,7 @@ export const useCurrentGame: UseCurrentGame = () => {
     } else {
       return;
     }
-  }, [game.state]);
+  }, [game]);
   const loading = userId === undefined || state == CurrentGameStatus.Deleting;
   const _delete = useCallback(() => {
     if (!_game || !userId || loading) {
