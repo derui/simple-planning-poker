@@ -1,43 +1,54 @@
-import { Game } from "@spp/shared-domain";
-import { atom, PrimitiveAtom } from "jotai";
-import { VoteStartingStatus } from "./type.js";
+import { Game, User } from "@spp/shared-domain";
+import { GameRepository } from "@spp/shared-domain/game-repository";
+import { Atom, atom, WritableAtom } from "jotai";
+import { loadable } from "jotai/utils";
+import { Loadable } from "jotai/vanilla/utils/loadable";
+
+const selectedGameIdAtom = atom<Game.Id | undefined>(undefined);
+
+const asyncCurrentGameAtom = atom(async (get) => {
+  const id = get(selectedGameIdAtom);
+
+  if (!id) return undefined;
+
+  return await GameRepository.findBy({ id });
+});
 
 /**
- * enum for game status management
+ * The current game atom.
  */
-export enum GameStatus {
-  NotSelect = "notSelect",
-  Create = "create",
-  Creating = "creating",
-  Edit = "edit",
-  Editing = "editing",
-  Deleting = "deleting",
-  Detail = "detail",
-}
+export const currentGameAtom: Atom<Loadable<Promise<Game.T | undefined>>> = loadable(asyncCurrentGameAtom);
+export const loadGameAtom: WritableAtom<null, [gameId: Game.Id], void> = atom(null, (_get, set, gameId: Game.Id) => {
+  set(selectedGameIdAtom, gameId);
+});
 
 /**
- * Atom to store game status
+ * Reset the current game to unselected.
  */
-export const gameStatusAtom: PrimitiveAtom<GameStatus> = atom<GameStatus>(GameStatus.Detail);
+export const resetGameAtom: WritableAtom<null, [], void> = atom(null, (_get, set) => {
+  set(selectedGameIdAtom, undefined);
+});
 
 /**
- * Atom to store starting vote
+ * All games that user is helding
  */
-export const voteStartingStatusAtom: PrimitiveAtom<VoteStartingStatus | undefined> = atom<
-  VoteStartingStatus | undefined
->();
+const loginUserIdAtom = atom<User.Id | undefined>();
+const asyncGamesAtom = atom(async (get) => {
+  const userId = get(loginUserIdAtom);
+
+  if (!userId) return [];
+
+  return await GameRepository.listUserCreated({ user: userId });
+});
 
 /**
- * A validation errors
+ * All games that user is helding
  */
-export type CreateGameError = "NameConflicted" | "InvalidPoints" | "InvalidName";
+export const gamesAtom: Atom<Loadable<Promise<Game.T[]>>> = loadable(asyncGamesAtom);
 
 /**
- * A validation errors while editing
+ * Load games with the user
  */
-export type EditGameError = "NotFound" | "NameConflicted" | "InvalidPoints" | "InvalidName";
-
-/**
- * An atom to store selected game
- */
-export const selectedGameAtom: PrimitiveAtom<Game.T | undefined> = atom<Game.T | undefined>(undefined);
+export const loadGamesAtom: WritableAtom<null, [userId: User.Id], void> = atom(null, (_get, set, userId: User.Id) => {
+  set(loginUserIdAtom, userId);
+});

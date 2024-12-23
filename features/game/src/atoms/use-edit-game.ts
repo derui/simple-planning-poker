@@ -3,7 +3,7 @@ import { Game } from "@spp/shared-domain";
 import { EditGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom } from "jotai";
 import { useCallback } from "react";
-import { EditGameError } from "./game-atom.js";
+import { EditGameError } from "./type.js";
 
 /**
  * An atom to store validation

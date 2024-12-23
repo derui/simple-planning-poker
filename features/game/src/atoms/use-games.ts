@@ -1,16 +1,8 @@
 import { useLoginUser } from "@spp/feature-login";
-import { Game } from "@spp/shared-domain";
-import { GameRepository } from "@spp/shared-domain/game-repository";
-import { atom, useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-
-/**
- * games that are owned by or joined by an user
- */
-const gamesAtom = atom<Game.T[]>([]);
-
-const loadingAtom = atom<boolean>(false);
+import { gamesAtom, loadGamesAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -28,30 +20,22 @@ export type UseGames = () => {
  * Create hook implementation of `UseListGame`
  */
 export const useGames: UseGames = () => {
-  const [loading, setLoading] = useAtom(loadingAtom);
-  const [games, setGames] = useAtom(gamesAtom);
+  const games = useAtomValue(gamesAtom);
+  const loadGames = useSetAtom(loadGamesAtom);
   const { userId } = useLoginUser();
+  const loading = games.state == "loading";
 
   const gameValues = useMemo(() => {
-    if (!userId) {
-      return [];
+    if (games.state == "hasData") {
+      return games.data.map((game) => toGameDto(game));
     }
 
-    const values = games.map((game) => toGameDto(game));
-    return values;
+    return [];
   }, [userId, games]);
 
   useEffect((): void => {
-    setLoading(true);
     if (userId) {
-      GameRepository.listUserCreated({ user: userId })
-        .then((games) => {
-          setGames(games);
-          setLoading(false);
-        })
-        .catch(() => {
-          setGames([]);
-        });
+      loadGames(userId);
     }
   }, [userId]);
 

@@ -1,29 +1,10 @@
 import { useLoginUser } from "@spp/feature-login";
 import { Game } from "@spp/shared-domain";
-import { GameRepository } from "@spp/shared-domain/mock/game-repository";
 import { DeleteGameUseCase } from "@spp/shared-use-case";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { loadable } from "jotai/utils";
 import { useCallback, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-
-/**
- * An atom to store selected game
- */
-const selectedGameIdAtom = atom<string | undefined>(undefined);
-const forceReloadAtom = atom<{}>({});
-const asyncSelectedGameAtom = atom<Promise<Game.T | undefined>>(async (get) => {
-  get(forceReloadAtom);
-  const id = get(selectedGameIdAtom);
-
-  if (!id) {
-    return undefined;
-  }
-
-  return await GameRepository.findBy({ id: Game.createId(id) });
-});
-
-const selectedGameAtom = loadable(asyncSelectedGameAtom);
+import { currentGameAtom, loadGameAtom, resetGameAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -45,8 +26,6 @@ export type UseCurrentGame = () => {
    * Delete current selected game.
    */
   readonly delete: () => void;
-
-  readonly reload: () => void;
 };
 
 /**
@@ -66,10 +45,10 @@ const currentGameStatusAtom = atom(CurrentGameStatus.NotSelect);
  */
 export const useCurrentGame: UseCurrentGame = () => {
   const [state, setStatus] = useAtom(currentGameStatusAtom);
-  const setSelectedId = useSetAtom(selectedGameIdAtom);
-  const forceReload = useSetAtom(forceReloadAtom);
+  const loadGame = useSetAtom(loadGameAtom);
+  const resetGame = useSetAtom(resetGameAtom);
   const { userId } = useLoginUser();
-  const [game] = useAtom(selectedGameAtom);
+  const [game] = useAtom(currentGameAtom);
   const _game = useMemo(() => {
     if (game.state == "hasData" && game.data) {
       return toGameDto(game.data);
@@ -78,10 +57,6 @@ export const useCurrentGame: UseCurrentGame = () => {
     }
   }, [game]);
   const loading = userId === undefined || state == CurrentGameStatus.Deleting;
-
-  const reload = useCallback(() => {
-    forceReload({});
-  }, []);
 
   const _delete = useCallback(() => {
     if (!_game || !userId || loading) {
@@ -93,7 +68,7 @@ export const useCurrentGame: UseCurrentGame = () => {
         const ret = await DeleteGameUseCase({ gameId: Game.createId(_game.id), ownedBy: userId });
 
         if (ret.kind == "success") {
-          setSelectedId(undefined);
+          resetGame();
         }
       } catch (err) {
         console.error(err);
@@ -111,7 +86,7 @@ export const useCurrentGame: UseCurrentGame = () => {
 
   const select = useCallback(async (gameId: string) => {
     setStatus(CurrentGameStatus.Selecting);
-    setSelectedId(gameId);
+    loadGame(Game.createId(gameId));
   }, []);
 
   return {
@@ -119,6 +94,5 @@ export const useCurrentGame: UseCurrentGame = () => {
     game: _game,
     select,
     delete: _delete,
-    reload,
   };
 };

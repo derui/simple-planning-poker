@@ -25,3 +25,13 @@ export enum CreateGameStatus {
    */
   Waiting = "waiting",
 }
+
+/**
+ * A validation errors
+ */
+export type CreateGameError = "NameConflicted" | "InvalidPoints" | "InvalidName";
+
+/**
+ * A validation errors while editing
+ */
+export type EditGameError = "NotFound" | "NameConflicted" | "InvalidPoints" | "InvalidName";

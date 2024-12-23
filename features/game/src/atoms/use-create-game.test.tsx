@@ -168,24 +168,6 @@ describe("Create", () => {
     expect(Game.isGameCreated(dispatcher.lastCall.args[0])).toBeTruthy();
   });
 
-  test("call callback after created", async () => {
-    // Arrange
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const dispatcher = sinon.fake<[DomainEvent.T]>();
-
-    subscribe(dispatcher);
-    const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
-
-    // Act
-    const callback = sinon.fake();
-    await act(async () => Promise.resolve(result.current.create("foo", "1", callback)));
-
-    // Assert
-    expect(callback.called).toBeTruthy();
-  });
-
   test("created game should have valid values", async () => {
     // Arrange
     const store = createStore();

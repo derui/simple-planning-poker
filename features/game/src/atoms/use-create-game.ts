@@ -1,9 +1,10 @@
 import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { CreateGameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom } from "jotai";
-import { useCallback, useEffect } from "react";
-import { CreateGameError } from "./game-atom.js";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { useCallback } from "react";
+import { loadGamesAtom } from "./game-atom.js";
+import { CreateGameError } from "./type.js";
 
 /**
  * An atom to store validation
@@ -31,16 +32,17 @@ export type UseCreateGame = () => {
    *
    * @param callback Callback after a game is created
    */
-  create: (name: string, points: string, callback?: (gameId: string) => void) => void;
+  create: (name: string, points: string) => void;
 };
 
 // hook implementations
 export const useCreateGame: UseCreateGame = () => {
   const [loading, setLoading] = useAtom(loadingAtom);
-  const { userId, checkLoggedIn } = useLoginUser();
+  const { userId } = useLoginUser();
   const [errors, setErrors] = useAtom(createGameErrorsAtom);
+  const loadGames = useSetAtom(loadGamesAtom);
   const create = useCallback(
-    (name: string, points: string, callback?: (gameId: string) => void) => {
+    (name: string, points: string) => {
       if (!userId || loading) {
         return;
       }
@@ -60,7 +62,7 @@ export const useCreateGame: UseCreateGame = () => {
 
         switch (ret.kind) {
           case "success":
-            callback?.(ret.game.id);
+            loadGames(userId);
             break;
           case "error":
             switch (ret.detail) {
@@ -85,10 +87,6 @@ export const useCreateGame: UseCreateGame = () => {
     },
     [userId, loading]
   );
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, [checkLoggedIn]);
 
   return {
     loading,
