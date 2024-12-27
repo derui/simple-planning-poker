@@ -1,28 +1,28 @@
 import { useLoginUser } from "@spp/feature-login";
 import { User, VoterType } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/user-repository";
-import { ChangeDefaultVoterTypeUseCase, ChangeUserNameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { ChangeUserNameUseCase } from "@spp/shared-use-case";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 import { VoterMode } from "../components/type.js";
 import { toUserDto, UserDto } from "./dto.js";
+import { editUserNameAtom, loadUserAtom, loginUserAtom } from "./user-atom.js";
 
-const statusAtom = atom<boolean>(false);
-const loginUserAtom = atom<User.T | undefined>(undefined);
 const voterModeAtom = atom<VoterMode | undefined>((get) => {
   const user = get(loginUserAtom);
 
-  if (!user) {
+  if (user.state != 'hasData' || !user.data) {
     return;
   }
-  const voterType = user.defaultVoterType;
+  
+  const voterType = user.data.defaultVoterType;
   if (voterType === VoterType.Normal) {
     return VoterMode.Normal;
   }
-  if (voterType === VoterType.Inspector) {
-    return VoterMode.Inspector;
-  }
+  return VoterMode.Inspector;
 });
+
+const loadingAtom = atom<boolean>(false);
 
 /**
  * Hook definition to list game
@@ -52,48 +52,25 @@ export type UseUserInfo = () => {
  * Create hook implementation of `UseListGame`
  */
 export const useUserInfo: UseUserInfo = () => {
-  const [loading, setLoading] = useAtom(statusAtom);
-  const [loginUser, setLoginUser] = useAtom(loginUserAtom);
+  const loadUser = useSetAtom(loadUserAtom);
+  const loginUser = useAtomValue(loginUserAtom)
+  const editUserName = useSetAtom(editUserNameAtom);
   const { userId } = useLoginUser();
   const voterMode = useAtomValue(voterModeAtom);
 
   useEffect(() => {
-    setLoading(true);
-
     if (userId) {
-      UserRepository.findBy({ id: userId })
-        .then((user) => {
-          setLoginUser(user);
-        })
-        .catch(() => setLoginUser(undefined))
-        .finally(() => setLoading(false));
+      loadUser(userId);
     }
   }, [userId]);
 
   const editName = useCallback(
     (newName: string) => {
-      if (!userId) {
+      if (!loginUser || !User.canChangeName(newName)) {
         return;
       }
 
-      setLoading(true);
-      ChangeUserNameUseCase({
-        userId,
-        name: newName,
-      })
-        .then((ret) => {
-          switch (ret.kind) {
-            case "success":
-              setLoginUser(ret.user);
-              break;
-            default:
-              setLoginUser(undefined);
-              break;
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      editUserName(newName)
     },
     [userId]
   );
@@ -103,27 +80,25 @@ export const useUserInfo: UseUserInfo = () => {
       if (!userId) {
         return;
       }
-
-      const voterType = newMode == VoterMode.Inspector ? VoterType.Inspector : VoterType.Normal;
-
       setLoading(true);
-      ChangeDefaultVoterTypeUseCase({
-        userId: userId,
-        voterType,
-      })
-        .then((ret) => {
-          switch (ret.kind) {
-            case "success":
-              setLoginUser(ret.user);
-              break;
-            default:
-              setLoginUser(undefined);
-              break;
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+
+      (async () => {
+      const voterType = newMode == VoterMode.Inspector ? VoterType.Inspector : VoterType.Normal;
+      const user = await UserRepository.findBy({ id: userId });
+      if (!user) {
+        loadUser(undefined)
+        return;
+      }
+
+      const newUser = User.changeDefaultVoterType(user, voterType);
+
+      await UserRepository.save({ user: newUser });
+      
+      loadUser(newUser);
+        
+      })().finally({
+        setLoading(false);
+      });
     },
     [userId]
   );

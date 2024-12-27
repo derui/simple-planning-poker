@@ -17,7 +17,7 @@ const asyncCurrentGameAtom = atom(async (get) => {
 /**
  * The current game atom.
  */
-export const currentGameAtom: Atom<Loadable<Promise<Game.T | undefined>>> = loadable(asyncCurrentGameAtom);
+export const currentGameAtom: Atom<Loadable<Game.T | undefined>> = loadable(asyncCurrentGameAtom);
 export const loadGameAtom: WritableAtom<null, [gameId: Game.Id], void> = atom(null, (_get, set, gameId: Game.Id) => {
   set(selectedGameIdAtom, gameId);
 });
@@ -44,7 +44,7 @@ const asyncGamesAtom = atom(async (get) => {
 /**
  * All games that user is helding
  */
-export const gamesAtom: Atom<Loadable<Promise<Game.T[]>>> = loadable(asyncGamesAtom);
+export const gamesAtom: Atom<Loadable<Game.T[]>> = loadable(asyncGamesAtom);
 
 /**
  * Load games with the user
