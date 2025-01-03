@@ -25,14 +25,14 @@ export const injectErrorOnSave = (error: string | undefined): void => {
  * Make In-memory version `GameRepository.T` for testing purpose.
  */
 export const GameRepository: I = {
-  save: ({ game }) => {
+  save: async ({ game }) => {
     if (errorOnSave) {
       throw new Error(errorOnSave);
     }
 
     data.set(game.id, game);
 
-    return Promise.resolve();
+    return;
   },
 
   findBy: ({ id }) => {

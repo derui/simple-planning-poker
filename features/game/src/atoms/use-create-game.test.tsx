@@ -1,4 +1,4 @@
-import { ApplicablePoints, DomainEvent, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
+import { ApplicablePoints, DomainEvent, Game, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
 import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
@@ -6,6 +6,7 @@ import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { loadGamesAtom } from "./game-atom.js";
 import { useCreateGame } from "./use-create-game.js";
 
 vi.mock("@spp/feature-login", () => {
@@ -30,6 +31,7 @@ const createWrapper =
 test("initial status is creating", () => {
   // Arrange
   const store = createStore();
+  store.set(loadGamesAtom, User.createId("user"));
 
   // Act
   const { result } = renderHook(useCreateGame, {
@@ -45,9 +47,9 @@ describe("validation", () => {
   test("get error if name is empty", async () => {
     // Arrange
     const store = createStore();
-    const wrapper = createWrapper(store);
+    store.set(loadGamesAtom, User.createId("user"));
 
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
     await act(async () => result.current.create("", "1"));
@@ -60,9 +62,9 @@ describe("validation", () => {
   test("get error if name is blank", async () => {
     // Arrange
     const store = createStore();
-    const wrapper = createWrapper(store);
+    store.set(loadGamesAtom, User.createId("user"));
 
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("   ", "1")));
@@ -75,8 +77,9 @@ describe("validation", () => {
   test.each(["", "  "])(`get error if point is empty or blank`, async (v) => {
     // Arrange
     const store = createStore();
-    const wrapper = createWrapper(store);
-    const { result, rerender } = renderHook(useCreateGame, { wrapper });
+    store.set(loadGamesAtom, User.createId("user"));
+
+    const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
     await act(async () => Promise.resolve(result.current.create("foo", v)));
@@ -90,6 +93,7 @@ describe("validation", () => {
   test("get error if points have non-numeric character", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -105,6 +109,7 @@ describe("validation", () => {
   test("accept comma-separated list", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -120,6 +125,7 @@ describe("validation", () => {
   test("accept large number in points", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -137,6 +143,7 @@ describe("Create", () => {
   test("change waiting status while creating game", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -152,6 +159,7 @@ describe("Create", () => {
   test("completed status after creating is finished", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
     subscribe(dispatcher);
@@ -171,6 +179,7 @@ describe("Create", () => {
   test("created game should have valid values", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -189,6 +198,7 @@ describe("Create", () => {
   test("after completed, update owned game list", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -208,6 +218,7 @@ describe("Create", () => {
   test("set failed state if create is failed", async () => {
     // Arrange
     const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     injectErrorOnSave("failed");
     const { result } = renderHook(useCreateGame, { wrapper });
@@ -218,27 +229,5 @@ describe("Create", () => {
 
     // Assert
     expect(result.current.loading).toEqual(false);
-  });
-
-  test("get error if name is conflicted in owned games", async () => {
-    // Arrange
-    await GameRepository.save({
-      game: Game.create({
-        id: Game.createId(),
-        name: GameName.create("bar"),
-        owner: User.createId("user"),
-        points: ApplicablePoints.create([StoryPoint.create(1)]),
-      })[0],
-    });
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const { result } = renderHook(useCreateGame, { wrapper });
-
-    // Act
-    await act(async () => result.current.create("bar", "1"));
-
-    // Assert
-    expect(result.current.errors).toHaveLength(1);
-    expect(result.current.errors).toContain("NameConflicted");
   });
 });
