@@ -2,7 +2,7 @@ import { ApplicablePoints, Game, GameName, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { dispatch } from "@spp/shared-use-case";
 import { Atom, atom, WritableAtom } from "jotai";
-import { atomWithRefresh, loadable } from "jotai/utils";
+import { atomWithRefresh, loadable, unwrap } from "jotai/utils";
 import { Loadable } from "jotai/vanilla/utils/loadable";
 import { CreateGameError } from "./type.js";
 
@@ -24,11 +24,40 @@ export const loadGameAtom: WritableAtom<null, [gameId: Game.Id], void> = atom(nu
   set(selectedGameIdAtom, gameId);
 });
 
+const internalGameDeletingAtom = atom(false);
+
 /**
- * Reset the current game to unselected.
+ * Loading state of the current game.
  */
-export const resetGameAtom: WritableAtom<null, [], void> = atom(null, (_get, set) => {
-  set(selectedGameIdAtom, undefined);
+export const gameDeletingAtom: Atom<boolean> = atom((get) => get(internalGameDeletingAtom));
+
+/**
+ * Delete current game. After deleting, the current game atom will be set to undefined.
+ */
+export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+  const game = get(unwrap(asyncCurrentGameAtom));
+  const deleting = get(internalGameDeletingAtom);
+  const userId = get(loginUserIdAtom);
+  if (!game || deleting) {
+    return;
+  }
+
+  if (game.owner != userId) {
+    return;
+  }
+
+  set(internalGameDeletingAtom, true);
+
+  GameRepository.delete({ game })
+    .then(() => {
+      set(selectedGameIdAtom, undefined);
+    })
+    .catch((e) => {
+      console.warn(e);
+    })
+    .finally(() => {
+      set(internalGameDeletingAtom, false);
+    });
 });
 
 /**

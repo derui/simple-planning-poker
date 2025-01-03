@@ -1,10 +1,8 @@
-import { useLoginUser } from "@spp/feature-login";
 import { Game } from "@spp/shared-domain";
-import { DeleteGameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { currentGameAtom, loadGameAtom, resetGameAtom } from "./game-atom.js";
+import { currentGameAtom, deleteCurrentGameAtom, gameDeletingAtom, loadGameAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -29,26 +27,14 @@ export type UseCurrentGame = () => {
 };
 
 /**
- * Current game status.
- */
-enum CurrentGameStatus {
-  NotSelect = "not select",
-  Selecting = "selecting",
-  Selected = "selected",
-  Deleting = "deleting",
-}
-
-const currentGameStatusAtom = atom(CurrentGameStatus.NotSelect);
-
-/**
  * Create hook implementation of `CurrentGame`
  */
 export const useCurrentGame: UseCurrentGame = () => {
-  const [state, setStatus] = useAtom(currentGameStatusAtom);
   const loadGame = useSetAtom(loadGameAtom);
-  const resetGame = useSetAtom(resetGameAtom);
-  const { userId } = useLoginUser();
-  const [game] = useAtom(currentGameAtom);
+  const deleteGame = useSetAtom(deleteCurrentGameAtom);
+  const deleting = useAtomValue(gameDeletingAtom);
+  const game = useAtomValue(currentGameAtom);
+
   const _game = useMemo(() => {
     if (game.state == "hasData" && game.data) {
       return toGameDto(game.data);
@@ -56,36 +42,13 @@ export const useCurrentGame: UseCurrentGame = () => {
       return;
     }
   }, [game]);
-  const loading = userId === undefined || state == CurrentGameStatus.Deleting;
+  const loading = game.state == "loading" || deleting;
 
   const _delete = useCallback(() => {
-    if (!_game || !userId || loading) {
-      return;
-    }
-
-    const _do = async () => {
-      try {
-        const ret = await DeleteGameUseCase({ gameId: Game.createId(_game.id), ownedBy: userId });
-
-        if (ret.kind == "success") {
-          resetGame();
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setStatus(CurrentGameStatus.NotSelect);
-      }
-    };
-
-    setStatus(CurrentGameStatus.Deleting);
-    new Promise(async (r) => {
-      await _do();
-      r(undefined);
-    });
-  }, [_game, userId, loading]);
+    deleteGame();
+  }, [deleteGame]);
 
   const select = useCallback(async (gameId: string) => {
-    setStatus(CurrentGameStatus.Selecting);
     loadGame(Game.createId(gameId));
   }, []);
 
