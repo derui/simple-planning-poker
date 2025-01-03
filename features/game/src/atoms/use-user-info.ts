@@ -1,28 +1,10 @@
 import { useLoginUser } from "@spp/feature-login";
 import { User, VoterType } from "@spp/shared-domain";
-import { UserRepository } from "@spp/shared-domain/user-repository";
-import { ChangeUserNameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useMemo } from "react";
 import { VoterMode } from "../components/type.js";
 import { toUserDto, UserDto } from "./dto.js";
-import { editUserNameAtom, loadUserAtom, loginUserAtom } from "./user-atom.js";
-
-const voterModeAtom = atom<VoterMode | undefined>((get) => {
-  const user = get(loginUserAtom);
-
-  if (user.state != 'hasData' || !user.data) {
-    return;
-  }
-  
-  const voterType = user.data.defaultVoterType;
-  if (voterType === VoterType.Normal) {
-    return VoterMode.Normal;
-  }
-  return VoterMode.Inspector;
-});
-
-const loadingAtom = atom<boolean>(false);
+import { changeDefaultVoterModeAtom, editUserNameAtom, loadUserAtom, loginUserAtom } from "./user-atom.js";
 
 /**
  * Hook definition to list game
@@ -53,10 +35,21 @@ export type UseUserInfo = () => {
  */
 export const useUserInfo: UseUserInfo = () => {
   const loadUser = useSetAtom(loadUserAtom);
-  const loginUser = useAtomValue(loginUserAtom)
+  const loginUser = useAtomValue(loginUserAtom);
   const editUserName = useSetAtom(editUserNameAtom);
+  const _changeDefaultVoterMode = useSetAtom(changeDefaultVoterModeAtom);
   const { userId } = useLoginUser();
-  const voterMode = useAtomValue(voterModeAtom);
+  const voterMode = useMemo(() => {
+    if (!loginUser) {
+      return VoterMode.Normal;
+    }
+
+    if (loginUser.defaultVoterType == VoterType.Normal) {
+      return VoterMode.Normal;
+    } else {
+      return VoterMode.Inspector;
+    }
+  }, [loginUser]);
 
   useEffect(() => {
     if (userId) {
@@ -64,47 +57,20 @@ export const useUserInfo: UseUserInfo = () => {
     }
   }, [userId]);
 
-  const editName = useCallback(
-    (newName: string) => {
-      if (!loginUser || !User.canChangeName(newName)) {
-        return;
-      }
+  const editName = useCallback((newName: string) => {
+    if (!User.canChangeName(newName)) {
+      return;
+    }
 
-      editUserName(newName)
-    },
-    [userId]
-  );
+    editUserName(newName);
+  }, []);
 
-  const changeDefaultVoterMode = useCallback(
-    (newMode: VoterMode) => {
-      if (!userId) {
-        return;
-      }
-      setLoading(true);
-
-      (async () => {
-      const voterType = newMode == VoterMode.Inspector ? VoterType.Inspector : VoterType.Normal;
-      const user = await UserRepository.findBy({ id: userId });
-      if (!user) {
-        loadUser(undefined)
-        return;
-      }
-
-      const newUser = User.changeDefaultVoterType(user, voterType);
-
-      await UserRepository.save({ user: newUser });
-      
-      loadUser(newUser);
-        
-      })().finally({
-        setLoading(false);
-      });
-    },
-    [userId]
-  );
+  const changeDefaultVoterMode = useCallback((newMode: VoterMode) => {
+    _changeDefaultVoterMode(newMode);
+  }, []);
 
   return {
-    loading: loading,
+    loading: loginUser ? false : true,
     loginUser: loginUser ? toUserDto(loginUser) : undefined,
     voterMode,
     editName,

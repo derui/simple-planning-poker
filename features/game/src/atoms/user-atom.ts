@@ -1,7 +1,8 @@
-import { User } from "@spp/shared-domain";
+import { User, VoterType } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/user-repository";
 import { Atom, atom, WritableAtom } from "jotai";
 import { atomWithRefresh, unwrap } from "jotai/utils";
+import { VoterMode } from "../components/type.js";
 
 /**
  * Logined user id
@@ -55,3 +56,33 @@ export const editUserNameAtom: WritableAtom<null, [name: string], void> = atom(n
       set(internalEditingUserAtom, false);
     });
 });
+
+/**
+ * Change default voter mode
+ */
+export const changeDefaultVoterModeAtom: WritableAtom<null, [voterMode: VoterMode], void> = atom(
+  null,
+  (get, set, voterMode: VoterMode) => {
+    const user = get(loginUserAtom);
+    const editing = get(internalEditingUserAtom);
+
+    if (!user || editing) {
+      return;
+    }
+
+    set(internalEditingUserAtom, true);
+
+    let revisedVoterMode: VoterType.T = VoterType.Normal;
+    if (voterMode === VoterMode.Inspector) {
+      revisedVoterMode = VoterType.Inspector;
+    }
+
+    UserRepository.save({ user: User.changeDefaultVoterType(user, revisedVoterMode) })
+      .then(() => {
+        set(asyncLoginUserAtom);
+      })
+      .finally(() => {
+        set(internalEditingUserAtom, false);
+      });
+  }
+);
