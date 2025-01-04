@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { AuthStatus } from "../atoms/use-auth.js";
 import { hooks } from "../hooks/facade.js";
 
 import { Route, Switch } from "wouter";
 
+import { AuthStatus } from "../atoms/type.js";
 import { Login } from "../components/containers/login.js";
 import { SignIn } from "../components/containers/signin.js";
 import { SignUp } from "../components/containers/signup.js";

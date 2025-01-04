@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
-import { AuthStatus } from "../../atoms/use-auth.js";
+
+import { AuthStatus } from "../../atoms/type.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { Login } from "./login.js";
 

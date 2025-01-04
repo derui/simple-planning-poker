@@ -51,9 +51,9 @@ describe("UseLogin", () => {
     const wrapper = createWrapper(store);
 
     // Act
-    const { result } = renderHook(() => useLogin(), { wrapper });
-
-    await act(async () => result.current.signUp("test@example.com", "password"));
+    const { result, rerender } = renderHook(() => useLogin(), { wrapper });
+    result.current.signUp("test@example.com", "password");
+    rerender();
 
     // Assert
     expect(result.current.status).toEqual("doing");
@@ -64,12 +64,12 @@ describe("UseLogin", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
 
-    await UserRepository.save({ user: User.create({ id: User.createId("test/pass"), name: "test" }) });
+    await UserRepository.save({ user: User.create({ id: User.createId("test@example.com/password"), name: "test" }) });
 
     // Act
-    const { result } = renderHook(() => useLogin(), { wrapper });
-
-    act(() => result.current.signIn("test@example.com", "password"));
+    const { result, rerender } = renderHook(() => useLogin(), { wrapper });
+    result.current.signIn("test@example.com", "password");
+    rerender();
 
     // Assert
     expect(result.current.status).toEqual("doing");
@@ -81,10 +81,10 @@ describe("UseLogin", () => {
     const wrapper = createWrapper(store);
 
     // Act
-    const { result } = renderHook(() => useLogin(), { wrapper });
+    const { result, rerender } = renderHook(() => useLogin(), { wrapper });
 
     await act(async () => result.current.signIn("test@example.com", "password"));
-    await waitFor(async () => {});
+    rerender();
 
     // Assert
     expect(result.current.status).toEqual("notLogined");

@@ -2,7 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
-import { AuthStatus } from "../../atoms/use-auth.js";
+import { AuthStatus } from "../../atoms/type.js";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { Login } from "./login.js";
 

@@ -1,4 +1,4 @@
-import { AuthStatus } from "../../atoms/use-auth.js";
+import { AuthStatus } from "../../atoms/type.js";
 import { hooks } from "../../hooks/facade.js";
 import { LoginLayout } from "./login.layout.js";
 

@@ -63,7 +63,7 @@ export const signInAtom: WritableAtom<null, [email: string, password: string], v
     const authStatus = get(internalAuthStatusAtom);
     const loginStatus = get(internalLoginStatusAtom);
 
-    if (!(authStatus == AuthStatus.NotAuthenticated && loginStatus != LoginStatus.NotLogined)) {
+    if (!(authStatus == AuthStatus.NotAuthenticated && loginStatus == LoginStatus.NotLogined)) {
       return;
     }
 
@@ -113,7 +113,7 @@ export const signUpAtom: WritableAtom<null, [email: string, password: string], v
           set(internalLoginErrorAtom, "Email or password is invalid");
         }
       })
-      .catch(() => {
+      .catch((e) => {
         set(internalLoginStatusAtom, LoginStatus.NotLogined);
         set(internalLoginErrorAtom, "Error occurred on backend. Please retry later");
       });
