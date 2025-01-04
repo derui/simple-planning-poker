@@ -32,22 +32,24 @@ export function GameIndex({ onStartVoting }: Props): JSX.Element {
 
   return (
     <div className={styles.root}>
-      <div className={styles.header}>
-        <UserHeader />
-      </div>
-      <div className={styles.list}>
-        <GameList onCreate={handleCreate} />
-      </div>
-      <div className={styles.detail}>
-        <Switch>
-          <Route path="/create">
-            <GameCreator onCreated={onCreated} onCancel={onCancelCreate} />
-          </Route>
-          <Route path="/">
-            <GameDetail onStartVoting={onStartVoting} />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/create">
+          <GameCreator onCreated={onCreated} onCancel={onCancelCreate} />
+        </Route>
+        <Route path="/">
+          <div className={styles.listRoot}>
+            <div className={styles.header}>
+              <UserHeader />
+            </div>
+            <div className={styles.list}>
+              <GameList onCreate={handleCreate} />
+            </div>
+            <div className={styles.detail}>
+              <GameDetail onStartVoting={onStartVoting} />
+            </div>
+          </div>
+        </Route>
+      </Switch>
     </div>
   );
 }
