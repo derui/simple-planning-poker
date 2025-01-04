@@ -1,7 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { createStore, Provider } from "jotai";
-import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
 import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
@@ -27,9 +26,7 @@ test("render page", () => {
   render(
     <ImplementationProvider implementation={mock}>
       <Provider store={store}>
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
+        <SignIn />
       </Provider>
     </ImplementationProvider>
   );
@@ -56,9 +53,7 @@ test("call hook after submit", async () => {
   // Act
   render(
     <ImplementationProvider implementation={mock}>
-      <MemoryRouter>
-        <SignIn />
-      </MemoryRouter>
+      <SignIn />
     </ImplementationProvider>
   );
 

@@ -1,7 +1,6 @@
 import * as Url from "@spp/shared-app-url";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { MemoryRouter } from "react-router-dom";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
 import { AuthStatus } from "../../atoms/use-auth.js";
@@ -27,9 +26,7 @@ test("render page", () => {
   render(
     <ImplementationProvider implementation={mock}>
       <Provider store={store}>
-        <MemoryRouter>
-          <Login />
-        </MemoryRouter>
+        <Login />
       </Provider>
     </ImplementationProvider>
   );
@@ -57,9 +54,7 @@ test("call hook on mount", async () => {
   // Act
   render(
     <ImplementationProvider implementation={mock}>
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
+      <Login />
     </ImplementationProvider>
   );
 
@@ -86,18 +81,14 @@ test("dont call hook twice", async () => {
   // Act
   const container = render(
     <ImplementationProvider implementation={mock}>
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
+      <Login />
     </ImplementationProvider>
   );
   await waitFor(() => Promise.resolve());
 
   container.rerender(
     <ImplementationProvider implementation={mock}>
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
+      <Login />
     </ImplementationProvider>
   );
   await waitFor(() => Promise.resolve());

@@ -64,7 +64,7 @@
     "@vanilla-extract/css": "catalog:",
     "jotai": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "catalog:",
-    "storybook": "catalog:"
+    "storybook": "catalog:",
+    "wouter": "catalog:"
   }
 }

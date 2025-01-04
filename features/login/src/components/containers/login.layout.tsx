@@ -1,7 +1,6 @@
-import * as Url from "@spp/shared-app-url";
 import { Dialog } from "@spp/ui-dialog";
 import { Loader } from "@spp/ui-loader";
-import { Link } from "react-router-dom";
+import { Link } from "wouter";
 import * as styles from "./login.css.js";
 
 interface Props {
@@ -29,10 +28,10 @@ export function LoginLayout({ authenticating = false }: Props): JSX.Element {
         ) : (
           <div className={styles.children}>
             <p className={styles.info}>Choose login method.</p>
-            <Link to={Url.signInPage()} className={styles.link}>
+            <Link to={"/signin"} className={styles.link}>
               Sign In
             </Link>
-            <Link to={Url.signUpPage()} className={styles.link}>
+            <Link to={"/signup"} className={styles.link}>
               Sign Up
             </Link>
           </div>
