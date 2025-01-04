@@ -36,7 +36,7 @@
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@testing-library/react": "catalog:",
-      "@testing-library/user-event": "catalog:",
+    "@testing-library/user-event": "catalog:",
     "@types/sinon": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
@@ -62,8 +62,9 @@
     "@spp/ui-theme": "workspace:^",
     "@types/react": "catalog:",
     "@vanilla-extract/css": "catalog:",
-      "jotai": "catalog:",
+    "jotai": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "catalog:"
+    "react-router-dom": "catalog:",
+    "storybook": "catalog:"
   }
 }

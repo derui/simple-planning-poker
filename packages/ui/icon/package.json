@@ -49,6 +49,7 @@
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-type-util": "workspace:^",
     "@spp/ui-theme": "workspace:^",
-      "react": "catalog:"
+    "react": "catalog:",
+    "storybook": "catalog:"
   }
 }

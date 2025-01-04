@@ -49,6 +49,7 @@
   "dependencies": {
     "@spp/shared-color-variant": "workspace:^",
     "@spp/ui-theme": "workspace:^",
-    "@vanilla-extract/css": "catalog:"
+    "@vanilla-extract/css": "catalog:",
+    "storybook": "catalog:"
   }
 }
