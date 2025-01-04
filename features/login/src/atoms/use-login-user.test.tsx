@@ -1,8 +1,9 @@
 import { resetLoggedInUser, setLoggedUser } from "@spp/infra-authenticator/memory";
 import { User } from "@spp/shared-domain";
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { beforeEach, describe, expect, test } from "vitest";
+import { checkLoginedAtom } from "./atom.js";
 import { useLoginUser } from "./use-login-user.js";
 
 beforeEach(() => {
@@ -30,11 +31,11 @@ describe("UseLoginUser", () => {
     const store = createStore();
     const wrapper = createWrapper(store);
     setLoggedUser(User.createId("foo"));
+    store.set(checkLoginedAtom);
 
     // Act
-    const { result, rerender } = renderHook(() => useLoginUser(), { wrapper });
-    result.current.loginUser(User.createId("foo"));
-    rerender();
+    const { result } = renderHook(() => useLoginUser(), { wrapper });
+    await act(async () => {});
 
     // Assert
     expect(result.current.userId).toEqual(User.createId("foo"));

@@ -1,18 +1,7 @@
-import { Authenticator } from "@spp/infra-authenticator/base";
-import { atom, useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
-import { useLoginUser } from "./use-login-user.js";
-
-/**
- * Authentication status. Not same as login status.
- */
-export enum AuthStatus {
-  Checking = "checking",
-  NotAuthenticated = "notAuthenticated",
-  Authenticated = "authenticated",
-}
-
-const authStatusAtom = atom<AuthStatus>(AuthStatus.NotAuthenticated);
+import { authStatusAtom, checkLoginedAtom, logoutAtom } from "./atom.js";
+import { AuthStatus } from "./type.js";
 
 /**
  * Hook interface
@@ -31,36 +20,19 @@ export type UseAuth = () => {
   /**
    * Logout user
    */
-  logout: () => Promise<void>;
+  logout: () => void;
 };
 
 /**
  * `UseAuth` implementation
  */
 export const useAuth: UseAuth = () => {
-  const { loginUser } = useLoginUser();
-  const [status, setStatus] = useAtom(authStatusAtom);
-  const checkLogined = useCallback(() => {
-    setStatus(AuthStatus.Checking);
+  const status = useAtomValue(authStatusAtom);
+  const _checkLogined = useSetAtom(checkLoginedAtom);
+  const _logout = useSetAtom(logoutAtom);
+  const checkLogined = useCallback(() => _checkLogined(), [_checkLogined]);
 
-    Authenticator.currentUserIdIfExists(undefined)
-      .then((userId) => {
-        if (!userId) {
-          setStatus(AuthStatus.NotAuthenticated);
-        } else {
-          loginUser(userId);
-          setStatus(AuthStatus.Authenticated);
-        }
-      })
-      .catch(() => {
-        setStatus(AuthStatus.NotAuthenticated);
-      });
-  }, [setStatus, loginUser]);
-
-  const logout = useCallback(() => {
-    loginUser(undefined);
-    return Promise.resolve();
-  }, [loginUser]);
+  const logout = useCallback(() => _logout(), [_logout]);
 
   return {
     status,

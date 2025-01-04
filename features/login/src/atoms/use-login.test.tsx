@@ -27,7 +27,7 @@ describe("UseLogin", () => {
 
     result.current.signUp("test@example.com", "foo");
 
-    await waitFor(() => Promise.resolve());
+    await waitFor(async () => {});
 
     // Assert
     expect(result.current.status).toEqual("logined");
@@ -45,7 +45,7 @@ describe("UseLogin", () => {
     expect(result.current.status).toEqual("notLogined");
   });
 
-  test("set doing while sign up", () => {
+  test("set doing while sign up", async () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
@@ -53,7 +53,7 @@ describe("UseLogin", () => {
     // Act
     const { result } = renderHook(() => useLogin(), { wrapper });
 
-    act(() => result.current.signUp("test@example.com", "password"));
+    await act(async () => result.current.signUp("test@example.com", "password"));
 
     // Assert
     expect(result.current.status).toEqual("doing");
@@ -83,8 +83,8 @@ describe("UseLogin", () => {
     // Act
     const { result } = renderHook(() => useLogin(), { wrapper });
 
-    act(() => result.current.signIn("test@example.com", "password"));
-    await waitFor(() => Promise.resolve());
+    await act(async () => result.current.signIn("test@example.com", "password"));
+    await waitFor(async () => {});
 
     // Assert
     expect(result.current.status).toEqual("notLogined");

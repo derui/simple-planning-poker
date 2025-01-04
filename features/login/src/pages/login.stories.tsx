@@ -33,7 +33,7 @@ export const notLogin: Story = {
         <ImplementationProvider implementation={mock}>
           <Provider store={store}>
             <div className={themeClass}>
-              <LoginPage />
+              <LoginPage onLogined={sinon.fake()} />
             </div>
           </Provider>
         </ImplementationProvider>
@@ -62,7 +62,7 @@ export const Checking: Story = {
         <ImplementationProvider implementation={mock}>
           <Provider store={store}>
             <div className={themeClass}>
-              <LoginPage />
+              <LoginPage onLogined={sinon.fake()} />
             </div>
           </Provider>
         </ImplementationProvider>
