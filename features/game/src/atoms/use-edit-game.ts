@@ -1,19 +1,8 @@
-import { useLoginUser } from "@spp/feature-login";
 import { Game } from "@spp/shared-domain";
-import { EditGameUseCase } from "@spp/shared-use-case";
-import { atom, useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
+import { commandProgressionAtom, editGameAtom, gameEditingErrorAtom } from "./game-atom.js";
 import { EditGameError } from "./type.js";
-
-/**
- * An atom to store validation
- */
-const editGameErrorsAtom = atom<EditGameError[]>([]);
-
-/**
- * loading state of editing game
- */
-const editingGameAtom = atom<boolean>(false);
 
 /**
  * Hook definition to edit game
@@ -36,59 +25,14 @@ export type UseEditGame = () => {
  * Create hook implementation of `UseGameEditor`
  */
 export const useEditGame: UseEditGame = () => {
-  const { userId } = useLoginUser();
-  const [loading, setLoading] = useAtom(editingGameAtom);
-  const [errors, setErrors] = useAtom(editGameErrorsAtom);
+  const loading = useAtomValue(commandProgressionAtom);
+  const errors = useAtomValue(gameEditingErrorAtom);
+  const editGame = useSetAtom(editGameAtom);
   const edit = useCallback(
     (gameId: Game.Id, name: string, points: string): void => {
-      if (!userId || loading) {
-        return;
-      }
-
-      const _do = async () => {
-        try {
-          const ret = await EditGameUseCase({
-            gameId,
-            name,
-            points: points.split(",").map((v) => parseInt(v)),
-            ownedBy: userId,
-          });
-
-          switch (ret.kind) {
-            case "success":
-              break;
-            case "error":
-              {
-                switch (ret.detail) {
-                  case "notFound":
-                    setErrors(["NotFound"]);
-                    break;
-                  case "conflictName":
-                    setErrors(["NameConflicted"]);
-                    break;
-                  case "invalidStoryPoint":
-                    setErrors(["InvalidPoints"]);
-                    break;
-                  case "invalidName":
-                    setErrors(["InvalidName"]);
-                    break;
-                }
-              }
-              break;
-            default:
-              break;
-          }
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      setLoading(true);
-      _do();
+      editGame({ gameId, name, points });
     },
-    [userId, loading]
+    [editGame]
   );
 
   return {

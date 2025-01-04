@@ -4,7 +4,7 @@ import { dispatch } from "@spp/shared-use-case";
 import { Atom, atom, WritableAtom } from "jotai";
 import { atomWithRefresh, loadable, unwrap } from "jotai/utils";
 import { Loadable } from "jotai/vanilla/utils/loadable";
-import { CreateGameError } from "./type.js";
+import { CreateGameError, EditGameError } from "./type.js";
 
 const selectedGameIdAtom = atom<Game.Id | undefined>(undefined);
 
@@ -24,21 +24,21 @@ export const loadGameAtom: WritableAtom<null, [gameId: Game.Id], void> = atom(nu
   set(selectedGameIdAtom, gameId);
 });
 
-const internalGameDeletingAtom = atom(false);
+const internalCommandProgressionAtom = atom(false);
 
 /**
  * Loading state of the current game.
  */
-export const gameDeletingAtom: Atom<boolean> = atom((get) => get(internalGameDeletingAtom));
+export const commandProgressionAtom: Atom<boolean> = atom((get) => get(internalCommandProgressionAtom));
 
 /**
  * Delete current game. After deleting, the current game atom will be set to undefined.
  */
 export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
   const game = get(unwrap(asyncCurrentGameAtom));
-  const deleting = get(internalGameDeletingAtom);
+  const progress = get(internalCommandProgressionAtom);
   const userId = get(loginUserIdAtom);
-  if (!game || deleting) {
+  if (!game || progress) {
     return;
   }
 
@@ -46,7 +46,7 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
     return;
   }
 
-  set(internalGameDeletingAtom, true);
+  set(internalCommandProgressionAtom, true);
 
   GameRepository.delete({ game })
     .then(() => {
@@ -56,7 +56,7 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
       console.warn(e);
     })
     .finally(() => {
-      set(internalGameDeletingAtom, false);
+      set(internalCommandProgressionAtom, false);
     });
 });
 
@@ -84,13 +84,6 @@ export const loadGamesAtom: WritableAtom<null, [userId: User.Id], void> = atom(n
   set(loginUserIdAtom, userId);
 });
 
-const internalGameCreatingAtom = atom(false);
-
-/**
- * Is game creating. This atom is read-only.
- */
-export const gameCreatingAtom: Atom<boolean> = atom((get) => get(internalGameCreatingAtom));
-
 const internalGameCreationErrorAtom = atom<CreateGameError[]>([]);
 
 /**
@@ -105,12 +98,12 @@ export const createGameAtom: WritableAtom<null, [obj: { name: string; points: st
   null,
   (get, set, obj) => {
     const loginUserId = get(loginUserIdAtom);
-    const loading = get(internalGameCreatingAtom);
+    const loading = get(internalCommandProgressionAtom);
     if (!loginUserId || loading) {
       return;
     }
 
-    set(internalGameCreatingAtom, true);
+    set(internalCommandProgressionAtom, true);
     set(internalGameCreationErrorAtom, []);
 
     if (!GameName.isValid(obj.name)) {
@@ -141,7 +134,70 @@ export const createGameAtom: WritableAtom<null, [obj: { name: string; points: st
         console.warn(e);
       })
       .finally(() => {
-        set(internalGameCreatingAtom, false);
+        set(internalCommandProgressionAtom, false);
+      });
+  }
+);
+
+const internalGameEditingErrorAtom = atom<EditGameError[]>([]);
+
+/**
+ * Game edit errors. This atom is read-only.
+ */
+export const gameEditingErrorAtom: Atom<EditGameError[]> = atom((get) => get(internalGameEditingErrorAtom));
+
+/**
+ * Try to create a game. If error occurs, the error will be stored in the error atom.
+ */
+export const editGameAtom: WritableAtom<null, [obj: { gameId: Game.Id; name: string; points: string }], void> = atom(
+  null,
+  (get, set, obj) => {
+    const loginUserId = get(loginUserIdAtom);
+    const loading = get(internalCommandProgressionAtom);
+    if (!loginUserId || loading) {
+      return;
+    }
+
+    set(internalCommandProgressionAtom, true);
+    set(internalGameEditingErrorAtom, []);
+
+    if (!GameName.isValid(obj.name)) {
+      set(internalGameEditingErrorAtom, ["InvalidName"]);
+      return;
+    }
+
+    const points = ApplicablePoints.parse(obj.points);
+    if (!points) {
+      set(internalGameEditingErrorAtom, ["InvalidPoints"]);
+      return;
+    }
+
+    GameRepository.findBy({ id: obj.gameId })
+      .then((game) => {
+        if (!game) {
+          set(internalGameEditingErrorAtom, ["NotFound"]);
+          throw new Error("not found");
+        }
+
+        if (game.owner != loginUserId) {
+          set(internalGameEditingErrorAtom, ["NotOwned"]);
+          throw new Error("not found");
+        }
+
+        let newOne = Game.changeName(game, obj.name);
+        newOne = Game.changePoints(newOne, points);
+        return newOne;
+      })
+      .then((game) => GameRepository.save({ game }))
+      .then(() => {
+        set(asyncGamesAtom);
+        set(asyncCurrentGameAtom);
+      })
+      .catch((e) => {
+        console.warn(e);
+      })
+      .finally(() => {
+        set(internalCommandProgressionAtom, false);
       });
   }
 );

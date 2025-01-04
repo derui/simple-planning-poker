@@ -2,7 +2,7 @@ import { Game } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { currentGameAtom, deleteCurrentGameAtom, gameDeletingAtom, loadGameAtom } from "./game-atom.js";
+import { commandProgressionAtom, currentGameAtom, deleteCurrentGameAtom, loadGameAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -32,7 +32,7 @@ export type UseCurrentGame = () => {
 export const useCurrentGame: UseCurrentGame = () => {
   const loadGame = useSetAtom(loadGameAtom);
   const deleteGame = useSetAtom(deleteCurrentGameAtom);
-  const deleting = useAtomValue(gameDeletingAtom);
+  const deleting = useAtomValue(commandProgressionAtom);
   const game = useAtomValue(currentGameAtom);
 
   const _game = useMemo(() => {
