@@ -1,7 +1,7 @@
 import { useLoginUser } from "@spp/feature-login";
-import { User, VoterType } from "@spp/shared-domain";
+import { User } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { VoterMode } from "../components/type.js";
 import { toUserDto, UserDto } from "./dto.js";
 import { changeDefaultVoterModeAtom, editUserNameAtom, loadUserAtom, loginUserAtom } from "./user-atom.js";
@@ -13,11 +13,6 @@ export type UseUserInfo = () => {
   readonly loading: boolean;
 
   readonly loginUser?: UserDto;
-
-  /**
-   * current voter mode of current user
-   */
-  readonly voterMode?: VoterMode;
 
   /**
    * Edit name of current user
@@ -39,17 +34,6 @@ export const useUserInfo: UseUserInfo = () => {
   const editUserName = useSetAtom(editUserNameAtom);
   const _changeDefaultVoterMode = useSetAtom(changeDefaultVoterModeAtom);
   const { userId } = useLoginUser();
-  const voterMode = useMemo(() => {
-    if (!loginUser) {
-      return VoterMode.Normal;
-    }
-
-    if (loginUser.defaultVoterType == VoterType.Normal) {
-      return VoterMode.Normal;
-    } else {
-      return VoterMode.Inspector;
-    }
-  }, [loginUser]);
 
   useEffect(() => {
     if (userId) {
@@ -72,7 +56,6 @@ export const useUserInfo: UseUserInfo = () => {
   return {
     loading: loginUser ? false : true,
     loginUser: loginUser ? toUserDto(loginUser) : undefined,
-    voterMode,
     editName,
     changeDefaultVoterMode,
   };

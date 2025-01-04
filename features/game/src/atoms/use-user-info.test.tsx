@@ -65,7 +65,7 @@ test("get user information after effect", async () => {
   rerender();
 
   // Assert
-  expect(result.current.loginUser).toEqual({ id: "id", name: "User" });
+  expect(result.current.loginUser).toEqual({ id: "id", name: "User", defaultVoterMode: VoterMode.Normal });
   expect(result.current.loading).toEqual(false);
 });
 
@@ -88,7 +88,7 @@ test("change name after call use case", async () => {
   rerender();
 
   // Assert
-  expect(result.current.loginUser).toEqual({ id: "id", name: "new name" });
+  expect(result.current.loginUser).toEqual({ id: "id", name: "new name", defaultVoterMode: VoterMode.Normal });
   expect(result.current.loading).toBe(false);
 });
 
@@ -111,7 +111,7 @@ test("should be able to change default voter type of the user", async () => {
   rerender();
 
   // Assert
-  expect(result.current.loginUser).toEqual({ id: "id", name: "name" });
+  expect(result.current.loginUser).toEqual({ id: "id", name: "name", defaultVoterMode: VoterMode.Normal });
   expect(result.current.loading).toBe(false);
 });
 
@@ -120,7 +120,7 @@ test("get current voter mode", async () => {
   const store = createStore();
   const wrapper = createWrapper(store);
   await UserRepository.save({
-    user: User.create({ id: User.createId("id"), name: "name", defaultVoterType: VoterType.Inspector }),
+    user: User.create({ id: User.createId("id"), name: "name", defaultVoterType: VoterType.Normal }),
   });
   const { result, rerender } = renderHook(useUserInfo, {
     wrapper,
@@ -128,14 +128,11 @@ test("get current voter mode", async () => {
 
   // Act
   await act(async () => {});
-  const current = result.current.voterMode;
   await act(async () => {
-    result.current.changeDefaultVoterMode(VoterMode.Normal);
+    result.current.changeDefaultVoterMode(VoterMode.Inspector);
   });
   rerender();
-  const changed = result.current.voterMode;
 
   // Assert
-  expect(current).toBe(VoterMode.Inspector);
-  expect(changed).toBe(VoterMode.Normal);
+  expect(result.current.loginUser).toEqual({ id: "id", name: "name", defaultVoterMode: VoterMode.Inspector });
 });

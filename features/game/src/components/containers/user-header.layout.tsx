@@ -43,7 +43,7 @@ export const UserHeaderLayout = function UserHeaderLayout({
     <div className={styles.root}>
       <UserHeader
         userName={user.name}
-        defaultVoterMode={VoterMode.Normal}
+        defaultVoterMode={user.defaultVoterMode}
         onRequestUserNameEdit={onRequestUserNameEdit}
         onChangeDefaultVoterMode={onChangeDefaultVoterMode}
       />

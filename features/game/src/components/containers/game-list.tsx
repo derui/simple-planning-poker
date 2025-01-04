@@ -14,9 +14,12 @@ export const GameList = function GameList({ onCreate }: Props): JSX.Element {
   const { games } = useGames();
   const { game, select } = useCurrentGame();
 
-  const handleSelect = useCallback((gameId: string) => {
-    select(gameId);
-  }, []);
+  const handleSelect = useCallback(
+    (gameId: string) => {
+      select(gameId);
+    },
+    [select]
+  );
 
   const handleRequestCreate = useCallback(() => {
     onCreate?.();

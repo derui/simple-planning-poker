@@ -1,5 +1,5 @@
 import { Game } from "@spp/shared-domain";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { GameDetailLayout } from "./game-detail.layout.js";
 
 import { useCurrentGame } from "../../atoms/use-current-game.js";
@@ -13,12 +13,8 @@ interface Props {
 }
 
 export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Element {
-  const { loading, delete: _delete, game, reload } = useCurrentGame();
+  const { loading, delete: _delete, game } = useCurrentGame();
   const { edit, loading: editing } = useEditGame();
-
-  useEffect(() => {
-    reload();
-  }, [editing]);
 
   const handleDelete = useCallback(() => {
     _delete();

@@ -1,4 +1,5 @@
-import { Game, User } from "@spp/shared-domain";
+import { Game, User, VoterType } from "@spp/shared-domain";
+import { VoterMode } from "../components/type.js";
 
 /**
  * Data transfer object for `Game.T`. This interface can be used only in this package.
@@ -26,14 +27,23 @@ export const toGameDto = function toGameDto(game: Game.T): GameDto {
 export interface UserDto {
   id: string;
   name: string;
+  defaultVoterMode: VoterMode;
 }
 
 /**
  * Conversion function from `User.T` to `UserDto`
  */
 export const toUserDto = function toUserDto(user: User.T): UserDto {
+  let voterMode: VoterMode;
+  if (user.defaultVoterType == VoterType.Normal) {
+    voterMode = VoterMode.Normal;
+  } else {
+    voterMode = VoterMode.Inspector;
+  }
+
   return {
     id: user.id,
     name: user.name,
+    defaultVoterMode: voterMode,
   };
 };

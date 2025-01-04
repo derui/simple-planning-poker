@@ -9,6 +9,7 @@ import { themeClass } from "@spp/ui-theme";
 import { Provider } from "jotai";
 import { useEffect } from "react";
 import { useCurrentGame } from "../../atoms/use-current-game.js";
+import { useGames } from "../../atoms/use-games.js";
 import { GameDetail } from "./game-detail.js";
 
 const meta: Meta<typeof GameDetail> = {
@@ -24,6 +25,7 @@ const meta: Meta<typeof GameDetail> = {
 const Logined = ({ children }: React.PropsWithChildren) => {
   const { loginUser } = useLoginUser();
   const { select } = useCurrentGame();
+  useGames();
 
   useEffect(() => {
     loginUser(User.createId("foo"));
