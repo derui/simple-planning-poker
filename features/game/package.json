@@ -6,10 +6,10 @@
     "./dist/"
   ],
   "exports": {
-    ".": {
+    "./page/game-index": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./src/page/game-index.ts",
+        "default": "./dist/page/game-index.js"
       }
     }
   },
