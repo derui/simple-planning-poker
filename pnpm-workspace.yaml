@@ -63,6 +63,9 @@ catalog:
   "@types/react-router-dom": 5.3.3
   "@remix-run/router": 1.19.2
 
+  # lib: wouter
+  wouter: 3.3.5
+
   "@types/react-transition-group": 4.4.10
 
   # type:node
