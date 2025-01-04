@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+import { useLocation } from "wouter";
 import { hooks } from "../../hooks/facade.js";
 import { SignInLayout } from "./signin.layout.js";
 
@@ -5,5 +7,11 @@ import { SignInLayout } from "./signin.layout.js";
 export function SignUp(): JSX.Element {
   const login = hooks.useLogin();
 
-  return <SignInLayout title="Sign Up" onSubmit={login.signUp} loading={login.status == "doing"} />;
+  const [, navigate] = useLocation();
+
+  const handleBack = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
+
+  return <SignInLayout title="Sign Up" onSubmit={login.signUp} onBack={handleBack} loading={login.status == "doing"} />;
 }

@@ -9,12 +9,14 @@ interface Props {
 
   onSubmit?: (email: string, password: string) => void;
 
+  onBack?: () => void;
+
   loading?: boolean;
 }
 
 // eslint-disable-next-line func-style
 export function SignInLayout(props: Props): JSX.Element {
-  const { title, loading = false, onSubmit } = props;
+  const { title, loading = false, onSubmit, onBack } = props;
 
   const handleSubmit = (email: string, password: string) => {
     onSubmit?.(email, password);
@@ -30,7 +32,7 @@ export function SignInLayout(props: Props): JSX.Element {
       </Overlay>
       <Dialog title={title}>
         <div className={styles.dialogContent}>
-          <LoginForm onSubmit={handleSubmit} />
+          <LoginForm onSubmit={handleSubmit} onBack={onBack} />
         </div>
       </Dialog>
     </main>

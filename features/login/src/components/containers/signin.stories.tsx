@@ -7,7 +7,7 @@ import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { SignIn } from "./signin.js";
 
 const meta: Meta<typeof SignIn> = {
-  title: "Page/Sign In",
+  title: "Container/Sign In",
   component: SignIn,
   tags: ["autodocs"],
 };

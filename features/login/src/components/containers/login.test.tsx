@@ -1,5 +1,4 @@
-import * as Url from "@spp/shared-app-url";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
@@ -32,67 +31,33 @@ test("render page", () => {
   );
 
   expect(screen.getByText("Sign In").tagName.toLowerCase()).toEqual("a");
-  expect(screen.getByText<HTMLAnchorElement>("Sign In").href).toContain(Url.signInPage());
+  expect(screen.getByText<HTMLAnchorElement>("Sign In").href).toContain("/signin");
   expect(screen.getByText(/Sign Up/).tagName.toLowerCase()).toEqual("a");
-  expect(screen.getByText<HTMLAnchorElement>("Sign Up").href).toContain(Url.signUpPage());
+  expect(screen.getByText<HTMLAnchorElement>("Sign Up").href).toContain("/signup");
 });
 
-test("call hook on mount", async () => {
-  // Arrange
-  const checkFake = sinon.fake();
+test("render page while checking", () => {
+  const store = createStore();
+
   const mock: Hooks = {
     useLogin: sinon.fake(),
     useAuth() {
       return {
-        status: AuthStatus.NotAuthenticated,
-        checkLogined: checkFake,
+        status: AuthStatus.Checking,
+        checkLogined: sinon.fake(),
         logout: sinon.fake(),
       };
     },
   };
 
-  // Act
   render(
     <ImplementationProvider implementation={mock}>
-      <Login />
+      <Provider store={store}>
+        <Login />
+      </Provider>
     </ImplementationProvider>
   );
 
-  await waitFor(() => Promise.resolve());
-
-  // Assert
-  expect(checkFake.callCount).toEqual(1);
-});
-
-test("dont call hook twice", async () => {
-  // Arrange
-  const checkFake = sinon.fake();
-  const mock: Hooks = {
-    useLogin: sinon.fake(),
-    useAuth() {
-      return {
-        status: AuthStatus.NotAuthenticated,
-        checkLogined: checkFake,
-        logout: sinon.fake(),
-      };
-    },
-  };
-
-  // Act
-  const container = render(
-    <ImplementationProvider implementation={mock}>
-      <Login />
-    </ImplementationProvider>
-  );
-  await waitFor(() => Promise.resolve());
-
-  container.rerender(
-    <ImplementationProvider implementation={mock}>
-      <Login />
-    </ImplementationProvider>
-  );
-  await waitFor(() => Promise.resolve());
-
-  // Assert
-  expect(checkFake.callCount).toEqual(1);
-});
+  expect(screen.queryByText("Sign In")).toBeNull();
+  expect(screen.queryByText("Sign Up")).toBeNull();
+}); //

@@ -8,7 +8,7 @@ import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { Login } from "./login.js";
 
 const meta: Meta<typeof Login> = {
-  title: "Page/Login",
+  title: "Container/Login",
   component: Login,
   tags: ["autodocs"],
 };
