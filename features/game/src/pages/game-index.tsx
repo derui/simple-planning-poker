@@ -15,7 +15,8 @@ interface Props {
 
 // eslint-disable-next-line func-style
 export function GameIndex({ onStartVoting }: Props): JSX.Element {
-  const [, navigate] = useLocation();
+  const [loc, navigate] = useLocation();
+  console.log(loc);
 
   const onCreated = useCallback(() => {
     navigate("/", { replace: true });
@@ -42,7 +43,7 @@ export function GameIndex({ onStartVoting }: Props): JSX.Element {
           <Route path="/create">
             <GameCreator onCreated={onCreated} onCancel={onCancelCreate} />
           </Route>
-          <Route>
+          <Route path="/">
             <GameDetail onStartVoting={onStartVoting} />
           </Route>
         </Switch>

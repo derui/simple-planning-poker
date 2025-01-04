@@ -6,7 +6,7 @@ import { CreateGameError } from "./type.js";
 /**
  * Hook definition to create game
  */
-export type UseCreateGame = () => {
+export type UseCreateGame = (created: () => void) => {
   /**
    * loading status of creating game
    */
@@ -26,16 +26,22 @@ export type UseCreateGame = () => {
 };
 
 // hook implementations
-export const useCreateGame: UseCreateGame = () => {
+export const useCreateGame: UseCreateGame = (created) => {
   const loading = useAtomValue(commandProgressionAtom);
   const errors = useAtomValue(gameCreationErrorAtom);
   const createGame = useSetAtom(createGameAtom);
-  const create = useCallback((name: string, points: string) => {
-    createGame({
-      name,
-      points,
-    });
-  }, []);
+  const create = useCallback(
+    (name: string, points: string) => {
+      createGame(
+        {
+          name,
+          points,
+        },
+        created
+      );
+    },
+    [created]
+  );
 
   return {
     loading,

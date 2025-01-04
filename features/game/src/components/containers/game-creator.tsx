@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useCreateGame } from "../../atoms/use-create-game.js";
 import { GameCreatorLayout } from "./game-creator.layout.js";
 
@@ -18,7 +18,7 @@ interface Props {
  * The component that allows the user to create a new game.
  */
 export const GameCreator = function GameCreator({ onCancel, onCreated }: Props): JSX.Element {
-  const { loading, errors, create } = useCreateGame();
+  const { loading, errors, create } = useCreateGame(onCreated);
 
   const handleSubmit = useCallback(
     (name: string, points: string) => {
@@ -30,12 +30,6 @@ export const GameCreator = function GameCreator({ onCancel, onCreated }: Props):
   const handleCancel = useCallback(() => {
     onCancel();
   }, [onCancel]);
-
-  useEffect(() => {
-    if (errors.length == 0 && !loading) {
-      onCreated();
-    }
-  }, [errors, loading, onCreated]);
 
   return <GameCreatorLayout onSubmit={handleSubmit} onCancel={handleCancel} errors={errors} loading={loading} />;
 };

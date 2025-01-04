@@ -2,7 +2,7 @@ import { ApplicablePoints, DomainEvent, Game, StoryPoint, User } from "@spp/shar
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
 import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -215,19 +215,37 @@ describe("Create", () => {
     expect(games[0].owner).toEqual(User.createId("user"));
   });
 
+  test("after completed, call the callback", async () => {
+    // Arrange
+    const store = createStore();
+    store.set(loadGamesAtom, User.createId("user"));
+    const wrapper = createWrapper(store);
+    const callback = vi.fn();
+
+    const { result } = renderHook(() => useCreateGame(callback), { wrapper });
+
+    // Act
+    await act(async () => Promise.resolve(result.current.create("foo", "1")));
+    await waitFor(() => !result.current.loading);
+
+    // Assert
+    expect(callback).toHaveBeenCalledOnce();
+  });
+
   test("set failed state if create is failed", async () => {
     // Arrange
     const store = createStore();
     store.set(loadGamesAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     injectErrorOnSave("failed");
-    const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
+    const callback = vi.fn();
+    const { result } = renderHook(() => useCreateGame(callback), { wrapper });
 
     // Act
     await act(async () => result.current.create("foo", "1"));
 
     // Assert
     expect(result.current.loading).toEqual(false);
+    expect(callback).not.toHaveBeenCalled();
   });
 });
