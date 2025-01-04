@@ -4,7 +4,7 @@ interface Props {
   /**
    * Handler to notify start voting to page.
    */
-  onStartVoting?: (gameId: string) => void;
+  onStartVoting: (gameId: string) => void;
 }
 
 // eslint-disable-next-line func-style

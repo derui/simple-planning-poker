@@ -1,20 +1,33 @@
-import { GameStatus } from "../atoms/game-atom.js";
+import { GameCreator } from "../components/containers/game-creator.js";
 import { GameDetail } from "../components/containers/game-detail.js";
 import { GameList } from "../components/containers/game-list.js";
 import { UserHeader } from "../components/containers/user-header.js";
 import * as styles from "./game-index.css.js";
 
 interface Props {
-  onStartVoting?: (gameId: string) => void;
+  /**
+   * The mode of the game index page.
+   */
+  mode: "list" | "create";
+
+  onStartVoting: (gameId: string) => void;
+
+  /**
+   * The callback function to be called when a game is created.
+   */
+  onCreated: () => void;
+
+  /**
+   * The callback function to be called when a creating game is cancelled.
+   */
+  onCancelCreate: () => void;
 }
 
 // eslint-disable-next-line func-style
-export function GameIndexLayout({ onStartVoting }: Props): JSX.Element {
+export function GameIndexLayout({ mode, onStartVoting, onCreated, onCancelCreate }: Props): JSX.Element {
   let component: JSX.Element;
-  if (status == GameStatus.Create || status == GameStatus.Creating) {
-    component = <div></div>;
-  } else if (status == GameStatus.Edit || status == GameStatus.Editing) {
-    component = <div></div>;
+  if (mode == "create") {
+    component = <GameCreator onCreated={onCreated} onCancel={onCancelCreate} />;
   } else {
     component = <GameDetail onStartVoting={onStartVoting} />;
   }

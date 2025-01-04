@@ -51,6 +51,7 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
   GameRepository.delete({ game })
     .then(() => {
       set(selectedGameIdAtom, undefined);
+      set(asyncGamesAtom);
     })
     .catch((e) => {
       console.warn(e);
