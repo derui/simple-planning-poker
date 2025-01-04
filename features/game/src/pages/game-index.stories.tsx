@@ -9,7 +9,8 @@ import { UserRepository } from "@spp/shared-domain/user-repository";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { useEffect } from "react";
-import { MemoryRouter } from "react-router-dom";
+import { Router } from "wouter";
+import { memoryLocation } from "wouter/memory-location";
 import { useCurrentGame } from "../atoms/use-current-game.js";
 import { GameIndex } from "./game-index.js";
 
@@ -48,15 +49,16 @@ const Logined = ({ children }: React.PropsWithChildren) => {
 export const WaitingPrepared: Story = {
   render() {
     const store = createStore();
+    const { hook } = memoryLocation();
 
     return (
-      <Provider store={store}>
-        <MemoryRouter>
+      <Router hook={hook}>
+        <Provider store={store}>
           <div className={themeClass}>
-            <GameIndex />
+            <GameIndex onStartVoting={() => {}} />
           </div>
-        </MemoryRouter>
-      </Provider>
+        </Provider>
+      </Router>
     );
   },
 };
@@ -64,17 +66,17 @@ export const WaitingPrepared: Story = {
 export const Empty: Story = {
   render() {
     const store = createStore();
-
+    const { hook } = memoryLocation();
     return (
-      <Provider store={store}>
-        <MemoryRouter>
+      <Router hook={hook}>
+        <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex />
+              <GameIndex onStartVoting={() => {}} />
             </div>
           </Logined>
-        </MemoryRouter>
-      </Provider>
+        </Provider>
+      </Router>
     );
   },
 };
@@ -82,7 +84,7 @@ export const Empty: Story = {
 export const SomeGames: Story = {
   render() {
     const store = createStore();
-
+    const { hook } = memoryLocation();
     useEffect(() => {
       [
         Game.create({
@@ -102,15 +104,15 @@ export const SomeGames: Story = {
     }, []);
 
     return (
-      <Provider store={store}>
-        <MemoryRouter>
+      <Router hook={hook}>
+        <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex />
+              <GameIndex onStartVoting={() => {}} />
             </div>
           </Logined>
-        </MemoryRouter>
-      </Provider>
+        </Provider>
+      </Router>
     );
   },
 };
@@ -119,6 +121,7 @@ export const TenGames: Story = {
   render() {
     const store = createStore();
     const games = new Array(10).fill(undefined);
+    const { hook } = memoryLocation();
 
     useEffect(() => {
       games.forEach((_, idx) =>
@@ -134,15 +137,15 @@ export const TenGames: Story = {
     }, []);
 
     return (
-      <Provider store={store}>
-        <MemoryRouter>
+      <Router hook={hook}>
+        <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex />
+              <GameIndex onStartVoting={() => {}} />
             </div>
           </Logined>
-        </MemoryRouter>
-      </Provider>
+        </Provider>
+      </Router>
     );
   },
 };
