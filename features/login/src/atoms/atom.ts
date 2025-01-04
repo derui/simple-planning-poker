@@ -113,7 +113,7 @@ export const signUpAtom: WritableAtom<null, [email: string, password: string], v
           set(internalLoginErrorAtom, "Email or password is invalid");
         }
       })
-      .catch((e) => {
+      .catch(() => {
         set(internalLoginStatusAtom, LoginStatus.NotLogined);
         set(internalLoginErrorAtom, "Error occurred on backend. Please retry later");
       });
