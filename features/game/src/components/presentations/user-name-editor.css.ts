@@ -5,15 +5,35 @@ import { style } from "@vanilla-extract/css";
 
 export const root: string = style({
   display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  border: `1px solid ${vars.color.gray[200]}`,
+  borderRadius: "8px",
+  gap: vars.spacing[1],
+  margin: 0,
+  padding: 0,
+  boxShadow: vars.shadow.md,
+});
+
+export const row: string = style({
+  display: "flex",
   alignItems: "center",
   justifyContent: "center",
   height: vars.spacing[12],
-  border: `1px solid ${vars.color.gray[200]}`,
-  borderRadius: "8px",
   gap: vars.spacing[3],
   margin: 0,
-  padding: `0 ${vars.spacing[4]}`,
-  boxShadow: vars.shadow.md,
+  padding: `0 ${vars.spacing[3]}`,
+  paddingTop: vars.spacing[3],
+});
+
+export const rowRight: string = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: vars.spacing[3],
+  margin: 0,
+  padding: `0 ${vars.spacing[3]}`,
+  paddingBottom: vars.spacing[3],
 });
 
 export const decoration: string = style({

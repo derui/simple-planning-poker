@@ -51,16 +51,20 @@ export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, 
 
   return (
     <form className={styles.root} onSubmit={handleSubmit(wrappedHandleSubmit)}>
-      <span className={styles.decoration}>
-        <Icon.Pencil size="m" variant={Variant.teal} />
-      </span>
-      <Input autoFocus defaultValue={defaultValue} {...register("userName")} aria-invalid={!!errors.userName} />
-      <button type="submit" className={styles.submit} aria-label="Submit">
-        <Icon.Check size="m" variant={Variant.emerald} />
-      </button>
-      <button type="button" className={styles.cancel} onClick={handleCancel} aria-label="Cancel">
-        <Icon.X size="m" variant={Variant.cerise} />
-      </button>
+      <div className={styles.row}>
+        <span className={styles.decoration}>
+          <Icon.Pencil size="m" variant={Variant.teal} />
+        </span>
+        <Input autoFocus defaultValue={defaultValue} {...register("userName")} aria-invalid={!!errors.userName} />
+      </div>
+      <div className={styles.rowRight}>
+        <button type="submit" className={styles.submit} aria-label="Submit">
+          <Icon.Check size="m" variant={Variant.emerald} />
+        </button>
+        <button type="button" className={styles.cancel} onClick={handleCancel} aria-label="Cancel">
+          <Icon.X size="m" variant={Variant.cerise} />
+        </button>
+      </div>
     </form>
   );
 };
