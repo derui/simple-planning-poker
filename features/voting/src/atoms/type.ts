@@ -1,5 +1,13 @@
-import { UserRole } from "../components/types.js";
 import { EstimationDto } from "./dto.js";
+
+/**
+ * status of voting
+ */
+export enum JoinedVotingStatus {
+  Voting = "voting",
+  Revealed = "revealed",
+  NotJoined = "notJoined",
+}
 
 /**
  * Hook to get common attributes at polling place
@@ -24,11 +32,6 @@ export type PollingPlace = {
    * theme of current joining voting
    */
   theme: string;
-
-  /**
-   * role of login user.
-   */
-  userRole: UserRole;
 
   /**
    * applicable points in this voting
