@@ -1,25 +1,14 @@
 import { Estimations, User, UserEstimation, VoterType, Voting } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/mock/user-repository";
 import { VotingRepository } from "@spp/shared-domain/voting-repository";
-import { Atom, atom } from "jotai";
+import { dispatch } from "@spp/shared-use-case";
+import { Atom, atom, WritableAtom } from "jotai";
 import { atomWithRefresh, loadable, unwrap } from "jotai/utils";
-import { UserRole } from "../components/types.js";
+import { Loadable } from "jotai/vanilla/utils/loadable";
 import { EstimationDto } from "./dto.js";
 import { JoinedVotingStatus, PollingPlace } from "./type.js";
 
 const currentUserIdAtom = atom<User.Id | undefined>();
-
-/**
- * atom for user role.
- */
-const userRoleAtom = atom<UserRole>("player");
-
-enum JoinStatus {
-  Joining = "joining",
-  Joined = "joined",
-  NotJoined = "notJoined",
-}
-const joinStatusAtom = atom<JoinStatus>(JoinStatus.NotJoined);
 
 /**
  * Atom for current voting id
@@ -39,8 +28,50 @@ const asyncCurrentVotingAtom = atomWithRefresh(async (get) => {
   return voting;
 });
 
+const internalJoiningAtom = atom(false);
+
 /**
- * users joined in the voting holding by `votingAtom`
+ * loading atom for joining
+ */
+export const joiningAtom: Atom<boolean> = atom((get) => get(internalJoiningAtom));
+
+/**
+ * Join user to the voting
+ */
+export const joinVotingAtom: WritableAtom<null, [userId: User.Id, votingId: Voting.Id], void> = atom(
+  null,
+  (_get, set, userId: User.Id, votingId: Voting.Id) => {
+    set(internalJoiningAtom, true);
+
+    VotingRepository.findBy({ id: votingId })
+      .then(async (voting) => {
+        if (!voting) {
+          throw new Error("not found");
+        }
+
+        if (!voting.participatedVoters.some((v) => v.user === userId)) {
+          const [newVoting, event] = Voting.joinUser(voting, userId);
+          await VotingRepository.save({ voting: newVoting });
+
+          if (event) {
+            dispatch(event);
+          }
+        }
+
+        set(currentVotingIdAtom, votingId);
+        set(currentUserIdAtom, userId);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        set(internalJoiningAtom, false);
+      });
+  }
+);
+
+/**
+ * users joined in the voting holding by `currentVotingAtom`
  */
 const asyncUsersAtom = atom(async (get) => {
   const voting = await get(asyncCurrentVotingAtom);
@@ -51,6 +82,9 @@ const asyncUsersAtom = atom(async (get) => {
   return await UserRepository.listIn({ users: voting.participatedVoters.map((v) => v.user) });
 });
 
+/**
+ *  voters joined in the voting holding by `currentVotingAtom`
+ */
 const asyncVotersAtom = atom(async (get) => {
   const voting = await get(asyncCurrentVotingAtom);
   if (!voting) {
@@ -60,6 +94,9 @@ const asyncVotersAtom = atom(async (get) => {
   return voting.participatedVoters.filter((v) => VoterType.Normal == v.type);
 });
 
+/**
+ * inspectors joined in the voting holding by `currentVotingAtom`
+ */
 const asyncInspectorsAtom = atom(async (get) => {
   const voting = await get(asyncCurrentVotingAtom);
   if (!voting) {
@@ -116,7 +153,10 @@ const asyncPollingPlaceAtom = atom<Promise<PollingPlace | undefined>>(async (get
   } satisfies PollingPlace;
 });
 
-export const pollingPlaceAtom = loadable(asyncPollingPlaceAtom);
+/**
+ * Get current polling place entity
+ */
+export const pollingPlaceAtom: Atom<Loadable<Promise<PollingPlace | undefined>>> = loadable(asyncPollingPlaceAtom);
 
 /**
  * get current user's joined voting status
