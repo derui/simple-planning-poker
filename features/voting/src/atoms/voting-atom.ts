@@ -161,8 +161,8 @@ export const pollingPlaceAtom: Atom<Loadable<Promise<PollingPlace | undefined>>>
 /**
  * get current user's joined voting status
  */
-const internalJoinedVotingStatusAtom = atom(async (get) => {
-  const voting = await get(asyncCurrentVotingAtom);
+const internalJoinedVotingStatusAtom = atom((get) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
   if (!voting) {
     return JoinedVotingStatus.NotJoined;
   }

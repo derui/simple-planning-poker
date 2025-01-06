@@ -1,63 +1,36 @@
-import { useLoginUser } from "@spp/feature-login";
+import { User, Voting } from "@spp/shared-domain";
+import { useAtomValue, useSetAtom } from "jotai";
+import { JoinedVotingStatus } from "./type.js";
+import { joinedVotingStatusAtom, joiningAtom, joinVotingAtom } from "./voting-atom.js";
 
 /**
  * Definition of hook for join
  */
 export type UseJoin = () => {
-  status: JoinStatus;
+  status: JoinedVotingStatus;
 
   /**
    * Join login user into the voting
    */
-  join(id: Voting.Id): void;
+  join: (userId: User.Id, id: Voting.Id) => void;
+
+  /**
+   * Loading status
+   */
+  loading: boolean;
 };
 
 /**
  * Create `UseJoin` with dependencies
  */
 export const useJoin: UseJoin = function useJoin() {
-  const { userId } = useLoginUser();
-  const [, setVoting] = useAtom(votingAtom);
-  const [status, setStatus] = useAtom(joinStatusAtom);
-  const [, setUsers] = useAtom(usersAtom);
-  const [, setVotingStatus] = useAtom(votingStatusAtom);
-  const setUserRole = useSetAtom(userRoleAtom);
+  const status = useAtomValue(joinedVotingStatusAtom);
+  const join = useSetAtom(joinVotingAtom);
+  const loading = useAtomValue(joiningAtom);
 
   return {
     status,
-
-    join(votingId) {
-      if (!userId) {
-        return;
-      }
-
-      setStatus(JoinStatus.Joining);
-
-      votingRepository
-        .findBy(votingId)
-        .then(async (voting) => {
-          if (voting) {
-            setStatus(JoinStatus.Joined);
-
-            const users = await userRepository.listIn(voting.participatedVoters.map((v) => v.user));
-            setUsers(users);
-            setVoting(voting);
-            setUserRole("player");
-
-            if (voting.status == Voting.VotingStatus.Revealed) {
-              setVotingStatus(VotingStatus.Revealed);
-            } else {
-              setVotingStatus(VotingStatus.Voting);
-            }
-          } else {
-            setStatus(JoinStatus.NotJoined);
-            setVoting(undefined);
-          }
-        })
-        .catch(() => {
-          setStatus(JoinStatus.NotJoined);
-          setVoting(undefined);
-        });
-    },
+    loading,
+    join,
   };
 };

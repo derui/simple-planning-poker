@@ -1,26 +1,12 @@
-import { UseLoginUser } from "@spp/feature-login";
 import { ApplicablePoints, Estimations, StoryPoint, User, UserEstimation, Voter, Voting } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import {
-  ChangeThemeUseCase,
-  ChangeUserModeUseCase,
-  EstimatePlayerUseCase,
-  newEstimatePlayerUseCase,
-  RevealUseCase,
-} from "@spp/shared-use-case";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { act, renderHook } from "@testing-library/react";
 import { enableMapSet } from "immer";
 import { createStore, Provider } from "jotai";
-import sinon from "sinon";
-import { describe, expect, test } from "vitest";
-import {
-  createUseJoin,
-  createUsePollingPlace,
-  createUseRevealed,
-  createUseVoting,
-  createUseVotingStatus,
-} from "./voting.js";
+import { expect, test } from "vitest";
+import { JoinedVotingStatus } from "./type.js";
+import { useJoin } from "./use-join.js";
 
 enableMapSet();
 
@@ -30,677 +16,94 @@ const createWrapper =
   (store: ReturnType<typeof createStore>) =>
   ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
 
-describe("UseVotingStatus", () => {
-  const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
 
-  test("get voting status when voting is not revealed", async () => {
-    // Arrange
-    const userId = User.createId();
-    const votingId = Voting.createId();
-    const votingRepository = newMemoryVotingRepository([
-      Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const useLoginUser: UseLoginUser = () => {
-      return {
-        userId,
-      };
-    };
+test("default status", async () => {
+  // Arrange
+  const store = createStore();
+  const wrapper = createWrapper(store);
 
-    // Act
-    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-    const { result, rerender } = renderHook(() => createUseVotingStatus()(), { wrapper });
+  // Act
+  const { result } = renderHook(useJoin, { wrapper });
 
-    await act(async () => {
-      join.result.current.join(votingId);
-    });
-    rerender();
-
-    // Assert
-    expect(result.current.status).toEqual("voting");
-  });
-
-  test("get voting status when voting is revealed", async () => {
-    // Arrange
-    const userId = User.createId();
-    const votingId = Voting.createId();
-    const votingRepository = newMemoryVotingRepository([
-      Voting.revealedOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const useLoginUser: UseLoginUser = () => {
-      return {
-        userId: userId,
-      };
-    };
-
-    // Act
-    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-    const { result, rerender } = renderHook(() => createUseVotingStatus()(), { wrapper });
-
-    await act(async () => {
-      join.result.current.join(votingId);
-    });
-    rerender();
-
-    // Assert
-    expect(result.current.status).toEqual("revealed");
-  });
+  // Assert
+  expect(result.current.loading).toBeFalsy();
+  expect(result.current.status).toBe(JoinedVotingStatus.NotJoined);
 });
 
-describe("UsePollingPlace", () => {
-  const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+test("get loading while joining", async () => {
+  // Arrange
+  const store = createStore();
+  const wrapper = createWrapper(store);
 
-  test("get voting after joined", async () => {
-    // Arrange
-    const userId = User.createId();
-    const votingId = Voting.createId();
-    const votingRepository = newMemoryVotingRepository([
-      Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const useLoginUser: UseLoginUser = () => {
-      return {
-        userId,
-      };
-    };
+  // Act
+  const { result, rerender } = renderHook(useJoin, { wrapper });
+  result.current.join(User.createId(), Voting.createId());
+  rerender();
 
-    // Act
-    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-    const { result, rerender } = renderHook(() => createUsePollingPlace()(), { wrapper });
-
-    await act(async () => {
-      join.result.current.join(votingId);
-    });
-    rerender();
-
-    // Assert
-    expect(join.result.current.status).toEqual("joined");
-    expect(result.current.loading).toBeFalsy();
-    expect(result.current.theme).toEqual("foo");
-    expect(result.current.estimations).toEqual([{ name: "foo" }]);
-  });
+  // Assert
+  expect(result.current.loading).toBe(true);
+  expect(result.current.status).toBe(JoinedVotingStatus.NotJoined);
 });
 
-describe("UseVoting", () => {
-  const POINTS = ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(5)]);
-
-  test("get voting after joined", async () => {
-    // Arrange
-    const userId = User.createId();
-    const votingId = Voting.createId();
-    const votingRepository = newMemoryVotingRepository([
-      Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const useLoginUser: UseLoginUser = () => {
-      return {
-        userId,
-      };
-    };
-
-    // Act
-    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-
-    await act(async () => {
-      join.result.current.join(votingId);
-    });
-
-    // Assert
-    expect(join.result.current.status).toEqual("joined");
+test("joined voting as others", async () => {
+  // Arrange
+  const ownerId = User.createId();
+  const userId = User.createId();
+  const votingId = Voting.createId();
+  const voting = Voting.votingOf({
+    id: votingId,
+    points: POINTS,
+    theme: "foo",
+    estimations: Estimations.empty(),
+    voters: [Voter.createVoter({ user: ownerId })],
   });
 
-  test("get revealable if the voting is revealable", async () => {
-    // Arrange
-    const userId = User.createId();
-    const votingId = Voting.createId();
-    const votingRepository = newMemoryVotingRepository([
-      Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-    const store = createStore();
-    const wrapper = createWrapper(store);
-    const useLoginUser: UseLoginUser = () => {
-      return {
-        userId,
-      };
-    };
-    const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
+  await VotingRepository.save({ voting });
+  await UserRepository.save({ user: User.create({ id: ownerId, name: "owner" }) });
+  await UserRepository.save({ user: User.create({ id: userId, name: "user" }) });
 
-    await act(async () => {
-      join.result.current.join(votingId);
-    });
+  const store = createStore();
 
-    // Act
-    const { result, rerender } = renderHook(
-      () =>
-        createUseVoting({
-          useLoginUser,
-          changeThemeUseCase: sinon.fake(),
-          estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
-          changeUserModeUseCase: sinon.fake(),
-          revealUseCase: sinon.fake(),
-        })(),
-      { wrapper }
-    );
-
-    await act(async () => {
-      result.current.estimate(1);
-    });
-    rerender();
-
-    // Assert
-    expect(result.current.revealable).toBeTruthy();
+  // Act
+  const { result } = renderHook(useJoin, { wrapper: createWrapper(store) });
+  await act(async () => {
+    result.current.join(userId, votingId);
   });
 
-  describe("ChangeTheme", () => {
-    test("can not call use case if voting is not ready", async () => {
-      // Arrange
-      const userId = User.createId();
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake();
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: fake,
-            estimatePlayerUseCase: sinon.fake(),
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      result.current.changeTheme("new");
-
-      // Assert
-      expect(fake.called).toBeFalsy();
-    });
-
-    test("call use case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<ChangeThemeUseCase>>({
-        kind: "success",
-        voting: Voting.changeTheme(voting, "new theme"),
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: fake,
-            estimatePlayerUseCase: sinon.fake(),
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.changeTheme("new theme");
-      });
-
-      // Assert
-      expect(pollingPlace.result.current.theme).toEqual("new theme");
-    });
-  });
-
-  describe("estimate", () => {
-    test("estimated should be undefined when voting is just started", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<EstimatePlayerUseCase>>({
-        kind: "success",
-        voting: Voting.takePlayerEstimation(voting, userId, UserEstimation.submittedOf(StoryPoint.create(1))),
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: fake,
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      // Assert
-      expect(result.current.estimated).toBeUndefined();
-    });
-
-    test("call use-case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<EstimatePlayerUseCase>>({
-        kind: "success",
-        voting: Voting.takePlayerEstimation(voting, userId, UserEstimation.submittedOf(StoryPoint.create(1))),
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: fake,
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.estimate(5);
-      });
-
-      // Assert
-      expect(fake.calledWith({ userId, votingId, userEstimation: UserEstimation.submittedOf(StoryPoint.create(1)) }));
-    });
-
-    test("udpate `estimated` if after estimated", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId }), Voter.createVoter({ user: User.createId("other") })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([
-        User.create({ id: userId, name: "foo" }),
-        User.create({ id: User.createId("other"), name: "other" }),
-      ]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.estimate(5);
-      });
-
-      // Assert
-      expect(result.current.estimated).toEqual(5);
-    });
-  });
-
-  describe("reveal", () => {
-    test("call use-case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<RevealUseCase>>({
-        kind: "success",
-        voting,
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: sinon.fake(),
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: fake,
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.reveal();
-      });
-
-      // Assert
-      expect(fake.calledWith({ votingId }));
-    });
-  });
+  // Assert
+  expect(result.current.loading).toBe(false);
+  expect(result.current.status).toBe(JoinedVotingStatus.Voting);
 });
 
-describe("UseRevealed", () => {
-  const POINTS = ApplicablePoints.create([StoryPoint.create(1)]);
+test("joined revealed voting as others", async () => {
+  // Arrange
+  const ownerId = User.createId();
+  const userId = User.createId();
+  const votingId = Voting.createId();
+  let voting = Voting.votingOf({
+    id: votingId,
+    points: POINTS,
+    theme: "foo",
+    estimations: Estimations.empty(),
+    voters: [Voter.createVoter({ user: ownerId })],
+  });
+  voting = Voting.takePlayerEstimation(voting, ownerId, UserEstimation.giveUpOf());
+  voting = Voting.reveal(voting)[0];
 
-  describe("ChangeTheme", () => {
-    test("can not call use case if voting is not ready", async () => {
-      // Arrange
-      const store = createStore();
-      const wrapper = createWrapper(store);
+  await VotingRepository.save({ voting });
+  await UserRepository.save({ user: User.create({ id: ownerId, name: "owner" }) });
+  await UserRepository.save({ user: User.create({ id: userId, name: "user" }) });
 
-      // Act
-      const fake = sinon.fake();
-      const { result } = renderHook(
-        () =>
-          createUseRevealed({
-            changeThemeUseCase: fake,
-            resetVotingUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
+  const store = createStore();
 
-      result.current.changeTheme("new");
-
-      // Assert
-      expect(fake.called).toBeFalsy();
-    });
-
-    test("call use case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<ChangeThemeUseCase>>({
-        kind: "success",
-        voting: Voting.changeTheme(voting, "new theme"),
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseRevealed({
-            changeThemeUseCase: fake,
-            resetVotingUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.changeTheme("new theme");
-      });
-
-      // Assert
-      expect(pollingPlace.result.current.theme).toEqual("new theme");
-    });
+  // Act
+  const { result } = renderHook(useJoin, { wrapper: createWrapper(store) });
+  await act(async () => {
+    result.current.join(userId, votingId);
   });
 
-  describe("reveal", () => {
-    test("call use-case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<RevealUseCase>>({
-        kind: "success",
-        voting,
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: sinon.fake(),
-            changeUserModeUseCase: sinon.fake(),
-            revealUseCase: fake,
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.reveal();
-      });
-
-      // Assert
-      expect(fake.calledWith({ votingId }));
-    });
-  });
-
-  describe("change voter type", () => {
-    test("call use-case and get updated voting", async () => {
-      // Arrange
-      const userId = User.createId();
-      const votingId = Voting.createId();
-      const voting = Voting.votingOf({
-        id: votingId,
-        points: POINTS,
-        theme: "foo",
-        estimations: Estimations.empty(),
-        voters: [Voter.createVoter({ user: userId })],
-      });
-      const votingRepository = newMemoryVotingRepository([voting]);
-      const userRepository = newMemoryUserRepository([User.create({ id: userId, name: "foo" })]);
-      const store = createStore();
-      const wrapper = createWrapper(store);
-      const useLoginUser: UseLoginUser = () => {
-        return {
-          userId,
-        };
-      };
-
-      // Act
-      const fake = sinon.fake.resolves<unknown[], ReturnType<ChangeUserModeUseCase>>({
-        kind: "success",
-        voting,
-      });
-      const join = renderHook(() => createUseJoin(useLoginUser, votingRepository, userRepository)(), { wrapper });
-      const pollingPlace = renderHook(() => createUsePollingPlace()(), { wrapper });
-      const { result } = renderHook(
-        () =>
-          createUseVoting({
-            useLoginUser,
-            changeThemeUseCase: sinon.fake(),
-            estimatePlayerUseCase: sinon.fake(),
-            changeUserModeUseCase: fake,
-            revealUseCase: sinon.fake(),
-          })(),
-        { wrapper }
-      );
-
-      await act(async () => {
-        join.result.current.join(votingId);
-      });
-
-      await act(async () => {
-        result.current.changeVoterRole("inspector");
-      });
-
-      // Assert
-      expect(fake.calledWith({ userId, votingId, voterType: Voter.VoterType.Inspector }));
-      expect(pollingPlace.result.current.userRole).toEqual("inspector");
-    });
-  });
+  // Assert
+  expect(result.current.loading).toBe(false);
+  expect(result.current.status).toBe(JoinedVotingStatus.Revealed);
 });
