@@ -1,4 +1,4 @@
-import { Estimations, User, UserEstimation, VoterType, Voting } from "@spp/shared-domain";
+import { Estimations, StoryPoint, User, UserEstimation, Voter, VoterType, Voting } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/mock/user-repository";
 import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { dispatch } from "@spp/shared-use-case";
@@ -115,6 +115,8 @@ const asyncPollingPlaceAtom = atom<Promise<PollingPlace | undefined>>(async (get
     return undefined;
   }
 
+  const currentUserId = get(currentUserIdAtom);
+
   const users = await get(asyncUsersAtom);
   const voters = await get(asyncVotersAtom);
   const inspectors = await get(asyncInspectorsAtom);
@@ -131,13 +133,14 @@ const asyncPollingPlaceAtom = atom<Promise<PollingPlace | undefined>>(async (get
     return {
       name: userName,
       estimated,
+      loginUser: currentUserId === voter.user,
     };
   });
 
   const _inspectors = inspectors.map<EstimationDto>((voter) => {
     const userName = users.find((v) => v.id == voter.user)?.name ?? "unknown";
 
-    return { name: userName };
+    return { name: userName, loginUser: currentUserId === voter.user };
   });
 
   return {
@@ -159,9 +162,21 @@ const asyncPollingPlaceAtom = atom<Promise<PollingPlace | undefined>>(async (get
 export const pollingPlaceAtom: Atom<Loadable<Promise<PollingPlace | undefined>>> = loadable(asyncPollingPlaceAtom);
 
 /**
+ * get current voting is revealable or not
+ */
+export const revealableAtom: Atom<boolean> = atom((get) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
+  if (!voting) {
+    return false;
+  }
+
+  return Voting.canReveal(voting);
+});
+
+/**
  * get current user's joined voting status
  */
-const internalJoinedVotingStatusAtom = atom((get) => {
+export const joinedVotingStatusAtom: Atom<JoinedVotingStatus> = atom((get) => {
   const voting = get(unwrap(asyncCurrentVotingAtom));
   if (!voting) {
     return JoinedVotingStatus.NotJoined;
@@ -179,6 +194,109 @@ const internalJoinedVotingStatusAtom = atom((get) => {
 });
 
 /**
- * The current joined voting status.
+ * Toggle the current user's role.
  */
-export const joinedVotingStatusAtom: Atom<JoinedVotingStatus | undefined> = unwrap(internalJoinedVotingStatusAtom);
+export const toggleRoleAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
+
+  if (!voting) {
+    return;
+  }
+
+  const currentUserId = get(currentUserIdAtom);
+  const voter = voting.participatedVoters.find((v) => v.user == currentUserId);
+
+  if (!voter) {
+    return;
+  }
+
+  const newVoter = Voter.changeVoterType(
+    voter,
+    voter.type == VoterType.Normal ? VoterType.Inspector : VoterType.Normal
+  );
+  const [newVoting, event] = Voting.updateVoter(voting, newVoter);
+
+  VotingRepository.save({ voting: newVoting })
+    .then(async () => {
+      dispatch(event);
+    })
+    .then(() => {
+      set(asyncCurrentVotingAtom);
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+});
+
+/**
+ * Change theme of current voting
+ */
+export const changeThemeAtom: WritableAtom<null, [theme: string], void> = atom(null, (get, set, theme: string) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
+
+  if (!voting) {
+    return;
+  }
+
+  const newVoting = Voting.changeTheme(voting, theme);
+
+  VotingRepository.save({ voting: newVoting })
+    .then(() => {
+      set(asyncCurrentVotingAtom);
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+});
+
+/**
+ * Estimate current voting
+ */
+export const estimateAtom: WritableAtom<null, [estimation: StoryPoint.T], void> = atom(
+  null,
+  (get, set, estimation: StoryPoint.T) => {
+    const voting = get(unwrap(asyncCurrentVotingAtom));
+    const currentUserId = get(currentUserIdAtom);
+    if (!voting || !currentUserId) {
+      return;
+    }
+
+    try {
+      const newVoting = Voting.takePlayerEstimation(voting, currentUserId, UserEstimation.submittedOf(estimation));
+
+      VotingRepository.save({ voting: newVoting })
+        .then(() => {
+          set(asyncCurrentVotingAtom);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
+
+/**
+ * Reveal voting if it able today
+ */
+export const revealAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
+
+  if (!voting || !Voting.canReveal(voting)) {
+    return;
+  }
+
+  const [newVoting, event] = Voting.reveal(voting);
+
+  VotingRepository.save({ voting: newVoting })
+    .then(() => {
+      dispatch(event);
+    })
+    .then(() => {
+      set(asyncCurrentVotingAtom);
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+});
