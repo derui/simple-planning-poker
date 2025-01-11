@@ -103,7 +103,7 @@ const asyncInspectorsAtom = atom(async (get) => {
     return [];
   }
 
-  return voting.participatedVoters.filter((v) => VoterType.Normal == v.type);
+  return voting.participatedVoters.filter((v) => VoterType.Inspector == v.type);
 });
 
 /**
