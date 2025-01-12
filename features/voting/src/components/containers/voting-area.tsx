@@ -12,9 +12,13 @@ export const VotingArea = function VotingArea(): JSX.Element {
   const voting = useVoting();
   const voter = useVoter();
 
-  const theme = useMemo(() => {
-    return place.pollingPlace?.theme;
+  const pollingPlace = useMemo(() => {
+    return place.pollingPlace;
   }, [place.pollingPlace]);
+
+  const theme = useMemo(() => {
+    return pollingPlace?.theme;
+  }, [pollingPlace]);
 
   const userRole = useMemo(() => {
     return voter.role;
@@ -34,9 +38,9 @@ export const VotingArea = function VotingArea(): JSX.Element {
       userRole={userRole}
       onSelect={onSelect}
       selected={voting.estimated ? String(voting.estimated) : undefined}
-      voters={place.pollingPlace?.estimations}
-      inspectors={place.pollingPlace?.inspectors}
-      points={place.pollingPlace?.points}
+      voters={pollingPlace?.estimations}
+      inspectors={pollingPlace?.inspectors}
+      points={pollingPlace?.points}
       onReveal={voting.reveal}
     />
   );
