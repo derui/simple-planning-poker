@@ -1,7 +1,13 @@
+import { useAtomValue, useSetAtom } from "jotai";
+import { useMemo } from "react";
+import { changeThemeAtom, pollingPlaceAtom, resetAtom } from "./voting-atom.js";
+
 /**
  * Definition of hook for revealed voting
  */
 export type UseRevealed = () => {
+  loading: boolean;
+
   /**
    * Change theme with `newTheme`
    */
@@ -17,45 +23,17 @@ export type UseRevealed = () => {
  * Create `UseRevealed` hook
  */
 export const useRevealed: UseRevealed = function useRevealed() {
-  const { changeThemeUseCase, resetVotingUseCase } = dependencies;
-  const [voting, setVoting] = useAtom(votingAtom);
+  const pollingPlace = useAtomValue(pollingPlaceAtom);
+  const loading = useMemo(() => {
+    return pollingPlace.state == "loading";
+  }, [pollingPlace]);
+
+  const changeTheme = useSetAtom(changeThemeAtom);
+  const reset = useSetAtom(resetAtom);
 
   return {
-    changeTheme: (newTheme) => {
-      if (!voting) {
-        return;
-      }
-
-      changeThemeUseCase({
-        theme: newTheme,
-        votingId: voting.id,
-      })
-        .then((ret) => {
-          if (ret.kind == "success") {
-            setVoting(ret.voting);
-          }
-        })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
-
-    reset: () => {
-      if (!voting) {
-        return;
-      }
-
-      resetVotingUseCase({ votingId: voting.id })
-        .then((result) => {
-          switch (result.kind) {
-            case "success":
-              setVoting(result.voting);
-              break;
-          }
-        })
-        .catch((e) => {
-          console.warn(e);
-        });
-    },
+    loading,
+    changeTheme,
+    reset,
   };
 };

@@ -300,3 +300,27 @@ export const revealAtom: WritableAtom<null, [], void> = atom(null, (get, set) =>
       console.error(e);
     });
 });
+
+/**
+ * Reset voting
+ */
+export const resetAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+  const voting = get(unwrap(asyncCurrentVotingAtom));
+
+  if (!voting) {
+    return;
+  }
+
+  const [newVoting, event] = Voting.reset(voting);
+
+  VotingRepository.save({ voting: newVoting })
+    .then(() => {
+      dispatch(event);
+    })
+    .then(() => {
+      set(asyncCurrentVotingAtom);
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+});
