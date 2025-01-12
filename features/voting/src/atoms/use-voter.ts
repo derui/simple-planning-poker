@@ -1,5 +1,7 @@
+import { VoterType } from "@spp/shared-domain";
 import { useAtomValue } from "jotai";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
+import { UserRole } from "../components/types.js";
 import { currentVoterRoleAtom } from "./voting-atom.js";
 
 /**
@@ -9,26 +11,20 @@ export type UseVoter = () => {
   /**
    * Current voter's role
    */
-  role: VoterType | undefined;
-
-  /**
-   * Check if the current user is an inspector
-   */
-  isInspector: boolean;
+  role: UserRole | undefined;
 };
 
 /**
  * Create `UseVoter` hook with dependencies
  */
 export const useVoter: UseVoter = function useVoter() {
-  const role = useAtomValue(currentVoterRoleAtom);
+  const voterRole = useAtomValue(currentVoterRoleAtom);
 
-  const isInspector = useMemo(() => {
-    return role === VoterType.Inspector;
-  }, [role]);
+  const role = useMemo<UserRole>(() => {
+    return voterRole == VoterType.Normal ? "player" : "inspector";
+  }, [voterRole]);
 
   return {
     role,
-    isInspector,
   };
 };

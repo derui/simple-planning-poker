@@ -328,7 +328,7 @@ export const resetAtom: WritableAtom<null, [], void> = atom(null, (get, set) => 
 /**
  * Atom for current voter role
  */
-export const currentVoterRoleAtom: Atom<VoterType | undefined> = atom((get) => {
+export const currentVoterRoleAtom: Atom<VoterType.T | undefined> = atom((get) => {
   const voting = get(unwrap(asyncCurrentVotingAtom));
   const currentUserId = get(currentUserIdAtom);
 
