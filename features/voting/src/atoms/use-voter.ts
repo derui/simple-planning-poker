@@ -2,7 +2,7 @@ import { VoterType } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo } from "react";
 import { UserRole } from "../components/types.js";
-import { currentVoterRoleAtom, toggleRole } from "./voting-atom.js";
+import { currentVoterRoleAtom, toggleRoleAtom } from "./voting-atom.js";
 
 /**
  * Definition of hook for voter role
@@ -23,7 +23,7 @@ export type UseVoter = () => {
  */
 export const useVoter: UseVoter = function useVoter() {
   const voterRole = useAtomValue(currentVoterRoleAtom);
-  const setToggleRole = useSetAtom(toggleRole);
+  const toggelRole = useSetAtom(toggleRoleAtom);
 
   const role = useMemo<UserRole>(() => {
     return voterRole == VoterType.Normal ? "player" : "inspector";
@@ -31,6 +31,6 @@ export const useVoter: UseVoter = function useVoter() {
 
   return {
     role,
-    toggleRole: setToggleRole,
+    toggleRole: toggelRole,
   };
 };
