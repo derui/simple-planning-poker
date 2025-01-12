@@ -25,7 +25,11 @@ export const useVoter: UseVoter = function useVoter() {
   const voterRole = useAtomValue(currentVoterRoleAtom);
   const toggelRole = useSetAtom(toggleRoleAtom);
 
-  const role = useMemo<UserRole>(() => {
+  const role = useMemo(() => {
+    if (!voterRole) {
+      return;
+    }
+
     return voterRole == VoterType.Normal ? "player" : "inspector";
   }, [voterRole]);
 
