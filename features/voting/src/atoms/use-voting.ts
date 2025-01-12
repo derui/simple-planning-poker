@@ -7,7 +7,6 @@ import {
   pollingPlaceAtom,
   revealableAtom,
   revealAtom,
-  toggleRoleAtom,
 } from "./voting-atom.js";
 
 /**
@@ -37,11 +36,6 @@ export type UseVoting = () => {
   changeTheme: (newTheme: string) => void;
 
   /**
-   * Toggle voter's role.
-   */
-  toggleRole: () => void;
-
-  /**
    * change estimation in voting
    */
   estimate: (estimation: number) => void;
@@ -52,9 +46,8 @@ export type UseVoting = () => {
  */
 export const useVoting: UseVoting = function useVoting() {
   const revealable = useAtomValue(revealableAtom);
-  const toggleRole = useSetAtom(toggleRoleAtom);
-  const pollingPlace = useAtomValue(pollingPlaceAtom);
   const changeTheme = useSetAtom(changeThemeAtom);
+  const pollingPlace = useAtomValue(pollingPlaceAtom);
   const _estimate = useSetAtom(estimateAtom);
   const reveal = useSetAtom(revealAtom);
 
@@ -87,7 +80,6 @@ export const useVoting: UseVoting = function useVoting() {
     loading,
     revealable,
     estimated,
-    toggleRole,
     changeTheme,
     estimate,
     reveal,
