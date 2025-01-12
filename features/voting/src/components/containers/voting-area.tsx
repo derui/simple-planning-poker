@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { usePollingPlace } from "../../atoms/use-polling-place.js";
 import { useVoter } from "../../atoms/use-voter.js";
 import { useVoting } from "../../atoms/use-voting.js";
@@ -20,12 +20,19 @@ export const VotingArea = function VotingArea(): JSX.Element {
     return voter.role;
   }, [voter.role]);
 
+  const onSelect = useCallback(
+    (v: string) => {
+      voting.estimate(Number(v));
+    },
+    [voting.estimate]
+  );
+
   return (
     <VotingAreaLayout
       loading={voting.loading}
       theme={theme}
       userRole={userRole}
-      onSelect={(v) => voting.estimate(Number(v))}
+      onSelect={onSelect}
       selected={voting.estimated ? String(voting.estimated) : undefined}
       voters={place.estimations}
       inspectors={place.inspectors}
