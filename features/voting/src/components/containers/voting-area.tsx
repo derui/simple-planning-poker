@@ -34,9 +34,9 @@ export const VotingArea = function VotingArea(): JSX.Element {
       userRole={userRole}
       onSelect={onSelect}
       selected={voting.estimated ? String(voting.estimated) : undefined}
-      voters={place.estimations}
-      inspectors={place.inspectors}
-      points={place.points}
+      voters={place.pollingPlace?.estimations}
+      inspectors={place.pollingPlace?.inspectors}
+      points={place.pollingPlace?.points}
       onReveal={voting.reveal}
     />
   );
