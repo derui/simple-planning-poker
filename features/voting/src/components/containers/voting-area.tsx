@@ -1,32 +1,30 @@
 import * as AppUrl from "@spp/shared-app-url";
 import { Voting } from "@spp/shared-domain";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { VotingStatus } from "../../atoms/voting.js";
-import { hooks } from "../../hooks/facade.js";
 import { VotingAreaLayout } from "./voting-area.layout.js";
+import { usePollingPlace } from "../../atoms/use-polling-place.js";
+import { useVoting } from "../../atoms/use-voting.js";
+import { useMemo } from "react";
 
 /**
  * VotingArea container
  */
 export const VotingArea = function VotingArea(): JSX.Element {
-  const place = hooks.usePollingPlace();
-  const voting = hooks.useVoting();
-  const { status } = hooks.useVotingStatus();
-  const navigate = useNavigate();
+  const place = usePollingPlace();
+  const voting = useVoting();
 
-  useEffect(() => {
-    const votingId = place.id;
-    if (status == VotingStatus.Revealed && votingId) {
-      navigate(AppUrl.revealedPage(Voting.createId(votingId)));
-    }
-  }, [status, place.id]);
+  const theme = useMemo(() => {
+    return place.pollingPlace?.theme
+  }, [place.pollingPlace])
+
+  const userRole = useMemo(() => {
+    
+  }, [voting.])
 
   return (
     <VotingAreaLayout
-      loading={status != VotingStatus.Voting}
-      theme={place.theme}
-      userRole={place.userRole}
+      loading={voting.loading}
+      theme={theme}
+      userRole={place.pollingPlace}
       onSelect={(v) => voting.estimate(Number(v))}
       selected={voting.estimated ? String(voting.estimated) : undefined}
       voters={place.estimations}
