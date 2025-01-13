@@ -83,7 +83,7 @@ type Props = {
   /**
    * Handler to change user role
    */
-  onToggleRole?: (role: UserRole) => void;
+  onToggleRole?: () => void;
 
   /**
    * text of points
