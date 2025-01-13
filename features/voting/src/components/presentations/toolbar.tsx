@@ -25,17 +25,23 @@ export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): J
     }
   };
 
+  const handleIconClick = (role: UserRole) => {
+    if (defaultRole !== role) {
+      onChangeRole?.(role);
+    }
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.role}>
         {defaultRole === "player" ? (
           <>
-            <Icon.User variant={Variant.teal} />
+            <Icon.User variant={Variant.teal} onClick={() => handleIconClick("player")} />
             <span className={styles.roleName}>Player</span>
           </>
         ) : (
           <>
-            <Icon.Eye variant={Variant.orange} />
+            <Icon.Eye variant={Variant.orange} onClick={() => handleIconClick("inspector")} />
             <span className={styles.roleName}>Inspector</span>
           </>
         )}
