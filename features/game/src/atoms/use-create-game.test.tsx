@@ -152,6 +152,7 @@ describe("Create", () => {
 
     // Act
     result.current.create("foo", "1");
+    await waitFor(() => expect(result.current.loading).toEqual(true));
     rerender();
 
     // Assert
