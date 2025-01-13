@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Normal: Story = {
   args: {
     total: 4,
-    estimations: [{ name: "user1" }, { name: "user2", estimated: "1" }, { name: "user3" }],
+    estimations: [{ name: "user1", loginUser: false }, { name: "user2", estimated: "1" }, { name: "user3" }],
   },
   render(args) {
     return (
