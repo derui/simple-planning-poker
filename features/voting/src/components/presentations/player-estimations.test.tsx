@@ -6,20 +6,20 @@ import { PlayerEstimations } from "./player-estimations.js";
 afterEach(cleanup);
 
 test("display a estimation", () => {
-  const { container } = render(<PlayerEstimations total={5} estimations={[{ name: "foo" }]}></PlayerEstimations>);
+  const { container } = render(<PlayerEstimations total={5} estimations={[{ name: "foo", loginUser: false }]}></PlayerEstimations>);
 
   expect(container).toMatchSnapshot();
 });
 
 test("loading", () => {
-  const { container } = render(<PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: "1" }]} />);
+  const { container } = render(<PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: "1", loginUser: false }]} />);
 
   expect(container.querySelector('[data-loading="true"]')).not.toBeNull();
 });
 
 test("all estimated", () => {
   const estimations = Array.from(new Array(5)).map((_, index) => {
-    return { name: `foo${index}`, estimated: "1" };
+    return { name: `foo${index}`, estimated: "1", loginUser: false };
   });
 
   const { container } = render(<PlayerEstimations total={5} estimations={estimations} />);
@@ -29,7 +29,7 @@ test("all estimated", () => {
 
 test("disable button if can not reveal", () => {
   const estimations = Array.from(new Array(5)).map((_, index) => {
-    return { name: `foo${index}`, estimated: "3" };
+    return { name: `foo${index}`, estimated: "3", loginUser: false };
   });
 
   const { container } = render(<PlayerEstimations total={5} estimations={estimations} />);
@@ -40,7 +40,7 @@ test("disable button if can not reveal", () => {
 test("call onReveal if it is revealable", async () => {
   expect.assertions(1);
   const estimations = Array.from(new Array(5)).map((_, index) => {
-    return { name: `foo${index}`, estimated: "4" };
+    return { name: `foo${index}`, estimated: "4", loginUser: false };
   });
 
   render(
