@@ -28,10 +28,18 @@ export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): J
   return (
     <div className={styles.root}>
       <div className={styles.role}>
-        <Icon.User variant={Variant.teal} />
-        <span className={styles.roleName}>{defaultRole}</span>
+        {defaultRole === "player" ? (
+          <>
+            <Icon.User variant={Variant.teal} />
+            <span className={styles.roleName}>Player</span>
+          </>
+        ) : (
+          <>
+            <Icon.Eye variant={Variant.orange} />
+            <span className={styles.roleName}>Inspector</span>
+          </>
+        )}
         <ToggleButton initialChecked={defaultRole === "inspector"} onToggle={handleToggle} />
-        <Icon.Eye variant={Variant.orange} />
       </div>
     </div>
   );
