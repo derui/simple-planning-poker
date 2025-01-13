@@ -7,7 +7,7 @@ export interface Props {
   /**
    * Event to notify change role between player and inspector.
    */
-  onChangeRole?: (role: UserRole) => void;
+  onToggleRole?: () => void;
 
   /**
    * Default role
@@ -15,28 +15,24 @@ export interface Props {
   defaultRole: UserRole;
 }
 
-export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): JSX.Element {
-  const handleRoleChange = (role: UserRole) => {
-    if (defaultRole !== role) {
-      onChangeRole?.(role);
-    }
+export const Toolbar = function Toolbar({ onToggleRole, defaultRole }: Props): JSX.Element {
+  const handleRoleClick = () => {
+    onToggleRole?.();
   };
 
   return (
     <div className={styles.root}>
-      <div className={styles.role}>
         {defaultRole === "player" ? (
-          <button onClick={() => handleRoleChange("player")}>
+          <button className={styles.role} onClick={() => handleRoleClick()}>
             <Icon.User variant={Variant.teal} />
             <span className={styles.roleName}>Player</span>
           </button>
         ) : (
-          <button onClick={() => handleRoleChange("inspector")}>
+          <button className={styles.role} onClick={() => handleRoleClick()}>
             <Icon.Eye variant={Variant.orange} />
             <span className={styles.roleName}>Inspector</span>
           </button>
         )}
-      </div>
     </div>
   );
 };
