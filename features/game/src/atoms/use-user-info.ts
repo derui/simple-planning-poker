@@ -1,3 +1,4 @@
+import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect } from "react";
@@ -22,6 +23,11 @@ export type UseUserInfo = () => {
    *  Change default voter mode of current user
    */
   readonly changeDefaultVoterMode: (voterMode: VoterMode) => void;
+
+  /**
+   * Load the user information
+   */
+  readonly loadUser: () => void;
 };
 
 /**
@@ -45,10 +51,15 @@ export const useUserInfo: UseUserInfo = () => {
     _changeDefaultVoterMode(newMode);
   }, []);
 
+  const loadUserInfo = useCallback(() => {
+    loadUser();
+  }, [loadUser]);
+
   return {
     loading: loginUser ? false : true,
     loginUser: loginUser ? toUserDto(loginUser) : undefined,
     editName,
     changeDefaultVoterMode,
+    loadUser: loadUserInfo,
   };
 };
