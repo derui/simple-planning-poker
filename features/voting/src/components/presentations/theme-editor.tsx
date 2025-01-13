@@ -56,40 +56,43 @@ const ThemeEditorInternal = function ThemeEditorInternal({
     setState(theme);
   };
 
-  if (!editing) {
-    return <span className={styles.editorRoot}>{state ? state : "No theme"}</span>
-  }
-
   return (
-    <form className={styles.editorRoot} onSubmit={handleSubmit}>
-      <input
-        ref={ref}
-        type="text"
-        tabIndex={1}
-        className={styles.editorInput}
-        onInput={handleChange}
-        value={state}
-        placeholder="No theme"
-        readOnly={!editing}
-      />
-      <button
-        type="submit"
-        className={editing ? styles.submitButton : styles.submitButtonHidden}
-        disabled={!editing}
-        aria-label="submit"
-      >
-        <Icon.Check variant={Variant.emerald} />
-      </button>
-      <button
-        type="button"
-        aria-label="cancel"
-        className={editing ? styles.cancelButton : styles.cancelButtonHidden}
-        onClick={handleCancel}
-        disabled={!editing}
-      >
-        <Icon.X variant={Variant.gray} />
-      </button>
-    </form>
+    <div>
+      <h2 className={styles.header}>Theme Editor</h2>
+      {editing ? (
+        <form className={styles.editorRoot} onSubmit={handleSubmit}>
+          <input
+            ref={ref}
+            type="text"
+            tabIndex={1}
+            className={styles.editorInput}
+            onInput={handleChange}
+            value={state}
+            placeholder="No theme"
+            readOnly={!editing}
+          />
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={!editing}
+            aria-label="submit"
+          >
+            <Icon.Check variant={Variant.emerald} />
+          </button>
+          <button
+            type="button"
+            aria-label="cancel"
+            className={styles.cancelButton}
+            onClick={handleCancel}
+            disabled={!editing}
+          >
+            <Icon.X variant={Variant.gray} />
+          </button>
+        </form>
+      ) : (
+        <span className={styles.editorRoot}>{state ? state : "No theme"}</span>
+      )}
+    </div>
   );
 };
 
