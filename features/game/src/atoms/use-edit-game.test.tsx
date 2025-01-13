@@ -1,19 +1,30 @@
 import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
-import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearGame, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { clearSubsctiptions } from "@spp/shared-use-case";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { toGameDto } from "./dto.js";
-import { loadGamesAtom } from "./game-atom.js";
 import { useEditGame } from "./use-edit-game.js";
+import { loadUserAtom } from "./user-atom.js";
 
-beforeEach(() => {
-  clear();
+beforeEach(async () => {
   clearSubsctiptions();
   injectErrorOnSave(undefined);
+
+  clearGame();
+  clearUser();
+
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("id"),
+      name: "name",
+    }),
+  });
 });
 
 const createWrapper =
@@ -23,7 +34,7 @@ const createWrapper =
 test("initial status", () => {
   // Arrange
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("user"));
+  store.set(loadUserAtom, User.createId("user"));
 
   // Act
   const { result } = renderHook(useEditGame, {
@@ -46,7 +57,7 @@ test("set loading after editing", async () => {
   await GameRepository.save({ game });
 
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
+  store.set(loadUserAtom, User.createId("id"));
   const { result, rerender } = renderHook(useEditGame, { wrapper: createWrapper(store) });
 
   // Act
@@ -67,7 +78,7 @@ test("should updated edited game", async () => {
   })[0];
   await GameRepository.save({ game });
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
+  store.set(loadUserAtom, User.createId("id"));
   const { result } = renderHook(useEditGame, { wrapper: createWrapper(store) });
 
   // Act
@@ -84,7 +95,7 @@ describe("validation", () => {
   test("get error if the game not found", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("id"));
+    store.set(loadUserAtom, User.createId("id"));
     const { result } = renderHook(useEditGame, { wrapper: createWrapper(store) });
 
     // Act
@@ -106,7 +117,7 @@ describe("validation", () => {
     await GameRepository.save({ game });
 
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("other"));
+    store.set(loadUserAtom, User.createId("other"));
     const { result } = renderHook(useEditGame, { wrapper: createWrapper(store) });
 
     // Act

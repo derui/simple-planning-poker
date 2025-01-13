@@ -1,15 +1,25 @@
 import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
-import { clear } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearGame } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { beforeEach, expect, test } from "vitest";
 import { toGameDto } from "./dto.js";
-import { loadGamesAtom } from "./game-atom.js";
 import { useCurrentGame } from "./use-current-game.js";
+import { loadUserAtom } from "./user-atom.js";
 
-beforeEach(() => {
-  clear();
+beforeEach(async () => {
+  clearGame();
+  clearUser();
+
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("id"),
+      name: "name",
+    }),
+  });
 });
 
 const createWrapper =
@@ -19,7 +29,7 @@ const createWrapper =
 test("initial status", async () => {
   // Arrange
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
+  store.set(loadUserAtom, User.createId("id"));
 
   // Act
   const { result } = renderHook(useCurrentGame, {
@@ -43,11 +53,10 @@ test("get game after select", async () => {
   })[0];
   await GameRepository.save({ game });
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
-  const wrapper = createWrapper(store);
+  store.set(loadUserAtom, User.createId("id"));
 
   // Act
-  const { result } = renderHook(useCurrentGame, { wrapper });
+  const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
   await act(async () => {
     result.current.select(game.id);
@@ -68,7 +77,7 @@ test("should loading while deleting a game", async () => {
   })[0];
   await GameRepository.save({ game });
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
+  store.set(loadUserAtom, User.createId("id"));
 
   const { result, rerender } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
@@ -94,7 +103,7 @@ test("should be able to delete game", async () => {
   })[0];
   await GameRepository.save({ game });
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("id"));
+  store.set(loadUserAtom, User.createId("id"));
 
   const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
@@ -102,6 +111,7 @@ test("should be able to delete game", async () => {
   await act(async () => {
     result.current.select(game.id);
   });
+
   await act(async () => result.current.delete());
   await waitFor(async () => !result.current.loading);
 
@@ -114,13 +124,13 @@ test("can not delete a game that have by other user", async () => {
   // Arrange
   const game = Game.create({
     id: Game.createId("game"),
-    owner: User.createId("id"),
+    owner: User.createId("other"),
     points: ApplicablePoints.create([StoryPoint.create(3)]),
     name: GameName.create("game"),
   })[0];
   await GameRepository.save({ game });
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("user"));
+  store.set(loadUserAtom, User.createId("id"));
 
   const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 

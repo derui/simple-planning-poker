@@ -11,8 +11,9 @@ const selectedGameIdAtom = atom<Game.Id | undefined>(undefined);
 
 const asyncCurrentGameAtom = atomWithRefresh(async (get) => {
   const id = get(selectedGameIdAtom);
+  const user = get(loginUserAtom);
 
-  if (!id) return undefined;
+  if (!id || !user) return undefined;
 
   return await GameRepository.findBy({ id });
 });
@@ -43,7 +44,7 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
     return;
   }
 
-  if (game.owner != user?.id) {
+  if (!user || game.owner != user.id) {
     return;
   }
 
