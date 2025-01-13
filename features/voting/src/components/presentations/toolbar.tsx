@@ -17,15 +17,7 @@ export interface Props {
 }
 
 export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): JSX.Element {
-  const handleToggle = (checked: boolean) => {
-    if (checked) {
-      onChangeRole?.("inspector");
-    } else {
-      onChangeRole?.("player");
-    }
-  };
-
-  const handleIconClick = (role: UserRole) => {
+  const handleRoleChange = (role: UserRole) => {
     if (defaultRole !== role) {
       onChangeRole?.(role);
     }
@@ -36,16 +28,16 @@ export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): J
       <div className={styles.role}>
         {defaultRole === "player" ? (
           <>
-            <Icon.User variant={Variant.teal} onClick={() => handleIconClick("player")} />
+            <Icon.User variant={Variant.teal} onClick={() => handleRoleChange("player")} />
             <span className={styles.roleName}>Player</span>
           </>
         ) : (
           <>
-            <Icon.Eye variant={Variant.orange} onClick={() => handleIconClick("inspector")} />
+            <Icon.Eye variant={Variant.orange} onClick={() => handleRoleChange("inspector")} />
             <span className={styles.roleName}>Inspector</span>
           </>
         )}
-        <ToggleButton initialChecked={defaultRole === "inspector"} onToggle={handleToggle} />
+        <ToggleButton initialChecked={defaultRole === "inspector"} onToggle={(checked) => handleRoleChange(checked ? "inspector" : "player")} />
       </div>
     </div>
   );
