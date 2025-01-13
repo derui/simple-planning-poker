@@ -22,6 +22,5 @@ export const role: string = style({
 });
 
 export const roleName: string = style({
-  display: "flex",
   color: vars.color.teal[500],
 });
