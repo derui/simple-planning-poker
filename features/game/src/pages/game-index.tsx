@@ -16,7 +16,6 @@ interface Props {
 // eslint-disable-next-line func-style
 export function GameIndex({ onStartVoting }: Props): JSX.Element {
   const [loc, navigate] = useLocation();
-  console.log(loc);
 
   const onCreated = useCallback(() => {
     navigate("/", { replace: true });

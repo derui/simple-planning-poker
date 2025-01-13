@@ -3,8 +3,9 @@ import { GameRepository } from "@spp/shared-domain/game-repository";
 import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { createStore, Provider } from "jotai";
-import { MemoryRouter } from "react-router-dom";
 import { afterEach, expect, test } from "vitest";
+import { Router } from "wouter";
+import { memoryLocation } from "wouter/memory-location";
 import { loadGamesAtom } from "../atoms/game-atom.js";
 import { GameIndex } from "./game-index.js";
 
@@ -13,14 +14,15 @@ afterEach(cleanup);
 test("render page", () => {
   // Arrange
   const store = createStore();
+  const { hook } = memoryLocation();
 
   // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
+    <Router hook={hook}>
+      <Provider store={store}>
         <GameIndex onStartVoting={() => {}} />
-      </MemoryRouter>
-    </Provider>
+      </Provider>
+    </Router>
   );
 
   // Assert
@@ -33,6 +35,7 @@ test("should call the handler when the game is loaded", async () => {
   expect.assertions(1);
   // Arrange
   const store = createStore();
+  const { hook } = memoryLocation();
 
   await GameRepository.save({
     game: Game.create({
@@ -46,11 +49,11 @@ test("should call the handler when the game is loaded", async () => {
 
   // Act
   render(
-    <Provider store={store}>
-      <MemoryRouter>
+    <Router hook={hook}>
+      <Provider store={store}>
         <GameIndex onStartVoting={() => {}} />
-      </MemoryRouter>
-    </Provider>
+      </Provider>
+    </Router>
   );
 
   await userEvent.click(await screen.findByText("The game"));

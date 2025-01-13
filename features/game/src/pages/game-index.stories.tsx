@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { useLoginUser } from "@spp/feature-login";
 import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear as clearGame } from "@spp/shared-domain/mock/game-repository";
@@ -35,11 +34,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Logined = ({ children }: React.PropsWithChildren) => {
-  const { loginUser } = useLoginUser();
   const { select } = useCurrentGame();
 
   useEffect(() => {
-    loginUser(User.createId("foo"));
     select(Game.createId("game"));
   }, []);
 
