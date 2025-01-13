@@ -74,4 +74,5 @@ export const cancelButtonHidden: string = style([
 export const header: string = style({
   padding: `${vars.spacing[2]} ${vars.spacing[4]}`,
   margin: vars.spacing[1],
+  borderRight: `1px solid ${vars.color.teal[600]}`,
 });
