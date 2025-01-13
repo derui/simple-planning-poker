@@ -1,6 +1,5 @@
 import { Variant } from "@spp/shared-color-variant";
 import { Icon } from "@spp/ui-icon";
-import { ToggleButton } from "@spp/ui-toggle-button";
 import { UserRole } from "../types.js";
 import * as styles from "./toolbar.css.js";
 
@@ -37,7 +36,6 @@ export const Toolbar = function Toolbar({ onChangeRole, defaultRole }: Props): J
             <span className={styles.roleName}>Inspector</span>
           </>
         )}
-        <ToggleButton initialChecked={defaultRole === "inspector"} onToggle={(checked) => handleRoleChange(checked ? "inspector" : "player")} />
       </div>
     </div>
   );
