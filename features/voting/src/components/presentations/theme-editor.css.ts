@@ -6,7 +6,7 @@ import { style } from "@vanilla-extract/css";
 export const root: string = style({
   display: "flex",
   padding: `${vars.spacing[1]} ${vars.spacing[4]}`,
-  borderRadius: "9999px",
+  borderRadius: vars.spacing[2],
   border: `1px solid ${vars.color.teal[600]}`,
   height: vars.spacing[12],
   alignItems: "center",
