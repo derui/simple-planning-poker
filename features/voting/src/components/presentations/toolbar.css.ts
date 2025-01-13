@@ -12,19 +12,12 @@ export const root: string = style({
 
 export const role: string = style({
   flex: '1 1 auto',
-  display: "grid",
-  gridTemplateRows: "repeat(1, minmax(0, 1fr))",
-  gridTemplateColumns: "auto auto auto",
-  justifyContent: "center",
-  placeItems: "center",
+  display: "flex",
+  alignItems: "center",
   gap: vars.spacing[2],
   padding: `${vars.spacing[1]} ${vars.spacing[2]}`,
 });
 
 export const roleName: string = style({
-  display: "flex",
-  flex: '1 1 auto',
-  alignItems: "center",
-  justifyContent: "center",
   color: vars.color.teal[800],
 });
