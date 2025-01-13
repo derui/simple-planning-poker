@@ -58,7 +58,6 @@ const ThemeEditorInternal = function ThemeEditorInternal({
 
   return (
     <div>
-      <span className={styles.header}>Theme Editor</span>
       {editing ? (
         <form className={styles.editorRoot} onSubmit={handleSubmit}>
           <input
@@ -71,12 +70,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
             placeholder="No theme"
             readOnly={!editing}
           />
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={!editing}
-            aria-label="submit"
-          >
+          <button type="submit" className={styles.submitButton} disabled={!editing} aria-label="submit">
             <Icon.Check variant={Variant.emerald} />
           </button>
           <button
@@ -120,7 +114,8 @@ export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props): JSX
 
   return (
     <div className={styles.root}>
-      <ThemeEditorInternal editing={editing} theme={theme } onSubmit={handleSubmit} onCancel={handleCancel} />
+      <span className={styles.header}>Theme</span>
+      <ThemeEditorInternal editing={editing} theme={theme} onSubmit={handleSubmit} onCancel={handleCancel} />
       {editButton}
     </div>
   );

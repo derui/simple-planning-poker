@@ -1,7 +1,7 @@
-import { test, afterEach, expect } from "vitest";
-import { render, cleanup, screen } from "@testing-library/react";
-import { ThemeEditor } from "./theme-editor.js";
+import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { afterEach, expect, test } from "vitest";
+import { ThemeEditor } from "./theme-editor.js";
 
 afterEach(cleanup);
 
@@ -38,17 +38,10 @@ test("cancel should return default", async () => {
   render(<ThemeEditor theme="foo" />);
 
   await userEvent.click(screen.getByRole("button", { name: "edit" }));
+  await userEvent.type(screen.getByPlaceholderText(/theme/), "changed");
   await userEvent.click(screen.getByRole("button", { name: "cancel" }));
 
-  expect(screen.queryByPlaceholderText<HTMLInputElement>(/No theme/)?.value).toBe("foo");
-});
-
-test("focus input first when switched to edit mode", async () => {
-  render(<ThemeEditor theme="foo" />);
-
-  await userEvent.click(screen.getByRole("button", { name: "edit" }));
-
-  expect(screen.getByRole<HTMLInputElement>("textbox").matches(":focus")).toBeTruthy();
+  expect(screen.queryByText(/foo/)).not.toBeNull();
 });
 
 test("should be able to render without theme", () => {

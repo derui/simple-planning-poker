@@ -1,7 +1,7 @@
-import { test, afterEach, expect } from "vitest";
-import { render, cleanup, screen } from "@testing-library/react";
-import { Toolbar } from "./toolbar.js";
+import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { afterEach, expect, test } from "vitest";
+import { Toolbar } from "./toolbar.js";
 
 afterEach(cleanup);
 
@@ -22,7 +22,7 @@ test("should not call handler after initial render", () => {
   render(
     <Toolbar
       defaultRole="inspector"
-      onChangeRole={() => {
+      onToggleRole={() => {
         expect.fail("Do not call initial render");
       }}
     />
@@ -35,7 +35,7 @@ test("get changed role from player to inspector", async () => {
   render(
     <Toolbar
       defaultRole="player"
-      onChangeRole={(role) => {
+      onToggleRole={(role) => {
         expect(role).toEqual("inspector");
       }}
     />
@@ -50,7 +50,7 @@ test("get changed role from inspector to player", async () => {
   render(
     <Toolbar
       defaultRole="inspector"
-      onChangeRole={(role) => {
+      onToggleRole={(role) => {
         expect(role).toEqual("player");
       }}
     />

@@ -12,6 +12,11 @@ exports[`should be able to render 1`] = `
         class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
+        class="toolbar_roleName__17ktofz2"
+      >
+        player
+      </span>
+      <span
         class="style_container__xfvt0r0"
         role="switch"
       >
@@ -50,6 +55,11 @@ exports[`should change current check 1`] = `
       <span
         class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
+      <span
+        class="toolbar_roleName__17ktofz2"
+      >
+        inspector
+      </span>
       <span
         class="style_container__xfvt0r0"
         role="switch"

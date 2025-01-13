@@ -15,27 +15,27 @@ export interface Props {
   defaultRole: UserRole;
 }
 
-const PlayerButton = ({ onToggleRole }: { onToggleRole: () => void }) => (
-  <button className={styles.role} onClick={() => onToggleRole()}>
+const PlayerRole = ({ onToggleRole }: { onToggleRole?: () => void }) => (
+  <div className={styles.role} onClick={() => onToggleRole?.()}>
     <Icon.User variant={Variant.teal} />
     <span className={styles.roleName}>Player</span>
-  </button>
+  </div>
 );
 
-const InspectorButton = ({ onToggleRole }: { onToggleRole: () => void }) => (
-  <button className={styles.role} onClick={() => onToggleRole()}>
-    <Icon.Eye variant={Variant.orange} />
+const InspectorRole = ({ onToggleRole }: { onToggleRole?: () => void }) => (
+  <div className={styles.role} onClick={() => onToggleRole?.()}>
+    <Icon.Eye variant={Variant.teal} />
     <span className={styles.roleName}>Inspector</span>
-  </button>
+  </div>
 );
 
 export const Toolbar = function Toolbar({ onToggleRole, defaultRole }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       {defaultRole === "player" ? (
-        <PlayerButton onToggleRole={onToggleRole || (() => {})} />
+        <PlayerRole onToggleRole={onToggleRole} />
       ) : (
-        <InspectorButton onToggleRole={onToggleRole || (() => {})} />
+        <InspectorRole onToggleRole={onToggleRole} />
       )}
     </div>
   );
