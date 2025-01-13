@@ -17,8 +17,8 @@ export const VotingArea = function VotingArea(): JSX.Element {
   }, [place.pollingPlace]);
 
   const theme = useMemo(() => {
-    return pollingPlace?.theme;
-  }, [pollingPlace]);
+    return place.pollingPlace?.theme;
+  }, [place.pollingPlace]);
 
   const userRole = useMemo(() => {
     return voter.role;

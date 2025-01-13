@@ -1,100 +1,68 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ApplicablePoints, Estimations, StoryPoint, User, Voter, VoterType, Voting } from "@spp/shared-domain";
-import { newMemoryUserRepository } from "@spp/shared-domain/mock/user-repository";
-import { newMemoryVotingRepository } from "@spp/shared-domain/mock/voting-repository";
-import {
-  newChangeThemeUseCase,
-  newChangeUserModeUseCase,
-  newEstimatePlayerUseCase,
-  newResetVotingUseCase,
-  newRevealUseCase,
-} from "@spp/shared-use-case";
+
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { clear as clearVoting } from "@spp/shared-domain/mock/voting-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { themeClass } from "@spp/ui-theme";
 import { enableMapSet } from "immer";
 import { createStore, Provider } from "jotai";
-import { useEffect } from "react";
-import sinon from "sinon";
-import {
-  createUseJoin,
-  createUsePollingPlace,
-  createUseRevealed,
-  createUseVoting,
-  createUseVotingStatus,
-} from "../../atoms/voting.js";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { joinVotingAtom } from "../../atoms/voting-atom.js";
 import { RevealedArea } from "./revealed-area.js";
 
 enableMapSet();
 
+let store = createStore();
+
 const meta: Meta<{ votingId: Voting.Id }> = {
   title: "Containers/Revealed Area",
+  component: RevealedArea,
   tags: ["autodocs"],
+  beforeEach: async () => {
+    clearVoting();
+    clearUser();
+
+    store = createStore();
+
+    const userId = User.createId();
+    const otherUserId = User.createId();
+    const votingId = Voting.createId();
+
+    await VotingRepository.save({
+      voting: Voting.votingOf({
+        id: votingId,
+        points: ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2)]),
+        estimations: Estimations.empty(),
+        voters: [
+          Voter.createVoter({ user: userId }),
+          Voter.createVoter({ user: otherUserId, type: VoterType.Inspector }),
+        ],
+      }),
+    });
+
+    await Promise.all(
+      [User.create({ id: userId, name: "player1" }), User.create({ id: otherUserId, name: "I'm looking" })].map(
+        (user) => UserRepository.save({ user })
+      )
+    );
+
+    store.set(joinVotingAtom, userId, votingId);
+  },
 };
 
 export default meta;
 type Story = StoryObj<{ votingId: Voting.Id }>;
 
 export const Default: Story = {
-  args: {
-    votingId: Voting.createId(),
-  },
-  render({ votingId }: { votingId: Voting.Id }) {
-    const store = createStore();
-    const users = {
-      player: User.createId(),
-      inspector: User.createId(),
-    };
-    const votingRepository = newMemoryVotingRepository([
-      Voting.votingOf({
-        id: votingId,
-        points: ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2)]),
-        estimations: Estimations.empty(),
-        voters: [
-          Voter.createVoter({ user: users.player }),
-          Voter.createVoter({ user: users.inspector, type: VoterType.Inspector }),
-        ],
-      }),
-    ]);
-    const userRepository = newMemoryUserRepository([
-      User.create({ id: users.player, name: "player1" }),
-      User.create({ id: users.inspector, name: "I'm looking" }),
-    ]);
-    const useLoginUser = () => {
-      return {
-        userId: users.player,
-      };
-    };
-    const hooks: Hooks = {
-      useJoin: createUseJoin(useLoginUser, votingRepository, userRepository),
-      useVoting: createUseVoting({
-        useLoginUser,
-        changeThemeUseCase: newChangeThemeUseCase(votingRepository),
-        estimatePlayerUseCase: newEstimatePlayerUseCase(votingRepository),
-        changeUserModeUseCase: newChangeUserModeUseCase(votingRepository, sinon.fake()),
-        revealUseCase: newRevealUseCase(sinon.fake(), votingRepository),
-      }),
-      useRevealed: createUseRevealed({
-        changeThemeUseCase: newChangeThemeUseCase(votingRepository),
-        resetVotingUseCase: newResetVotingUseCase(sinon.fake(), votingRepository),
-      }),
-
-      usePollingPlace: createUsePollingPlace(),
-      useVotingStatus: createUseVotingStatus(),
-    };
-
-    useEffect(() => {
-      hooks.useJoin().join(votingId);
-    }, []);
-
+  render() {
     return (
-      <ImplementationProvider implementation={hooks}>
-        <Provider store={store}>
-          <div className={themeClass}>
-            <RevealedArea />
-          </div>
-        </Provider>
-      </ImplementationProvider>
+      <Provider store={store}>
+        <div className={themeClass}>
+          <RevealedArea />
+        </div>
+      </Provider>
     );
   },
 };

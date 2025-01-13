@@ -1,47 +1,53 @@
+import { ApplicablePoints, Estimations, StoryPoint, User, Voter, VoterType, Voting } from "@spp/shared-domain";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { clear as clearVoting } from "@spp/shared-domain/mock/voting-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { cleanup, render, screen } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import sinon from "sinon";
-import { afterEach, expect, test } from "vitest";
-import { VotingStatus } from "../../atoms/voting.js";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
+import { afterEach, beforeEach, expect, test } from "vitest";
+import { joinVotingAtom } from "../../atoms/voting-atom.js";
 import { RevealedArea } from "./revealed-area.js";
 
+beforeEach(clearUser);
+beforeEach(clearVoting);
 afterEach(cleanup);
 
 test("Pass valid states to child component", async () => {
   // Arrange
   const store = createStore();
 
-  const hooks: Hooks = {
-    useJoin: sinon.fake(),
-    useVoting: sinon.fake(),
-    useRevealed: sinon.fake.returns({
-      changeTheme: sinon.fake(),
-      reset: sinon.fake(),
+  const userId = User.createId();
+  const otherUserId = User.createId();
+  const votingId = Voting.createId();
+
+  await VotingRepository.save({
+    voting: Voting.votingOf({
+      id: votingId,
+      points: ApplicablePoints.create([StoryPoint.create(1), StoryPoint.create(2)]),
+      estimations: Estimations.empty(),
+      voters: [
+        Voter.createVoter({ user: userId }),
+        Voter.createVoter({ user: otherUserId, type: VoterType.Inspector }),
+      ],
     }),
-    usePollingPlace: sinon.fake.returns({
-      estimations: [{ name: "player1" }, { name: "player2" }],
-      inspectors: [],
-      loading: false,
-      points: ["1", "2"],
-      userRole: "player",
-      theme: "",
-    }),
-    useVotingStatus: sinon.fake.returns({
-      status: VotingStatus.Voting,
-    }),
-  };
+  });
+
+  await Promise.all(
+    [User.create({ id: userId, name: "player1" }), User.create({ id: otherUserId, name: "I'm looking" })].map((user) =>
+      UserRepository.save({ user })
+    )
+  );
+  store.set(joinVotingAtom, userId, votingId);
 
   // Act
   render(
-    <ImplementationProvider implementation={hooks}>
-      <Provider store={store}>
-        <RevealedArea />
-      </Provider>
-    </ImplementationProvider>
+    <Provider store={store}>
+      <RevealedArea />
+    </Provider>
   );
 
   // Assert
-  expect(screen.getByText("player1")).not.toBeNull();
-  expect(screen.getByText("player2")).not.toBeNull();
+  expect(await screen.findByText("player1")).not.toBeNull();
+  expect(await screen.findByText("I'm looking")).not.toBeNull();
 });
