@@ -27,7 +27,7 @@ export type UseUserInfo = () => {
   /**
    * Load the user information
    */
-  readonly loadUser: () => void;
+  readonly loadUser: (userId: string) => void;
 };
 
 /**
@@ -51,8 +51,8 @@ export const useUserInfo: UseUserInfo = () => {
     _changeDefaultVoterMode(newMode);
   }, []);
 
-  const loadUserInfo = useCallback(() => {
-    loadUser();
+  const loadUserInfo = useCallback((userId: string) => {
+    loadUser(userId);
   }, [loadUser]);
 
   return {
