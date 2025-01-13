@@ -56,6 +56,10 @@ const ThemeEditorInternal = function ThemeEditorInternal({
     setState(theme);
   };
 
+  if (!editing) {
+    return <span className={styles.editorRoot}>{state ? state : "No theme"}</span>
+  }
+
   return (
     <form className={styles.editorRoot} onSubmit={handleSubmit}>
       <input
@@ -113,7 +117,7 @@ export const ThemeEditor = function ThemeEditor({ theme, onSubmit }: Props): JSX
 
   return (
     <div className={styles.root}>
-      <ThemeEditorInternal editing={editing} theme={theme} onSubmit={handleSubmit} onCancel={handleCancel} />
+      <ThemeEditorInternal editing={editing} theme={theme } onSubmit={handleSubmit} onCancel={handleCancel} />
       {editButton}
     </div>
   );
