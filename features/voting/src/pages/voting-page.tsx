@@ -1,3 +1,4 @@
+import { User, Voting } from "@spp/shared-domain";
 import { useEffect } from "react";
 import { Route, Switch, useLocation, useParams } from "wouter";
 import { JoinedVotingStatus } from "../atoms/type.js";
@@ -18,7 +19,7 @@ export function VotingPage({ currentUserId }: Props): JSX.Element {
 
   useEffect(() => {
     if (currentUserId && param.id && join.status == JoinedVotingStatus.NotJoined) {
-      join.join(currentUserId, Voting.createId(param.id));
+      join.join(User.createId(currentUserId), Voting.createId(param.id));
     }
   }, [currentUserId, param.id, join.join]);
 
