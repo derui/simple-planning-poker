@@ -20,3 +20,8 @@ export const role: string = style({
   gap: vars.spacing[2],
   padding: `${vars.spacing[1]} ${vars.spacing[2]}`,
 });
+
+export const roleName: string = style({
+  display: "flex",
+  color: vars.color.teal[500],
+});
