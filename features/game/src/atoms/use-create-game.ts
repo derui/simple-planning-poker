@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { commandProgressionAtom, createGameAtom, gameCreationErrorAtom } from "./game-atom.js";
 import { CreateGameError } from "./type.js";
 import { loginUserAtom } from "./user-atom.js";
@@ -28,10 +28,15 @@ export type UseCreateGame = (created: () => void) => {
 
 // hook implementations
 export const useCreateGame: UseCreateGame = (created) => {
-  const loading = useAtomValue(commandProgressionAtom);
-  const user = useAtomValue(loginUserAtom)
+  const commandProgression = useAtomValue(commandProgressionAtom);
+  const user = useAtomValue(loginUserAtom);
   const errors = useAtomValue(gameCreationErrorAtom);
   const createGame = useSetAtom(createGameAtom);
+
+  const loading = useMemo(() => {
+    return commandProgression || !user;
+  }, [commandProgression, user]);
+
   const create = useCallback(
     (name: string, points: string) => {
       createGame(
