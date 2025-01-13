@@ -6,8 +6,12 @@ import { RevealedArea } from "../components/containers/revealed-area.js";
 import { VotingArea } from "../components/containers/voting-area.js";
 import * as styles from "./voting-page.css.js";
 
+interface Props {
+  currentUserId: string;
+}
+
 // eslint-disable-next-line func-style
-export function VotingPage({ currentUserId }: { currentUserId: string }): JSX.Element {
+export function VotingPage({ currentUserId }: Props): JSX.Element {
   const param = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const join = useJoin();
