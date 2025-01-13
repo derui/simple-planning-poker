@@ -19,9 +19,9 @@ export const Normal: Story = {
   args: {
     average: 2.5,
     estimations: [
-      { name: "user1", estimated: "1" },
-      { name: "user2", estimated: "3" },
-      { name: "user3", estimated: "4" },
+      { name: "user1", estimated: "1", loginUser: false },
+      { name: "user2", estimated: "3", loginUser: false },
+      { name: "user3", estimated: "4", loginUser: false },
     ],
   },
   render: (args) => (
@@ -35,12 +35,12 @@ export const Large: Story = {
   args: {
     average: 4.587,
     estimations: [
-      { name: "user1", estimated: "3" },
-      { name: "user2", estimated: "4" },
-      { name: "user3", estimated: "5" },
-      { name: "user4", estimated: "6" },
-      { name: "user5", estimated: "7" },
-      { name: "user6", estimated: "8" },
+      { name: "user1", estimated: "3", loginUser: false },
+      { name: "user2", estimated: "4", loginUser: false },
+      { name: "user3", estimated: "5", loginUser: false },
+      { name: "user4", estimated: "6", loginUser: false },
+      { name: "user5", estimated: "7", loginUser: false },
+      { name: "user6", estimated: "8", loginUser: false },
     ],
   },
   render: (args) => (
