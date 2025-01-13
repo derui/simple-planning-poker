@@ -1,4 +1,3 @@
-import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect } from "react";
@@ -33,13 +32,6 @@ export const useUserInfo: UseUserInfo = () => {
   const loginUser = useAtomValue(loginUserAtom);
   const editUserName = useSetAtom(editUserNameAtom);
   const _changeDefaultVoterMode = useSetAtom(changeDefaultVoterModeAtom);
-  const { userId } = useLoginUser();
-
-  useEffect(() => {
-    if (userId) {
-      loadUser(userId);
-    }
-  }, [userId]);
 
   const editName = useCallback((newName: string) => {
     if (!User.canChangeName(newName)) {
