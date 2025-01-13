@@ -1,10 +1,11 @@
-import { ApplicablePoints, Game, GameName, User } from "@spp/shared-domain";
+import { ApplicablePoints, Game, GameName } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { dispatch } from "@spp/shared-use-case";
 import { Atom, atom, WritableAtom } from "jotai";
 import { atomWithRefresh, loadable, unwrap } from "jotai/utils";
 import { Loadable } from "jotai/vanilla/utils/loadable";
 import { CreateGameError, EditGameError } from "./type.js";
+import { loginUserAtom } from "./user-atom.js";
 
 const selectedGameIdAtom = atom<Game.Id | undefined>(undefined);
 
@@ -37,12 +38,12 @@ export const commandProgressionAtom: Atom<boolean> = atom((get) => get(internalC
 export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
   const game = get(unwrap(asyncCurrentGameAtom));
   const progress = get(internalCommandProgressionAtom);
-  const userId = get(loginUserIdAtom);
+  const user = get(loginUserAtom);
   if (!game || progress) {
     return;
   }
 
-  if (game.owner != userId) {
+  if (game.owner != user?.id) {
     return;
   }
 
@@ -64,26 +65,18 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
 /**
  * All games that user is helding
  */
-const loginUserIdAtom = atom<User.Id | undefined>();
 const asyncGamesAtom = atomWithRefresh(async (get) => {
-  const userId = get(loginUserIdAtom);
+  const user = get(loginUserAtom);
 
-  if (!userId) return [];
+  if (!user) return [];
 
-  return await GameRepository.listUserCreated({ user: userId });
+  return await GameRepository.listUserCreated({ user: user.id });
 });
 
 /**
  * All games that user is helding
  */
 export const gamesAtom: Atom<Loadable<Game.T[]>> = loadable(asyncGamesAtom);
-
-/**
- * Load games with the user
- */
-export const loadGamesAtom: WritableAtom<null, [userId: User.Id], void> = atom(null, (_get, set, userId: User.Id) => {
-  set(loginUserIdAtom, userId);
-});
 
 const internalGameCreationErrorAtom = atom<CreateGameError[]>([]);
 
@@ -97,9 +90,9 @@ export const gameCreationErrorAtom: Atom<CreateGameError[]> = atom((get) => get(
  */
 export const createGameAtom: WritableAtom<null, [obj: { name: string; points: string }, callback: () => void], void> =
   atom(null, (get, set, obj, callback) => {
-    const loginUserId = get(loginUserIdAtom);
+    const loginUser = get(loginUserAtom);
     const loading = get(internalCommandProgressionAtom);
-    if (!loginUserId || loading) {
+    if (!loginUser || loading) {
       return;
     }
 
@@ -121,7 +114,7 @@ export const createGameAtom: WritableAtom<null, [obj: { name: string; points: st
     const [game, event] = Game.create({
       id: gameId,
       name: GameName.create(obj.name),
-      owner: loginUserId,
+      owner: loginUser.id,
       points: points,
     });
 
@@ -152,9 +145,9 @@ export const gameEditingErrorAtom: Atom<EditGameError[]> = atom((get) => get(int
 export const editGameAtom: WritableAtom<null, [obj: { gameId: Game.Id; name: string; points: string }], void> = atom(
   null,
   (get, set, obj) => {
-    const loginUserId = get(loginUserIdAtom);
+    const loginUser = get(loginUserAtom);
     const loading = get(internalCommandProgressionAtom);
-    if (!loginUserId || loading) {
+    if (!loginUser || loading) {
       return;
     }
 
@@ -179,7 +172,7 @@ export const editGameAtom: WritableAtom<null, [obj: { gameId: Game.Id; name: str
           throw new Error("not found");
         }
 
-        if (game.owner != loginUserId) {
+        if (game.owner != loginUser.id) {
           set(internalGameEditingErrorAtom, ["NotOwned"]);
           throw new Error("not found");
         }

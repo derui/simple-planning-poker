@@ -1,30 +1,18 @@
-import { useLoginUser } from "@spp/feature-login";
 import { ApplicablePoints, Game, GameName, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
-import { clear } from "@spp/shared-domain/mock/game-repository";
-import { act, renderHook } from "@testing-library/react";
+import { clear as clearGame } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
+import { renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
-import { beforeEach, expect, test, vi } from "vitest";
+import { beforeEach, expect, test } from "vitest";
 import { useGames } from "./use-games.js";
-
-vi.mock(import("@spp/feature-login"), async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    useLoginUser: vi.fn(),
-  };
-});
+import { loadUserAtom } from "./user-atom.js";
 
 beforeEach(() => {
-  clear();
-
-  vi.mocked(useLoginUser).mockReturnValue({
-    userId: User.createId("id"),
-    checkLoggedIn: vi.fn(),
-    loginUser: vi.fn(),
-  });
+  clearGame();
+  clearUser();
 });
 
 const createWrapper =
@@ -47,6 +35,13 @@ test("initial status", () => {
 
 test("get games after effect", async () => {
   // Arrange
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("id"),
+      name: "name",
+    }),
+  });
+
   const game = Game.create({
     id: Game.createId(),
     owner: User.createId("id"),
@@ -57,12 +52,13 @@ test("get games after effect", async () => {
   await GameRepository.save({ game });
   const store = createStore();
   const wrapper = createWrapper(store);
+  store.set(loadUserAtom, User.createId("id"));
 
   // Act
   const { result, rerender } = renderHook(useGames, { wrapper });
 
   // Wait a promise
-  await act(async () => {});
+  await waitFor(async () => !result.current.loading);
   rerender();
 
   // Assert

@@ -1,31 +1,15 @@
-import { useLoginUser } from "@spp/feature-login";
 import { User, VoterType } from "@spp/shared-domain";
 import { clear } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
 import { act, renderHook } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
-import { beforeEach, expect, test, vi } from "vitest";
+import { beforeEach, expect, test } from "vitest";
 import { VoterMode } from "../components/type.js";
 import { useUserInfo } from "./use-user-info.js";
 
-vi.mock(import("@spp/feature-login"), async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    useLoginUser: vi.fn(),
-  };
-});
-
 beforeEach(() => {
   clear();
-
-  vi.mocked(useLoginUser).mockReturnValue({
-    userId: User.createId("id"),
-    checkLoggedIn: vi.fn(),
-    loginUser: vi.fn(),
-  });
 });
 
 const createWrapper =
@@ -46,7 +30,7 @@ test("initial status", () => {
   expect(result.current.loading).toBe(true);
 });
 
-test("get user information after effect", async () => {
+test("get user information after load", async () => {
   // Arrange
   await UserRepository.save({
     user: User.create({
@@ -61,7 +45,7 @@ test("get user information after effect", async () => {
   const { result, rerender } = renderHook(useUserInfo, { wrapper });
 
   // Wait a promise
-  await act(async () => {});
+  await act(async () => result.current.loadUser("id"));
   rerender();
 
   // Assert
@@ -83,7 +67,7 @@ test("change name after call use case", async () => {
   // Act
   const { result, rerender } = renderHook(useUserInfo, { wrapper });
   // Wait a promise
-  await act(async () => {});
+  await act(async () => result.current.loadUser("id"));
   await act(async () => result.current.editName("new name"));
   rerender();
 
@@ -104,7 +88,7 @@ test("should be able to change default voter type of the user", async () => {
   });
 
   // Act
-  await act(async () => {});
+  await act(async () => result.current.loadUser("id"));
   await act(async () => {
     result.current.changeDefaultVoterMode(VoterMode.Normal);
   });
@@ -127,7 +111,7 @@ test("get current voter mode", async () => {
   });
 
   // Act
-  await act(async () => {});
+  await act(async () => result.current.loadUser("id"));
   await act(async () => {
     result.current.changeDefaultVoterMode(VoterMode.Inspector);
   });

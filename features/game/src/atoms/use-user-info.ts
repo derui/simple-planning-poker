@@ -1,7 +1,6 @@
-import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { VoterMode } from "../components/type.js";
 import { toUserDto, UserDto } from "./dto.js";
 import { changeDefaultVoterModeAtom, editUserNameAtom, loadUserAtom, loginUserAtom } from "./user-atom.js";
@@ -51,9 +50,12 @@ export const useUserInfo: UseUserInfo = () => {
     _changeDefaultVoterMode(newMode);
   }, []);
 
-  const loadUserInfo = useCallback((userId: string) => {
-    loadUser(userId);
-  }, [loadUser]);
+  const loadUserInfo = useCallback(
+    (userId: string) => {
+      loadUser(User.createId(userId));
+    },
+    [loadUser]
+  );
 
   return {
     loading: loginUser ? false : true,

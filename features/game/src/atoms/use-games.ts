@@ -1,7 +1,7 @@
-import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useMemo } from "react";
+import { useAtomValue } from "jotai";
+import { useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { gamesAtom, loadGamesAtom } from "./game-atom.js";
+import { gamesAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -13,11 +13,6 @@ export type UseGames = () => {
    * Current joined/owned games
    */
   games: GameDto[];
-
-  /**
-   * Function to load games
-   */
-  loadGames: (userId: string) => void;
 };
 
 /**
@@ -25,7 +20,6 @@ export type UseGames = () => {
  */
 export const useGames: UseGames = () => {
   const games = useAtomValue(gamesAtom);
-  const loadGames = useSetAtom(loadGamesAtom);
   const loading = games.state == "loading";
 
   const gameValues = useMemo(() => {
@@ -39,6 +33,5 @@ export const useGames: UseGames = () => {
   return {
     loading,
     games: gameValues,
-    loadGames,
   };
 };
