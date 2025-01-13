@@ -1,21 +1,23 @@
 import { Game } from "@spp/shared-domain";
 import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
 import Sinon from "sinon";
 import { afterEach, expect, test } from "vitest";
 import { GameListItem } from "./game-list-item.js";
+import { Router } from "wouter";
+import { memoryLocation } from "wouter/memory-location";
 
 afterEach(cleanup);
 
 test("render component", () => {
   // Arrange
+  const {hook} = memoryLocation()
 
   // Act
   render(
-    <MemoryRouter>
+    <Router hook={hook}>
       <GameListItem gameId={Game.createId("id")} name="The game" />
-    </MemoryRouter>
+    </Router>
   );
 
   // Assert
