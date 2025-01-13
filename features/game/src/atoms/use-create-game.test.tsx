@@ -1,6 +1,8 @@
 import { ApplicablePoints, DomainEvent, Game, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
 import { clear as clearGame, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
@@ -8,8 +10,6 @@ import sinon from "sinon";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { useCreateGame } from "./use-create-game.js";
 import { loadUserAtom } from "./user-atom.js";
-import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
-import { UserRepository } from "@spp/shared-domain/user-repository";
 
 beforeEach(async () => {
   clearSubsctiptions();
@@ -20,7 +20,7 @@ beforeEach(async () => {
 
   await UserRepository.save({
     user: User.create({
-      id: User.createId("id"),
+      id: User.createId("user"),
       name: "name",
     }),
   });
@@ -41,7 +41,7 @@ test("initial status is creating", () => {
   });
 
   // Assert
-  expect(result.current.loading).toBe(false);
+  expect(result.current.loading).toBe(true);
   expect(result.current.errors).toEqual([]);
 });
 
@@ -54,6 +54,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => result.current.create("", "1"));
     rerender();
 
@@ -69,6 +70,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => Promise.resolve(result.current.create("   ", "1")));
     rerender();
 
@@ -84,6 +86,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => Promise.resolve(result.current.create("foo", v)));
     rerender();
 
@@ -100,6 +103,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => Promise.resolve(result.current.create("foo", "a,b")));
     rerender();
 
@@ -116,7 +120,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
+    await waitFor(async () => !result.current.loading);
     result.current.create("foo", "1,3");
     rerender();
 
@@ -132,7 +136,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await act(async () => {});
+    await waitFor(async () => !result.current.loading);
     result.current.create("foo", "1,30");
     rerender();
 
@@ -148,11 +152,10 @@ describe("Create", () => {
     store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
 
     // Act
+    await waitFor(async () => !result.current.loading);
     result.current.create("foo", "1");
-    await waitFor(() => expect(result.current.loading).toEqual(true));
     rerender();
 
     // Assert
@@ -167,9 +170,9 @@ describe("Create", () => {
     const dispatcher = sinon.fake<[DomainEvent.T]>();
     subscribe(dispatcher);
     const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
 
     // Assert
@@ -185,10 +188,10 @@ describe("Create", () => {
     store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
 
     // Act
-    await act(async () => Promise.resolve(result.current.create("foo", "1")));
+    await waitFor(async () => !result.current.loading);
+    await act(async () => result.current.create("foo", "1"));
 
     const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
@@ -204,10 +207,10 @@ describe("Create", () => {
     store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
-    await act(async () => {});
 
     // Act
-    await act(async () => Promise.resolve(result.current.create("foo", "1")));
+    await waitFor(async () => !result.current.loading);
+    await act(async () => result.current.create("foo", "1"));
 
     const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
@@ -228,8 +231,9 @@ describe("Create", () => {
     const { result } = renderHook(() => useCreateGame(callback), { wrapper });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => Promise.resolve(result.current.create("foo", "1")));
-    await waitFor(() => !result.current.loading);
+    await waitFor(async () => !result.current.loading);
 
     // Assert
     expect(callback).toHaveBeenCalledOnce();
@@ -238,14 +242,15 @@ describe("Create", () => {
   test("set failed state if create is failed", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
-    const wrapper = createWrapper(store);
+    store.set(loadUserAtom, User.createId("user"));
     injectErrorOnSave("failed");
     const callback = vi.fn();
-    const { result } = renderHook(() => useCreateGame(callback), { wrapper });
+    const { result } = renderHook(() => useCreateGame(callback), { wrapper: createWrapper(store) });
 
     // Act
+    await waitFor(async () => !result.current.loading);
     await act(async () => result.current.create("foo", "1"));
+    await waitFor(async () => !result.current.loading);
 
     // Assert
     expect(result.current.loading).toEqual(false);

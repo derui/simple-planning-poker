@@ -7,7 +7,7 @@ import { loginUserAtom } from "./user-atom.js";
 /**
  * Hook definition to create game
  */
-export type UseCreateGame = (created: () => void) => {
+export type UseCreateGame = (created?: () => void) => {
   /**
    * loading status of creating game
    */

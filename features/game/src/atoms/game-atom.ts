@@ -95,7 +95,7 @@ export const gameCreationErrorAtom: Atom<CreateGameError[]> = atom((get) => get(
 /**
  * Try to create a game. If error occurs, the error will be stored in the error atom.
  */
-export const createGameAtom: WritableAtom<null, [obj: { name: string; points: string }, callback: () => void], void> =
+export const createGameAtom: WritableAtom<null, [obj: { name: string; points: string }, callback?: () => void], void> =
   atom(null, (get, set, obj, callback) => {
     const loginUser = get(loginUserAtom);
     const loading = get(internalCommandProgressionAtom);
@@ -129,7 +129,7 @@ export const createGameAtom: WritableAtom<null, [obj: { name: string; points: st
       .then(() => {
         dispatch(event);
         set(asyncGamesAtom);
-        callback();
+        callback?.();
       })
       .catch((e) => {
         console.warn(e);
