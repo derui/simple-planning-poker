@@ -22,5 +22,9 @@ export const role: string = style({
 });
 
 export const roleName: string = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   color: vars.color.teal[500],
+  width: "100%",
 });
