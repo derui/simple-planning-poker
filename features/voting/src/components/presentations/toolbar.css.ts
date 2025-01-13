@@ -2,23 +2,19 @@ import { vars } from "@spp/ui-theme";
 import { style } from "@vanilla-extract/css";
 
 export const root: string = style({
-  display: "grid",
-  gridTemplateRows: "repeat(1, minmax(0, 1fr))",
-  gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+  display: "flex",
   gap: vars.spacing[2],
   alignItems: "center",
   height: vars.spacing[12],
-  padding: `${vars.spacing[1]} ${vars.spacing[2]}`,
   borderRadius: "4px",
-  backgroundColor: vars.color.orange[500],
+  border: `1px solid ${vars.color.orange[500]}`,
 });
 
 export const role: string = style({
+  flex: '1 1 auto',
   display: "grid",
   gridTemplateRows: "repeat(1, minmax(0, 1fr))",
   gridTemplateColumns: "auto auto auto",
-  borderRadius: "4px",
-  backgroundColor: vars.color.orange[100],
   justifyContent: "center",
   placeItems: "center",
   gap: vars.spacing[2],
