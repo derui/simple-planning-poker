@@ -58,7 +58,7 @@ const ThemeEditorInternal = function ThemeEditorInternal({
 
   return (
     <div>
-      <h2 className={styles.header}>Theme Editor</h2>
+      <span className={styles.header}>Theme Editor</span>
       {editing ? (
         <form className={styles.editorRoot} onSubmit={handleSubmit}>
           <input
