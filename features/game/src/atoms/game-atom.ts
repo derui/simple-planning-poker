@@ -15,7 +15,13 @@ const asyncCurrentGameAtom = atomWithRefresh(async (get) => {
 
   if (!id || !user) return undefined;
 
-  return await GameRepository.findBy({ id });
+  const game = await GameRepository.findBy({ id });
+
+  if (game?.owner != user.id) {
+    return;
+  }
+
+  return game;
 });
 
 /**
@@ -143,12 +149,12 @@ export const gameEditingErrorAtom: Atom<EditGameError[]> = atom((get) => get(int
 /**
  * Try to create a game. If error occurs, the error will be stored in the error atom.
  */
-export const editGameAtom: WritableAtom<null, [obj: { gameId: Game.Id; name: string; points: string }], void> = atom(
+export const editGameAtom: WritableAtom<null, [obj: { name: string; points: string }], void> = atom(
   null,
   (get, set, obj) => {
-    const loginUser = get(loginUserAtom);
+    const game = get(unwrap(asyncCurrentGameAtom));
     const loading = get(internalCommandProgressionAtom);
-    if (!loginUser || loading) {
+    if (!game || loading) {
       return;
     }
 
@@ -166,18 +172,8 @@ export const editGameAtom: WritableAtom<null, [obj: { gameId: Game.Id; name: str
       return;
     }
 
-    GameRepository.findBy({ id: obj.gameId })
+    Promise.resolve(game)
       .then((game) => {
-        if (!game) {
-          set(internalGameEditingErrorAtom, ["NotFound"]);
-          throw new Error("not found");
-        }
-
-        if (game.owner != loginUser.id) {
-          set(internalGameEditingErrorAtom, ["NotOwned"]);
-          throw new Error("not found");
-        }
-
         let newOne = Game.changeName(game, obj.name);
         newOne = Game.changePoints(newOne, points);
         return newOne;

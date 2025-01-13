@@ -1,7 +1,6 @@
-import { Game } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback } from "react";
-import { commandProgressionAtom, editGameAtom, gameEditingErrorAtom } from "./game-atom.js";
+import { useCallback, useMemo } from "react";
+import { commandProgressionAtom, currentGameAtom, editGameAtom, gameEditingErrorAtom } from "./game-atom.js";
 import { EditGameError } from "./type.js";
 
 /**
@@ -18,22 +17,27 @@ export type UseEditGame = () => {
   /**
    * edit game with given game id, name and points
    */
-  edit: (gameId: Game.Id, name: string, points: string) => void;
+  edit: (name: string, points: string) => void;
 };
 
 /**
  * Create hook implementation of `UseGameEditor`
  */
 export const useEditGame: UseEditGame = () => {
-  const loading = useAtomValue(commandProgressionAtom);
+  const progression = useAtomValue(commandProgressionAtom);
+  const current = useAtomValue(currentGameAtom);
   const errors = useAtomValue(gameEditingErrorAtom);
   const editGame = useSetAtom(editGameAtom);
   const edit = useCallback(
-    (gameId: Game.Id, name: string, points: string): void => {
-      editGame({ gameId, name, points });
+    (name: string, points: string): void => {
+      editGame({ name, points });
     },
     [editGame]
   );
+
+  const loading = useMemo(() => {
+    return progression || current.state != "hasData";
+  }, [progression, current]);
 
   return {
     loading,
