@@ -8,6 +8,9 @@ import { VotingArea } from "../components/containers/voting-area.js";
 import * as styles from "./voting-page.css.js";
 
 interface Props {
+  /**
+   * The current user's ID
+   */
   currentUserId: string;
 }
 
