@@ -1,27 +1,29 @@
 import { ApplicablePoints, DomainEvent, Game, StoryPoint, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
-import { clear, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearGame, injectErrorOnSave } from "@spp/shared-domain/mock/game-repository";
 import { clearSubsctiptions, subscribe } from "@spp/shared-use-case";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import sinon from "sinon";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { loadGamesAtom } from "./game-atom.js";
 import { useCreateGame } from "./use-create-game.js";
+import { loadUserAtom } from "./user-atom.js";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 
-vi.mock("@spp/feature-login", () => {
-  return {
-    useLoginUser: () => ({
-      userId: "user",
-      checkLoggedIn: () => {},
-    }),
-  };
-});
-
-beforeEach(() => {
-  clear();
+beforeEach(async () => {
   clearSubsctiptions();
   injectErrorOnSave(undefined);
+
+  clearGame();
+  clearUser();
+
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("id"),
+      name: "name",
+    }),
+  });
 });
 
 const createWrapper =
@@ -31,7 +33,7 @@ const createWrapper =
 test("initial status is creating", () => {
   // Arrange
   const store = createStore();
-  store.set(loadGamesAtom, User.createId("user"));
+  store.set(loadUserAtom, User.createId("user"));
 
   // Act
   const { result } = renderHook(useCreateGame, {
@@ -47,7 +49,7 @@ describe("validation", () => {
   test("get error if name is empty", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
 
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
@@ -62,7 +64,7 @@ describe("validation", () => {
   test("get error if name is blank", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
 
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
@@ -77,7 +79,7 @@ describe("validation", () => {
   test.each(["", "  "])(`get error if point is empty or blank`, async (v) => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
 
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
@@ -93,7 +95,7 @@ describe("validation", () => {
   test("get error if points have non-numeric character", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -109,7 +111,7 @@ describe("validation", () => {
   test("accept comma-separated list", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -125,7 +127,7 @@ describe("validation", () => {
   test("accept large number in points", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
@@ -143,7 +145,7 @@ describe("Create", () => {
   test("change waiting status while creating game", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -159,7 +161,7 @@ describe("Create", () => {
   test("completed status after creating is finished", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const dispatcher = sinon.fake<[DomainEvent.T]>();
     subscribe(dispatcher);
@@ -179,7 +181,7 @@ describe("Create", () => {
   test("created game should have valid values", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -198,7 +200,7 @@ describe("Create", () => {
   test("after completed, update owned game list", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const { result } = renderHook(useCreateGame, { wrapper });
     await act(async () => {});
@@ -218,7 +220,7 @@ describe("Create", () => {
   test("after completed, call the callback", async () => {
     // Arrange
     const store = createStore();
-    store.set(loadGamesAtom, User.createId("user"));
+    store.set(loadUserAtom, User.createId("user"));
     const wrapper = createWrapper(store);
     const callback = vi.fn();
 
