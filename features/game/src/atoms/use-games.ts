@@ -1,4 +1,3 @@
-import { useLoginUser } from "@spp/feature-login";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
@@ -14,6 +13,11 @@ export type UseGames = () => {
    * Current joined/owned games
    */
   games: GameDto[];
+
+  /**
+   * Function to load games
+   */
+  loadGames: (userId: string) => void;
 };
 
 /**
@@ -22,7 +26,6 @@ export type UseGames = () => {
 export const useGames: UseGames = () => {
   const games = useAtomValue(gamesAtom);
   const loadGames = useSetAtom(loadGamesAtom);
-  const { userId } = useLoginUser();
   const loading = games.state == "loading";
 
   const gameValues = useMemo(() => {
@@ -31,16 +34,11 @@ export const useGames: UseGames = () => {
     }
 
     return [];
-  }, [userId, games]);
-
-  useEffect((): void => {
-    if (userId) {
-      loadGames(userId);
-    }
-  }, [userId]);
+  }, [games]);
 
   return {
     loading,
     games: gameValues,
+    loadGames,
   };
 };
