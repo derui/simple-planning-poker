@@ -31,6 +31,10 @@ export const VotingArea = function VotingArea(): JSX.Element {
     [voting.estimate]
   );
 
+  const onToggleRole = useCallback(() => {
+    voter.toggleRole();
+  }, [voter.toggleRole]);
+
   return (
     <VotingAreaLayout
       loading={voting.loading}
@@ -42,6 +46,7 @@ export const VotingArea = function VotingArea(): JSX.Element {
       inspectors={pollingPlace?.inspectors}
       points={pollingPlace?.points}
       onReveal={voting.reveal}
+      onToggleRole={onToggleRole}
     />
   );
 };
