@@ -7,6 +7,7 @@ export const root: string = style({
   height: vars.spacing[12],
   borderRadius: "4px",
   border: `1px solid ${vars.color.teal[500]}`,
+  overflow: "hidden",
 });
 
 export const role: string = style([
