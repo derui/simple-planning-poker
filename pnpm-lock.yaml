@@ -569,9 +569,6 @@ importers:
 
   features/voting:
     dependencies:
-      '@spp/feature-login':
-        specifier: workspace:^
-        version: link:../login
       '@spp/shared-app-url':
         specifier: workspace:^
         version: link:../../packages/shared-logic/app-url

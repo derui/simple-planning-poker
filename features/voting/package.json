@@ -52,7 +52,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@spp/feature-login": "workspace:^",
     "@spp/shared-app-url": "workspace:^",
     "@spp/shared-color-variant": "workspace:^",
     "@spp/shared-domain": "workspace:^",
