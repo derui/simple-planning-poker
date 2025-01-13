@@ -7,7 +7,6 @@ import { UserRepository } from "@spp/shared-domain/user-repository";
 import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { themeClass } from "@spp/ui-theme";
 import { Provider } from "jotai";
-import { useEffect } from "react";
 import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { VotingPage } from "./voting-page.js";
@@ -20,7 +19,7 @@ const meta: Meta<typeof VotingPage> = {
     clearGame();
     clearUser();
 
-    const userId = User.createId();
+    const userId = User.createId("user");
     const otherUserId = User.createId();
     const votingId = Voting.createId("voting");
 
@@ -49,17 +48,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render() {
-    const { hook, navigate } = memoryLocation();
-
-    useEffect(() => {
-      navigate(`/voting`);
-    }, []);
+    const { hook } = memoryLocation();
 
     return (
       <Router hook={hook}>
         <Provider>
           <div className={themeClass}>
-            <VotingPage />
+            <VotingPage currentUserId="user" votingId="voting" />
           </div>
         </Provider>
       </Router>
