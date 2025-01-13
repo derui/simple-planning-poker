@@ -83,7 +83,7 @@ type Props = {
   /**
    * Handler to change user role
    */
-  onChangeRole?: (role: UserRole) => void;
+  onToggleRole?: (role: UserRole) => void;
 
   /**
    * text of points
@@ -104,7 +104,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
     voters = [],
     inspectors = [],
     onChangeTheme,
-    onChangeRole,
+    onToggleRole,
     points = [],
     revealable = true,
     onReveal,
@@ -115,7 +115,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} onChangeRole={onChangeRole} />
+        <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} onToggleRole={onToggleRole} />
       </div>
       <div className={styles.estimations}>
         <VotingUserEstimations estimations={voters} loading={loading} revealable={revealable} onReveal={onReveal} />

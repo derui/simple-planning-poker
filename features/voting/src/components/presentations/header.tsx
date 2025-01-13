@@ -17,7 +17,7 @@ export interface Props {
   /**
    * Handler to change user role
    */
-  onChangeRole?: (role: UserRole) => void;
+  onToggleRole?: () => void;
 
   /**
    * Default user role to display
@@ -28,12 +28,12 @@ export interface Props {
 /**
  * Layout component for container.
  */
-export const Header = function Header({ theme, onChangeTheme, defaultRole, onChangeRole }: Props): JSX.Element {
+export const Header = function Header({ theme, onChangeTheme, defaultRole, onToggleRole }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />
       <div></div>
-      <Toolbar defaultRole={defaultRole} onToggleRole={onChangeRole} />
+      <Toolbar defaultRole={defaultRole} onToggleRole={onToggleRole} />
     </div>
   );
 };

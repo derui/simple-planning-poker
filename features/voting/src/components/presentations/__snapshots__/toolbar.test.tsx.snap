@@ -6,84 +6,16 @@ exports[`should be able to render 1`] = `
     class="toolbar_root__17ktofz0"
   >
     <div
-      class="toolbar_role__17ktofz1"
+      class="toolbar_role__17ktofz1 style_transition_all__59wy0241"
     >
       <span
-        class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
+        class="user_medium_teal__b5o5bsb style_iconMedium__qkwts32 style_iconBase__qkwts30"
       />
       <span
         class="toolbar_roleName__17ktofz2"
       >
-        player
+        Player
       </span>
-      <span
-        class="style_container__xfvt0r0"
-        role="switch"
-      >
-        <span
-          class="style_toggleRoot__xfvt0r2"
-        >
-          <span
-            class="style_switchRailUnchecked__xfvt0r5 style_switchRail__xfvt0r3 style_transition_all__59wy0241"
-          >
-            <span
-              class="style_switchBox__xfvt0r6 style_transition_all__59wy0241"
-            />
-          </span>
-          <input
-            class="style_input__xfvt0r1"
-            type="checkbox"
-          />
-        </span>
-      </span>
-      <span
-        class="eye_medium_orange__1p3uyfcd style_iconMedium__qkwts32 style_iconBase__qkwts30"
-      />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`should change current check 1`] = `
-<div>
-  <div
-    class="toolbar_root__17ktofz0"
-  >
-    <div
-      class="toolbar_role__17ktofz1"
-    >
-      <span
-        class="user_medium_orange__b5o5bsd style_iconMedium__qkwts32 style_iconBase__qkwts30"
-      />
-      <span
-        class="toolbar_roleName__17ktofz2"
-      >
-        inspector
-      </span>
-      <span
-        class="style_container__xfvt0r0"
-        role="switch"
-      >
-        <span
-          class="style_toggleRoot__xfvt0r2"
-        >
-          <span
-            class="style_switchRailChecked__xfvt0r4 style_switchRail__xfvt0r3 style_transition_all__59wy0241"
-          >
-            <span
-              class="style_switchBoxChecked__xfvt0r7 style_switchBox__xfvt0r6 style_transition_all__59wy0241"
-            />
-          </span>
-          <input
-            checked=""
-            class="style_input__xfvt0r1"
-            type="checkbox"
-          />
-        </span>
-      </span>
-      <span
-        class="eye_medium_orange__1p3uyfcd style_iconMedium__qkwts32 style_iconBase__qkwts30"
-      />
     </div>
   </div>
 </div>
