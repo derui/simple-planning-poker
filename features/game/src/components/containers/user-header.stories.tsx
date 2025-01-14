@@ -7,6 +7,7 @@ import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import React, { useEffect } from "react";
 import { UserHeader } from "./user-header.js";
+import { useUserInfo } from "./use-user-info";
 
 const meta: Meta<typeof UserHeader> = {
   title: "Container/User Header",
@@ -42,9 +43,11 @@ export const WaitingPrepared: Story = {
 };
 
 const Login = () => {
+  const { loadUser } = useUserInfo();
+
   useEffect(() => {
-    UserRepository.loadUser("foo");
-  }, []);
+    loadUser("foo");
+  }, [loadUser]);
 
   return <UserHeader />;
 };
