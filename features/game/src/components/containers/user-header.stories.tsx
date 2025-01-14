@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { useLoginUser } from "@spp/feature-login";
 import { User } from "@spp/shared-domain";
 import { clear } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
@@ -13,19 +12,16 @@ const meta: Meta<typeof UserHeader> = {
   title: "Container/User Header",
   component: UserHeader,
   tags: ["autodocs"],
-  beforeEach: () => {
+  beforeEach: async () => {
     clear();
+
+    await UserRepository.save({
+        user: User.create({
+          id: User.createId("foo"),
+          name: "foobar",
+        }),
+      })
   },
-};
-
-const Logined = ({ children }: React.PropsWithChildren) => {
-  const { loginUser } = useLoginUser();
-
-  useEffect(() => {
-    loginUser(User.createId("foo"));
-  }, []);
-
-  return children;
 };
 
 export default meta;
@@ -49,21 +45,14 @@ export const Loaded: Story = {
     const store = createStore();
 
     useEffect(() => {
-      UserRepository.save({
-        user: User.create({
-          id: User.createId("foo"),
-          name: "foobar",
-        }),
-      });
+      ;
     }, []);
 
     return (
       <Provider store={store}>
-        <Logined>
-          <div className={themeClass}>
-            <UserHeader />
-          </div>
-        </Logined>
+        <div className={themeClass}>
+          <UserHeader />
+        </div>
       </Provider>
     );
   },
