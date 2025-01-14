@@ -23,7 +23,7 @@ export const Default: Story = {
     name: "Test",
   },
   render(args) {
-    const {hook} = memoryLocation()
+    const { hook } = memoryLocation();
 
     return (
       <Router hook={hook}>
@@ -42,9 +42,10 @@ export const Selected: Story = {
     name: "Test",
   },
   render(args) {
-    const memoryLocation = useMemoryLocation();
+    const { hook } = memoryLocation();
+
     return (
-      <Router hook={memoryLocation}>
+      <Router hook={hook}>
         <div className={themeClass}>
           <GameListItem {...args} />
         </div>
