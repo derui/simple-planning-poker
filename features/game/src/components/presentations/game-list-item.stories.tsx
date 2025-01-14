@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
 import { Router, useMemoryLocation } from "wouter";
 import { GameListItem } from "./game-list-item.js";
+import { memoryLocation } from "wouter/memory-location";
 
 const meta: Meta<typeof GameListItem> = {
   title: "Presentations/Game List Item",
@@ -22,9 +23,10 @@ export const Default: Story = {
     name: "Test",
   },
   render(args) {
-    const memoryLocation = useMemoryLocation();
+    const {hook} = memoryLocation()
+
     return (
-      <Router hook={memoryLocation}>
+      <Router hook={hook}>
         <div className={themeClass}>
           <GameListItem {...args} />
         </div>
