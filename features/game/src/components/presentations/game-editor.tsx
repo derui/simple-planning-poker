@@ -5,7 +5,6 @@ import { Input } from "@spp/ui-input";
 import { Loader } from "@spp/ui-loader";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
-import { CreateGameError } from "../../atoms/game-atom.js";
 import * as styles from "./game-editor.css.js";
 
 interface Props {
@@ -17,11 +16,6 @@ interface Props {
    * do submit after validate is succeeded
    */
   onSubmit?: (name: string, points: string) => void;
-
-  /**
-   * validate input. return errors if exists. This function should return empty array if all argument is valid.
-   */
-  errors?: CreateGameError[];
 
   onCancel?: () => void;
 
@@ -43,25 +37,14 @@ const schema = z.object({
 
 // eslint-disable-next-line func-style
 export function GameEditor(props: Props): JSX.Element {
-  const { defaultName, defaultPoints, onSubmit, loading = false, onCancel, errors: submitErrors = [] } = props;
+  const { defaultName, defaultPoints, onSubmit, loading = false, onCancel } = props;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Input>({
-    resolver: zodResolver(
-      schema.refine(
-        () => {
-          if (submitErrors.length > 0) {
-            return submitErrors.every((e) => e != "NameConflicted");
-          } else {
-            return true;
-          }
-        },
-        { path: ["name"], message: "Given name is conflicted" }
-      )
-    ),
+    resolver: zodResolver(schema),
   });
 
   const handleWrappedSusbmit: SubmitHandler<Input> = (data) => {

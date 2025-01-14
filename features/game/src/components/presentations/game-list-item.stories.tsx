@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { themeClass } from "@spp/ui-theme";
-import { Router, useMemoryLocation } from "wouter";
-import { GameListItem } from "./game-list-item.js";
+import type { Meta, StoryObj } from "@storybook/react";
+import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
+import { GameListItem } from "./game-list-item.js";
 
 const meta: Meta<typeof GameListItem> = {
   title: "Presentations/Game List Item",
