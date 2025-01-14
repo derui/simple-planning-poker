@@ -42,14 +42,14 @@ export const WaitingPrepared: Story = {
   },
 };
 
-const Login = () => {
+const Login = ({ children }: { children: React.ReactNode }) => {
   const { loadUser } = useUserInfo();
 
   useEffect(() => {
     loadUser("foo");
   }, [loadUser]);
 
-  return <UserHeader />;
+  return <>{children}</>;
 };
 
 export const Loaded: Story = {
@@ -59,7 +59,9 @@ export const Loaded: Story = {
     return (
       <Provider store={store}>
         <div className={themeClass}>
-          <Login />
+          <Login>
+            <UserHeader />
+          </Login>
         </div>
       </Provider>
     );
