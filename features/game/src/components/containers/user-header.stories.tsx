@@ -7,7 +7,7 @@ import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import React, { useEffect } from "react";
 import { UserHeader } from "./user-header.js";
-import { useUserInfo } from "./use-user-info";
+import { useUserInfo } from "../../atoms/use-user-info.js";
 
 const meta: Meta<typeof UserHeader> = {
   title: "Container/User Header",
