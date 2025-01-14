@@ -40,18 +40,23 @@ export const WaitingPrepared: Story = {
     );
   },
 };
+
+const Login = () => {
+  useEffect(() => {
+    UserRepository.loadUser("foo");
+  }, []);
+
+  return <UserHeader />;
+};
+
 export const Loaded: Story = {
   render() {
     const store = createStore();
 
-    useEffect(() => {
-      ;
-    }, []);
-
     return (
       <Provider store={store}>
         <div className={themeClass}>
-          <UserHeader />
+          <Login />
         </div>
       </Provider>
     );
