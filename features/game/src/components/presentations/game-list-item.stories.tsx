@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
 import { themeClass } from "@spp/ui-theme";
-import { MemoryRouter } from "react-router-dom";
+import { Router } from "wouter";
 import { GameListItem } from "./game-list-item.js";
 
 const meta: Meta<typeof GameListItem> = {
@@ -24,11 +23,11 @@ export const Default: Story = {
   },
   render(args) {
     return (
-      <MemoryRouter>
+      <Router>
         <div className={themeClass}>
           <GameListItem {...args} />
         </div>
-      </MemoryRouter>
+      </Router>
     );
   },
 };
@@ -41,11 +40,11 @@ export const Selected: Story = {
   },
   render(args) {
     return (
-      <MemoryRouter>
+      <Router>
         <div className={themeClass}>
           <GameListItem {...args} />
         </div>
-      </MemoryRouter>
+      </Router>
     );
   },
 };
