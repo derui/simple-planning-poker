@@ -9,6 +9,7 @@ export const listRoot: string = style({
   position: "relative",
   gridTemplateRows: "auto 1fr 1fr",
   gridTemplateColumns: `${vars.spacing[64]} 1fr`,
+  gap: vars.spacing[2],
 });
 
 export const list: string = style({

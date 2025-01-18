@@ -26,7 +26,7 @@ export const Errors: Story = {
   render() {
     return (
       <div className={themeClass}>
-        <GameEditor errors={["InvalidName"]} />
+        <GameEditor />
       </div>
     );
   },

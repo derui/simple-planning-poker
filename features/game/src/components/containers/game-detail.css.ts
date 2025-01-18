@@ -8,4 +8,5 @@ export const root: string = style({
   gridRowEnd: 3,
   placeContent: "center",
   position: "relative",
+  minHeight: "100%",
 });

@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { CreateGameError } from "../../atoms/game-atom.js";
 import { GameEditor } from "../presentations/game-editor.js";
 import * as styles from "./game-detail.css.js";
 
@@ -18,16 +17,9 @@ export interface Props {
    * A handler to request to edit the game
    */
   readonly onSubmit: (name: string, points: string) => void;
-
-  readonly errors: CreateGameError[];
 }
 
-export const GameCreatorLayout = function GameCreatorLayout({
-  onCancel,
-  onSubmit,
-  loading,
-  errors,
-}: Props): JSX.Element {
+export const GameCreatorLayout = function GameCreatorLayout({ onCancel, onSubmit, loading }: Props): JSX.Element {
   const handleCancel = useCallback(() => {
     onCancel();
   }, [onCancel]);
@@ -41,7 +33,7 @@ export const GameCreatorLayout = function GameCreatorLayout({
 
   return (
     <div className={styles.root}>
-      <GameEditor onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} errors={errors} />
+      <GameEditor onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
     </div>
   );
 };

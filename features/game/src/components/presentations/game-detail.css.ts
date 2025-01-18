@@ -8,7 +8,6 @@ export const root: string = style({
   gridTemplateRows: "auto auto 1fr",
   gap: vars.spacing[4],
   position: "relative",
-  margin: vars.spacing[4],
   height: "100%",
 });
 
