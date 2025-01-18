@@ -1,6 +1,6 @@
 import { User } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/user-repository";
-import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { type Authenticator as I } from "./base.js";
 
 /**
@@ -16,7 +16,7 @@ export const setAuth = function setAuth(auth: Auth): void {
 export const Authenticator: I = {
   async signIn({ email, password }): Promise<User.Id> {
     try {
-      const authenticated = await signInWithEmailAndPassword(_auth, email, password);
+      const authenticated = await signInWithEmailAndPassword(getAuth(), email, password);
       const uid = authenticated.user.uid;
 
       const userId = User.createId(uid);
@@ -34,7 +34,7 @@ export const Authenticator: I = {
 
   async signUp({ name, email, password }): Promise<User.Id> {
     try {
-      const authenticated = await createUserWithEmailAndPassword(_auth, email, password);
+      const authenticated = await createUserWithEmailAndPassword(getAuth(), email, password);
       const uid = authenticated.user.uid;
 
       const userId = User.createId(uid);
@@ -50,7 +50,7 @@ export const Authenticator: I = {
 
   async currentUserIdIfExists(): Promise<User.Id | undefined> {
     return new Promise((resolve) => {
-      onAuthStateChanged(_auth, (user) => {
+      onAuthStateChanged(getAuth(), (user) => {
         if (user) {
           const uid = user.uid;
           resolve(User.createId(uid));
