@@ -1,15 +1,15 @@
-import { Database } from "firebase/database";
+import { Database, getDatabase as getGlobalDatabase } from "firebase/database";
 
 /**
  * instance of database
  */
-let database: Database;
+let database: Database | null;
 
 /**
  * get database instance
  */
 export const getDatabase = (): Database => {
-  return database;
+  return database || getGlobalDatabase();
 };
 
 /**

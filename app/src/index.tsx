@@ -1,5 +1,3 @@
-import { setAuth } from "@spp/infra-authenticator/firebase";
-import { setDatabase } from "@spp/infra-domain";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
@@ -21,9 +19,6 @@ if (location.hostname === "localhost") {
   connectDatabaseEmulator(database, "localhost", 9000);
   connectAuthEmulator(auth, "http://localhost:9099");
 }
-
-setAuth(auth);
-setDatabase(database);
 
 const root = createRoot(document.getElementById("root")!);
 
