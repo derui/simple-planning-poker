@@ -36,11 +36,11 @@ export function VotingPage({ currentUserId, votingId }: Props): JSX.Element {
 
   return (
     <div className={styles.root}>
-      <Route path="/">
-        <VotingArea />
-      </Route>
       <Route path="/revealed">
         <RevealedArea />
+      </Route>
+      <Route>
+        <VotingArea />
       </Route>
     </div>
   );

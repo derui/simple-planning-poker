@@ -46,7 +46,7 @@ export function GameIndex({ onStartVoting, userId }: Props): JSX.Element {
         <Route path="/create">
           <GameCreator onCreated={onCreated} onCancel={onCancelCreate} />
         </Route>
-        <Route path="/">
+        <Route>
           <div className={styles.listRoot}>
             <div className={styles.header}>
               <UserHeader />
