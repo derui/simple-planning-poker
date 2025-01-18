@@ -52,7 +52,7 @@ export const WaitingPrepared: Story = {
       <Router hook={hook}>
         <Provider store={store}>
           <div className={themeClass}>
-            <GameIndex onStartVoting={() => {}} />
+            <GameIndex onStartVoting={() => {}} userId="foo" />
           </div>
         </Provider>
       </Router>
@@ -69,7 +69,7 @@ export const Empty: Story = {
         <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} />
+              <GameIndex onStartVoting={() => {}} userId="foo" />
             </div>
           </Logined>
         </Provider>
@@ -105,7 +105,7 @@ export const SomeGames: Story = {
         <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} />
+              <GameIndex onStartVoting={() => {}} userId="foo" />
             </div>
           </Logined>
         </Provider>
@@ -138,7 +138,7 @@ export const TenGames: Story = {
         <Provider store={store}>
           <Logined>
             <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} />
+              <GameIndex onStartVoting={() => {}} userId="foo" />
             </div>
           </Logined>
         </Provider>
