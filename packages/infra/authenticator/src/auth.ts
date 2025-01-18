@@ -1,4 +1,8 @@
-export const setAuth = function setAuth(auth): void {
+import { Auth } from "firebase/auth";
+
+let _auth: Auth;
+
+export const setAuth = function setAuth(auth: Auth): void {
   _auth = auth;
 };
 
