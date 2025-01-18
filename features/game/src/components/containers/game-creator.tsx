@@ -18,7 +18,7 @@ interface Props {
  * The component that allows the user to create a new game.
  */
 export const GameCreator = function GameCreator({ onCancel, onCreated }: Props): JSX.Element {
-  const { loading, errors, create } = useCreateGame(onCreated);
+  const { loading, create } = useCreateGame(onCreated);
 
   const handleSubmit = useCallback(
     (name: string, points: string) => {
@@ -31,5 +31,5 @@ export const GameCreator = function GameCreator({ onCancel, onCreated }: Props):
     onCancel();
   }, [onCancel]);
 
-  return <GameCreatorLayout onSubmit={handleSubmit} onCancel={handleCancel} errors={errors} loading={loading} />;
+  return <GameCreatorLayout onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />;
 };
