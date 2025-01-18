@@ -15,17 +15,17 @@ export interface Props {
   /**
    * A handler to delete the game
    */
-  readonly onDelete: (gameId: string) => void;
+  readonly onDelete: () => void;
 
   /**
    * A handler to request to edit the game
    */
-  readonly onSubmit: (gameId: string, name: string, points: string) => void;
+  readonly onSubmit: (name: string, points: string) => void;
 
   /**
    *  A handler to start voting for the game
    */
-  readonly onStartVoting: (gameId: string) => void;
+  readonly onStartVoting: () => void;
 }
 
 export const GameDetailLayout = function GameDetailLayout({
@@ -38,27 +38,21 @@ export const GameDetailLayout = function GameDetailLayout({
   const [mode, setMode] = useState<"editing" | "viewing">("viewing");
 
   const handleDelete = () => {
-    if (game) {
-      onDelete?.(game.id);
-    }
+    onDelete?.();
   };
 
   const handleEdit = () => setMode("editing");
 
   const handleStartVoting = useCallback(() => {
-    if (game) {
-      onStartVoting?.(game.id);
-    }
-  }, [game, onStartVoting]);
+    onStartVoting?.();
+  }, [onStartVoting]);
 
   const handleSubmit = useCallback<(name: string, points: string) => void>(
     (name, points) => {
-      if (game) {
-        onSubmit?.(game.id, name, points);
-        setMode("viewing");
-      }
+      onSubmit?.(name, points);
+      setMode("viewing");
     },
-    [game, onSubmit]
+    [onSubmit]
   );
 
   const handleCancel = useCallback(() => {

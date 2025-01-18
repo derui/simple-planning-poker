@@ -1,4 +1,3 @@
-import { Game } from "@spp/shared-domain";
 import { useCallback } from "react";
 import { GameDetailLayout } from "./game-detail.layout.js";
 
@@ -20,16 +19,15 @@ export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Ele
     _delete();
   }, [_delete]);
 
-  const handleStartVoting = useCallback(
-    (gameId: string) => {
-      onStartVoting?.(gameId);
-    },
-    [onStartVoting]
-  );
+  const handleStartVoting = useCallback(() => {
+    if (game) {
+      onStartVoting?.(game?.id);
+    }
+  }, [game, onStartVoting]);
 
   const handleSubmit = useCallback(
-    (gameId: string, name: string, points: string) => {
-      edit(Game.createId(gameId), name, points);
+    (name: string, points: string) => {
+      edit(name, points);
     },
     [edit]
   );
