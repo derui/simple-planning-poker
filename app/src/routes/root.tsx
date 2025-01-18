@@ -1,10 +1,11 @@
 import { AuthStatus, useAuth, useLoginUser } from "@spp/feature-login";
-import React, { PropsWithChildren, Suspense, useEffect } from "react";
+import React, { PropsWithChildren, Suspense, useCallback, useEffect } from "react";
 import lazyImport from "../utils/lazy-import.js";
 
 import { themeClass } from "@spp/ui-theme";
 import { JSX } from "react/jsx-runtime";
-import { useLocation } from "wouter";
+import { Redirect, Route, Switch, useLocation } from "wouter";
+import { VotingPage } from "./voting-page.js";
 
 // eslint-disable-next-line func-style
 function PrivateRoute({ children }: PropsWithChildren) {
@@ -23,7 +24,6 @@ function PrivateRoute({ children }: PropsWithChildren) {
 const LaziedGameIndexPage = React.lazy(() =>
   lazyImport(import("@spp/feature-game")).then((v) => ({ default: v.GameIndex }))
 );
-const VotingPage = React.lazy(() => lazyImport(import("@spp/feature-voting")).then((v) => ({ default: v.VotingPage })));
 
 const LaziedLoginPage = React.lazy(() =>
   lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.LoginPage }))
@@ -32,14 +32,46 @@ const LaziedLoginPage = React.lazy(() =>
 export const Routed = function Routed(): JSX.Element {
   const { checkLogined } = useAuth();
   const { userId } = useLoginUser();
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     checkLogined();
   }, [checkLogined]);
 
+  const handleStartVoting = useCallback(
+    (votingId: string) => {
+      navigate(`/voting/${votingId}`);
+    },
+    [navigate]
+  );
+
+  const handleLogined = useCallback(() => {
+    navigate("/game");
+  }, [navigate]);
+
   return (
     <Suspense>
-      <div id="theme" className={themeClass}></div>
+      <div id="theme" className={themeClass}>
+        <Switch>
+          <Route path="/game">
+            {() => (
+              <PrivateRoute>
+                {" "}
+                <LaziedGameIndexPage userId={userId!!} onStartVoting={handleStartVoting} />
+              </PrivateRoute>
+            )}
+          </Route>
+          <Route path="/voting/:votingId">
+            {() => (
+              <PrivateRoute>
+                <VotingPage userId={userId!!} />
+              </PrivateRoute>
+            )}
+          </Route>
+          <Route path="/">{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
+          <Redirect to="/" />
+        </Switch>
+      </div>
     </Suspense>
   );
 };

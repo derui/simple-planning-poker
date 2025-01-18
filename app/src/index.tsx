@@ -8,6 +8,7 @@ import { Provider } from "jotai";
 import { createRoot } from "react-dom/client";
 import "./app.css.js";
 import { firebaseConfig } from "./firebase.config.js";
+import { Routed } from "./routes/root.js";
 
 enableMapSet();
 
@@ -23,8 +24,6 @@ if (location.hostname === "localhost") {
 
 setAuth(auth);
 setDatabase(database);
-
-const dispatcher = newEventDispatcher([new CreateGameEventListener(database)]);
 
 const root = createRoot(document.getElementById("root")!);
 

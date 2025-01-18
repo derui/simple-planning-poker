@@ -339,3 +339,10 @@ export const currentVoterRoleAtom: Atom<VoterType.T | undefined> = atom((get) =>
   const voter = voting.participatedVoters.find((v) => v.user === currentUserId);
   return voter ? voter.type : undefined;
 });
+
+/**
+ * pull some update from voting
+ */
+export const pullVotingUpdateAtom: WritableAtom<null, [], void> = atom(null, (_get, set) => {
+  set(asyncCurrentVotingAtom);
+});

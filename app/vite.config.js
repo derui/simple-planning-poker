@@ -20,10 +20,26 @@ export default defineConfig({
   plugins: [react(), vanillaExtractPlugin()],
   resolve: {
     alias: [
-      { find: "@spp/shared-domain/user-repository", replacement: path.join(__dirname, "src", isProduction ? "user-repository.prod" : "user-repository") },
-      { find: "@spp/shared-domain/game-repository", replacement: path.join(__dirname, "src", isProduction ? "game-repository.prod" : "game-repository") },
-      { find: "@spp/shared-domain/voting-repository", replacement: path.join(__dirname, "src", isProduction ? "voting-repository.prod" : "voting-repository") },
-      { find: "@spp/infra-authenticator/base", replacement: path.join(__dirname, "src", isProduction ? "firebase-auth.prod" : "firebase-auth") },
+      {
+        find: "./firebase.config",
+        replacement: path.join(__dirname, "src", isProduction ? "firebase.config.prod" : "firebase.config"),
+      },
+      {
+        find: "@spp/shared-domain/user-repository",
+        replacement: path.join(__dirname, "src", isProduction ? "user-repository.prod" : "user-repository"),
+      },
+      {
+        find: "@spp/shared-domain/game-repository",
+        replacement: path.join(__dirname, "src", isProduction ? "game-repository.prod" : "game-repository"),
+      },
+      {
+        find: "@spp/shared-domain/voting-repository",
+        replacement: path.join(__dirname, "src", isProduction ? "voting-repository.prod" : "voting-repository"),
+      },
+      {
+        find: "@spp/infra-authenticator/base",
+        replacement: path.join(__dirname, "src", isProduction ? "firebase-auth.prod" : "firebase-auth"),
+      },
     ],
   },
 });
