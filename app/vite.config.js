@@ -26,19 +26,19 @@ export default defineConfig({
       },
       {
         find: "@spp/shared-domain/user-repository",
-        replacement: path.join(__dirname, "src", isProduction ? "user-repository.prod" : "user-repository"),
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "user-repository")),
       },
       {
         find: "@spp/shared-domain/game-repository",
-        replacement: path.join(__dirname, "src", isProduction ? "game-repository.prod" : "game-repository"),
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "game-repository")),
       },
       {
         find: "@spp/shared-domain/voting-repository",
-        replacement: path.join(__dirname, "src", isProduction ? "voting-repository.prod" : "voting-repository"),
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "voting-repository")),
       },
       {
         find: "@spp/infra-authenticator/base",
-        replacement: path.join(__dirname, "src", isProduction ? "firebase-auth.prod" : "firebase-auth"),
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "firebase-auth")),
       },
     ],
   },
