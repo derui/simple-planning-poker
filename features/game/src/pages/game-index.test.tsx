@@ -1,26 +1,37 @@
 import { ApplicablePoints, Game, GameName, User } from "@spp/shared-domain";
 import { GameRepository } from "@spp/shared-domain/game-repository";
+import { clear as clearGame } from "@spp/shared-domain/mock/game-repository";
+import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { cleanup, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { createStore, Provider } from "jotai";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { loadGamesAtom } from "../atoms/game-atom.js";
 import { GameIndex } from "./game-index.js";
 
 afterEach(cleanup);
+beforeEach(clearGame);
+beforeEach(clearUser);
 
-test("render page", () => {
+test("render page", async () => {
   // Arrange
   const store = createStore();
   const { hook } = memoryLocation();
+
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("user"),
+      name: "user",
+    }),
+  });
 
   // Act
   render(
     <Router hook={hook}>
       <Provider store={store}>
-        <GameIndex onStartVoting={() => {}} />
+        <GameIndex userId="user" onStartVoting={() => {}} />
       </Provider>
     </Router>
   );
@@ -30,9 +41,7 @@ test("render page", () => {
   expect(screen.queryByText("Add Game")).not.toBeNull();
 });
 
-// add test case to check a handler called or not
-test("should call the handler when the game is loaded", async () => {
-  expect.assertions(1);
+test("should load games after loaded", async () => {
   // Arrange
   const store = createStore();
   const { hook } = memoryLocation();
@@ -45,13 +54,19 @@ test("should call the handler when the game is loaded", async () => {
       points: ApplicablePoints.parse("1,2,3")!,
     })[0],
   });
-  store.set(loadGamesAtom, User.createId("user"));
+
+  await UserRepository.save({
+    user: User.create({
+      id: User.createId("user"),
+      name: "user",
+    }),
+  });
 
   // Act
   render(
     <Router hook={hook}>
       <Provider store={store}>
-        <GameIndex onStartVoting={() => {}} />
+        <GameIndex userId="user" onStartVoting={() => {}} />
       </Provider>
     </Router>
   );

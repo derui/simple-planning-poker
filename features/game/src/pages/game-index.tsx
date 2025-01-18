@@ -1,5 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
+import { useUserInfo } from "../atoms/use-user-info.js";
 import { GameCreator } from "../components/containers/game-creator.js";
 import { GameDetail } from "../components/containers/game-detail.js";
 import { GameList } from "../components/containers/game-list.js";
@@ -11,11 +12,17 @@ interface Props {
    * Handler to notify start voting to page.
    */
   onStartVoting: (gameId: string) => void;
+
+  /**
+   * The user id
+   */
+  userId: string;
 }
 
 // eslint-disable-next-line func-style
-export function GameIndex({ onStartVoting }: Props): JSX.Element {
+export function GameIndex({ onStartVoting, userId }: Props): JSX.Element {
   const [loc, navigate] = useLocation();
+  const { loadUser } = useUserInfo();
 
   const onCreated = useCallback(() => {
     navigate("/", { replace: true });
@@ -28,6 +35,10 @@ export function GameIndex({ onStartVoting }: Props): JSX.Element {
   const handleCreate = useCallback(() => {
     navigate("/create");
   }, [navigate]);
+
+  useEffect(() => {
+    loadUser(userId);
+  }, [userId]);
 
   return (
     <div className={styles.root}>
