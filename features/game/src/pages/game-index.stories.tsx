@@ -33,16 +33,6 @@ const meta: Meta<typeof GameIndex> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Logined = ({ children }: React.PropsWithChildren) => {
-  const { select } = useCurrentGame();
-
-  useEffect(() => {
-    select(Game.createId("game"));
-  }, []);
-
-  return children;
-};
-
 export const WaitingPrepared: Story = {
   render() {
     const store = createStore();
@@ -64,14 +54,17 @@ export const Empty: Story = {
   render() {
     const store = createStore();
     const { hook } = memoryLocation();
+
+    useEffect(() => {
+      useCurrentGame().select(Game.createId("game"));
+    }, []);
+
     return (
       <Router hook={hook}>
         <Provider store={store}>
-          <Logined>
-            <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} userId="foo" />
-            </div>
-          </Logined>
+          <div className={themeClass}>
+            <GameIndex onStartVoting={() => {}} userId="foo" />
+          </div>
         </Provider>
       </Router>
     );
@@ -82,6 +75,7 @@ export const SomeGames: Story = {
   render() {
     const store = createStore();
     const { hook } = memoryLocation();
+
     useEffect(() => {
       [
         Game.create({
@@ -103,11 +97,9 @@ export const SomeGames: Story = {
     return (
       <Router hook={hook}>
         <Provider store={store}>
-          <Logined>
-            <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} userId="foo" />
-            </div>
-          </Logined>
+          <div className={themeClass}>
+            <GameIndex onStartVoting={() => {}} userId="foo" />
+          </div>
         </Provider>
       </Router>
     );
@@ -136,11 +128,9 @@ export const TenGames: Story = {
     return (
       <Router hook={hook}>
         <Provider store={store}>
-          <Logined>
-            <div className={themeClass}>
-              <GameIndex onStartVoting={() => {}} userId="foo" />
-            </div>
-          </Logined>
+          <div className={themeClass}>
+            <GameIndex onStartVoting={() => {}} userId="foo" />
+          </div>
         </Provider>
       </Router>
     );
