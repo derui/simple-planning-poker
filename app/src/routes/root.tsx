@@ -4,7 +4,7 @@ import lazyImport from "../utils/lazy-import.js";
 
 import { themeClass } from "@spp/ui-theme";
 import { JSX } from "react/jsx-runtime";
-import { Redirect, Route, Switch, useLocation } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import { VotingPage } from "./voting-page.js";
 
 // eslint-disable-next-line func-style
@@ -68,8 +68,7 @@ export const Routed = function Routed(): JSX.Element {
               </PrivateRoute>
             )}
           </Route>
-          <Route path="/">{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
-          <Redirect to="/" />
+          <Route>{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
         </Switch>
       </div>
     </Suspense>

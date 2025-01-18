@@ -3,8 +3,6 @@ import { UserRepository } from "@spp/shared-domain/user-repository";
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { type Authenticator as I } from "./base.js";
 
-let _auth: Auth;
-
 /**
  * Set instance of Firebase.Auth
  */

@@ -306,9 +306,6 @@ importers:
       '@hookform/resolvers':
         specifier: 'catalog:'
         version: 3.9.1(react-hook-form@7.53.1(react@18.3.1))
-      '@spp/feature-login':
-        specifier: workspace:^
-        version: link:../login
       '@spp/infra-domain':
         specifier: workspace:^
         version: link:../../packages/infra/domain
