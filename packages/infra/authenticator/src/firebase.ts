@@ -1,14 +1,7 @@
 import { User } from "@spp/shared-domain";
 import { UserRepository } from "@spp/shared-domain/user-repository";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { type Authenticator as I } from "./base.js";
-
-/**
- * Set instance of Firebase.Auth
- */
-export const setAuth = function setAuth(auth: Auth): void {
-  _auth = auth;
-};
 
 /**
  * Instance of authenticator that is combined with Firebase.Auth
