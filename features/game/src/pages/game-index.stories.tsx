@@ -9,7 +9,6 @@ import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
 import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { useCurrentGame } from "../atoms/use-current-game.js";
 import { GameIndex } from "./game-index.js";
 
 const meta: Meta<typeof GameIndex> = {
@@ -53,8 +52,6 @@ export const Empty: Story = {
   render() {
     const store = createStore();
     const { hook } = memoryLocation();
-
-    useCurrentGame().select(Game.createId("game"));
 
     return (
       <Router hook={hook}>
