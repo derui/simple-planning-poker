@@ -2,8 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
-import sinon from "sinon";
-import { Hooks, ImplementationProvider } from "../../hooks/facade.js";
 import { SignIn } from "./signin.js";
 
 const meta: Meta<typeof SignIn> = {
@@ -17,54 +15,26 @@ type Story = StoryObj<typeof meta>;
 
 export const notLogin: Story = {
   render() {
-    const mock: Hooks = {
-      useLogin() {
-        return {
-          loginError: undefined,
-          status: "notLogined",
-          signIn() {},
-          signUp() {},
-        };
-      },
-      useAuth: sinon.fake(),
-    };
-    const store = createStore();
-
     return (
-      <ImplementationProvider implementation={mock}>
-        <Provider store={store}>
-          <div className={themeClass}>
-            <SignIn />
-          </div>
-        </Provider>
-      </ImplementationProvider>
+      <Provider>
+        <div className={themeClass}>
+          <SignIn />
+        </div>
+      </Provider>
     );
   },
 };
 
 export const doing: Story = {
   render() {
-    const mock: Hooks = {
-      useLogin() {
-        return {
-          loginError: undefined,
-          status: "doing",
-          signIn() {},
-          signUp() {},
-        };
-      },
-      useAuth: sinon.fake(),
-    };
     const store = createStore();
 
     return (
-      <ImplementationProvider implementation={mock}>
-        <Provider store={store}>
-          <div className={themeClass}>
-            <SignIn />
-          </div>
-        </Provider>
-      </ImplementationProvider>
+      <Provider store={store}>
+        <div className={themeClass}>
+          <SignIn />
+        </div>
+      </Provider>
     );
   },
 };
