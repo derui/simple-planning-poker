@@ -53,22 +53,21 @@ export const Routed = function Routed(): JSX.Element {
     <Suspense>
       <div id="theme" className={themeClass}>
         <Switch>
-          <Route path="/game">
+          <Route path="/game" nest>
             {() => (
               <PrivateRoute>
-                {" "}
                 <LaziedGameIndexPage userId={userId!!} onStartVoting={handleStartVoting} />
               </PrivateRoute>
             )}
           </Route>
-          <Route path="/voting/:votingId">
+          <Route path="/voting/:votingId" nest>
             {() => (
               <PrivateRoute>
                 <VotingPage userId={userId!!} />
               </PrivateRoute>
             )}
           </Route>
-          <Route>{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
+          <Route nest>{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
         </Switch>
       </div>
     </Suspense>
