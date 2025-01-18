@@ -7,7 +7,6 @@ import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
 import { themeClass } from "@spp/ui-theme";
 import { createStore, Provider } from "jotai";
-import { useEffect } from "react";
 import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { useCurrentGame } from "../atoms/use-current-game.js";
@@ -55,9 +54,7 @@ export const Empty: Story = {
     const store = createStore();
     const { hook } = memoryLocation();
 
-    useEffect(() => {
-      useCurrentGame().select(Game.createId("game"));
-    }, []);
+    useCurrentGame().select(Game.createId("game"));
 
     return (
       <Router hook={hook}>
@@ -76,23 +73,21 @@ export const SomeGames: Story = {
     const store = createStore();
     const { hook } = memoryLocation();
 
-    useEffect(() => {
-      [
-        Game.create({
-          id: Game.createId(),
-          owner: User.createId("foo"),
-          name: GameName.create("Sprint 1"),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-        })[0],
+    [
+      Game.create({
+        id: Game.createId(),
+        owner: User.createId("foo"),
+        name: GameName.create("Sprint 1"),
+        points: ApplicablePoints.create([StoryPoint.create(1)]),
+      })[0],
 
-        Game.create({
-          id: Game.createId(),
-          owner: User.createId("bar"),
-          name: GameName.create("Sprint 2"),
-          points: ApplicablePoints.create([StoryPoint.create(1)]),
-        })[0],
-      ].forEach((game) => GameRepository.save({ game }));
-    }, []);
+      Game.create({
+        id: Game.createId(),
+        owner: User.createId("bar"),
+        name: GameName.create("Sprint 2"),
+        points: ApplicablePoints.create([StoryPoint.create(1)]),
+      })[0],
+    ].forEach((game) => GameRepository.save({ game }));
 
     return (
       <Router hook={hook}>
@@ -112,18 +107,16 @@ export const TenGames: Story = {
     const games = new Array(10).fill(undefined);
     const { hook } = memoryLocation();
 
-    useEffect(() => {
-      games.forEach((_, idx) =>
-        GameRepository.save({
-          game: Game.create({
-            id: Game.createId(),
-            owner: User.createId("foo"),
-            name: GameName.create(`Sprint ${idx}`),
-            points: ApplicablePoints.create([StoryPoint.create(idx)]),
-          })[0],
-        })
-      );
-    }, []);
+    games.forEach((_, idx) =>
+      GameRepository.save({
+        game: Game.create({
+          id: Game.createId(),
+          owner: User.createId("foo"),
+          name: GameName.create(`Sprint ${idx}`),
+          points: ApplicablePoints.create([StoryPoint.create(idx)]),
+        })[0],
+      })
+    );
 
     return (
       <Router hook={hook}>
