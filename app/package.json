@@ -7,6 +7,7 @@
   "scripts": {
     "dev:test": "vitest",
     "dev:tsc": "tsc --watch",
+    "dev:vite": "vite",
     "build:tsc": "tsc --noEmit",
     "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\"",
     "ci": "CI=true firebase emulators:exec --ui 'npx vite'",
@@ -23,7 +24,6 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "catalog:",
-    "@remix-run/web-fetch": "catalog:",
     "@spp/eslint-config": "workspace:^",
     "@spp/typescript-config": "workspace:^",
     "@testing-library/dom": "catalog:",
@@ -31,8 +31,6 @@
     "@testing-library/user-event": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@types/react-router": "catalog:",
-    "@types/react-router-dom": "catalog:",
     "@types/sinon": "catalog:",
     "@types/uuid": "catalog:",
     "@vanilla-extract/vite-plugin": "^4.0.17",
@@ -49,7 +47,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@remix-run/router": "catalog:",
     "@spp/feature-game": "workspace:^",
     "@spp/feature-login": "workspace:^",
     "@spp/feature-voting": "workspace:^",
@@ -65,8 +62,7 @@
     "jotai": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "catalog:",
-    "react-router-dom": "catalog:",
-    "uuid": "catalog:"
+    "uuid": "catalog:",
+    "wouter": "catalog:"
   }
 }
