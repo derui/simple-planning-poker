@@ -20,10 +20,28 @@ export default defineConfig({
   plugins: [react(), vanillaExtractPlugin()],
   resolve: {
     alias: [
-      { find: "@spp/shared-domain/user-repository", replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "user-repository")) },
-      { find: "@spp/shared-domain/game-repository", replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "game-repository")) },
-      { find: "@spp/shared-domain/voting-repository", replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "voting-repository")) },
-      { find: "@spp/infra-authenticator/base", replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "firebase-auth")) },
+      {
+        find: "./firebase.config",
+        replacement: path.join(__dirname, "src", isProduction ? "firebase.config.prod" : "firebase.config"),
+      },
+      {
+        find: "@spp/shared-domain/user-repository",
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "user-repository")),
+      },
+      {
+        find: "@spp/shared-domain/game-repository",
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "game-repository")),
+      },
+      {
+        find: "@spp/shared-domain/voting-repository",
+        replacement: path.resolve(
+          path.join(__dirname, "node_modules", "@spp/infra-domain", "dist", "voting-repository")
+        ),
+      },
+      {
+        find: "@spp/infra-authenticator/base",
+        replacement: path.resolve(path.join(__dirname, "node_modules", "@spp/infra-authenticator", "dist", "firebase")),
+      },
     ],
   },
 });
