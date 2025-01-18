@@ -40,7 +40,7 @@ export const WaitingPrepared: Story = {
       <Router hook={hook}>
         <Provider store={store}>
           <div className={themeClass}>
-            <GameIndex onStartVoting={() => {}} userId="foo" />
+            <GameIndex onStartVoting={() => {}} userId="" />
           </div>
         </Provider>
       </Router>
