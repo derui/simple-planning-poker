@@ -197,8 +197,8 @@ export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, se
   const game = get(unwrap(asyncCurrentGameAtom));
   if (!game) return;
 
-  // Call Game.newVoting if the game is valid
-  Game.newVoting(game);
+  // Call Game.newVoting if the game is valid and store the returned values
+  const [voting, event] = Game.newVoting(game);
 
   console.log("Starting voting for game:", game);
 });
