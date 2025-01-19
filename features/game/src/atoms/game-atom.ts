@@ -193,6 +193,10 @@ export const editGameAtom: WritableAtom<null, [obj: { name: string; points: stri
   }
 );
 
+/**
+ * Atom to start a voting for the current game.
+ * @param callback - A function that will be called with the `votingId` after saving the voting.
+ */
 export const startVotingAtom: WritableAtom<null, [(votingId: string) => void], void> = atom(
   null,
   (get, _set, callback) => {
