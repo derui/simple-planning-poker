@@ -11,6 +11,7 @@ generated/
 *.tsbuildinfo
 .turbo/
 storybook-static/
+/storybook/books
 
 database-debug.log
 ui-debug.log
