@@ -28,7 +28,7 @@ export type UseCurrentGame = () => {
   /**
    * Start voting for the current game.
    */
-  readonly startVoting: () => void;
+  readonly startVoting: (callback?: (votingId: string) => void) => void;
 };
 
 /**
@@ -58,8 +58,8 @@ export const useCurrentGame: UseCurrentGame = () => {
     loadGame(Game.createId(gameId));
   }, []);
 
-  const _startVoting = useCallback(() => {
-    startVoting(() => {});
+  const _startVoting = useCallback((callback?: (votingId: string) => void) => {
+    startVoting(callback || (() => {}));
   }, [startVoting]);
 
   return {
