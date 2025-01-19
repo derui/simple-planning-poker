@@ -223,6 +223,9 @@ importers:
       '@testing-library/user-event':
         specifier: 'catalog:'
         version: 14.5.2(@testing-library/dom@10.0.0)
+      '@types/node':
+        specifier: ^22.10.7
+        version: 22.10.7
       '@types/react':
         specifier: 'catalog:'
         version: 18.3.10
@@ -240,10 +243,10 @@ importers:
         version: 1.16.0
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -270,10 +273,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   configs/eslint-config:
     dependencies:
@@ -378,7 +381,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -393,10 +396,10 @@ importers:
         version: 17.0.3
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -417,10 +420,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   features/login:
     dependencies:
@@ -487,7 +490,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -499,10 +502,10 @@ importers:
         version: 17.0.3
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -523,10 +526,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   features/voting:
     dependencies:
@@ -593,7 +596,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -608,10 +611,10 @@ importers:
         version: 17.0.3
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -635,10 +638,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/infra/authenticator:
     dependencies:
@@ -660,7 +663,7 @@ importers:
         version: link:../../../configs/typescript-config
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -672,10 +675,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/infra/domain:
     dependencies:
@@ -712,7 +715,7 @@ importers:
         version: 10.0.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -733,10 +736,10 @@ importers:
         version: 10.0.0
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/app-url:
     dependencies:
@@ -761,10 +764,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/array:
     devDependencies:
@@ -785,10 +788,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/basic:
     devDependencies:
@@ -809,10 +812,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/color-variant:
     devDependencies:
@@ -833,10 +836,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/domain:
     dependencies:
@@ -879,10 +882,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/get-pnpm-root:
     dependencies:
@@ -950,10 +953,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/type-util:
     devDependencies:
@@ -974,10 +977,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/shared-logic/use-case:
     dependencies:
@@ -1014,10 +1017,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/button-style:
     dependencies:
@@ -1048,7 +1051,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1057,10 +1060,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1081,10 +1084,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/dialog:
     dependencies:
@@ -1127,7 +1130,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1136,10 +1139,10 @@ importers:
         version: 14.5.2(@testing-library/dom@10.4.0)
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1157,10 +1160,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/icon:
     dependencies:
@@ -1194,7 +1197,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1206,10 +1209,10 @@ importers:
         version: 1.16.0
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1227,7 +1230,7 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
 
   packages/ui/input:
     dependencies:
@@ -1258,7 +1261,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1267,10 +1270,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: ^4.0.17
-        version: 4.0.17(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.17(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1288,10 +1291,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/loader:
     dependencies:
@@ -1328,7 +1331,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1337,10 +1340,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1358,10 +1361,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/overlay:
     dependencies:
@@ -1392,7 +1395,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1401,10 +1404,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1422,10 +1425,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/radio-button:
     dependencies:
@@ -1456,7 +1459,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1468,10 +1471,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1489,10 +1492,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/radio-group:
     dependencies:
@@ -1526,7 +1529,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1535,10 +1538,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1556,10 +1559,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/skeleton:
     dependencies:
@@ -1590,7 +1593,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1599,10 +1602,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1620,10 +1623,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   packages/ui/theme:
     devDependencies:
@@ -1638,7 +1641,7 @@ importers:
         version: 1.16.0
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1656,7 +1659,7 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
 
   packages/ui/toggle-button:
     dependencies:
@@ -1687,7 +1690,7 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.1)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1699,10 +1702,10 @@ importers:
         version: 18.3.10
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
-        version: 4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))
+        version: 4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1720,10 +1723,10 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.1(@types/node@22.9.0)(jsdom@25.0.1)
+        version: 2.1.1(@types/node@22.10.7)(jsdom@25.0.1)
 
   storybook:
     devDependencies:
@@ -1738,13 +1741,13 @@ importers:
         version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       '@storybook/react-vite':
         specifier: 'catalog:'
-        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+        version: 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@types/react':
         specifier: 'catalog:'
         version: 18.3.10
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.3.1(vite@5.4.8(@types/node@22.9.0))
+        version: 4.3.1(vite@5.4.8(@types/node@22.10.7))
       concurrently:
         specifier: 'catalog:'
         version: 9.0.1
@@ -1762,7 +1765,7 @@ importers:
         version: 5.6.2
       vite:
         specifier: 'catalog:'
-        version: 5.4.8(@types/node@22.9.0)
+        version: 5.4.8(@types/node@22.10.7)
 
   tests/firebase-emulator-launcher:
     dependencies:
@@ -3074,6 +3077,9 @@ packages:
 
   '@types/long@4.0.2':
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
+
+  '@types/node@22.10.7':
+    resolution: {integrity: sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg==}
 
   '@types/node@22.5.5':
     resolution: {integrity: sha512-Xjs4y5UPO/CLdzpgR6GirZJx36yScjh73+2NlLlkFRSoQN8B0DpfXPdZGnvVmLRLOsqDpOfTNv7D9trgGhmOIA==}
@@ -6683,6 +6689,9 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
   undici@6.19.7:
     resolution: {integrity: sha512-HR3W/bMGPSr90i8AAp2C4DM3wChFdJPLrWYpIS++LxS8K+W535qftjt+4MyjNYHeWabMj1nvtmLIi7l++iq91A==}
     engines: {node: '>=18.17'}
@@ -7876,7 +7885,7 @@ snapshots:
   '@grpc/grpc-js@1.9.15':
     dependencies:
       '@grpc/proto-loader': 0.7.13
-      '@types/node': 22.9.0
+      '@types/node': 22.10.7
 
   '@grpc/proto-loader@0.7.13':
     dependencies:
@@ -7911,11 +7920,11 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.4.2(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.4.2(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.6.2)
-      vite: 5.4.8(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
     optionalDependencies:
       typescript: 5.6.2
 
@@ -8120,13 +8129,13 @@ snapshots:
       storybook: 8.4.7(prettier@3.3.3)
       ts-dedent: 2.2.0
 
-  '@storybook/builder-vite@8.4.7(storybook@8.4.7(prettier@3.3.3))(vite@5.4.8(@types/node@22.9.0))':
+  '@storybook/builder-vite@8.4.7(storybook@8.4.7(prettier@3.3.3))(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
       '@storybook/csf-plugin': 8.4.7(storybook@8.4.7(prettier@3.3.3))
       browser-assert: 1.2.1
       storybook: 8.4.7(prettier@3.3.3)
       ts-dedent: 2.2.0
-      vite: 5.4.8(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
 
   '@storybook/components@8.4.7(storybook@8.4.7(prettier@3.3.3))':
     dependencies:
@@ -8177,11 +8186,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 8.4.7(prettier@3.3.3)
 
-  '@storybook/react-vite@8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))':
+  '@storybook/react-vite@8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.4)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.4.2(typescript@5.6.2)(vite@5.4.8(@types/node@22.9.0))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.4.2(typescript@5.6.2)(vite@5.4.8(@types/node@22.10.7))
       '@rollup/pluginutils': 5.1.0(rollup@4.24.4)
-      '@storybook/builder-vite': 8.4.7(storybook@8.4.7(prettier@3.3.3))(vite@5.4.8(@types/node@22.9.0))
+      '@storybook/builder-vite': 8.4.7(storybook@8.4.7(prettier@3.3.3))(vite@5.4.8(@types/node@22.10.7))
       '@storybook/react': 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.3.3))(typescript@5.6.2)
       find-up: 5.0.0
       magic-string: 0.30.11
@@ -8191,7 +8200,7 @@ snapshots:
       resolve: 1.22.8
       storybook: 8.4.7(prettier@3.3.3)
       tsconfig-paths: 4.2.0
-      vite: 5.4.8(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
     transitivePeerDependencies:
       - '@storybook/test'
       - rollup
@@ -8316,6 +8325,10 @@ snapshots:
       '@types/node': 22.9.0
 
   '@types/long@4.0.2': {}
+
+  '@types/node@22.10.7':
+    dependencies:
+      undici-types: 6.20.0
 
   '@types/node@22.5.5':
     dependencies:
@@ -8624,7 +8637,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@vanilla-extract/integration@7.1.10(@types/node@22.9.0)':
+  '@vanilla-extract/integration@7.1.10(@types/node@22.10.7)':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-syntax-typescript': 7.25.4(@babel/core@7.25.2)
@@ -8636,8 +8649,8 @@ snapshots:
       find-up: 5.0.0
       javascript-stringify: 2.1.0
       mlly: 1.7.1
-      vite: 5.4.8(@types/node@22.9.0)
-      vite-node: 1.6.0(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
+      vite-node: 1.6.0(@types/node@22.10.7)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -8652,10 +8665,10 @@ snapshots:
 
   '@vanilla-extract/private@1.0.6': {}
 
-  '@vanilla-extract/vite-plugin@4.0.16(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))':
+  '@vanilla-extract/vite-plugin@4.0.16(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
-      '@vanilla-extract/integration': 7.1.10(@types/node@22.9.0)
-      vite: 5.4.8(@types/node@22.9.0)
+      '@vanilla-extract/integration': 7.1.10(@types/node@22.10.7)
+      vite: 5.4.8(@types/node@22.10.7)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -8668,10 +8681,10 @@ snapshots:
       - supports-color
       - terser
 
-  '@vanilla-extract/vite-plugin@4.0.17(@types/node@22.9.0)(vite@5.4.8(@types/node@22.9.0))':
+  '@vanilla-extract/vite-plugin@4.0.17(@types/node@22.10.7)(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
-      '@vanilla-extract/integration': 7.1.10(@types/node@22.9.0)
-      vite: 5.4.8(@types/node@22.9.0)
+      '@vanilla-extract/integration': 7.1.10(@types/node@22.10.7)
+      vite: 5.4.8(@types/node@22.10.7)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -8684,14 +8697,14 @@ snapshots:
       - supports-color
       - terser
 
-  '@vitejs/plugin-react@4.3.1(vite@5.4.8(@types/node@22.9.0))':
+  '@vitejs/plugin-react@4.3.1(vite@5.4.8(@types/node@22.10.7))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.8(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
     transitivePeerDependencies:
       - supports-color
 
@@ -8702,6 +8715,14 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.8(@types/node@22.10.7))':
+    dependencies:
+      '@vitest/spy': 2.1.1
+      estree-walker: 3.0.3
+      magic-string: 0.30.11
+    optionalDependencies:
+      vite: 5.4.8(@types/node@22.10.7)
+
   '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.8(@types/node@22.5.5))':
     dependencies:
       '@vitest/spy': 2.1.1
@@ -8709,14 +8730,6 @@ snapshots:
       magic-string: 0.30.11
     optionalDependencies:
       vite: 5.4.8(@types/node@22.5.5)
-
-  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.4.8(@types/node@22.9.0))':
-    dependencies:
-      '@vitest/spy': 2.1.1
-      estree-walker: 3.0.3
-      magic-string: 0.30.11
-    optionalDependencies:
-      vite: 5.4.8(@types/node@22.9.0)
 
   '@vitest/pretty-format@2.1.1':
     dependencies:
@@ -9903,7 +9916,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 22.9.0
+      '@types/node': 22.10.7
       require-like: 0.1.2
 
   event-target-shim@5.0.1: {}
@@ -12724,6 +12737,8 @@ snapshots:
 
   undici-types@6.19.8: {}
 
+  undici-types@6.20.0: {}
+
   undici@6.19.7: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
@@ -12831,13 +12846,30 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@1.6.0(@types/node@22.9.0):
+  vite-node@1.6.0(@types/node@22.10.7):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
       picocolors: 1.1.0
-      vite: 5.4.8(@types/node@22.9.0)
+      vite: 5.4.8(@types/node@22.10.7)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vite-node@2.1.1(@types/node@22.10.7):
+    dependencies:
+      cac: 6.7.14
+      debug: 4.3.7
+      pathe: 1.1.2
+      vite: 5.4.8(@types/node@22.10.7)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -12866,22 +12898,14 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@2.1.1(@types/node@22.9.0):
+  vite@5.4.8(@types/node@22.10.7):
     dependencies:
-      cac: 6.7.14
-      debug: 4.3.7
-      pathe: 1.1.2
-      vite: 5.4.8(@types/node@22.9.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
+      esbuild: 0.21.5
+      postcss: 8.4.47
+      rollup: 4.24.4
+    optionalDependencies:
+      '@types/node': 22.10.7
+      fsevents: 2.3.3
 
   vite@5.4.8(@types/node@22.5.5):
     dependencies:
@@ -12892,14 +12916,40 @@ snapshots:
       '@types/node': 22.5.5
       fsevents: 2.3.3
 
-  vite@5.4.8(@types/node@22.9.0):
+  vitest@2.1.1(@types/node@22.10.7)(jsdom@25.0.1):
     dependencies:
-      esbuild: 0.21.5
-      postcss: 8.4.47
-      rollup: 4.24.4
+      '@vitest/expect': 2.1.1
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.4.8(@types/node@22.10.7))
+      '@vitest/pretty-format': 2.1.1
+      '@vitest/runner': 2.1.1
+      '@vitest/snapshot': 2.1.1
+      '@vitest/spy': 2.1.1
+      '@vitest/utils': 2.1.1
+      chai: 5.1.1
+      debug: 4.3.7
+      magic-string: 0.30.11
+      pathe: 1.1.2
+      std-env: 3.7.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.0
+      tinypool: 1.0.1
+      tinyrainbow: 1.2.0
+      vite: 5.4.8(@types/node@22.10.7)
+      vite-node: 2.1.1(@types/node@22.10.7)
+      why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 22.9.0
-      fsevents: 2.3.3
+      '@types/node': 22.10.7
+      jsdom: 25.0.1
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
 
   vitest@2.1.1(@types/node@22.5.5)(jsdom@25.0.1):
     dependencies:
@@ -12924,41 +12974,6 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.5.5
-      jsdom: 25.0.1
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.1.1(@types/node@22.9.0)(jsdom@25.0.1):
-    dependencies:
-      '@vitest/expect': 2.1.1
-      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.4.8(@types/node@22.9.0))
-      '@vitest/pretty-format': 2.1.1
-      '@vitest/runner': 2.1.1
-      '@vitest/snapshot': 2.1.1
-      '@vitest/spy': 2.1.1
-      '@vitest/utils': 2.1.1
-      chai: 5.1.1
-      debug: 4.3.7
-      magic-string: 0.30.11
-      pathe: 1.1.2
-      std-env: 3.7.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.0
-      tinypool: 1.0.1
-      tinyrainbow: 1.2.0
-      vite: 5.4.8(@types/node@22.9.0)
-      vite-node: 2.1.1(@types/node@22.9.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 22.9.0
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less
