@@ -104,7 +104,6 @@ describe("UseRevealed", () => {
     await UserRepository.save({ user: User.create({ id: userId, name: "foo" }) });
 
     const store = createStore();
-    store.set(joinVotingAtom, userId, votingId);
     const wrapper = createWrapper(store);
 
     // Act
