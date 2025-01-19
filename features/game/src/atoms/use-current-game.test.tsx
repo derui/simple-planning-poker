@@ -147,3 +147,21 @@ test("can not delete a game that have by other user", async () => {
   expect(result.current.loading).toBe(false);
 });
 
+test("should not start voting if game is not loaded", async () => {
+  // Arrange
+  const store = createStore();
+  store.set(loadUserAtom, User.createId("id"));
+
+  // Act
+  const { result } = renderHook(useCurrentGame, {
+    wrapper: createWrapper(store),
+  });
+
+  await act(async () => {
+    result.current.startVoting();
+  });
+
+  // Assert
+  expect(result.current.loading).toBe(false);
+  expect(result.current.error).toBe("Game is not loaded");
+});
