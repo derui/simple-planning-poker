@@ -112,4 +112,33 @@ describe("UseRevealed", () => {
     // Assert
     expect(result.current.averageEstimation).toBe(0);
   });
+
+  test("averageEstimation should be correct after loaded with 1 estimation", async () => {
+    // Arrange
+    const userId = User.createId();
+    const votingId = Voting.createId();
+    const voting = Voting.revealedOf({
+      id: votingId,
+      points: POINTS,
+      theme: "foo",
+      estimations: Estimations.from({
+        [userId]: UserEstimation.submittedOf(POINTS[1]),
+      }),
+      voters: [Voter.createVoter({ user: userId })],
+    });
+    await VotingRepository.save({ voting });
+    await UserRepository.save({ user: User.create({ id: userId, name: "foo" }) });
+
+    const store = createStore();
+    store.set(joinVotingAtom, userId, votingId);
+    const wrapper = createWrapper(store);
+
+    // Act
+    const { result } = renderHook(useRevealed, { wrapper });
+
+    await waitFor(async () => result.current.loading == false);
+
+    // Assert
+    expect(result.current.averageEstimation).toBe(1);
+  });
 });
