@@ -5,7 +5,7 @@ import { clear as clearUser } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
-import { beforeEach, expect, test } from "vitest";
+import { beforeEach, expect, test, vi } from "vitest";
 import { toGameDto } from "./dto.js";
 import { useCurrentGame } from "./use-current-game.js";
 import { loadUserAtom } from "./user-atom.js";
@@ -151,6 +151,7 @@ test("should not start voting if game is not loaded", async () => {
   // Arrange
   const store = createStore();
   store.set(loadUserAtom, User.createId("id"));
+  const callback = vi.fn();
 
   // Act
   const { result } = renderHook(useCurrentGame, {
@@ -158,10 +159,11 @@ test("should not start voting if game is not loaded", async () => {
   });
 
   await act(async () => {
-    result.current.startVoting();
+    result.current.startVoting(callback);
   });
 
   // Assert
   expect(result.current.loading).toBe(false);
   expect(result.current.error).toBe("Game is not loaded");
+  expect(callback).not.toHaveBeenCalled();
 });
