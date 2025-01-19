@@ -17,6 +17,11 @@ export type UseRevealed = () => {
    * Reset revealed voting
    */
   reset: () => void;
+
+  /**
+   * Average estimation from pollingPlace
+   */
+  averageEstimation: number | null;
 };
 
 /**
@@ -31,9 +36,18 @@ export const useRevealed: UseRevealed = function useRevealed() {
   const changeTheme = useSetAtom(changeThemeAtom);
   const reset = useSetAtom(resetAtom);
 
+  const averageEstimation = useMemo(() => {
+    if (pollingPlace.estimations && pollingPlace.estimations.length > 0) {
+      const total = pollingPlace.estimations.reduce((sum, estimation) => sum + estimation.value, 0);
+      return total / pollingPlace.estimations.length;
+    }
+    return null;
+  }, [pollingPlace.estimations]);
+
   return {
     loading,
     changeTheme,
     reset,
+    averageEstimation,
   };
 };
