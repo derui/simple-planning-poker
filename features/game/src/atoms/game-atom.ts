@@ -193,21 +193,23 @@ export const editGameAtom: WritableAtom<null, [obj: { name: string; points: stri
   }
 );
 
-// New atom to start voting from current game
-export const startVotingAtom: WritableAtom<null, [(votingId: string) => void], void> = atom(null, (get, set, callback) => {
-  const game = get(unwrap(asyncCurrentGameAtom));
-  if (!game) return;
+export const startVotingAtom: WritableAtom<null, [(votingId: string) => void], void> = atom(
+  null,
+  (get, _set, callback) => {
+    const game = get(unwrap(asyncCurrentGameAtom));
+    if (!game) return;
 
-  // Call Game.newVoting if the game is valid and store the returned values
-  const [voting, event] = Game.newVoting(game);
+    // Call Game.newVoting if the game is valid and store the returned values
+    const [voting, event] = Game.newVoting(game);
 
-  // Save the voting to the repository
-  VotingRepository.save({ voting })
-    .then(() => {
-      dispatch(event);
-      callback(voting.id);
-    })
-    .catch((e) => {
-      console.warn(e);
-    });
-});
+    // Save the voting to the repository
+    VotingRepository.save({ voting })
+      .then(() => {
+        dispatch(event);
+        callback(voting.id);
+      })
+      .catch((e) => {
+        console.warn(e);
+      });
+  }
+);
