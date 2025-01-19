@@ -70,7 +70,7 @@ export const deleteCurrentGameAtom: WritableAtom<null, [], void> = atom(null, (g
 });
 
 /**
- * All games that user is helding
+ * All games that user is holding
  */
 const asyncGamesAtom = atomWithRefresh(async (get) => {
   const user = get(loginUserAtom);
@@ -81,7 +81,7 @@ const asyncGamesAtom = atomWithRefresh(async (get) => {
 });
 
 /**
- * All games that user is helding
+ * All games that user is holding
  */
 export const gamesAtom: Atom<Loadable<Game.T[]>> = loadable(asyncGamesAtom);
 
@@ -191,3 +191,13 @@ export const editGameAtom: WritableAtom<null, [obj: { name: string; points: stri
       });
   }
 );
+
+// New atom to start voting from current game
+export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+  const game = get(unwrap(asyncCurrentGameAtom));
+  if (!game) return;
+
+  // Implement the logic to start voting for the current game here.
+  // This is a placeholder function and should be replaced with actual implementation.
+  console.log("Starting voting for game:", game);
+});
