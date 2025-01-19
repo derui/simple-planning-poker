@@ -197,7 +197,8 @@ export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, se
   const game = get(unwrap(asyncCurrentGameAtom));
   if (!game) return;
 
-  // Implement the logic to start voting for the current game here.
-  // This is a placeholder function and should be replaced with actual implementation.
+  // Call Game.newVoting if the game is valid
+  Game.newVoting(game);
+
   console.log("Starting voting for game:", game);
 });
