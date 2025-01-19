@@ -20,10 +20,8 @@ export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Ele
   }, [_delete]);
 
   const handleStartVoting = useCallback(() => {
-    if (game) {
-      startVoting(game.id);
-    }
-  }, [game, startVoting]);
+    startVoting(onStartVoting);
+  }, [startVoting, onStartVoting]);
 
   const handleSubmit = useCallback(
     (name: string, points: string) => {
