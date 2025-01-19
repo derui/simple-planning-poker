@@ -44,6 +44,7 @@ export const RevealedArea = function RevealedArea(): JSX.Element {
       inspectors={pollingPlace?.inspectors}
       onChangeTheme={onChangeTheme}
       onReset={onReset}
+      average={revealed.averageEstimation}
     />
   );
 };

@@ -122,7 +122,7 @@ describe("UseRevealed", () => {
       points: POINTS,
       theme: "foo",
       estimations: Estimations.from({
-        [userId]: UserEstimation.submittedOf(POINTS[1]),
+        [userId]: UserEstimation.submittedOf(POINTS[0]),
       }),
       voters: [Voter.createVoter({ user: userId })],
     });

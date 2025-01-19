@@ -31,6 +31,8 @@ export function VotingPage({ currentUserId, votingId }: Props): JSX.Element {
   useEffect(() => {
     if (join.status === JoinedVotingStatus.Revealed) {
       navigate(`/revealed/`, { replace: true });
+    } else if (join.status === JoinedVotingStatus.Voting) {
+      navigate(`/`, { replace: true });
     }
   }, [join.status]);
 

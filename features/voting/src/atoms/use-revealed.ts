@@ -37,15 +37,21 @@ export const useRevealed: UseRevealed = function useRevealed() {
   const reset = useSetAtom(resetAtom);
 
   const averageEstimation = useMemo(() => {
-    if (pollingPlace.state !== "loaded") {
+    if (pollingPlace.state !== "hasData") {
       return 0;
     }
-    if (pollingPlace.estimations && pollingPlace.estimations.length > 0) {
-      const total = pollingPlace.estimations.reduce((sum, estimation) => sum + estimation.value, 0);
-      return total / pollingPlace.estimations.length;
+
+    const data = pollingPlace.data;
+    if (!data || data.estimations.length == 0) {
+      return 0;
+    }
+
+    if (data.estimations && data.estimations.length > 0) {
+      const total = data.estimations.reduce((sum, estimation) => sum + Number(estimation.estimated ?? "0"), 0);
+      return total / data.estimations.length;
     }
     return undefined;
-  }, [pollingPlace.state, pollingPlace.estimations]);
+  }, [pollingPlace]);
 
   return {
     loading,

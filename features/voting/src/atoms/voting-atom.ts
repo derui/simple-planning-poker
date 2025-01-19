@@ -1,5 +1,5 @@
 import { Estimations, StoryPoint, User, UserEstimation, Voter, VoterType, Voting } from "@spp/shared-domain";
-import { UserRepository } from "@spp/shared-domain/mock/user-repository";
+import { UserRepository } from "@spp/shared-domain/user-repository";
 import { VotingRepository } from "@spp/shared-domain/voting-repository";
 import { dispatch } from "@spp/shared-use-case";
 import { Atom, atom, WritableAtom } from "jotai";
