@@ -48,7 +48,8 @@ export const useRevealed: UseRevealed = function useRevealed() {
 
     if (data.estimations && data.estimations.length > 0) {
       const total = data.estimations.reduce((sum, estimation) => sum + Number(estimation.estimated ?? "0"), 0);
-      return total / data.estimations.length;
+      const average = total / data.estimations.length;
+      return parseFloat(average.toFixed(1));
     }
     return undefined;
   }, [pollingPlace]);
