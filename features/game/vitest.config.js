@@ -11,6 +11,7 @@ export default mergeConfig(
       alias: {
         "@spp/shared-domain/game-repository": "@spp/shared-domain/mock/game-repository",
         "@spp/shared-domain/user-repository": "@spp/shared-domain/mock/user-repository",
+        "@spp/shared-domain/voting-repository": "@spp/shared-domain/mock/voting-repository",
       },
     },
   })
