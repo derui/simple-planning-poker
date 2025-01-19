@@ -2,7 +2,7 @@ import { Game } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useMemo } from "react";
 import { GameDto, toGameDto } from "./dto.js";
-import { commandProgressionAtom, currentGameAtom, deleteCurrentGameAtom, loadGameAtom } from "./game-atom.js";
+import { commandProgressionAtom, currentGameAtom, deleteCurrentGameAtom, loadGameAtom, startVotingAtom } from "./game-atom.js";
 
 /**
  * Hook definition to list game
@@ -24,6 +24,11 @@ export type UseCurrentGame = () => {
    * Delete current selected game.
    */
   readonly delete: () => void;
+
+  /**
+   * Start voting for the current game.
+   */
+  readonly startVoting: () => void;
 };
 
 /**
@@ -32,6 +37,7 @@ export type UseCurrentGame = () => {
 export const useCurrentGame: UseCurrentGame = () => {
   const loadGame = useSetAtom(loadGameAtom);
   const deleteGame = useSetAtom(deleteCurrentGameAtom);
+  const startVoting = useSetAtom(startVotingAtom);
   const deleting = useAtomValue(commandProgressionAtom);
   const game = useAtomValue(currentGameAtom);
 
@@ -52,10 +58,15 @@ export const useCurrentGame: UseCurrentGame = () => {
     loadGame(Game.createId(gameId));
   }, []);
 
+  const _startVoting = useCallback(() => {
+    startVoting(() => {});
+  }, [startVoting]);
+
   return {
     loading,
     game: _game,
     select,
     delete: _delete,
+    startVoting: _startVoting,
   };
 };
