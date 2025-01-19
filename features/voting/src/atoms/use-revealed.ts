@@ -21,7 +21,7 @@ export type UseRevealed = () => {
   /**
    * Average estimation from pollingPlace
    */
-  averageEstimation: number | null;
+  averageEstimation: number | undefined;
 };
 
 /**
@@ -37,12 +37,15 @@ export const useRevealed: UseRevealed = function useRevealed() {
   const reset = useSetAtom(resetAtom);
 
   const averageEstimation = useMemo(() => {
+    if (pollingPlace.state !== "loaded") {
+      return 0;
+    }
     if (pollingPlace.estimations && pollingPlace.estimations.length > 0) {
       const total = pollingPlace.estimations.reduce((sum, estimation) => sum + estimation.value, 0);
       return total / pollingPlace.estimations.length;
     }
-    return null;
-  }, [pollingPlace.estimations]);
+    return undefined;
+  }, [pollingPlace.state, pollingPlace.estimations]);
 
   return {
     loading,
