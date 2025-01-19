@@ -1,5 +1,5 @@
 import { ApplicablePoints, Game, GameName } from "@spp/shared-domain";
-import { GameRepository } from "@spp/shared-domain/game-repository";
+import { GameRepository, VotingRepository } from "@spp/shared-domain/game-repository";
 import { dispatch } from "@spp/shared-use-case";
 import { Atom, atom, WritableAtom } from "jotai";
 import { atomWithRefresh, loadable, unwrap } from "jotai/utils";
@@ -201,4 +201,13 @@ export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, se
   const [voting, event] = Game.newVoting(game);
 
   console.log("Starting voting for game:", game);
+
+  // Save the voting to the repository
+  VotingRepository.save({ voting })
+    .then(() => {
+      dispatch(event);
+    })
+    .catch((e) => {
+      console.warn(e);
+    });
 });
