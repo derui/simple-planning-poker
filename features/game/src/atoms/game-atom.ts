@@ -194,7 +194,7 @@ export const editGameAtom: WritableAtom<null, [obj: { name: string; points: stri
 );
 
 // New atom to start voting from current game
-export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
+export const startVotingAtom: WritableAtom<null, [(votingId: string) => void], void> = atom(null, (get, set, callback) => {
   const game = get(unwrap(asyncCurrentGameAtom));
   if (!game) return;
 
@@ -205,6 +205,7 @@ export const startVotingAtom: WritableAtom<null, [], void> = atom(null, (get, se
   VotingRepository.save({ voting })
     .then(() => {
       dispatch(event);
+      callback(voting.id);
     })
     .catch((e) => {
       console.warn(e);
