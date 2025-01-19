@@ -141,4 +141,38 @@ describe("UseRevealed", () => {
     // Assert
     expect(result.current.averageEstimation).toBe(1);
   });
+
+  test("averageEstimation should be correct after loaded with 3 estimation", async () => {
+    // Arrange
+    const userIds = [User.createId("1"), User.createId("2"), User.createId("3")];
+    const points = ApplicablePoints.parse("1,2,3,4")!;
+    const votingId = Voting.createId();
+    const voting = Voting.revealedOf({
+      id: votingId,
+      points: points,
+      theme: "foo",
+      estimations: Estimations.from({
+        [userIds[0]]: UserEstimation.submittedOf(points[0]),
+        [userIds[1]]: UserEstimation.submittedOf(points[2]),
+        [userIds[2]]: UserEstimation.submittedOf(points[3]),
+      }),
+      voters: userIds.map((user) => Voter.createVoter({ user })),
+    });
+    await VotingRepository.save({ voting });
+    await UserRepository.save({ user: User.create({ id: userIds[0], name: "foo0" }) });
+    await UserRepository.save({ user: User.create({ id: userIds[1], name: "foo1" }) });
+    await UserRepository.save({ user: User.create({ id: userIds[2], name: "foo2" }) });
+
+    const store = createStore();
+    store.set(joinVotingAtom, userIds[0], votingId);
+    const wrapper = createWrapper(store);
+
+    // Act
+    const { result } = renderHook(useRevealed, { wrapper });
+
+    await waitFor(async () => result.current.loading == false);
+
+    // Assert
+    expect(result.current.averageEstimation).toBe(2.7);
+  });
 });

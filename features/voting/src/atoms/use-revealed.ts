@@ -42,7 +42,7 @@ export const useRevealed: UseRevealed = function useRevealed() {
     }
 
     const data = pollingPlace.data;
-    if (!data || data.estimations.length == 0) {
+    if (!data) {
       return 0;
     }
 
