@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Element {
-  const { loading, delete: _delete, game } = useCurrentGame();
+  const { loading, delete: _delete, game, startVoting } = useCurrentGame();
   const { edit, loading: editing } = useEditGame();
 
   const handleDelete = useCallback(() => {
@@ -21,9 +21,9 @@ export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Ele
 
   const handleStartVoting = useCallback(() => {
     if (game) {
-      onStartVoting?.(game?.id);
+      startVoting(game.id);
     }
-  }, [game, onStartVoting]);
+  }, [game, startVoting]);
 
   const handleSubmit = useCallback(
     (name: string, points: string) => {
