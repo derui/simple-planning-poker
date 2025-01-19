@@ -47,8 +47,13 @@ export const useRevealed: UseRevealed = function useRevealed() {
     }
 
     if (data.estimations && data.estimations.length > 0) {
-      const total = data.estimations.reduce((sum, estimation) => sum + Number(estimation.estimated ?? "0"), 0);
-      const average = total / data.estimations.length;
+      const filteredEstimations = data.estimations.filter(estimation => estimation.estimated);
+      if (filteredEstimations.length === 0) {
+        return undefined;
+      }
+
+      const total = filteredEstimations.reduce((sum, estimation) => sum + Number(estimation.estimated ?? "0"), 0);
+      const average = total / filteredEstimations.length;
 
       return parseFloat(average.toFixed(1));
     }
