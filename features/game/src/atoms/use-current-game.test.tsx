@@ -166,3 +166,33 @@ test("should not start voting if game is not loaded", async () => {
   // Assert
   expect(callback.called).toBe(false);
 });
+
+test("should start voting if game is loaded", async () => {
+  // Arrange
+  const game = Game.create({
+    id: Game.createId(),
+    owner: User.createId("id"),
+    points: ApplicablePoints.create([StoryPoint.create(3)]),
+    name: GameName.create("game"),
+  })[0];
+  await GameRepository.save({ game });
+  const store = createStore();
+  store.set(loadUserAtom, User.createId("id"));
+  const callback = sinon.fake();
+
+  // Act
+  const { result } = renderHook(useCurrentGame, {
+    wrapper: createWrapper(store),
+  });
+
+  await act(async () => {
+    result.current.select(game.id);
+  });
+
+  await act(async () => {
+    result.current.startVoting(callback);
+  });
+
+  // Assert
+  expect(callback.called).toBe(true);
+});
