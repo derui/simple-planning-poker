@@ -146,3 +146,4 @@ test("can not delete a game that have by other user", async () => {
   expect(result.current.game).toBe(expected);
   expect(result.current.loading).toBe(false);
 });
+
