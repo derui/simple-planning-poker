@@ -115,3 +115,16 @@ export const Trash: Story = {
     );
   },
 };
+
+export const Copy: Story = {
+  args: {
+    size: "m",
+  },
+  render(args) {
+    return (
+      <div className={themeClass}>
+        <Icon.Copy {...args} />
+      </div>
+    );
+  },
+};

@@ -1,18 +1,8 @@
+import { Icon } from "@spp/ui-icon";
 import { UserRole } from "../types.js";
 import * as styles from "./header.css.js";
 import { ThemeEditor } from "./theme-editor.js";
 import { Toolbar } from "./toolbar.js";
-
-function copyVotingUrl() {
-  navigator.clipboard.writeText(window.location.href)
-    .then(() => {
-      alert('Voting URL copied to clipboard!');
-    })
-    .catch(err => {
-      console.error('Failed to copy voting URL:', err);
-      alert('Failed to copy voting URL');
-    });
-}
 
 export interface Props {
   /**
@@ -37,18 +27,29 @@ export interface Props {
 }
 
 /**
+ * Copy current location to the clipboard
+ */
+function copyVotingUrl() {
+  navigator.clipboard
+    .writeText(window.location.href)
+    .then(() => {
+      alert("Voting URL copied to clipboard!");
+    })
+    .catch((err) => {
+      console.error("Failed to copy voting URL:", err);
+    });
+}
+
+/**
  * Layout component for container.
  */
 export const Header = function Header({ theme, onChangeTheme, defaultRole, onToggleRole }: Props): JSX.Element {
-   
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />
       <div className={styles.buttonContainer}>
-        <button 
-          onClick={copyVotingUrl}
-          className={styles.copyButton}
-        >
+        <button onClick={copyVotingUrl} className={styles.copyButton}>
+          <Icon.Copy />
           Copy Voting URL
         </button>
       </div>

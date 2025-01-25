@@ -1,4 +1,5 @@
 import { Check } from "./check.js";
+import { Copy } from "./copy.js";
 import { Eye } from "./eye.js";
 import { Loader2 } from "./loader2.js";
 import { Pencil } from "./pencil.js";
@@ -16,6 +17,7 @@ const Icon: {
   Pencil: typeof Pencil;
   Plus: typeof Plus;
   Trash: typeof Trash;
+  Copy: typeof Trash;
 } = {
   Check,
   X,
@@ -25,6 +27,7 @@ const Icon: {
   User,
   Plus,
   Trash,
+  Copy,
 };
 
 export { Icon };

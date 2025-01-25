@@ -9,9 +9,9 @@ export const root: string = style({
 });
 
 export const buttonContainer: string = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 });
 
-export const copyButton: string = style([buttonStyle({ variant: Variant.cerise })]);
+export const copyButton: string = style([buttonStyle({ variant: Variant.cerise, iconButton: true })]);
