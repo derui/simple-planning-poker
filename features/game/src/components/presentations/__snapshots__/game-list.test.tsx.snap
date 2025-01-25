@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <ul
+    class="game-list_root__17rv8c10"
+  >
+    <li
+      class="game-list_plusContainer__17rv8c11 style_transition_all__192bcwg41"
+    >
+      <span
+        class="plus_medium_indigo__12x1qz0h style_iconMedium__p90ga82 style_iconBase__p90ga80"
+      />
+      Add Game
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`should be render game 1`] = `
+<div>
+  <ul
+    class="game-list_root__17rv8c10"
+  >
+    <li
+      aria-selected="false"
+      class="game-list-item_main__a15gnn0 style_transition_all__192bcwg41"
+    >
+      <div
+        class="game-list-item_link__a15gnn1"
+      >
+        <span
+          class="game-list-item_linkName__a15gnn2"
+        >
+          Game 1
+        </span>
+        <span
+          class="game-list-item_selectMarkContainer__a15gnn3"
+        >
+          <span
+            aria-label="mark"
+            aria-selected="false"
+            class="game-list-item_selectMark__a15gnn4"
+          >
+            <span
+              class="check_medium_indigo__1oavie2h style_iconMedium__p90ga82 style_iconBase__p90ga80"
+            />
+          </span>
+        </span>
+      </div>
+    </li>
+    <li
+      class="game-list_plusContainer__17rv8c11 style_transition_all__192bcwg41"
+    >
+      <span
+        class="plus_medium_indigo__12x1qz0h style_iconMedium__p90ga82 style_iconBase__p90ga80"
+      />
+      Add Game
+    </li>
+  </ul>
+</div>
+`;

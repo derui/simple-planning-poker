@@ -1,0 +1,18 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <span
+    class="flex flex-col p-3 items-center"
+  >
+    <span
+      class="flex-auto text-indigo-700 font-bold mb-2"
+    >
+      foo
+    </span>
+    <span
+      class="flex before:bg-indigo-700 before:inline-block before:flex-none before:[mask-image:url(/static/svg/tabler-icons/user.svg)] before:[mask-size:cover] before:[mask-position:center] before:[mask-repeat:no-repeat] before:w-10 before:h-10 w-10 h-10"
+    />
+  </span>
+</div>
+`;

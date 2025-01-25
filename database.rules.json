@@ -4,15 +4,11 @@
       ".read": "auth != null",
       ".write": "auth != null"
     },
-    "rounds": {
+      "authenticated": {
       ".read": "auth != null",
       ".write": "auth != null"
     },
-    "authenticated": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "invitations": {
+    "voting": {
       ".read": "auth != null",
       ".write": "auth != null"
     },
@@ -26,12 +22,5 @@
         ".write": "auth != null"
       }
     },
-    "roundHistories": {
-      ".read": "auth != null",
-      ".write": "auth != null",
-      "$game": {
-        ".indexOn": "finishedAt"
-      }
-    }
   }
 }

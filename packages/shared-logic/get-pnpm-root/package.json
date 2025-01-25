@@ -1,0 +1,36 @@
+{
+  "name": "@spp/shared-get-pnpm-root",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "files": [
+    "./dist/"
+  ],
+  "bin": {
+    "get-pnpm-root": "./dist/index.js"
+  },
+  "scripts": {
+    "postinstall": "node -e 'console.log(\"Do `npx get-pnpm-root`\")'",
+    "build": "tsc",
+    "check-type": "tsc --noEmit",
+    "dev:build": "tsc --watch --noEmit --preserveWatchOutput",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+      "@types/node": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+      "@pnpm/find-workspace-dir": "catalog:"
+  }
+}

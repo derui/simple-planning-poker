@@ -1,10 +1,17 @@
+.git/
+.env
+.envrc
+.direnv
 node_modules
-yarn-error.log
 .log/
 .firebase/
 .firebaserc
-/dist/
+dist/
 generated/
+*.tsbuildinfo
+.turbo/
+storybook-static/
+/storybook/books
 
 database-debug.log
 ui-debug.log
@@ -15,3 +22,6 @@ src/firebase.config.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+*storybook.log
+.aider*

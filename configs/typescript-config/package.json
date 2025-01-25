@@ -1,0 +1,10 @@
+{
+  "name": "@spp/typescript-config",
+  "version": "1.0.0",
+    "private": true,
+  "description": "repository-global tsconfig management",
+    "sideEffects": false,
+    "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

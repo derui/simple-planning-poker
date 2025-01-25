@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="theme-editor_root__mrulgs0"
+  >
+    <span
+      class="theme-editor_header__mrulgs9"
+    >
+      Theme
+    </span>
+    <div>
+      <span
+        class="theme-editor_editorRoot__mrulgs3"
+      >
+        foo
+      </span>
+    </div>
+    <button
+      aria-label="edit"
+      class="theme-editor_edit__mrulgs2 style_enabledIconButtonVariants_orange__16ett8m11 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
+      type="button"
+    >
+      <span
+        class="pencil_medium_orange__1mszgw0d style_iconMedium__qkwts32 style_iconBase__qkwts30"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`should be able to render without theme 1`] = `
+<div>
+  <div
+    class="theme-editor_root__mrulgs0"
+  >
+    <span
+      class="theme-editor_header__mrulgs9"
+    >
+      Theme
+    </span>
+    <div>
+      <span
+        class="theme-editor_editorRoot__mrulgs3"
+      >
+        No theme
+      </span>
+    </div>
+    <button
+      aria-label="edit"
+      class="theme-editor_edit__mrulgs2 style_enabledIconButtonVariants_orange__16ett8m11 style_enabledIconBase__16ett8m5 style_iconBase__16ett8m1 style_transition_all__59wy0241"
+      type="button"
+    >
+      <span
+        class="pencil_medium_orange__1mszgw0d style_iconMedium__qkwts32 style_iconBase__qkwts30"
+      />
+    </button>
+  </div>
+</div>
+`;

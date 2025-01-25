@@ -1,0 +1,17 @@
+import { atom, useAtom, useAtomValue } from 'jotai';
+
+const messageAtom = atom("hello");
+
+const writeMessageAtom = atom(null, (_get, set, value) => {
+  set(message, value);
+})
+
+export const useMessage = () => {
+  const [atom] = useAtomValue(messageAtom);
+  const [writeMessage] = useAtom(writeMessageAtom);
+
+  return {
+    message: atom,
+    updateMessage: (value: string) => writeMessage(value),
+  }
+}

@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="game-detail_root__6k3kyt0"
+  >
+    <button
+      aria-label="Edit"
+      class="game-detail_editButton__6k3kyt2 style_enabledIconButtonVariants_emerald__92u52z10 style_enabledIconBase__92u52z5 style_iconBase__92u52z1 style_transition_all__192bcwg41"
+    >
+      <span
+        class="pencil_medium_emerald__2ixuvsc style_iconMedium__p90ga82 style_iconBase__p90ga80"
+      />
+    </button>
+    <div
+      class="game-detail_defList__6k3kyt3"
+    >
+      <span
+        class="game-detail_defListLabel__6k3kyt4"
+      >
+        Name
+      </span>
+      <span
+        class="game-detail_defListContent__6k3kyt5"
+      >
+        name
+      </span>
+    </div>
+    <div
+      class="game-detail_defList__6k3kyt3"
+    >
+      <span
+        class="game-detail_defListLabel__6k3kyt4"
+      >
+        Points
+      </span>
+      <span
+        class="game-detail_defListContent__6k3kyt5"
+      >
+        points
+      </span>
+    </div>
+    <div
+      class="game-detail_footer__6k3kyt6"
+    >
+      <button
+        class="game-detail_deleteButton__6k3kyt7 style_enabledButtonVariants_cerise__92u52zu style_enabledBase__92u52z3 style_base__92u52z0 style_transition_all__192bcwg41"
+      >
+        <span
+          class="trash_medium_cerise__1a232vqf style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+        Delete
+      </button>
+      <button
+        class="game-detail_startVotingButton__6k3kyt8 style_enabledButtonVariants_emerald__92u52zr style_enabledBase__92u52z3 style_base__92u52z0 style_transition_all__192bcwg41"
+      >
+        <span
+          class="check_medium_emerald__1oavie2c style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+        Start Voting
+      </button>
+    </div>
+  </div>
+</div>
+`;

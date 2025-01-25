@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <input
+    class="style_input__tb17r50"
+  />
+</div>
+`;

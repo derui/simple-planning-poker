@@ -1,0 +1,27 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "The common base settings",
+  "compilerOptions": {
+    "outDir": "${configDir}/dist",
+    "target": "es2020",
+    "lib": [
+      "es2020",
+      "dom",
+      "dom.iterable"
+    ],
+      "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+      "isolatedDeclarations": true,
+    "jsx": "react-jsx",
+    "incremental": true
+  }
+}

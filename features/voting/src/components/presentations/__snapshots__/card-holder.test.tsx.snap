@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="card-holder_root__j7wifn0"
+    role="tablist"
+  >
+    <div
+      aria-selected="false"
+      class="selectable-card_notSelected__t2s9ip1 selectable-card_rootBase__t2s9ip0 style_transition_all__59wy0241"
+      data-selected="false"
+      role="tab"
+    >
+      3
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should be able to render as inspector 1`] = `
+<div>
+  <div
+    class="card-holder_root__j7wifn0"
+    role="tablist"
+  >
+    <p
+      class="card-holder_inspector__j7wifn1"
+    >
+      Inspector mode
+    </p>
+  </div>
+</div>
+`;

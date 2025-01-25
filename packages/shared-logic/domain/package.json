@@ -1,0 +1,83 @@
+{
+  "name": "@spp/shared-domain",
+  "version": "1.0.0",
+  "description": "",
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./src/index.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./mock/voting-repository": {
+      "import": {
+        "types": "./src/mock/voting-repository.ts",
+        "default": "./dist/mock/voting-repository.js"
+      }
+    },
+    "./mock/game-repository": {
+      "import": {
+        "types": "./src/mock/game-repository.ts",
+        "default": "./dist/mock/game-repository.js"
+      }
+    },
+    "./mock/user-repository": {
+      "import": {
+        "types": "./src/mock/user-repository.ts",
+        "default": "./dist/mock/user-repository.js"
+      }
+    },
+    "./voting-repository": {
+      "import": {
+        "types": "./src/voting-repository.ts",
+        "default": "./dist/voting-repository.js"
+      }
+    },
+    "./game-repository": {
+      "import": {
+        "types": "./src/game-repository.ts",
+        "default": "./dist/game-repository.js"
+      }
+    },
+    "./user-repository": {
+      "import": {
+        "types": "./src/user-repository.ts",
+        "default": "./dist/user-repository.js"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "check-type": "tsc --noEmit",
+    "dev:build": "tsc --watch --noEmit --preserveWatchOutput",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+      "@types/crypto-js": "catalog:",
+      "@types/uuid": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@spp/shared-array": "workspace:^",
+    "@spp/shared-basic": "workspace:^",
+      "crypto-js": "catalog:",
+      "immer": "catalog:",
+      "uuid": "catalog:"
+  }
+}

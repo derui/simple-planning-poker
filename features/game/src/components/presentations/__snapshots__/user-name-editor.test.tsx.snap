@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <form
+    class="user-name-editor_root__1isub0u0"
+  >
+    <div
+      class="user-name-editor_row__1isub0u1"
+    >
+      <span
+        class="user-name-editor_decoration__1isub0u3"
+      >
+        <span
+          class="pencil_medium_teal__2ixuvsb style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+      </span>
+      <input
+        aria-invalid="false"
+        class="style_input__xo256r0 style_transition_border__192bcwg42"
+        name="userName"
+        value="foo"
+      />
+    </div>
+    <div
+      class="user-name-editor_rowRight__1isub0u2"
+    >
+      <button
+        aria-label="Submit"
+        class="user-name-editor_submit__1isub0u4 style_enabledIconButtonVariants_emerald__92u52z10 style_enabledIconBase__92u52z5 style_iconBase__92u52z1 style_transition_all__192bcwg41"
+        type="submit"
+      >
+        <span
+          class="check_medium_emerald__1oavie2c style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+      </button>
+      <button
+        aria-label="Cancel"
+        class="user-name-editor_cancel__1isub0u5 style_enabledIconButtonVariants_cerise__92u52z13 style_enabledIconBase__92u52z5 style_iconBase__92u52z1 style_transition_all__192bcwg41"
+        type="button"
+      >
+        <span
+          class="x_medium_cerise__15rhf1pf style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+      </button>
+    </div>
+  </form>
+</div>
+`;

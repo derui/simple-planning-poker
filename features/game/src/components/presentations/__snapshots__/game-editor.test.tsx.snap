@@ -1,0 +1,77 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <form
+    class="game-editor_root__nauw780"
+  >
+    <div
+      class="game-editor_input_row__nauw782"
+    >
+      <label
+        class="game-editor_input_label__nauw781"
+        for="name"
+      >
+        Name
+      </label>
+      <input
+        class="style_input__xo256r0 style_transition_border__192bcwg42"
+        id="name"
+        name="name"
+        placeholder="e.g. A sprint"
+        tabindex="0"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="game-editor_input_row__nauw782"
+    >
+      <label
+        class="game-editor_input_label__nauw781"
+        for="points"
+      >
+        Points
+      </label>
+      <input
+        class="style_input__xo256r0 style_transition_border__192bcwg42"
+        id="points"
+        name="points"
+        tabindex="0"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="game-editor_footer_root__nauw788"
+    >
+      <button
+        class="game-editor_cancel__nauw786 style_enabledButtonVariants_gray__92u52zo style_enabledBase__92u52z3 style_base__92u52z0 style_transition_all__192bcwg41"
+        type="button"
+      >
+        Cancel
+      </button>
+      <button
+        aria-busy="false"
+        class="game-editor_footer_submit__nauw789 style_enabledButtonVariants_emerald__92u52zr style_enabledBase__92u52z3 style_base__92u52z0 style_transition_all__192bcwg41 game-editor_submitBase__nauw785"
+        type="submit"
+      >
+        <span
+          class="style_hidden__1yu8yli1"
+          data-shown="false"
+          role="alert"
+        >
+          <span
+            class="style_spinLoader_s__1yu8yli6 style_spinLoaderBase__1yu8yli5 style_animation_spin__192bcwg3z"
+          >
+            <span
+              class="loader2_small_emerald__120am7c3 style_iconSmall__p90ga81 style_iconBase__p90ga80"
+            />
+          </span>
+        </span>
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+`;

@@ -1,0 +1,42 @@
+{
+  "name": "@spp/ui-theme",
+  "version": "1.0.0",
+  "description": "",
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "check-type": "tsc --noEmit",
+    "build:tsc": "tsc",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\"",
+    "build": "concurrently \"pnpm:build:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "dependencies": {
+  }
+}

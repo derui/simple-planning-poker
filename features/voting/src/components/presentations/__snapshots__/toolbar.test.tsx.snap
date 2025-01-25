@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="toolbar_root__17ktofz0"
+  >
+    <div
+      class="toolbar_role__17ktofz1 style_transition_all__59wy0241"
+    >
+      <span
+        class="user_medium_teal__b5o5bsb style_iconMedium__qkwts32 style_iconBase__qkwts30"
+      />
+      <span
+        class="toolbar_roleName__17ktofz2"
+      >
+        Player
+      </span>
+    </div>
+  </div>
+</div>
+`;

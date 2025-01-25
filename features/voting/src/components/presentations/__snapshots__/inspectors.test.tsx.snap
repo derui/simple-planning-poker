@@ -1,0 +1,60 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`render text if no children 1`] = `
+<div>
+  <div
+    class="inspectors_root__osy0pc0"
+  >
+    <p
+      class="inspectors_emptyText__osy0pc1"
+    >
+      No inspectors
+    </p>
+  </div>
+</div>
+`;
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="inspectors_root__osy0pc0"
+  >
+    <span
+      class="inspector_root__qybz2l0"
+    >
+      <span
+        class="inspector_name__qybz2l1"
+      >
+        foo
+      </span>
+      <span
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
+      />
+    </span>
+    <span
+      class="inspector_root__qybz2l0"
+    >
+      <span
+        class="inspector_name__qybz2l1"
+      >
+        bar
+      </span>
+      <span
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
+      />
+    </span>
+    <span
+      class="inspector_root__qybz2l0"
+    >
+      <span
+        class="inspector_name__qybz2l1"
+      >
+        long name
+      </span>
+      <span
+        class="user_extraLarge_indigo__b5o5bsz style_iconExtraLarge__qkwts34 style_iconBase__qkwts30"
+      />
+    </span>
+  </div>
+</div>
+`;

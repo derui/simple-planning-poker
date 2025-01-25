@@ -1,0 +1,58 @@
+{
+  "name": "@spp/infra-authenticator",
+  "version": "1.0.0",
+  "description": "",
+  "sideEffects": [],
+  "files": [
+    "./dist/"
+  ],
+  "exports": {
+    "./base": {
+      "import": {
+        "types": "./src/base.ts",
+        "default": "./dist/base.js"
+      }
+    },
+    "./firebase": {
+      "import": {
+        "types": "./src/firebase.ts",
+        "default": "./dist/firebase.js"
+      }
+    },
+    "./memory": {
+      "import": {
+        "types": "./src/memory.ts",
+        "default": "./dist/memory.js"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build:tsc": "tsc",
+    "check-type": "tsc --noEmit",
+    "dev:build:tsc": "tsc --watch --noEmit --preserveWatchOutput",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\"",
+    "build": "concurrently \"pnpm:build:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@spp/shared-domain": "workspace:^",
+    "firebase": "catalog:",
+      "uuid": "catalog:"
+  }
+}

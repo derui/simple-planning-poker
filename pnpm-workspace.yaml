@@ -1,0 +1,91 @@
+packages:
+  - 'app'
+  - 'storybook'
+  - 'packages/**/*'
+  - 'configs/**/*'
+  - 'features/**/*'
+  - 'tests/**/*'
+
+catalog:
+  # build:vite
+  vite: 5.4.8
+  vitest: 2.1.1
+  "@vitejs/plugin-react": 4.3.1
+
+  # test:playwright
+  '@playwright/test': 1.50.0
+
+  # test:testing-librry
+  jsdom: 25.0.1
+  "@testing-library/dom": 10.0.0
+  "@testing-library/react": 16.0.1
+  "@testing-library/user-event": 14.5.2
+  # test:sinon
+  "sinon": 19.0.2
+  "@types/sinon": 17.0.3
+  
+  # lib:react
+  react: 18.3.1
+  react-dom: 18.3.1
+  "@types/react": 18.3.10
+  "@types/react-dom": 18.2.18
+
+  # lib:react-hook-form
+  react-hook-form: 7.53.1
+  '@hookform/resolvers': 3.9.1 
+
+  # lib:zod
+  zod: 3.23.8
+
+  # dev:storybook
+  storybook: 8.4.7
+  "@storybook/addon-controls": 8.4.7
+  "@storybook/react": 8.4.7
+  "@storybook/react-vite": 8.4.7
+
+  # dev:eslint and related
+  "eslint": 9.13.0
+  "eslint-config-prettier": 9.1.0
+  "eslint-plugin-react": 7.37.0
+  "eslint-plugin-react-hooks": 5.0.0
+  "eslint-plugin-unused-imports": 4.1.4
+  "typescript-eslint": 8.7.0
+
+  # lib:jotai
+  "jotai": 2.9.3
+
+  # lib: wouter
+  wouter: 3.3.5
+
+  "@types/react-transition-group": 4.4.10
+
+  # type:node
+  '@types/node': 22.5.5
+
+  # dev:typescript
+  typescript: 5.6.2
+
+  # lib:firebase
+  firebase-tools: 13.20.1
+  firebase: 10.13.2
+  "@firebase/rules-unit-testing": 3.0.1
+
+  # dev:tools
+  '@dotenvx/dotenvx': 1.14.1
+  "@pnpm/find-workspace-dir": 7.0.1
+  "concurrently": 9.0.1
+
+  # lib:crypto-js
+  'crypto-js': 4.2.0
+  '@types/crypto-js': 4.2.2
+
+  # lib:immer
+  immer: 10.0.3
+
+  # lib:uuid
+  uuid: 10.0.0
+  "@types/uuid": 10.0.0
+
+  # dev:vanilla-extract
+  '@vanilla-extract/css': 1.16.0
+  '@vanilla-extract/vite-plugin': 4.0.16

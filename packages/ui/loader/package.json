@@ -1,0 +1,55 @@
+{
+  "name": "@spp/ui-loader",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "check-type": "tsc --noEmit",
+    "build:tsc": "tsc",
+    "dev:build:tsc": "tsc --watch --noEmit",
+    "test": "vitest run",
+    "dev:test": "vitest watch",
+    "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
+    "dev:storybook": "storybook dev --disable-telemetry -p 6006",
+    "build:storybook": "storybook build --disable-telemetry",
+    "dev": "concurrently --raw --kill-others --handle-input \"pnpm:dev:*\"",
+    "build": "concurrently \"pnpm:build:*\""
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@spp/ui-icon": "workspace:^",
+    "@storybook/addon-controls": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@spp/shared-color-variant": "workspace:^",
+    "@spp/ui-theme": "workspace:^",
+    "@vanilla-extract/css": "catalog:",
+    "react": "catalog:",
+    "storybook": "catalog:"
+  }
+}

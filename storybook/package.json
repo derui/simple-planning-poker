@@ -1,0 +1,29 @@
+{
+  "name": "@spp/storybook",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build:storybook": "storybook build --disable-telemetry"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@spp/eslint-config": "workspace:^",
+    "@spp/typescript-config": "workspace:^",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@types/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "concurrently": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+      "vite": "catalog:",
+      "storybook": "catalog:",
+      "react": "catalog:"
+  },
+  "dependencies": {
+
+  }
+}

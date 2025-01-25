@@ -1,0 +1,137 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`call hook after submit 1`] = `
+<div>
+  <main
+    class="signin_root__dhmk8q0"
+  >
+    <div
+      class="style_hidden__gg6aol1 style_root__gg6aol0 style_transition_all__13d8cin41"
+      data-show="false"
+      role="dialog"
+    >
+      <div
+        class="signin_overlayDialog__dhmk8q1"
+      >
+        <span
+          class="style_loader_m__m7nytx3 style_base__m7nytx0"
+          data-shown="true"
+          role="alert"
+        >
+          <span
+            class="style_spinLoader_m__m7nytx7 style_spinLoaderBase__m7nytx5 style_animation_spin__13d8cin3z"
+          >
+            <span
+              class="loader2_medium_gray__1nawc259 style_iconMedium__11pykq32 style_iconBase__11pykq30"
+            />
+          </span>
+        </span>
+        <span
+          class="signin_dialogText__dhmk8q2"
+        >
+          Authenticating...
+        </span>
+      </div>
+    </div>
+    <div
+      class="style_root__18vd3zh0"
+      role="dialog"
+    >
+      <div
+        class="style_header__18vd3zh1"
+      >
+        Sign Up
+      </div>
+      <div
+        class="style_main__18vd3zh2"
+        role="article"
+      >
+        <div
+          class="signin_dialogContent__dhmk8q3"
+        >
+          <form
+            class="login-form_root__11r7lvx0"
+          >
+            <div
+              class="login-form_inputContainer__11r7lvx2"
+            >
+              <label
+                class="login-form_inputLabel__11r7lvx3"
+              >
+                Email
+              </label>
+              <input
+                class="login-form_input__11r7lvx4 style_transition_all__13d8cin41"
+                name="email"
+                placeholder="e.g. yourname@yourdomain.com"
+                tabindex="0"
+                value="email"
+              />
+            </div>
+            <div
+              class="login-form_inputContainer__11r7lvx2"
+            >
+              <label
+                class="login-form_inputLabel__11r7lvx3"
+              >
+                Password
+              </label>
+              <input
+                class="login-form_input__11r7lvx4 style_transition_all__13d8cin41"
+                minlength="6"
+                name="password"
+                placeholder="Password"
+                tabindex="0"
+                type="password"
+                value="password"
+              />
+            </div>
+            <div
+              class="login-form_submitContainer__11r7lvx5"
+            >
+              <button
+                class="style_enabledButtonVariants_gray__nv52ero style_enabledBase__nv52er3 style_base__nv52er0 style_transition_all__13d8cin41"
+                type="button"
+              >
+                <span
+                  class="style_hidden__m7nytx1"
+                  data-shown="false"
+                  role="alert"
+                >
+                  <span
+                    class="style_spinLoader_s__m7nytx6 style_spinLoaderBase__m7nytx5 style_animation_spin__13d8cin3z"
+                  >
+                    <span
+                      class="loader2_small_gray__1nawc250 style_iconSmall__11pykq31 style_iconBase__11pykq30"
+                    />
+                  </span>
+                </span>
+                Back
+              </button>
+              <button
+                class="style_enabledButtonVariants_emerald__nv52err style_enabledBase__nv52er3 style_base__nv52er0 style_transition_all__13d8cin41"
+                type="submit"
+              >
+                <span
+                  class="style_hidden__m7nytx1"
+                  data-shown="false"
+                  role="alert"
+                >
+                  <span
+                    class="style_spinLoader_s__m7nytx6 style_spinLoaderBase__m7nytx5 style_animation_spin__13d8cin3z"
+                  >
+                    <span
+                      class="loader2_small_gray__1nawc250 style_iconSmall__11pykq31 style_iconBase__11pykq30"
+                    />
+                  </span>
+                </span>
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;

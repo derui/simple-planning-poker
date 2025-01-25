@@ -1,0 +1,19 @@
+import type { Meta, StoryObj } from "@storybook/react";
+
+import {themeClass} from "@spp/ui-theme";
+import { {{pascalCase name}} } from "./{{name}}.js";
+
+const meta = {
+  title: "UI/{{pascalCase name}}",
+  component: {{pascalCase name}},
+  tags: ["autodocs"],
+} satisfies Meta<typeof {{pascalCase name}}>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render() {
+    return <div className={themeClass}><{{pascalCase name}} /></div>
+  }
+};

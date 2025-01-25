@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should be able to render 1`] = `
+<div>
+  <div
+    class="user-header_root__44nqd40 style_transition_all__192bcwg41"
+  >
+    <button
+      aria-label="Toggle voter mode"
+      class="user-header_voterMode__44nqd44 style_enabledIconButtonVariants_orange__92u52z11 style_enabledIconBase__92u52z5 style_iconBase__92u52z1 style_transition_all__192bcwg41"
+    >
+      <span
+        class="user_medium_orange__icoifyd style_iconMedium__p90ga82 style_iconBase__p90ga80"
+      />
+    </button>
+    <div
+      class="user-header_container__44nqd41 style_transition_all__192bcwg41"
+    >
+      <span
+        class="user-header_name__44nqd42"
+      >
+        name
+      </span>
+      <button
+        aria-label="Edit user name"
+        class="user-header_icon__44nqd43 style_transition_all__192bcwg41 style_enabledIconButtonVariants_teal__92u52zz style_enabledIconBase__92u52z5 style_iconBase__92u52z1"
+      >
+        <span
+          class="pencil_medium_teal__2ixuvsb style_iconMedium__p90ga82 style_iconBase__p90ga80"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
