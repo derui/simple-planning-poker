@@ -16,20 +16,74 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
       in
         {
-          
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nodejs_22
-              pnpm_9
-              pre-commit
-              nodePackages.typescript-language-server
-              openjdk17
-            ];
+          default = (pkgs.buildFHSEnv {
+            name = "playwright";
 
-            shellHook = ''
-              pre-commit install
+            targetPkgs =
+              pkgs: with pkgs; [
+                nodejs_22
+                pnpm_9
+                pre-commit
+                nodePackages.typescript-language-server
+                openjdk17
+                openssl
+                systemd
+                glibc
+                glibc.dev
+                glib
+                cups.lib
+                cups
+                nss
+                nssTools
+                alsa-lib
+                dbus
+                at-spi2-core
+                libdrm
+                expat
+                xorg.libX11
+                xorg.libXcomposite
+                xorg.libXdamage
+                xorg.libXext
+                xorg.libXfixes
+                xorg.libXrandr
+                xorg.libxcb
+                mesa
+                libxkbcommon
+                pango
+                cairo
+                nspr
+              ];
+
+            profile = ''
+              export LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib:/lib
+              export FONTCONFIG_FILE=/etc/fonts/fonts.conf
             '';
-          };
+
+            unshareUser = false;
+            unshareIpc = false;
+            unsharePid = false;
+            unshareNet = false;
+            unshareUts = false;
+            unshareCgroup = false;
+            dieWithParent = true;
+          }).env;
+          # default = pkgs.mkShell {
+          #   buildInputs = with pkgs; [
+          #     nodejs_22
+          #     pnpm_9
+          #     pre-commit
+          #     nodePackages.typescript-language-server
+          #     openjdk17
+
+          #     # for test in NixOS
+          #     playwright-test
+          #     play
+          #   ];
+
+          #   shellHook = ''
+          #     pre-commit install
+          #   '';
+          # };
         };
   };
 }
