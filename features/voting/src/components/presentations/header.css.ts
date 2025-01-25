@@ -8,4 +8,10 @@ export const root: string = style({
   gridTemplateColumns: "auto 1fr auto",
 });
 
+export const buttonContainer: string = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+});
+
 export const copyButton: string = style([buttonStyle({ variant: Variant.cerise })]);
