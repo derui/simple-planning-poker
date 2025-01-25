@@ -98,6 +98,7 @@ test("should be able to save and find a finished voting", async () => {
       [User.createId("user3")]: UserEstimation.giveUpOf(),
       [User.createId("user4")]: UserEstimation.unsubmitOf(),
     }),
+    theme: "sample",
     voters: [
       Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
       Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),
@@ -123,7 +124,7 @@ test("should be able to save and find a finished voting", async () => {
       [User.createId("user4"), UserEstimation.unsubmitOf()],
     ])
   );
-  expect(instance?.theme).toBeUndefined();
+  expect(instance?.theme).toBe("sample");
   expect(instance?.participatedVoters).toEqual([
     Voter.createVoter({ user: User.createId("user1"), type: VoterType.Normal }),
     Voter.createVoter({ user: User.createId("user2"), type: VoterType.Normal }),

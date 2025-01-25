@@ -1,125 +1,108 @@
-import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
+import { expect, test } from "./extended-test.js";
 
 test("change user name and mode", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
   await resetFirebase();
-
   // sign up main
   await page.goto(`/`);
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
   await signIn(page, "test@example.com", "password");
 
   // sign up other
   await other.goto(`/`);
-  await other.getByText("Sign up").click();
+  await other.getByText("Sign Up").click();
   await signIn(other, "test2@example.com", "password");
 
   // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
+  await page.getByText("Add Game").click();
   await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
-  await page.getByRole("button", { name: "Submit" }).click();
+  await page.getByLabel("Points").fill("1,2,3,5");
 
-  // move to select game page
-  const link = page.getByRole("link", { name: "CI sample" });
+  const submit = page.getByRole("button", { name: "Submit" });
+  await submit.click();
 
-  // open game
-  await link.click();
+  // start new voting
+  await page.getByText("CI sample").click();
+  await page.getByRole("button", { name: "Start Voting" }).click();
+
+  await expect(page.getByText("Voted")).toBeVisible();
 
   // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).fill(token);
-  await other.getByRole("button", { name: "Join" }).click();
-
-  // update joined user in other page
-  await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();
-  await expect(other.getByTestId("estimations/test2@example.com/root")).toBeVisible();
+  await other.goto(page.url());
+  await expect(other).toHaveURL(page.url());
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   // change user mode to inspector
-  await page.getByTestId("user-info/indicator").click();
-  await page.getByTestId("user-info/updater/inspector/root").click();
-  await page.getByTestId("user-info/updater/nameEditorInput").clear();
-  await page.getByTestId("user-info/updater/nameEditorInput").fill("changed");
-  await page.getByTestId("user-info/updater/submit").click();
+  await page.getByText("Player").click();
 
   // change user mode
-  await expect(page.getByTestId("estimations/changed/root")).toHaveText("changed");
-  await expect(page.getByTestId("estimations/changed/card")).toHaveAttribute("data-mode", "inspector");
-  await expect(other.getByTestId("estimations/changed/root")).toHaveText("changed");
-  await expect(other.getByTestId("estimations/changed/card")).toHaveAttribute("data-mode", "inspector");
+  await expect(page.getByText("Inspectors", { exact: true })).not.toBeVisible();
+  await expect(page.getByText("No Inspectors")).not.toBeVisible();
+  await expect(page.getByText("Inspector mode")).toBeVisible();
+  await expect(page.getByText("Voted0 / 1Revealtest2@example")).toBeVisible();
+  await expect(other.getByText("Voted0 / 1Revealtest2@example")).toBeVisible();
 });
 
-test("inspector can show down", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
+test("inspector can reveal", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
   await resetFirebase();
 
   // sign up main
   await page.goto(`/`);
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
   await signIn(page, "test@example.com", "password");
 
   // sign up other
   await other.goto(`/`);
-  await other.getByText("Sign up").click();
+  await other.getByText("Sign Up").click();
   await signIn(other, "test2@example.com", "password");
 
   // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
+  await page.getByText("Add Game").click();
   await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
-  await page.getByRole("button", { name: "Submit" }).click();
+  await page.getByLabel("Points").fill("1,2,3,5");
 
-  // move to select game page
-  const link = page.getByRole("link", { name: "CI sample" });
+  const submit = page.getByRole("button", { name: "Submit" });
+  await submit.click();
 
-  // open game
-  await link.click();
+  // start new voting
+  await page.getByText("CI sample").click();
+  await page.getByRole("button", { name: "Start Voting" }).click();
+
+  await expect(page.getByText("Voted")).toBeVisible();
 
   // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).fill(token);
-  await other.getByRole("button", { name: "Join" }).click();
-
-  // update joined user in other page
-  await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();
-  await expect(other.getByTestId("estimations/test2@example.com/root")).toBeVisible();
+  await other.goto(page.url());
+  await expect(other).toHaveURL(page.url());
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   // change user mode to inspector
-  await page.getByTestId("user-info/indicator").click();
-  await page.getByTestId("user-info/updater/inspector/root").click();
-  await page.getByTestId("user-info/updater/submit").click();
+  await page.getByText("Player").click();
 
   // estimation
   await other.getByText("3", { exact: true }).click();
 
   // show down
-  const showDownButton = page.getByRole("button", { name: "Show down!" });
-  const showDownButtonOnOtherPage = other.getByRole("button", { name: "Show down!" });
-  await expect(showDownButton).toBeVisible();
-  await expect(showDownButton).toBeEnabled();
-  await expect(showDownButtonOnOtherPage).toBeVisible();
-  await expect(showDownButtonOnOtherPage).toBeEnabled();
+  const revealButton = page.getByRole("button", { name: "Reveal" });
+  const revealButtonOnOtherPage = other.getByRole("button", { name: "Reveal" });
+  await expect(revealButton).toBeVisible();
+  await expect(revealButton).toBeEnabled();
+  await expect(revealButtonOnOtherPage).toBeVisible();
+  await expect(revealButtonOnOtherPage).toBeEnabled();
 
-  await showDownButton.click();
-
-  // invisible show down button
-  await expect(showDownButton).toBeHidden();
-  await expect(showDownButtonOnOtherPage).toBeHidden();
+  await revealButton.click();
 
   // show result
-  const nextRoundButton = page.getByRole("button", { name: "Start next round" });
-  const nextRoundButtonOnOtherPage = other.getByRole("button", { name: "Start next round" });
+  const resetButton = page.getByRole("button", { name: "Reset" });
+  const resetButtonOnOtherPage = other.getByRole("button", { name: "Reset" });
 
-  await expect(nextRoundButton).toBeEnabled();
-  await expect(nextRoundButtonOnOtherPage).toBeEnabled();
+  await expect(resetButton).toBeEnabled();
+  await expect(resetButtonOnOtherPage).toBeEnabled();
 
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toHaveText("3");
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("estimations/test2@example.com/card")).toHaveText("3");
-  await expect(other.getByTestId("estimations/test@example.com/card")).toBeEmpty();
+  await expect(page.getByText("test2@example.com3")).toBeVisible();
 
-  await expect(page.getByTestId("resultCard")).toContainText("3");
-  await expect(other.getByTestId("resultCard")).toContainText("3");
-
-  await expect(page.getByTestId("average")).toContainText("Score3");
-  await expect(other.getByTestId("average")).toContainText("Score3");
+  await expect(page.getByText("Estimation(Average):3.0")).toBeVisible();
 });
