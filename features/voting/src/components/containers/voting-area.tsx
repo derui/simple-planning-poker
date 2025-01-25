@@ -35,6 +35,10 @@ export const VotingArea = function VotingArea(): JSX.Element {
     voter.toggleRole();
   }, [voter.toggleRole]);
 
+  const onChangeTheme = useCallback((newTheme: string) => {
+    voting.changeTheme(newTheme);
+  }, [voting.changeTheme]);
+
   return (
     <VotingAreaLayout
       loading={voting.loading}
@@ -47,6 +51,7 @@ export const VotingArea = function VotingArea(): JSX.Element {
       points={pollingPlace?.points}
       onReveal={voting.reveal}
       onToggleRole={onToggleRole}
+      onChangeTheme={onChangeTheme}
     />
   );
 };
