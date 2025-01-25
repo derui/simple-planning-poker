@@ -1,5 +1,5 @@
-import { test, expect } from "./extended-test.js";
 import { signIn } from "./_helper.js";
+import { expect, test } from "./extended-test.js";
 
 test("sign in and select game", async ({ page, resetFirebase }) => {
   await resetFirebase();
@@ -7,18 +7,18 @@ test("sign in and select game", async ({ page, resetFirebase }) => {
   await page.goto(`/`);
 
   // should redirect to  sign in page.
-  await expect(page).toHaveURL("/signin");
+  await expect(page).toHaveURL("/");
 
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
 
   // sign up
   await signIn(page, "test@example.com", "password");
 
   // move to select game
   await expect(page).toHaveURL(/game$/);
-  await expect(page.getByText("Select game you already joined")).toBeVisible();
-  await expect(page.getByText("You do not have games that you are invited before.")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Create Game" })).toBeVisible();
+  await expect(page.getByText("Select game from list")).toBeVisible();
+  await expect(page.getByText("test@example.com")).toBeVisible();
+  await expect(page.getByText("Add Game")).toBeVisible();
 });
 
 test("create and join game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
@@ -26,57 +26,53 @@ test("create and join game", async ({ page, newPageOnNewContext: other, resetFir
 
   // sign up main
   await page.goto(`/`);
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
   await signIn(page, "test@example.com", "password");
 
   // sign up other
   await other.goto(`/`);
-  await other.getByText("Sign up").click();
+  await other.getByText("Sign Up").click();
   await signIn(other, "test2@example.com", "password");
 
   // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
+  await page.getByText("Add Game").click();
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
+  await page.getByLabel("Points").fill("1,2,3,5");
+
   const submit = page.getByRole("button", { name: "Submit" });
-  await expect(submit).toBeDisabled();
-
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
-  await expect(submit).toBeEnabled();
-
   await submit.click();
 
   // move to select game page
-  const link = page.getByRole("link", { name: "CI sample" });
-  await expect(page).toHaveURL(/game$/);
+  const link = page.getByText("CI sample");
+  await expect(page).toHaveURL(/game\/$/);
   await expect(link).toBeVisible();
 
   // open game
   await link.click();
+  await page.getByRole("button", { name: "Start Voting" }).click();
 
   // expect game pages
-  await expect(page.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(page.getByTestId("estimations/test@example.com/root")).toHaveText("test@example.com");
+  await expect(page.getByText("Voted")).toBeVisible();
+  await expect(page.getByText("No inspectors")).toBeVisible();
 
-  for (const card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
+  for (const card of [1, 2, 3, 5]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
   }
 
   // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
-  await other.getByRole("button", { name: "Join" }).click();
+  const votingUrl = page.url();
+  await other.goto(votingUrl);
 
   await expect(other).toHaveURL(page.url());
-  await expect(other.getByTestId("waiting")).toHaveText("Waiting to select card...");
-  await expect(other.getByTestId("estimations/test2@example.com/root")).toBeVisible();
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   // update joined user in other page
-  await expect(page.getByTestId("estimations/test2@example.com/root")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   // estimation synchronize each page
-  await page.getByText("3", { exact: true }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toHaveAttribute("data-state", "estimated");
-  await expect(other.getByTestId("estimations/test@example.com/card")).toBeVisible();
+  await page.getByRole("tab", { name: "3" }).click();
 });
 
 test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
@@ -84,134 +80,77 @@ test("result game", async ({ page, newPageOnNewContext: other, resetFirebase }) 
 
   // sign up main
   await page.goto(`/`);
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
   await signIn(page, "test@example.com", "password");
 
   // sign up other
   await other.goto(`/`);
-  await other.getByText("Sign up").click();
+  await other.getByText("Sign Up").click();
   await signIn(other, "test2@example.com", "password");
 
   // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
+  await page.getByText("Add Game").click();
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
+  await page.getByLabel("Points").fill("1,2,3,5");
+
   const submit = page.getByRole("button", { name: "Submit" });
-
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
-
   await submit.click();
 
-  // move to select game page
-  const link = page.getByRole("link", { name: "CI sample" });
+  // start new voting
+  await page.getByText("CI sample").click();
+  await page.getByRole("button", { name: "Start Voting" }).click();
 
-  // open game
-  await link.click();
+  await expect(page.getByText("Voted")).toBeVisible();
 
   // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
-  await other.getByRole("button", { name: "Join" }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await other.goto(page.url());
+  await expect(other).toHaveURL(page.url());
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   // estimation
-  await page.getByText("3", { exact: true }).click();
+  await page.getByRole("tab", { name: "3" }).click();
 
   // show down
-  const showDownButton = page.getByRole("button", { name: "Show down!" });
-  const showDownButtonOnOtherPage = other.getByRole("button", { name: "Show down!" });
-  await expect(showDownButton).toBeVisible();
-  await expect(showDownButton).toBeEnabled();
-  await expect(showDownButtonOnOtherPage).toBeVisible();
-  await expect(showDownButtonOnOtherPage).toBeEnabled();
+  const revealButton = page.getByRole("button", { name: "Reveal" });
+  const revealButtonOnOtherPage = other.getByRole("button", { name: "Reveal" });
+  await expect(revealButton).toBeVisible();
+  await expect(revealButton).toBeEnabled();
+  await expect(revealButtonOnOtherPage).toBeVisible();
+  await expect(revealButtonOnOtherPage).toBeEnabled();
 
-  await showDownButton.click();
-
-  // invisible show down button
-  await expect(showDownButton).toBeHidden();
-  await expect(showDownButtonOnOtherPage).toBeHidden();
+  await revealButton.click();
 
   // show result
-  const nextRoundButton = page.getByRole("button", { name: "Start next round" });
-  const nextRoundButtonOnOtherPage = other.getByRole("button", { name: "Start next round" });
+  await expect(page).toHaveURL(/revealed\/?$/);
+  await expect(other).toHaveURL(/revealed\/?$/);
+  const resetButton = page.getByRole("button", { name: "Reset" });
+  const resetButtonOnOtherPage = other.getByRole("button", { name: "Reset" });
 
-  await expect(nextRoundButton).toBeEnabled();
-  await expect(nextRoundButtonOnOtherPage).toBeEnabled();
+  await expect(resetButton).toBeEnabled();
+  await expect(resetButtonOnOtherPage).toBeEnabled();
 
-  await expect(page.getByTestId("estimations/test@example.com/card")).toHaveText("3");
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("estimations/test@example.com/card")).toHaveText("3");
-  await expect(other.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
+  await expect(page.getByText("test@example.com3")).toBeVisible();
+  await expect(page.getByText("test2@example.com?")).toBeVisible();
 
-  await expect(page.getByTestId("resultCard")).toContainText("3");
-  await expect(other.getByTestId("resultCard")).toContainText("3");
-
-  await expect(page.getByTestId("average")).toContainText("Score3");
-  await expect(other.getByTestId("average")).toContainText("Score3");
+  await expect(page.getByText("Estimation(Average):3.0")).toBeVisible();
 
   // start next round.
-  await nextRoundButton.click();
-  await expect(nextRoundButton).toBeHidden();
-  await expect(nextRoundButtonOnOtherPage).toBeHidden();
+  await resetButton.click();
 
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeEmpty();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("estimations/test@example.com/card")).toBeEmpty();
-  await expect(other.getByTestId("estimations/test2@example.com/card")).toBeEmpty();
+  await expect(page).not.toHaveURL(/revealed\/?$/);
+  await expect(other).not.toHaveURL(/revealed\/?$/);
 
-  for (const card of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) {
+  await expect(page.locator("div").filter({ hasText: /^test@example\.com$/ })).toBeVisible();
+  await expect(page.locator("div").filter({ hasText: /^test2@example\.com$/ })).toBeVisible();
+  await expect(other.locator("div").filter({ hasText: /^test@example\.com$/ })).toBeVisible();
+  await expect(other.locator("div").filter({ hasText: /^test2@example\.com$/ })).toBeVisible();
+
+  for (const card of [1, 2, 3, 5]) {
     await expect(page.getByText(`${card}`, { exact: true })).toBeVisible();
     await expect(other.getByText(`${card}`, { exact: true })).toBeVisible();
   }
-});
-
-test("leave from game", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  await resetFirebase();
-
-  // sign up main
-  await page.goto(`/`);
-  await page.getByText("Sign up").click();
-  await signIn(page, "test@example.com", "password");
-
-  // sign up other
-  await other.goto(`/`);
-  await other.getByText("Sign up").click();
-  await signIn(other, "test2@example.com", "password");
-
-  // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
-  const submit = page.getByRole("button", { name: "Submit" });
-
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
-
-  await submit.click();
-
-  // open game
-  await page.getByRole("link", { name: "CI sample" }).click();
-
-  // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
-  await other.getByRole("button", { name: "Join" }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("game-info/leave")).toBeHidden();
-
-  // leave from current game. This button is hidden first, and hidden by clip-path
-  await other.getByTestId("game-info/leave").hover({ position: { x: 10, y: 10 } });
-  await other.getByTestId("game-info/leave").click();
-
-  // expect left user do not display in page
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).not.toBeVisible();
-
-  // left user is navigated to select page, and do not display any game
-  await expect(other).toHaveURL(/.*game\/?$/);
-  await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
-
-  await other.goto("/game/");
-  await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
 });
 
 test("re-open and restore current round", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
@@ -219,100 +158,47 @@ test("re-open and restore current round", async ({ page, newPageOnNewContext: ot
 
   // sign up main
   await page.goto(`/`);
-  await page.getByText("Sign up").click();
+  await page.getByText("Sign Up").click();
   await signIn(page, "test@example.com", "password");
 
   // sign up other
   await other.goto(`/`);
-  await other.getByText("Sign up").click();
+  await other.getByText("Sign Up").click();
   await signIn(other, "test2@example.com", "password");
 
   // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
+  await page.getByText("Add Game").click();
+  await page.getByPlaceholder("e.g. A sprint").fill("CI sample");
+  await page.getByLabel("Points").fill("1,2,3,5");
+
   const submit = page.getByRole("button", { name: "Submit" });
-
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
-
   await submit.click();
 
+  // move to select game page
+  const link = page.getByText("CI sample");
+  await expect(page).toHaveURL(/game\/$/);
+  await expect(link).toBeVisible();
+
   // open game
-  await page.getByRole("link", { name: "CI sample" }).click();
+  await link.click();
+  await page.getByRole("button", { name: "Start Voting" }).click();
+
+  await expect(page.getByText("Voted")).toBeVisible();
 
   // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
-  await other.getByRole("button", { name: "Join" }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await other.goto(page.url());
+  await expect(other).toHaveURL(page.url());
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 
   await page.getByText("3", { exact: true }).click();
 
   // re-open and restore information
   await other.goto("/game");
-  await other.getByRole("link", { name: "CI sample" }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
+  await other.goto(page.url());
 
-  await expect(page.getByTestId("estimations/test@example.com/card")).toHaveAttribute("data-state", "estimated");
-});
-
-test("kick player", async ({ page, newPageOnNewContext: other, resetFirebase }) => {
-  await resetFirebase();
-
-  // sign up main
-  await page.goto(`/`);
-  await page.getByText("Sign up").click();
-  await signIn(page, "test@example.com", "password");
-
-  // sign up other
-  await other.goto(`/`);
-  await other.getByText("Sign up").click();
-  await signIn(other, "test2@example.com", "password");
-
-  // create game
-  await page.getByRole("button", { name: "Create Game" }).click();
-  const submit = page.getByRole("button", { name: "Submit" });
-
-  await page.getByPlaceholder("e.g. A sprint").type("CI sample");
-  await submit.click();
-
-  // open game
-  await page.getByRole("link", { name: "CI sample" }).click();
-
-  // join game with other
-  await page.getByTestId("invitation/opener").click();
-  const token = await page.getByTestId("invitation/container").getByRole("textbox").inputValue();
-  await page.getByTestId("invitation/opener").click();
-  await other.getByPlaceholder(/Paste invitation token/).type(token);
-  await other.getByRole("button", { name: "Join" }).click();
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("joined-user-list/root")).toBeVisible();
-  await expect(other.getByTestId("joined-user-list/root")).toBeVisible();
-
-  // open joined user list
-  await page.getByTestId("joined-user-list/opener").click();
-  await expect(page.getByTestId("joined-user-list/list")).toContainText("test@example.com");
-  await expect(page.getByTestId("joined-user-list/list")).toContainText("test2@example.com");
-
-  await other.getByTestId("joined-user-list/opener").click();
-  await expect(other.getByTestId("joined-user-list/list")).toContainText("test@example.com");
-  await expect(other.getByTestId("joined-user-list/list")).toContainText("test2@example.com");
-
-  // Kick user
-  const kickButton = page.getByTestId("joined-user-list/test2@example.com/kick/root");
-
-  await kickButton.hover({ position: { x: 10, y: 10 } });
-  await kickButton.getByRole("button", { name: "Kick" }).click();
-  await kickButton.getByRole("button", { name: "Yes" }).click();
-
-  await expect(page.getByTestId("estimations/test@example.com/card")).toBeVisible();
-  await expect(page.getByTestId("estimations/test2@example.com/card")).not.toBeVisible();
-  await expect(page.getByTestId("joined-user-list/list")).toContainText("test@example.com");
-  await expect(page.getByTestId("joined-user-list/list")).not.toContainText("test2@example.com");
-
-  // kicked user is navigated to select page, and do not display any game
-  await expect(other).toHaveURL(/.+\/game\/?$/);
-  await expect(other.getByText("You do not have games that you are invited before.")).toBeVisible();
+  await expect(other.getByText("No inspectors")).toBeVisible();
+  await expect(other.getByText("test@example.com")).toBeVisible();
+  await expect(other.getByText("test2@example.com")).toBeVisible();
 });

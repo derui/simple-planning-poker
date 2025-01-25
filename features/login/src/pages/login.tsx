@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch } from "wouter";
 
 import { AuthStatus } from "../atoms/type.js";
 import { useAuth } from "../atoms/use-auth.js";
@@ -18,7 +18,6 @@ export interface Props {
 // eslint-disable-next-line func-style
 export function LoginPage({ onLogined }: Props): JSX.Element {
   const { checkLogined, status } = useAuth();
-  const [loc] = useLocation();
 
   useEffect(() => {
     checkLogined();

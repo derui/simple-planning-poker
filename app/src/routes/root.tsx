@@ -67,7 +67,7 @@ export const Routed = function Routed(): JSX.Element {
               </PrivateRoute>
             )}
           </Route>
-          <Route nest>{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
+          <Route>{() => <LaziedLoginPage onLogined={handleLogined} />}</Route>
         </Switch>
       </div>
     </Suspense>
