@@ -4,7 +4,7 @@ import { style } from "@vanilla-extract/css";
 export const root: string = style({
   display: "flex",
   alignItems: "center",
-  height: vars.spacing[12],
+  height: "100%",
   borderRadius: "4px",
   border: `1px solid ${vars.color.teal[500]}`,
   overflow: "hidden",

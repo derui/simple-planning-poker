@@ -1,3 +1,4 @@
+import { Variant } from "@spp/shared-color-variant";
 import { Icon } from "@spp/ui-icon";
 import { UserRole } from "../types.js";
 import * as styles from "./header.css.js";
@@ -48,9 +49,9 @@ export const Header = function Header({ theme, onChangeTheme, defaultRole, onTog
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />
       <div className={styles.buttonContainer}>
+        Copy Voting URL to Invite
         <button onClick={copyVotingUrl} className={styles.copyButton}>
-          <Icon.Copy />
-          Copy Voting URL
+          <Icon.Copy variant={Variant.indigo} />
         </button>
       </div>
       <Toolbar defaultRole={defaultRole} onToggleRole={onToggleRole} />
