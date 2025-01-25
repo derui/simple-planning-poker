@@ -3,33 +3,31 @@ This project provides functions to do planning poker in online.
 
 ## Features ##
 
-- Sign in/Sign up with pre-registered email/password
+- Sign in/Sign up with email/password
 - Create game with story points, or some numbers what you want
-- Invite other user to game
-- Kick player by game owner
+- Join voting
 - Change user name/mode
 - Show average estimations after show down
-- Browse round histories from round result
-- Restore round history and view it
-
-# Requirement #
-
-- Node >= 16
-- Firebase project you have own
-- pnpm (recommended using latest version)
-- JRE >= 1.8
-  - To run firebase emulators
-
-# Libraries #
-
-- React.js
-- React Router
-- Vite
-- Vitest
-- Redux Toolkit & React-Redux & Redux-Observable
-- twind
 
 # Development #
+
+## Libraries ##
+- React.js
+- Wouter
+- Vite
+- Vitest
+- jotai
+- vanilla-css
+
+## Requirement ##
+
+- Node >= 22
+- Firebase project you have own
+- pnpm (recommended using latest version)
+- JRE >= 17
+  - To run firebase emulators
+- Taskfile
+  - `brew install go-task` on macOS, other platforms can install like `taskfile` 
 
 ## Prerequirement ##
 You should login to firebase before to start development.
@@ -47,6 +45,9 @@ You must select below in `npx firebase init`:
 - Emulator
 
 > NOTICE: Please do not overwrite firebase.json in a process of initialization. If you overwrite it, this project can not run correctly.
+
+## For nix user ##
+This repository maintains flake.nix to create build environment a minute. We recommends use `direnv` to enable devShell on the fly.
 
 ## Make config file for local development ##
 Create `firebase.config.ts` into `src`. Content of it like below.
