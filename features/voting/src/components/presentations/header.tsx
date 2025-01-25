@@ -32,7 +32,12 @@ export const Header = function Header({ theme, onChangeTheme, defaultRole, onTog
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />
-      <div></div>
+      <div>
+        <button 
+          onClick={copyVotingUrl}
+          className={styles.copyButton}
+        >
+      </div>
       <Toolbar defaultRole={defaultRole} onToggleRole={onToggleRole} />
     </div>
   );
