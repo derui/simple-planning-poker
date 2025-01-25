@@ -42,6 +42,7 @@
     "eslint-config-prettier": "catalog:",
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-unused-imports": "catalog:",
+    "firebase-tools": "catalog:",
     "jsdom": "catalog:",
     "sinon": "catalog:",
     "typescript": "catalog:",

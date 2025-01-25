@@ -16,6 +16,10 @@
       ".read": "auth != null",
       ".write": "auth != null"
     },
+    "voting": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "defined-users": {
       ".read": true,
       ".write": false

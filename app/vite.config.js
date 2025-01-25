@@ -21,8 +21,8 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: "./firebase.config",
-        replacement: path.join(__dirname, "src", isProduction ? "firebase.config.prod" : "firebase.config"),
+        find: "./firebase.config.js",
+        replacement: path.join(__dirname, "src", isProduction ? "firebase.config.prod.js" : "firebase.config.js"),
       },
       {
         find: "@spp/shared-domain/user-repository",
