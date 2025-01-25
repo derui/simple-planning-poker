@@ -6,15 +6,19 @@ import { PlayerEstimations } from "./player-estimations.js";
 afterEach(cleanup);
 
 test("display a estimation", () => {
-  const { container } = render(<PlayerEstimations total={5} estimations={[{ name: "foo", loginUser: false }]}></PlayerEstimations>);
+  const { container } = render(
+    <PlayerEstimations total={5} estimations={[{ name: "foo", loginUser: false }]}></PlayerEstimations>
+  );
 
   expect(container).toMatchSnapshot();
 });
 
 test("loading", () => {
-  const { container } = render(<PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: "1", loginUser: false }]} />);
+  const { container } = render(
+    <PlayerEstimations loading total={5} estimations={[{ name: "foo", estimated: "1", loginUser: false }]} />
+  );
 
-  expect(container.querySelector('[data-loading="true"]')).not.toBeNull();
+  expect(screen.getByRole<HTMLButtonElement>("button").disabled).toBeTruthy();
 });
 
 test("all estimated", () => {

@@ -1,4 +1,3 @@
-import { Skeleton } from "@spp/ui-skeleton";
 import { useMemo } from "react";
 import { EstimationDto } from "../../atoms/dto.js";
 import { PlayerEstimation } from "./player-estimation.js";
@@ -19,14 +18,6 @@ interface Props {
 export function PlayerEstimations({ loading, total, estimations, onReveal, revealable = false }: Props): JSX.Element {
   const estimated = useMemo(() => estimations.filter((v) => v.estimated).length, [estimations]);
 
-  if (loading) {
-    return (
-      <div className={styles.loading} data-loading="true">
-        <Skeleton />
-      </div>
-    );
-  }
-
   const handleReveal = () => {
     onReveal?.();
   };
@@ -45,7 +36,7 @@ export function PlayerEstimations({ loading, total, estimations, onReveal, revea
         <button
           className={revealable ? styles.votingRevealButtonEnabled : styles.votingRevealButtonDisbled}
           onClick={handleReveal}
-          disabled={!revealable}
+          disabled={!revealable || loading}
         >
           Reveal
         </button>
