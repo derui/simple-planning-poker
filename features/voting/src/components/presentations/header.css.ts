@@ -1,3 +1,5 @@
+import { Variant } from "@spp/shared-color-variant";
+import { buttonStyle } from "@spp/ui-button-style";
 import { style } from "@vanilla-extract/css";
 
 export const root: string = style({
@@ -5,3 +7,5 @@ export const root: string = style({
   gridTemplateRows: "repeat(1, 1fr)",
   gridTemplateColumns: "auto 1fr auto",
 });
+
+export const copyButton: string = style([buttonStyle({ variant: Variant.cerise })]);
