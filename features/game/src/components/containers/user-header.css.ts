@@ -7,4 +7,5 @@ export const root: string = style({
   height: "100%",
   position: "relative",
   minHeight: vars.spacing[12],
+  overflow: "hidden",
 });

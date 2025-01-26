@@ -53,10 +53,10 @@ export const UserHeader = function UserHeader({
       </button>
       <div className={styles.userName.container}>
         <span className={styles.userName.name}>{userName}</span>
-        <button className={styles.userName.icon} onClick={handleRequestUserNameEdit} aria-label="Edit user name">
-          <Icon.Pencil size="m" variant={Variant.teal} />
-        </button>
       </div>
+      <button className={styles.userName.icon} onClick={handleRequestUserNameEdit} aria-label="Edit user name">
+        <Icon.Pencil size="m" variant={Variant.teal} />
+      </button>
     </div>
   );
 };

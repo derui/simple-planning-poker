@@ -22,7 +22,7 @@ const meta: Meta<typeof GameIndex> = {
     await UserRepository.save({
       user: User.create({
         id: User.createId("foo"),
-        name: "foo",
+        name: "looong naaaaaaaaaame",
       }),
     });
   },
