@@ -51,9 +51,11 @@ export const userName: {
     buttonStyle({ variant: Variant.teal, iconButton: true }),
     {
       cursor: "pointer",
-      opacity: 1, // Always visible
+      visibility: "hidden",
+      opacity: 0,
       selectors: {
         [`${container}:hover &`]: {
+          visibility: "visible",
           opacity: 1,
         },
       },
