@@ -60,13 +60,12 @@
     "@spp/shared-use-case": "workspace:^",
     "@spp/ui-button-style": "workspace:^",
     "@spp/ui-icon": "workspace:^",
-    "@spp/ui-skeleton": "workspace:^",
     "@spp/ui-theme": "workspace:^",
     "@spp/ui-toggle-button": "workspace:^",
     "@vanilla-extract/css": "catalog:",
     "jotai": "catalog:",
     "react": "catalog:",
-      "wouter": "catalog:",
-    "storybook": "catalog:"
+    "storybook": "catalog:",
+    "wouter": "catalog:"
   }
 }
