@@ -1,10 +1,8 @@
-import { Skeleton } from "@spp/ui-skeleton";
 import { EstimationDto } from "../../atoms/dto.js";
 import { RevealedEstimation } from "./revealed-estimation.js";
 import * as styles from "./revealed-estimations.css.js";
 
 interface Props {
-  loading?: boolean;
   average?: number;
   estimations: EstimationDto[];
   onReset?: () => void;
@@ -14,15 +12,7 @@ interface Props {
  * Container presentation for revealed estimations
  */
 // eslint-disable-next-line func-style
-export function RevealedEstimations({ loading, average, estimations, onReset }: Props): JSX.Element {
-  if (loading) {
-    return (
-      <div className={styles.loading} data-loading="true">
-        <Skeleton />
-      </div>
-    );
-  }
-
+export function RevealedEstimations({ average, estimations, onReset }: Props): JSX.Element {
   return (
     <div className={styles.root}>
       <div className={styles.votingRoot}>
