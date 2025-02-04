@@ -37,19 +37,16 @@ const SelectableCardHolder = function SelectableCardHolder({
  */
 const VotingUserEstimations = function VotingUserEstimations({
   estimations,
-  loading,
   revealable,
   onReveal,
 }: {
   estimations: EstimationDto[];
-  loading: boolean;
   revealable: boolean;
   onReveal?: () => void;
 }) {
   return (
     <PlayerEstimations
       onReveal={onReveal}
-      loading={loading}
       total={estimations.length}
       estimations={estimations}
       revealable={revealable}
@@ -67,7 +64,6 @@ const VotingInspectors = function VotingInspectors({ inspectors: _inspectors }: 
 };
 
 type Props = {
-  loading?: boolean;
   theme?: string;
   userRole?: UserRole;
   onSelect?: (point: string) => void;
@@ -98,7 +94,6 @@ type Props = {
 
 export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>): JSX.Element {
   const {
-    loading = false,
     onSelect,
     selected,
     voters = [],
@@ -118,7 +113,7 @@ export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>
         <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} onToggleRole={onToggleRole} />
       </div>
       <div className={styles.estimations}>
-        <VotingUserEstimations estimations={voters} loading={loading} revealable={revealable} onReveal={onReveal} />
+        <VotingUserEstimations estimations={voters} revealable={revealable} onReveal={onReveal} />
       </div>
       <div className={styles.inspectors}>
         <VotingInspectors inspectors={inspectors} />

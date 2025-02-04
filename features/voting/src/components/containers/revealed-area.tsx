@@ -37,7 +37,6 @@ export const RevealedArea = function RevealedArea(): JSX.Element {
 
   return (
     <RevealedAreaLayout
-      loading={revealed.loading}
       theme={theme}
       userRole={userRole}
       voters={pollingPlace?.estimations}

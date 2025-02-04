@@ -12,16 +12,14 @@ import * as styles from "./revealed-area.css.js";
  */
 const RevealedUserEstimations = function RevealedUserEstimations({
   estimations,
-  loading,
   average,
   onReset,
 }: {
   estimations: EstimationDto[];
-  loading: boolean;
   average: number;
   onReset?: () => void;
 }) {
-  return <RevealedEstimations loading={loading} estimations={estimations} average={average} onReset={onReset} />;
+  return <RevealedEstimations estimations={estimations} average={average} onReset={onReset} />;
 };
 
 /**
@@ -34,7 +32,6 @@ const VotingInspectors = function VotingInspectors({ inspectors: _inspectors }: 
 };
 
 type Props = {
-  loading?: boolean;
   theme?: string;
   userRole?: UserRole;
   voters?: EstimationDto[];
@@ -52,7 +49,7 @@ type Props = {
 };
 
 export const RevealedAreaLayout = function RevealedAreaLayout(props: Prettify<Props>): JSX.Element {
-  const { loading = false, voters = [], inspectors = [], onChangeTheme, onReset, average = 0 } = props;
+  const { voters = [], inspectors = [], onChangeTheme, onReset, average = 0 } = props;
   const theme = props.theme ?? "";
   const userRole = props.userRole ?? "player";
 
@@ -62,7 +59,7 @@ export const RevealedAreaLayout = function RevealedAreaLayout(props: Prettify<Pr
         <Header theme={theme} defaultRole={userRole} onChangeTheme={onChangeTheme} />
       </div>
       <div className={styles.estimations}>
-        <RevealedUserEstimations estimations={voters} loading={loading} average={average} onReset={onReset} />
+        <RevealedUserEstimations estimations={voters} average={average} onReset={onReset} />
       </div>
       <div className={styles.inspectors}>
         <VotingInspectors inspectors={inspectors} />

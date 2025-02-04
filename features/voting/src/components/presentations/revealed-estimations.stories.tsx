@@ -7,9 +7,7 @@ const meta: Meta<typeof RevealedEstimations> = {
   title: "Presentations/Revealed Estimations",
   component: RevealedEstimations,
   tags: ["autodocs"],
-  argTypes: {
-    loading: { type: "boolean" },
-  },
+  argTypes: {},
 };
 
 export default meta;
@@ -42,18 +40,6 @@ export const Large: Story = {
       { name: "user5", estimated: "7", loginUser: false },
       { name: "user6", estimated: "8", loginUser: false },
     ],
-  },
-  render: (args) => (
-    <div className={themeClass}>
-      <RevealedEstimations {...args} />
-    </div>
-  ),
-};
-
-export const Loading: Story = {
-  args: {
-    estimations: [],
-    loading: true,
   },
   render: (args) => (
     <div className={themeClass}>

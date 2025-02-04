@@ -21,7 +21,7 @@ export const Normal: Story = {
     estimations: [
       { name: "user1", loginUser: false },
       { name: "user2", estimated: "1", loginUser: false },
-      { name: "user3", loginUser: false }
+      { name: "user3", loginUser: false },
     ],
   },
   render(args) {
@@ -45,22 +45,6 @@ export const Large: Story = {
       { name: "user6", estimated: "4", loginUser: false },
     ],
   },
-  render(args) {
-    return (
-      <div className={themeClass}>
-        <PlayerEstimations {...args} />
-      </div>
-    );
-  },
-};
-
-export const Loading: Story = {
-  args: {
-    total: 1,
-    estimations: [],
-    loading: true,
-  },
-
   render(args) {
     return (
       <div className={themeClass}>
