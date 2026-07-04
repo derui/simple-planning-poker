@@ -21,9 +21,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
-      "@types/node": "catalog:",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
@@ -31,6 +31,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-      "@pnpm/find-workspace-dir": "catalog:"
+    "@pnpm/find-workspace-dir": "catalog:"
   }
 }

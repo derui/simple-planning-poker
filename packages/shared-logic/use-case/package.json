@@ -27,19 +27,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
     "@types/sinon": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
-      "immer": "catalog:",
+    "immer": "catalog:",
     "sinon": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-domain": "workspace:^",
-    "@spp/shared-type-util": "workspace:^"
+    "@spp/shared-domain": "workspace:*",
+    "@spp/shared-type-util": "workspace:*"
   }
 }

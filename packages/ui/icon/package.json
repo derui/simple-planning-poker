@@ -28,8 +28,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
     "@storybook/addon-controls": "catalog:",
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
@@ -46,9 +46,9 @@
     "vite": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-color-variant": "workspace:^",
-    "@spp/shared-type-util": "workspace:^",
-    "@spp/ui-theme": "workspace:^",
+    "@spp/shared-color-variant": "workspace:*",
+    "@spp/shared-type-util": "workspace:*",
+    "@spp/ui-theme": "workspace:*",
     "react": "catalog:",
     "storybook": "catalog:"
   }

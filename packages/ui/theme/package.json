@@ -26,8 +26,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
     "@vanilla-extract/css": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
     "concurrently": "catalog:",
@@ -37,6 +37,5 @@
     "typescript": "catalog:",
     "vite": "catalog:"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

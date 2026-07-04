@@ -41,8 +41,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
     "@vitejs/plugin-react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",
@@ -51,8 +51,8 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@spp/shared-domain": "workspace:^",
+    "@spp/shared-domain": "workspace:*",
     "firebase": "catalog:",
-      "uuid": "catalog:"
+    "uuid": "catalog:"
   }
 }

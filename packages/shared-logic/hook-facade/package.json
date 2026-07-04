@@ -27,9 +27,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
-      "@testing-library/react": "catalog:",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
+    "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "concurrently": "catalog:",
     "eslint": "catalog:",

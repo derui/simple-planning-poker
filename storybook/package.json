@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@spp/eslint-config": "workspace:^",
-    "@spp/typescript-config": "workspace:^",
+    "@spp/eslint-config": "workspace:*",
+    "@spp/typescript-config": "workspace:*",
     "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@types/react": "catalog:",
@@ -19,11 +19,9 @@
     "concurrently": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
-      "vite": "catalog:",
-      "storybook": "catalog:",
-      "react": "catalog:"
+    "vite": "catalog:",
+    "storybook": "catalog:",
+    "react": "catalog:"
   },
-  "dependencies": {
-
-  }
+  "dependencies": {}
 }
