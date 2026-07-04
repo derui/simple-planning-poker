@@ -14,10 +14,10 @@
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              nodejs_22
-              pnpm_9
+              nodejs_24
+              pnpm_11
               pre-commit
-              nodePackages.typescript-language-server
+              typescript-language-server
               openjdk17
             ];
 
