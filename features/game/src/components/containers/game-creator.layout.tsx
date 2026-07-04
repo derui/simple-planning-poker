@@ -19,7 +19,7 @@ export interface Props {
   readonly onSubmit: (name: string, points: string) => void;
 }
 
-export const GameCreatorLayout = function GameCreatorLayout({ onCancel, onSubmit, loading }: Props): JSX.Element {
+export const GameCreatorLayout = function GameCreatorLayout({ onCancel, onSubmit, loading }: Props): import("react").JSX.Element {
   const handleCancel = useCallback(() => {
     onCancel();
   }, [onCancel]);

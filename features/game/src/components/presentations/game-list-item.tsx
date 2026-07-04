@@ -9,7 +9,7 @@ export interface Props {
   onClick?: () => void;
 }
 
-export const GameListItem = function GameListItem({ gameId, selected = false, name, onClick }: Props): JSX.Element {
+export const GameListItem = function GameListItem({ gameId, selected = false, name, onClick }: Props): import("react").JSX.Element {
   const handleClick = (): void => {
     if (!selected) {
       onClick?.();

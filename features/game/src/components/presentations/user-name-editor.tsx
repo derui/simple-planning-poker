@@ -31,7 +31,7 @@ const schema = z.object({
   userName: z.string().min(1, { message: "required" }),
 });
 
-export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): JSX.Element {
+export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): import("react").JSX.Element {
   const {
     register,
     handleSubmit,

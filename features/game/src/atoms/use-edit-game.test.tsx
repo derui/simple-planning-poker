@@ -84,9 +84,9 @@ test("should updated edited game", async () => {
   const { result } = renderHook(useEditGame, { wrapper: createWrapper(store) });
 
   // Act
-  await waitFor(async () => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
   await act(async () => result.current.edit("new", "1,2,3"));
-  await waitFor(async () => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
   const actual = await GameRepository.findBy({ id: game.id });

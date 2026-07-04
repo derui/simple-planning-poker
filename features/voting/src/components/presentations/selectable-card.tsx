@@ -7,7 +7,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function SelectableCard({ selected = false, children, onSelect }: PropsWithChildren<Props>): JSX.Element {
+export function SelectableCard({ selected = false, children, onSelect }: PropsWithChildren<Props>): import("react").JSX.Element {
   return (
     <div
       className={selected ? styles.selected : styles.notSelected}

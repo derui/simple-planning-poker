@@ -23,7 +23,7 @@ export interface Props {
   readonly onStartVoting?: () => void;
 }
 
-export const GameDetail = function GameDetail({ name, points, onEdit, onDelete, onStartVoting }: Props): JSX.Element {
+export const GameDetail = function GameDetail({ name, points, onEdit, onDelete, onStartVoting }: Props): import("react").JSX.Element {
   if (!name || !points) {
     return (
       <div className={styles.root}>

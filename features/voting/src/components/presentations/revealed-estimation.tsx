@@ -6,7 +6,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function RevealedEstimation(props: PropsWithChildren<Props>): JSX.Element {
+export function RevealedEstimation(props: PropsWithChildren<Props>): import("react").JSX.Element {
   const [opened, setOpened] = useState(false);
 
   useEffect(() => {

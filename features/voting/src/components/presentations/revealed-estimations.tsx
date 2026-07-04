@@ -12,7 +12,7 @@ interface Props {
  * Container presentation for revealed estimations
  */
 // eslint-disable-next-line func-style
-export function RevealedEstimations({ average, estimations, onReset }: Props): JSX.Element {
+export function RevealedEstimations({ average, estimations, onReset }: Props): import("react").JSX.Element {
   return (
     <div className={styles.root}>
       <div className={styles.votingRoot}>

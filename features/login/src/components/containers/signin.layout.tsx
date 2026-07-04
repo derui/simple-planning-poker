@@ -15,7 +15,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function SignInLayout(props: Props): JSX.Element {
+export function SignInLayout(props: Props): import("react").JSX.Element {
   const { title, loading = false, onSubmit, onBack } = props;
 
   const handleSubmit = (email: string, password: string) => {

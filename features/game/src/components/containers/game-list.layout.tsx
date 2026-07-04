@@ -20,7 +20,7 @@ export const GameListLayout = function GameListLayout({
   selectedGame,
   onRequestCreate,
   onSelect,
-}: Props): JSX.Element {
+}: Props): import("react").JSX.Element {
   return (
     <div className={styles.root}>
       <GameList games={games} selectedGame={selectedGame} onSelect={onSelect} onRequestCreate={onRequestCreate} />

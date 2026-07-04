@@ -46,6 +46,7 @@ export default [
           destructuredArrayIgnorePattern: "^_",
         },
       ],
+      "@typescript-eslint/no-namespace": "off",
     },
   },
 ];

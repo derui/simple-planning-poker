@@ -18,7 +18,7 @@
     "publish:preview": "pnpm run build && pnpm run deploy:preview",
     "publish:production": "pnpm run build && pnpm run deploy:production",
     "lint": "eslint --cache --cache-location=node_modules/.cache/eslint --fix src/",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   },
   "author": "derui",
   "license": "MIT",
@@ -33,7 +33,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/sinon": "catalog:",
-    "@types/uuid": "catalog:",
     "@vanilla-extract/css": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",

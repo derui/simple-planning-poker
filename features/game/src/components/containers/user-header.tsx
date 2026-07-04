@@ -5,7 +5,7 @@ import { UserHeaderLayout } from "./user-header.layout.js";
 /**
  * Container for the user header.
  */
-export const UserHeader = function UserHeader(): JSX.Element {
+export const UserHeader = function UserHeader(): import("react").JSX.Element {
   const { loginUser, loading, changeDefaultVoterMode, editName } = useUserInfo();
   const [mode, setMode] = useState<"edit" | "view">("view");
 

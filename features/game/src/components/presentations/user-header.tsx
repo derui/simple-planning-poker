@@ -30,7 +30,7 @@ export const UserHeader = function UserHeader({
   defaultVoterMode,
   onChangeDefaultVoterMode,
   onRequestUserNameEdit,
-}: Props): JSX.Element {
+}: Props): import("react").JSX.Element {
   const HeaderIcon = defaultVoterMode == VoterMode.Inspector ? Icon.Eye : Icon.User;
 
   const handleChangeDefaultVoterMode = () => {

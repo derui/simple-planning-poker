@@ -36,7 +36,7 @@ const schema = z.object({
 });
 
 // eslint-disable-next-line func-style
-export function GameEditor(props: Props): JSX.Element {
+export function GameEditor(props: Props): import("react").JSX.Element {
   const { defaultName, defaultPoints, onSubmit, loading = false, onCancel } = props;
 
   const {

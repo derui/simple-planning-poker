@@ -20,7 +20,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function GameIndex({ onStartVoting, userId }: Props): JSX.Element {
+export function GameIndex({ onStartVoting, userId }: Props): import("react").JSX.Element {
   const [loc, navigate] = useLocation();
   const { loadUser } = useUserInfo();
 

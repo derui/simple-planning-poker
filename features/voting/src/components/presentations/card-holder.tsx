@@ -8,7 +8,7 @@ export interface Props {
   type: "player" | "inspector";
 }
 
-export const CardHolder = function CardHolder({ type, children }: PropsWithChildren<Props>): JSX.Element {
+export const CardHolder = function CardHolder({ type, children }: PropsWithChildren<Props>): import("react").JSX.Element {
   return (
     <div className={styles.root} role="tablist">
       {type == "player" ? children : <p className={styles.inspector}>Inspector mode</p>}

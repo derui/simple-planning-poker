@@ -37,7 +37,7 @@ test("initial status", async () => {
     wrapper: createWrapper(store),
   });
 
-  await waitFor(() => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
   expect(result.current.game).toBeUndefined();
@@ -79,19 +79,33 @@ test("should loading while deleting a game", async () => {
   await GameRepository.save({ game });
   const store = createStore();
   store.set(loadUserAtom, User.createId("id"));
+  let resolveDelete: (() => void) | undefined;
+  const deleteStub = sinon.stub(GameRepository, "delete").callsFake(async () => {
+    await new Promise<void>((resolve) => {
+      resolveDelete = resolve;
+    });
+  });
 
   const { result, rerender } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
-  // Act
-  await act(async () => {
-    result.current.select(game.id);
-  });
-  result.current.delete();
-  rerender();
+  try {
+    // Act
+    await act(async () => {
+      result.current.select(game.id);
+    });
+    await act(async () => {
+      result.current.delete();
+    });
+    rerender();
+    await waitFor(() => expect(result.current.loading).toBe(true));
 
-  // Assert
-  expect(result.current.game).not.toBeUndefined();
-  expect(result.current.loading).toBe(true);
+    // Assert
+    expect(result.current.game).not.toBeUndefined();
+    expect(result.current.loading).toBe(true);
+  } finally {
+    resolveDelete?.();
+    deleteStub.restore();
+  }
 });
 
 test("should be able to delete game", async () => {
@@ -114,7 +128,7 @@ test("should be able to delete game", async () => {
   });
 
   await act(async () => result.current.delete());
-  await waitFor(async () => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
   expect(result.current.game).toBeUndefined();
@@ -141,7 +155,7 @@ test("can not delete a game that have by other user", async () => {
   });
   const expected = result.current.game;
   await act(async () => result.current.delete());
-  await waitFor(async () => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
   expect(result.current.game).toBe(expected);

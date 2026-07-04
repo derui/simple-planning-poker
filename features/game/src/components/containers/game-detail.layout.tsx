@@ -34,7 +34,7 @@ export const GameDetailLayout = function GameDetailLayout({
   onSubmit,
   onStartVoting,
   loading,
-}: Props): JSX.Element {
+}: Props): import("react").JSX.Element {
   const [mode, setMode] = useState<"editing" | "viewing">("viewing");
 
   const handleDelete = () => {

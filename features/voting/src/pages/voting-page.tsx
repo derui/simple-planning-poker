@@ -20,7 +20,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function VotingPage({ currentUserId, votingId }: Props): JSX.Element {
+export function VotingPage({ currentUserId, votingId }: Props): import("react").JSX.Element {
   const [, navigate] = useLocation();
   const join = useJoin();
 

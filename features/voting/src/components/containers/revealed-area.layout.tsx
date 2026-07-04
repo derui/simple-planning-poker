@@ -48,7 +48,7 @@ type Props = {
   onReset?: () => void;
 };
 
-export const RevealedAreaLayout = function RevealedAreaLayout(props: Prettify<Props>): JSX.Element {
+export const RevealedAreaLayout = function RevealedAreaLayout(props: Prettify<Props>): import("react").JSX.Element {
   const { voters = [], inspectors = [], onChangeTheme, onReset, average = 0 } = props;
   const theme = props.theme ?? "";
   const userRole = props.userRole ?? "player";

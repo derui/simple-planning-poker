@@ -92,7 +92,7 @@ type Props = {
   onReveal?: () => void;
 };
 
-export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>): JSX.Element {
+export const VotingAreaLayout = function VotingAreaLayout(props: Prettify<Props>): import("react").JSX.Element {
   const {
     onSelect,
     selected,

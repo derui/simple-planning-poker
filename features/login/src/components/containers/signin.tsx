@@ -4,7 +4,7 @@ import { useLogin } from "../../atoms/use-login.js";
 import { SignInLayout } from "./signin.layout.js";
 
 // eslint-disable-next-line func-style
-export function SignIn(): JSX.Element {
+export function SignIn(): import("react").JSX.Element {
   const login = useLogin();
   const [, navigate] = useLocation();
 

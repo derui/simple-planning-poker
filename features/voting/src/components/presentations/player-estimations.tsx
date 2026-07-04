@@ -15,7 +15,7 @@ interface Props {
  * Container presentation for player estimations
  */
 // eslint-disable-next-line func-style
-export function PlayerEstimations({ loading, total, estimations, onReveal, revealable = false }: Props): JSX.Element {
+export function PlayerEstimations({ loading, total, estimations, onReveal, revealable = false }: Props): import("react").JSX.Element {
   const estimated = useMemo(() => estimations.filter((v) => v.estimated).length, [estimations]);
 
   const handleReveal = () => {

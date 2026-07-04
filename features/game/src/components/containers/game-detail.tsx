@@ -11,7 +11,7 @@ interface Props {
   onStartVoting?: (gameId: string) => void;
 }
 
-export const GameDetail = function GameDetail({ onStartVoting }: Props): JSX.Element {
+export const GameDetail = function GameDetail({ onStartVoting }: Props): import("react").JSX.Element {
   const { loading, delete: _delete, game, startVoting } = useCurrentGame();
   const { edit, loading: editing } = useEditGame();
 

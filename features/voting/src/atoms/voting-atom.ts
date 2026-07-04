@@ -196,8 +196,8 @@ export const joinedVotingStatusAtom: Atom<JoinedVotingStatus> = atom((get) => {
 /**
  * Toggle the current user's role.
  */
-export const toggleRoleAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
-  const voting = get(unwrap(asyncCurrentVotingAtom));
+export const toggleRoleAtom: WritableAtom<null, [], Promise<void>> = atom(null, async (get, set) => {
+  const voting = await get(asyncCurrentVotingAtom);
 
   if (!voting) {
     return;
@@ -216,46 +216,45 @@ export const toggleRoleAtom: WritableAtom<null, [], void> = atom(null, (get, set
   );
   const [newVoting, event] = Voting.updateVoter(voting, newVoter);
 
-  VotingRepository.save({ voting: newVoting })
-    .then(async () => {
-      dispatch(event);
-    })
-    .then(() => {
-      set(asyncCurrentVotingAtom);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  try {
+    await VotingRepository.save({ voting: newVoting });
+    dispatch(event);
+    set(asyncCurrentVotingAtom);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 /**
  * Change theme of current voting
  */
-export const changeThemeAtom: WritableAtom<null, [theme: string], void> = atom(null, (get, set, theme: string) => {
-  const voting = get(unwrap(asyncCurrentVotingAtom));
+export const changeThemeAtom: WritableAtom<null, [theme: string], Promise<void>> = atom(
+  null,
+  async (get, set, theme: string) => {
+    const voting = await get(asyncCurrentVotingAtom);
 
-  if (!voting) {
-    return;
-  }
+    if (!voting) {
+      return;
+    }
 
-  const newVoting = Voting.changeTheme(voting, theme);
+    const newVoting = Voting.changeTheme(voting, theme);
 
-  VotingRepository.save({ voting: newVoting })
-    .then(() => {
+    try {
+      await VotingRepository.save({ voting: newVoting });
       set(asyncCurrentVotingAtom);
-    })
-    .catch((e) => {
+    } catch (e) {
       console.error(e);
-    });
-});
+    }
+  }
+);
 
 /**
  * Estimate current voting
  */
-export const estimateAtom: WritableAtom<null, [estimation: StoryPoint.T], void> = atom(
+export const estimateAtom: WritableAtom<null, [estimation: StoryPoint.T], Promise<void>> = atom(
   null,
-  (get, set, estimation: StoryPoint.T) => {
-    const voting = get(unwrap(asyncCurrentVotingAtom));
+  async (get, set, estimation: StoryPoint.T) => {
+    const voting = await get(asyncCurrentVotingAtom);
     const currentUserId = get(currentUserIdAtom);
     if (!voting || !currentUserId) {
       return;
@@ -264,13 +263,8 @@ export const estimateAtom: WritableAtom<null, [estimation: StoryPoint.T], void> 
     try {
       const newVoting = Voting.takePlayerEstimation(voting, currentUserId, UserEstimation.submittedOf(estimation));
 
-      VotingRepository.save({ voting: newVoting })
-        .then(() => {
-          set(asyncCurrentVotingAtom);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      await VotingRepository.save({ voting: newVoting });
+      set(asyncCurrentVotingAtom);
     } catch (e) {
       console.error(e);
     }
@@ -280,8 +274,8 @@ export const estimateAtom: WritableAtom<null, [estimation: StoryPoint.T], void> 
 /**
  * Reveal voting if it able today
  */
-export const revealAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
-  const voting = get(unwrap(asyncCurrentVotingAtom));
+export const revealAtom: WritableAtom<null, [], Promise<void>> = atom(null, async (get, set) => {
+  const voting = await get(asyncCurrentVotingAtom);
 
   if (!voting || !Voting.canReveal(voting)) {
     return;
@@ -289,23 +283,20 @@ export const revealAtom: WritableAtom<null, [], void> = atom(null, (get, set) =>
 
   const [newVoting, event] = Voting.reveal(voting);
 
-  VotingRepository.save({ voting: newVoting })
-    .then(() => {
-      dispatch(event);
-    })
-    .then(() => {
-      set(asyncCurrentVotingAtom);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  try {
+    await VotingRepository.save({ voting: newVoting });
+    dispatch(event);
+    set(asyncCurrentVotingAtom);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 /**
  * Reset voting
  */
-export const resetAtom: WritableAtom<null, [], void> = atom(null, (get, set) => {
-  const voting = get(unwrap(asyncCurrentVotingAtom));
+export const resetAtom: WritableAtom<null, [], Promise<void>> = atom(null, async (get, set) => {
+  const voting = await get(asyncCurrentVotingAtom);
 
   if (!voting) {
     return;
@@ -313,16 +304,13 @@ export const resetAtom: WritableAtom<null, [], void> = atom(null, (get, set) => 
 
   const [newVoting, event] = Voting.reset(voting);
 
-  VotingRepository.save({ voting: newVoting })
-    .then(() => {
-      dispatch(event);
-    })
-    .then(() => {
-      set(asyncCurrentVotingAtom);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  try {
+    await VotingRepository.save({ voting: newVoting });
+    dispatch(event);
+    set(asyncCurrentVotingAtom);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 /**

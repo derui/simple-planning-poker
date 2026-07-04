@@ -44,7 +44,7 @@ function copyVotingUrl() {
 /**
  * Layout component for container.
  */
-export const Header = function Header({ theme, onChangeTheme, defaultRole, onToggleRole }: Props): JSX.Element {
+export const Header = function Header({ theme, onChangeTheme, defaultRole, onToggleRole }: Props): import("react").JSX.Element {
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />

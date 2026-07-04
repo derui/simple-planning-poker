@@ -10,8 +10,8 @@ export type Id<T extends symbol> = string & { [_id]: T };
  * Stringify for `ID` Type
  */
 export const toString = <T extends symbol>(v: Id<T>): string =>
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  v as string;
+   
+  v;
 
 /**
  * Create new ID with or without identifier. When without identifier,

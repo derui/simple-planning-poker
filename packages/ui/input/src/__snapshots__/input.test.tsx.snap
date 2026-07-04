@@ -3,7 +3,7 @@
 exports[`should be able to render 1`] = `
 <div>
   <input
-    class="style_input__tb17r50"
+    class="style_input__tb17r50 style_transition_border__1h34uuj42"
   />
 </div>
 `;

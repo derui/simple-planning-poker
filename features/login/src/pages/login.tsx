@@ -16,7 +16,7 @@ export interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function LoginPage({ onLogined }: Props): JSX.Element {
+export function LoginPage({ onLogined }: Props): import("react").JSX.Element {
   const { checkLogined, status } = useAuth();
 
   useEffect(() => {

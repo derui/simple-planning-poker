@@ -29,7 +29,7 @@ const InspectorRole = ({ onToggleRole }: { onToggleRole?: () => void }) => (
   </div>
 );
 
-export const Toolbar = function Toolbar({ onToggleRole, defaultRole }: Props): JSX.Element {
+export const Toolbar = function Toolbar({ onToggleRole, defaultRole }: Props): import("react").JSX.Element {
   return (
     <div className={styles.root}>
       {defaultRole === "player" ? (

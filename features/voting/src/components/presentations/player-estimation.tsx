@@ -6,7 +6,7 @@ interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function PlayerEstimation(props: Props): JSX.Element {
+export function PlayerEstimation(props: Props): import("react").JSX.Element {
   const { estimated } = props;
 
   const estimationClass = estimated ? styles.cardEstimated : styles.cardNotEstimated;

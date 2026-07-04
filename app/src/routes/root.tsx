@@ -3,7 +3,6 @@ import React, { PropsWithChildren, Suspense, useCallback, useEffect } from "reac
 import lazyImport from "../utils/lazy-import.js";
 
 import { themeClass } from "@spp/ui-theme";
-import { JSX } from "react/jsx-runtime";
 import { Route, Switch, useLocation } from "wouter";
 import { VotingPage } from "./voting-page.js";
 
@@ -29,7 +28,7 @@ const LaziedLoginPage = React.lazy(() =>
   lazyImport(import("@spp/feature-login")).then((v) => ({ default: v.LoginPage }))
 );
 
-export const Routed = function Routed(): JSX.Element {
+export const Routed = function Routed(): import("react").JSX.Element {
   const { checkLogined } = useAuth();
   const { userId } = useLoginUser();
   const [, navigate] = useLocation();
@@ -56,14 +55,14 @@ export const Routed = function Routed(): JSX.Element {
           <Route path="/game" nest>
             {() => (
               <PrivateRoute>
-                <LaziedGameIndexPage userId={userId!!} onStartVoting={handleStartVoting} />
+                <LaziedGameIndexPage userId={userId!} onStartVoting={handleStartVoting} />
               </PrivateRoute>
             )}
           </Route>
           <Route path="/voting/:votingId" nest>
             {() => (
               <PrivateRoute>
-                <VotingPage userId={userId!!} />
+                <VotingPage userId={userId!} />
               </PrivateRoute>
             )}
           </Route>

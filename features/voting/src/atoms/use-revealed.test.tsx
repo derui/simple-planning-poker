@@ -8,7 +8,7 @@ import { enableMapSet } from "immer";
 import { createStore, Provider } from "jotai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { useRevealed } from "./use-revealed.js";
-import { joinVotingAtom } from "./voting-atom.js";
+import { changeThemeAtom, joinVotingAtom, resetAtom } from "./voting-atom.js";
 
 enableMapSet();
 
@@ -33,7 +33,7 @@ describe("UseRevealed", () => {
         points: POINTS,
         theme: "foo",
         estimations: Estimations.from({
-          [userId]: UserEstimation.submittedOf(POINTS[1]),
+          [userId]: UserEstimation.submittedOf(POINTS[0]),
         }),
         voters: [Voter.createVoter({ user: userId })],
       });
@@ -47,12 +47,16 @@ describe("UseRevealed", () => {
       // Act
       const { result } = renderHook(useRevealed, { wrapper });
 
-      await waitFor(async () => result.current.loading == false);
-      await act(async () => result.current.changeTheme("new theme"));
+      await waitFor(() => expect(result.current.loading).toBe(false));
+      await act(async () => {
+        store.set(changeThemeAtom, "new theme");
+      });
 
       // Assert
-      const actual = await VotingRepository.findBy({ id: votingId });
-      expect(actual?.theme).toBe("new theme");
+      await waitFor(async () => {
+        const actual = await VotingRepository.findBy({ id: votingId });
+        expect(actual?.theme).toBe("new theme");
+      });
     });
   });
 
@@ -65,7 +69,7 @@ describe("UseRevealed", () => {
       points: POINTS,
       theme: "foo",
       estimations: Estimations.from({
-        [userId]: UserEstimation.submittedOf(POINTS[1]),
+        [userId]: UserEstimation.submittedOf(POINTS[0]),
       }),
       voters: [Voter.createVoter({ user: userId })],
     });
@@ -79,12 +83,16 @@ describe("UseRevealed", () => {
     // Act
     const { result } = renderHook(useRevealed, { wrapper });
 
-    await waitFor(async () => result.current.loading == false);
-    await act(async () => result.current.reset());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    await act(async () => {
+      store.set(resetAtom);
+    });
 
     // Assert
-    const actual = await VotingRepository.findBy({ id: votingId });
-    expect(actual?.status).toBe(Voting.VotingStatus.Voting);
+    await waitFor(async () => {
+      const actual = await VotingRepository.findBy({ id: votingId });
+      expect(actual?.status).toBe(Voting.VotingStatus.Voting);
+    });
   });
 
   test("averageEstimation should be 0 when loading", async () => {
@@ -96,7 +104,7 @@ describe("UseRevealed", () => {
       points: POINTS,
       theme: "foo",
       estimations: Estimations.from({
-        [userId]: UserEstimation.submittedOf(POINTS[1]),
+          [userId]: UserEstimation.submittedOf(POINTS[0]),
       }),
       voters: [Voter.createVoter({ user: userId })],
     });
@@ -136,7 +144,7 @@ describe("UseRevealed", () => {
     // Act
     const { result } = renderHook(useRevealed, { wrapper });
 
-    await waitFor(async () => result.current.loading == false);
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.averageEstimation).toBe(1);
@@ -170,7 +178,7 @@ describe("UseRevealed", () => {
     // Act
     const { result } = renderHook(useRevealed, { wrapper });
 
-    await waitFor(async () => result.current.loading == false);
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.averageEstimation).toBe(2.7);

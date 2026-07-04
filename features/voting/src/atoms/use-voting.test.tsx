@@ -57,7 +57,7 @@ describe("UseVoting", () => {
     // Act
     const { result } = renderHook(useVoting, { wrapper });
 
-    await waitFor(async () => result.current.loading == false);
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.estimated).toBeUndefined();
@@ -87,7 +87,7 @@ describe("UseVoting", () => {
     // Act
     const { result } = renderHook(useVoting, { wrapper });
 
-    await waitFor(async () => result.current.loading == false);
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.estimated).toBe("5");
@@ -118,12 +118,14 @@ describe("UseVoting", () => {
       // Act
       const { result } = renderHook(useVoting, { wrapper });
 
-      await waitFor(async () => result.current.loading == false);
+      await waitFor(() => expect(result.current.loading).toBe(false));
       await act(async () => result.current.changeTheme("new theme"));
 
       // Assert
-      const actual = await VotingRepository.findBy({ id: votingId });
-      expect(actual?.theme).toBe("new theme");
+      await waitFor(async () => {
+        const actual = await VotingRepository.findBy({ id: votingId });
+        expect(actual?.theme).toBe("new theme");
+      });
     });
   });
 
@@ -149,11 +151,11 @@ describe("UseVoting", () => {
       // Act
       const { result } = renderHook(useVoting, { wrapper });
 
-      await waitFor(async () => result.current.loading == false);
+      await waitFor(() => expect(result.current.loading).toBe(false));
       await act(async () => result.current.estimate(5));
 
       // Assert
-      expect(result.current.estimated).toBe("5");
+      await waitFor(() => expect(result.current.estimated).toBe("5"));
     });
 
     test("change esitmation before reveal", async () => {
@@ -177,12 +179,12 @@ describe("UseVoting", () => {
       // Act
       const { result } = renderHook(useVoting, { wrapper });
 
-      await waitFor(async () => result.current.loading == false);
+      await waitFor(() => expect(result.current.loading).toBe(false));
       await act(async () => result.current.estimate(5));
       await act(async () => result.current.estimate(1));
 
       // Assert
-      expect(result.current.estimated).toBe("1");
+      await waitFor(() => expect(result.current.estimated).toBe("1"));
     });
   });
 
@@ -210,12 +212,14 @@ describe("UseVoting", () => {
       // Act
       const { result } = renderHook(useVoting, { wrapper });
 
-      await waitFor(async () => result.current.loading == false);
-      await waitFor(async () => result.current.reveal());
+      await waitFor(() => expect(result.current.loading).toBe(false));
+      await act(async () => result.current.reveal());
 
       // Assert
-      expect(result.current.estimated).toBe("5");
-      expect(result.current.revealable).toBeFalsy();
+      await waitFor(() => {
+        expect(result.current.estimated).toBe("5");
+        expect(result.current.revealable).toBeFalsy();
+      });
     });
   });
 });

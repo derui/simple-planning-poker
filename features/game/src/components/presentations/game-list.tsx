@@ -23,7 +23,7 @@ export interface Props {
   onSelect?: (id: string) => void;
 }
 
-export const GameList = function GameList({ games, onRequestCreate, onSelect, selectedGame }: Props): JSX.Element {
+export const GameList = function GameList({ games, onRequestCreate, onSelect, selectedGame }: Props): import("react").JSX.Element {
   const items = games.map((v) => (
     <GameListItem
       key={v.id}

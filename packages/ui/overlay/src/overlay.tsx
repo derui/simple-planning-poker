@@ -6,7 +6,7 @@ export interface Props {
 }
 
 // eslint-disable-next-line func-style
-export function Overlay(props: PropsWithChildren<Props>): JSX.Element {
+export function Overlay(props: PropsWithChildren<Props>): import("react").JSX.Element {
   const style = props.show ? root : hidden;
 
   return (

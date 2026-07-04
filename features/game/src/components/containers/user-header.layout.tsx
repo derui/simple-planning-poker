@@ -22,7 +22,7 @@ export const UserHeaderLayout = function UserHeaderLayout({
   onChangeDefaultVoterMode,
   onRequestUserNameEdit,
   onCancelUserNameEdit,
-}: Props): JSX.Element {
+}: Props): import("react").JSX.Element {
   if (!user) {
     return (
       <div className={styles.root}>

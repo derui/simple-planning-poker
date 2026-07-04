@@ -10,7 +10,7 @@ interface Props {
   onCreate?: () => void;
 }
 
-export const GameList = function GameList({ onCreate }: Props): JSX.Element {
+export const GameList = function GameList({ onCreate }: Props): import("react").JSX.Element {
   const { games } = useGames();
   const { game, select } = useCurrentGame();
 

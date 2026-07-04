@@ -3,7 +3,7 @@ import { Prettify } from "@spp/shared-type-util";
 import { IconProps } from "./props.js";
 import { extraLarge, large, medium, small } from "./trash.css.js";
 
-export const Trash = function Trash({ size = "m", variant = Variant.gray }: Prettify<IconProps>): JSX.Element {
+export const Trash = function Trash({ size = "m", variant = Variant.gray }: Prettify<IconProps>): import("react").JSX.Element {
   let base: typeof small;
 
   switch (size) {

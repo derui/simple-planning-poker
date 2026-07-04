@@ -3,7 +3,7 @@ import { Prettify } from "@spp/shared-type-util";
 import { extraLarge, large, medium, small } from "./plus.css.js";
 import { IconProps } from "./props.js";
 
-export const Plus = function Plus({ size = "m", variant = Variant.gray }: Prettify<IconProps>): JSX.Element {
+export const Plus = function Plus({ size = "m", variant = Variant.gray }: Prettify<IconProps>): import("react").JSX.Element {
   let base: typeof small;
 
   switch (size) {

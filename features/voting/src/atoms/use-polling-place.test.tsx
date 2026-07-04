@@ -51,7 +51,7 @@ test("should be able to get polling place after joining", async () => {
   // Act
   const { result } = renderHook(usePollingPlace, { wrapper });
 
-  await waitFor(async () => result.current.loading == false);
+  await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
   expect(result.current.loading).toBeFalsy();

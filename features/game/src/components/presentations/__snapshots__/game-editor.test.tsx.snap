@@ -21,7 +21,6 @@ exports[`should be able to render 1`] = `
         placeholder="e.g. A sprint"
         tabindex="0"
         type="text"
-        value=""
       />
     </div>
     <div
@@ -39,7 +38,6 @@ exports[`should be able to render 1`] = `
         name="points"
         tabindex="0"
         type="text"
-        value=""
       />
     </div>
     <div

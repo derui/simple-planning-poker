@@ -32,7 +32,7 @@ export const GameRepository: I = {
 
     data.set(game.id, game);
 
-    return;
+    return Promise.resolve();
   },
 
   findBy: ({ id }) => {
