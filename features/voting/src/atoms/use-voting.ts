@@ -1,13 +1,7 @@
 import { StoryPoint } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useMemo } from "react";
-import {
-  changeThemeAtom,
-  estimateAtom,
-  pollingPlaceAtom,
-  revealableAtom,
-  revealAtom,
-} from "./voting-atom.js";
+import { changeThemeAtom, estimateAtom, pollingPlaceAtom, revealableAtom, revealAtom } from "./voting-atom.js";
 
 /**
  * Definition of hook for voting
@@ -57,7 +51,7 @@ export const useVoting: UseVoting = function useVoting() {
         return;
       }
 
-      _estimate(StoryPoint.create(estimation));
+      void _estimate(StoryPoint.create(estimation));
     },
     [_estimate]
   );
@@ -75,13 +69,22 @@ export const useVoting: UseVoting = function useVoting() {
 
     return estimate?.estimated;
   }, [pollingPlace]);
+  const changeThemeHandler = useCallback(
+    (newTheme: string): void => {
+      void changeTheme(newTheme);
+    },
+    [changeTheme]
+  );
+  const revealHandler = useCallback((): void => {
+    void reveal();
+  }, [reveal]);
 
   return {
     loading,
     revealable,
     estimated,
-    changeTheme,
+    changeTheme: changeThemeHandler,
     estimate,
-    reveal,
+    reveal: revealHandler,
   };
 };

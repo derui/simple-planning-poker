@@ -6,7 +6,7 @@ import { GameList } from "./game-list.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<GameList games={[]} />);
 
   expect(ret.container).toMatchSnapshot();

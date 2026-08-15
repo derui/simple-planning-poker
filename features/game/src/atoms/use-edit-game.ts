@@ -30,7 +30,7 @@ export const useEditGame: UseEditGame = () => {
   const editGame = useSetAtom(editGameAtom);
   const edit = useCallback(
     (name: string, points: string): void => {
-      editGame({ name, points });
+      void editGame({ name, points });
     },
     [editGame]
   );

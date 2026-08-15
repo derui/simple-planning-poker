@@ -55,7 +55,7 @@ export const Authenticator: I = {
     }
   },
 
-  async currentUserIdIfExists(): Promise<User.Id | undefined> {
-    return loggedInUser;
+  currentUserIdIfExists(): Promise<User.Id | undefined> {
+    return Promise.resolve(loggedInUser);
   },
 };

@@ -7,7 +7,7 @@ import { UserHeader } from "./user-header.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<UserHeader userName="name" defaultVoterMode={VoterMode.Normal} />);
 
   expect(ret.container).toMatchSnapshot();

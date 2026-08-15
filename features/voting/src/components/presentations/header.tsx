@@ -30,7 +30,7 @@ export interface Props {
 /**
  * Copy current location to the clipboard
  */
-function copyVotingUrl() {
+const copyVotingUrl = (): void => {
   navigator.clipboard
     .writeText(window.location.href)
     .then(() => {
@@ -39,12 +39,17 @@ function copyVotingUrl() {
     .catch((err) => {
       console.error("Failed to copy voting URL:", err);
     });
-}
+};
 
 /**
  * Layout component for container.
  */
-export const Header = function Header({ theme, onChangeTheme, defaultRole, onToggleRole }: Props): import("react").JSX.Element {
+export const Header = function Header({
+  theme,
+  onChangeTheme,
+  defaultRole,
+  onToggleRole,
+}: Props): import("react").JSX.Element {
   return (
     <div className={styles.root}>
       <ThemeEditor theme={theme} onSubmit={onChangeTheme} />

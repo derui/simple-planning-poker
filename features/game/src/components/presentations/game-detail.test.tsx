@@ -6,7 +6,7 @@ import { GameDetail } from "./game-detail.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<GameDetail name="name" points="points" />);
 
   expect(ret.container).toMatchSnapshot();

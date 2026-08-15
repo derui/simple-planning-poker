@@ -23,7 +23,9 @@ if (location.hostname === "localhost") {
 }
 
 const createdGameEventListener = new CreateGameEventListener();
-subscribe((e) => createdGameEventListener.handle(e));
+subscribe((e) => {
+  void createdGameEventListener.handle(e);
+});
 
 const root = createRoot(document.getElementById("root")!);
 

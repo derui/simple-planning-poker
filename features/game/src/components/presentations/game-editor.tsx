@@ -52,7 +52,12 @@ export function GameEditor(props: Props): import("react").JSX.Element {
   };
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit(handleWrappedSusbmit)}>
+    <form
+      className={styles.root}
+      onSubmit={(event) => {
+        void handleSubmit(handleWrappedSusbmit)(event);
+      }}
+    >
       <div className={styles.input.row}>
         <label htmlFor="name" className={styles.input.label}>
           Name

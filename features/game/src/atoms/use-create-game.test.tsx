@@ -54,8 +54,8 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => result.current.create("", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("", "1"));
     rerender();
 
     // Assert
@@ -70,8 +70,8 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => Promise.resolve(result.current.create("   ", "1")));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("   ", "1"));
     rerender();
 
     // Assert
@@ -86,8 +86,8 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper: createWrapper(store) });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => Promise.resolve(result.current.create("foo", v)));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", v));
     rerender();
 
     // Assert
@@ -103,8 +103,8 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => Promise.resolve(result.current.create("foo", "a,b")));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "a,b"));
     rerender();
 
     // Assert
@@ -120,7 +120,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
+    await waitFor(() => expect(result.current.loading).toBe(false));
     result.current.create("foo", "1,3");
     rerender();
 
@@ -136,7 +136,7 @@ describe("validation", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
+    await waitFor(() => expect(result.current.loading).toBe(false));
     result.current.create("foo", "1,30");
     rerender();
 
@@ -154,7 +154,7 @@ describe("Create", () => {
     const { result, rerender } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
+    await waitFor(() => expect(result.current.loading).toBe(false));
     result.current.create("foo", "1");
     rerender();
 
@@ -172,8 +172,9 @@ describe("Create", () => {
     const { result } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => Promise.resolve(result.current.create("foo", "1")));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.errors).toHaveLength(0);
@@ -190,8 +191,9 @@ describe("Create", () => {
     const { result } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
@@ -209,8 +211,9 @@ describe("Create", () => {
     const { result } = renderHook(useCreateGame, { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     const games = await GameRepository.listUserCreated({ user: User.createId("user") });
 
@@ -231,9 +234,9 @@ describe("Create", () => {
     const { result } = renderHook(() => useCreateGame(callback), { wrapper });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => Promise.resolve(result.current.create("foo", "1")));
-    await waitFor(async () => !result.current.loading);
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(callback).toHaveBeenCalledOnce();
@@ -248,9 +251,9 @@ describe("Create", () => {
     const { result } = renderHook(() => useCreateGame(callback), { wrapper: createWrapper(store) });
 
     // Act
-    await waitFor(async () => !result.current.loading);
-    await act(async () => result.current.create("foo", "1"));
-    await waitFor(async () => !result.current.loading);
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.create("foo", "1"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     // Assert
     expect(result.current.loading).toEqual(false);

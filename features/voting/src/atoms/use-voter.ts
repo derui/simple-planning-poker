@@ -1,6 +1,6 @@
 import { VoterType } from "@spp/shared-domain";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { UserRole } from "../components/types.js";
 import { currentVoterRoleAtom, toggleRoleAtom } from "./voting-atom.js";
 
@@ -24,6 +24,9 @@ export type UseVoter = () => {
 export const useVoter: UseVoter = function useVoter() {
   const voterRole = useAtomValue(currentVoterRoleAtom);
   const toggelRole = useSetAtom(toggleRoleAtom);
+  const toggleRole = useCallback((): void => {
+    void toggelRole();
+  }, [toggelRole]);
 
   const role = useMemo(() => {
     if (!voterRole) {
@@ -35,6 +38,6 @@ export const useVoter: UseVoter = function useVoter() {
 
   return {
     role,
-    toggleRole: toggelRole,
+    toggleRole,
   };
 };

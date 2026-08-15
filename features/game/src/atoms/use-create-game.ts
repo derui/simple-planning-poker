@@ -39,7 +39,7 @@ export const useCreateGame: UseCreateGame = (created) => {
 
   const create = useCallback(
     (name: string, points: string) => {
-      createGame(
+      void createGame(
         {
           name,
           points,
@@ -47,7 +47,7 @@ export const useCreateGame: UseCreateGame = (created) => {
         created
       );
     },
-    [created]
+    [created, createGame]
   );
 
   return {

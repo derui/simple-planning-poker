@@ -59,9 +59,10 @@ test("get game after select", async () => {
   // Act
   const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
-  await act(async () => {
+  act(() => {
     result.current.select(game.id);
   });
+  await waitFor(() => expect(result.current.game).toEqual(toGameDto(game)));
 
   // Assert
   expect(result.current.game).toEqual(toGameDto(game));
@@ -90,10 +91,11 @@ test("should loading while deleting a game", async () => {
 
   try {
     // Act
-    await act(async () => {
+    act(() => {
       result.current.select(game.id);
     });
-    await act(async () => {
+    await waitFor(() => expect(result.current.game).not.toBeUndefined());
+    act(() => {
       result.current.delete();
     });
     rerender();
@@ -123,11 +125,12 @@ test("should be able to delete game", async () => {
   const { result } = renderHook(useCurrentGame, { wrapper: createWrapper(store) });
 
   // Act
-  await act(async () => {
+  act(() => {
     result.current.select(game.id);
   });
+  await waitFor(() => expect(result.current.game).not.toBeUndefined());
 
-  await act(async () => result.current.delete());
+  act(() => result.current.delete());
   await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
@@ -152,9 +155,10 @@ test("can not delete a game that have by other user", async () => {
   // Act
   await act(async () => {
     result.current.select(game.id);
+    await Promise.resolve();
   });
   const expected = result.current.game;
-  await act(async () => result.current.delete());
+  act(() => result.current.delete());
   await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert
@@ -162,7 +166,7 @@ test("can not delete a game that have by other user", async () => {
   expect(result.current.loading).toBe(false);
 });
 
-test("should not start voting if game is not loaded", async () => {
+test("should not start voting if game is not loaded", () => {
   // Arrange
   const store = createStore();
   store.set(loadUserAtom, User.createId("id"));
@@ -173,7 +177,7 @@ test("should not start voting if game is not loaded", async () => {
     wrapper: createWrapper(store),
   });
 
-  await act(async () => {
+  act(() => {
     result.current.startVoting(callback);
   });
 
@@ -199,13 +203,15 @@ test("should start voting if game is loaded", async () => {
     wrapper: createWrapper(store),
   });
 
-  await act(async () => {
+  act(() => {
     result.current.select(game.id);
   });
+  await waitFor(() => expect(result.current.game).not.toBeUndefined());
 
-  await act(async () => {
+  act(() => {
     result.current.startVoting(callback);
   });
+  await waitFor(() => expect(callback.called).toBe(true));
 
   // Assert
   expect(callback.called).toBe(true);

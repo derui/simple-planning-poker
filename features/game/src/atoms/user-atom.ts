@@ -48,7 +48,7 @@ export const editUserNameAtom: WritableAtom<null, [name: string], void> = atom(n
 
   set(internalEditingUserAtom, true);
 
-  UserRepository.save({ user: User.changeName(user, name)[0] })
+  void UserRepository.save({ user: User.changeName(user, name)[0] })
     .then(() => {
       set(asyncLoginUserAtom);
     })
@@ -77,7 +77,7 @@ export const changeDefaultVoterModeAtom: WritableAtom<null, [voterMode: VoterMod
       revisedVoterMode = VoterType.Inspector;
     }
 
-    UserRepository.save({ user: User.changeDefaultVoterType(user, revisedVoterMode) })
+    void UserRepository.save({ user: User.changeDefaultVoterType(user, revisedVoterMode) })
       .then(() => {
         set(asyncLoginUserAtom);
       })

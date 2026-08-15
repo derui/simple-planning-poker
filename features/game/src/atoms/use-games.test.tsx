@@ -58,7 +58,7 @@ test("get games after effect", async () => {
   const { result, rerender } = renderHook(useGames, { wrapper });
 
   // Wait a promise
-  await waitFor(async () => !result.current.loading);
+  await waitFor(() => expect(result.current.loading).toBe(false));
   rerender();
 
   // Assert

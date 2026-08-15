@@ -2,7 +2,7 @@ import { resetLoggedInUser } from "@spp/infra-authenticator/memory";
 import { User } from "@spp/shared-domain";
 import { clear } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { useLogin } from "./use-login.js";
@@ -45,7 +45,7 @@ describe("UseLogin", () => {
     expect(result.current.status).toEqual("notLogined");
   });
 
-  test("set doing while sign up", async () => {
+  test("set doing while sign up", () => {
     // Arrange
     const store = createStore();
     const wrapper = createWrapper(store);
@@ -83,7 +83,8 @@ describe("UseLogin", () => {
     // Act
     const { result, rerender } = renderHook(() => useLogin(), { wrapper });
 
-    await act(async () => result.current.signIn("test@example.com", "password"));
+    result.current.signIn("test@example.com", "password");
+    await waitFor(() => expect(result.current.status).toEqual("notLogined"));
     rerender();
 
     // Assert

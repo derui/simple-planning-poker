@@ -31,7 +31,11 @@ const schema = z.object({
   userName: z.string().min(1, { message: "required" }),
 });
 
-export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, onCancel }: Props): import("react").JSX.Element {
+export const UserNameEditor = function UserNameEditor({
+  defaultValue,
+  onSubmit,
+  onCancel,
+}: Props): import("react").JSX.Element {
   const {
     register,
     handleSubmit,
@@ -50,7 +54,12 @@ export const UserNameEditor = function UserNameEditor({ defaultValue, onSubmit, 
   };
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit(wrappedHandleSubmit)}>
+    <form
+      className={styles.root}
+      onSubmit={(event) => {
+        void handleSubmit(wrappedHandleSubmit)(event);
+      }}
+    >
       <div className={styles.row}>
         <span className={styles.decoration}>
           <Icon.Pencil size="m" variant={Variant.teal} />

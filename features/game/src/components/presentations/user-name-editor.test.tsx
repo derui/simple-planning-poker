@@ -6,7 +6,7 @@ import { UserNameEditor } from "./user-name-editor.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<UserNameEditor defaultValue="foo" />);
 
   expect(ret.container).toMatchSnapshot();

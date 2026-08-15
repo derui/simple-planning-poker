@@ -85,7 +85,7 @@ test("should updated edited game", async () => {
 
   // Act
   await waitFor(() => expect(result.current.loading).toBe(false));
-  await act(async () => result.current.edit("new", "1,2,3"));
+  act(() => result.current.edit("new", "1,2,3"));
   await waitFor(() => expect(result.current.loading).toBe(false));
 
   // Assert

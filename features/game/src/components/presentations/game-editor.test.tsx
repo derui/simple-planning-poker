@@ -6,7 +6,7 @@ import { GameEditor } from "./game-editor.js";
 
 afterEach(cleanup);
 
-test("should be able to render", async () => {
+test("should be able to render", () => {
   const ret = render(<GameEditor />);
 
   expect(ret.container).toMatchSnapshot();
@@ -27,7 +27,7 @@ test("call callback after submit", async () => {
   expect(callback.calledOnceWith("test", "1,2,3")).toBeTruthy();
 });
 
-test("show initial value", async () => {
+test("show initial value", () => {
   // Arrange
   render(<GameEditor defaultName="name" defaultPoints="1,2,3" />);
 

@@ -15,8 +15,6 @@ enableMapSet();
 beforeEach(clearUser);
 beforeEach(clearVoting);
 
-/* eslint-disable  @typescript-eslint/require-await */
-
 const createWrapper =
   (store?: ReturnType<typeof createStore>) =>
   ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
@@ -49,7 +47,7 @@ describe("UseRevealed", () => {
 
       await waitFor(() => expect(result.current.loading).toBe(false));
       await act(async () => {
-        store.set(changeThemeAtom, "new theme");
+        await store.set(changeThemeAtom, "new theme");
       });
 
       // Assert
@@ -85,7 +83,7 @@ describe("UseRevealed", () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     await act(async () => {
-      store.set(resetAtom);
+      await store.set(resetAtom);
     });
 
     // Assert
@@ -104,7 +102,7 @@ describe("UseRevealed", () => {
       points: POINTS,
       theme: "foo",
       estimations: Estimations.from({
-          [userId]: UserEstimation.submittedOf(POINTS[0]),
+        [userId]: UserEstimation.submittedOf(POINTS[0]),
       }),
       voters: [Voter.createVoter({ user: userId })],
     });

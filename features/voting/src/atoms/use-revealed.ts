@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { changeThemeAtom, pollingPlaceAtom, resetAtom } from "./voting-atom.js";
 
 /**
@@ -35,6 +35,15 @@ export const useRevealed: UseRevealed = function useRevealed() {
 
   const changeTheme = useSetAtom(changeThemeAtom);
   const reset = useSetAtom(resetAtom);
+  const changeThemeHandler = useCallback(
+    (newTheme: string): void => {
+      void changeTheme(newTheme);
+    },
+    [changeTheme]
+  );
+  const resetHandler = useCallback((): void => {
+    void reset();
+  }, [reset]);
 
   const averageEstimation = useMemo(() => {
     if (pollingPlace.state !== "hasData") {
@@ -62,8 +71,8 @@ export const useRevealed: UseRevealed = function useRevealed() {
 
   return {
     loading,
-    changeTheme,
-    reset,
+    changeTheme: changeThemeHandler,
+    reset: resetHandler,
     averageEstimation,
   };
 };

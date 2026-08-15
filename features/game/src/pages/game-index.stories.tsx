@@ -84,7 +84,9 @@ export const SomeGames: Story = {
         name: GameName.create("Sprint 2"),
         points: ApplicablePoints.create([StoryPoint.create(1)]),
       })[0],
-    ].forEach((game) => GameRepository.save({ game }));
+    ].forEach((game) => {
+      void GameRepository.save({ game });
+    });
 
     return (
       <Router hook={hook}>
@@ -104,16 +106,16 @@ export const TenGames: Story = {
     const games = new Array(10).fill(undefined);
     const { hook } = memoryLocation();
 
-    games.forEach((_, idx) =>
-      GameRepository.save({
+    games.forEach((_, idx) => {
+      void GameRepository.save({
         game: Game.create({
           id: Game.createId(),
           owner: User.createId("foo"),
           name: GameName.create(`Sprint ${idx}`),
           points: ApplicablePoints.create([StoryPoint.create(idx)]),
         })[0],
-      })
-    );
+      });
+    });
 
     return (
       <Router hook={hook}>

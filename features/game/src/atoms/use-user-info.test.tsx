@@ -1,7 +1,7 @@
 import { User, VoterType } from "@spp/shared-domain";
 import { clear } from "@spp/shared-domain/mock/user-repository";
 import { UserRepository } from "@spp/shared-domain/user-repository";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { createStore, Provider } from "jotai";
 import React from "react";
 import { beforeEach, expect, test } from "vitest";
@@ -45,7 +45,8 @@ test("get user information after load", async () => {
   const { result, rerender } = renderHook(useUserInfo, { wrapper });
 
   // Wait a promise
-  await act(async () => result.current.loadUser("id"));
+  act(() => result.current.loadUser("id"));
+  await waitFor(() => expect(result.current.loginUser).not.toBeUndefined());
   rerender();
 
   // Assert
@@ -67,8 +68,10 @@ test("change name after call use case", async () => {
   // Act
   const { result, rerender } = renderHook(useUserInfo, { wrapper });
   // Wait a promise
-  await act(async () => result.current.loadUser("id"));
-  await act(async () => result.current.editName("new name"));
+  act(() => result.current.loadUser("id"));
+  await waitFor(() => expect(result.current.loginUser).not.toBeUndefined());
+  act(() => result.current.editName("new name"));
+  await waitFor(() => expect(result.current.loading).toBe(false));
   rerender();
 
   // Assert
@@ -88,10 +91,12 @@ test("should be able to change default voter type of the user", async () => {
   });
 
   // Act
-  await act(async () => result.current.loadUser("id"));
-  await act(async () => {
+  act(() => result.current.loadUser("id"));
+  await waitFor(() => expect(result.current.loginUser).not.toBeUndefined());
+  act(() => {
     result.current.changeDefaultVoterMode(VoterMode.Normal);
   });
+  await waitFor(() => expect(result.current.loginUser?.defaultVoterMode).toBe(VoterMode.Normal));
   rerender();
 
   // Assert
@@ -111,10 +116,12 @@ test("get current voter mode", async () => {
   });
 
   // Act
-  await act(async () => result.current.loadUser("id"));
-  await act(async () => {
+  act(() => result.current.loadUser("id"));
+  await waitFor(() => expect(result.current.loginUser).not.toBeUndefined());
+  act(() => {
     result.current.changeDefaultVoterMode(VoterMode.Inspector);
   });
+  await waitFor(() => expect(result.current.loginUser?.defaultVoterMode).toBe(VoterMode.Inspector));
   rerender();
 
   // Assert
